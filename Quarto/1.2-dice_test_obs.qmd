@@ -4,11 +4,15 @@ format: html
 ---
 
 ```{ojs}
-// Inputs
-const numDice = Inputs.number({ value: 2, min: 1, max: 10, label: "Number of Dice:" });
-const numRolls = Inputs.slider({ value: 100, min: 1, max: 10000, label: "Number of Rolls:" });
-const rollButton = Inputs.button("Roll the Dice!");
+//| panel: input
+viewof numDice = Inputs.number({ value: 2, min: 1, max: 10, label: "Number of Dice:" });
+viewof numRolls = Inputs.slider({ value: 100, min: 1, max: 10000, label: "Number of Rolls:" });
+viewof rollButton = Inputs.button("Roll the Dice!");
+```
 
+
+
+```{ojs}
 // Reactive Data (using a reactive value for better practice)
 const diceSums = reactive(null);
 
@@ -69,3 +73,14 @@ const updateDisplay = viewof(() => {
 
 diceSums.subscribe(updateDisplay); // Subscribe to automatically update
 ```
+
+<div id="sums-text"></div>
+<div id="dice-plot"></div>
+
+<script>
+const sumsText = document.getElementById("sums-text");
+const dicePlot = document.getElementById("dice-plot");
+
+// Initial display (not necessary with subscription)
+// updateDisplay();
+</script>
