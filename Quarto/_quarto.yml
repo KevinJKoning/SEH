@@ -1,0 +1,29 @@
+project:
+  type: website
+
+website:
+  title: "Quarto"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Data Generation"
+        href: 1-data_generation.qmd
+        contents:
+          - 1.1-penguin_test.qmd
+      - text: "Parameter Estimation"
+        href: 2-parameter_estimation.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+
