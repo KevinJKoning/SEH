@@ -17,6 +17,7 @@ website:
         href: 1-data_generation.qmd
         contents:
           - 1.1-penguin_test.qmd
+          - 1.2-dice_test.qmd
       - text: "Parameter Estimation"
         href: 2-parameter_estimation.qmd
 

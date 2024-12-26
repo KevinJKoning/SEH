@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Penguins – Quarto</title>
+<title>Observable Dice Rolling – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed fullcontent">
+<body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.1-penguin_test.html">Penguins</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.2-dice_test.html">Observable Dice Rolling</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -174,13 +174,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./1.1-penguin_test.html" class="sidebar-item-text sidebar-link active">
+  <a href="./1.1-penguin_test.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Penguins</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./1.2-dice_test.html" class="sidebar-item-text sidebar-link">
+  <a href="./1.2-dice_test.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Observable Dice Rolling</span></a>
   </div>
 </li>
@@ -197,13 +197,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.1-penguin_test.html">Penguins</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.2-dice_test.html">Observable Dice Rolling</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Penguins</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<h1 class="title">Observable Dice Rolling</h1>
 </div>
 
 
@@ -220,101 +222,95 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>A simple example based on Allison Horst’s <a href="https://allisonhorst.github.io/palmerpenguins/">Palmer Penguins</a> dataset. Here we look at how penguin body mass varies across both sex and species (use the provided inputs to filter the dataset by bill length and island):</p>
-<div class="cell panel-input card bg-light p-2">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="15" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 14;"><span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>viewof bill_length_min <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>(</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">32</span><span class="op">,</span> <span class="dv">50</span>]<span class="op">,</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">value</span><span class="op">:</span> <span class="dv">35</span><span class="op">,</span> <span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"Bill length (min):"</span>}</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>viewof islands <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>(</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span><span class="op">,</span> <span class="st">"Dream"</span>]<span class="op">,</span> </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  { <span class="dt">value</span><span class="op">:</span> [<span class="st">"Torgersen"</span><span class="op">,</span> <span class="st">"Biscoe"</span>]<span class="op">,</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">label</span><span class="op">:</span> <span class="st">"Islands:"</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-1" data-nodetype="declaration">
+<div class="quarto-ojs-syntax-error">
+<div class="sourceCode" id="cb1" data-startfrom="6" data-syntax-error-position="10" data-source-offset="9"><pre class="sourceCode numberSource numberLines java code-with-copy"><code class="sourceCode java" style="counter-reset: source-line 5;"><span id="cb1-6"><a href="#cb1-6"></a>```<span class="op">{</span>ojs<span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">// Inputs</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="dt">const</span> numDice <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">number</span><span class="op">({</span> value<span class="op">:</span> <span class="dv">2</span><span class="op">,</span> min<span class="op">:</span> <span class="dv">1</span><span class="op">,</span> max<span class="op">:</span> <span class="dv">10</span><span class="op">,</span> label<span class="op">:</span> <span class="st">"Number of Dice:"</span> <span class="op">});</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="dt">const</span> numRolls <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">slider</span><span class="op">({</span> value<span class="op">:</span> <span class="dv">100</span><span class="op">,</span> min<span class="op">:</span> <span class="dv">1</span><span class="op">,</span> max<span class="op">:</span> <span class="dv">10000</span><span class="op">,</span> label<span class="op">:</span> <span class="st">"Number of Rolls:"</span> <span class="op">});</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="dt">const</span> rollButton <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">button</span><span class="op">(</span><span class="st">"Roll the Dice!"</span><span class="op">);</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">// Reactive Data (using a reactive value for better practice)</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="dt">const</span> diceSums <span class="op">=</span> <span class="fu">reactive</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">// Roll Logic (using an observer to react to button clicks)</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="dt">const</span> runtime <span class="op">=</span> <span class="kw">new</span> observablehq<span class="op">.</span><span class="fu">Runtime</span><span class="op">();</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="dt">const</span> module <span class="op">=</span> runtime<span class="op">.</span><span class="fu">module</span><span class="op">();</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a></span>
+<span id="cb1-19"><a href="#cb1-19"></a>module<span class="op">.</span><span class="fu">input</span><span class="op">(</span><span class="st">"numDice"</span><span class="op">,</span> numDice<span class="op">);</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>module<span class="op">.</span><span class="fu">input</span><span class="op">(</span><span class="st">"numRolls"</span><span class="op">,</span> numRolls<span class="op">);</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a></span>
+<span id="cb1-22"><a href="#cb1-22"></a>module<span class="op">.</span><span class="fu">define</span><span class="op">(</span><span class="st">"diceSums"</span><span class="op">,</span> <span class="op">[</span><span class="st">"numDice"</span><span class="op">,</span> <span class="st">"numRolls"</span><span class="op">,</span> <span class="st">"rollButton"</span><span class="op">],</span> <span class="op">(</span>numDice<span class="op">,</span> numRolls<span class="op">,</span> rollButton<span class="op">)</span> <span class="op">=&gt;</span> <span class="op">{</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>  <span class="cf">if</span> <span class="op">(</span>rollButton<span class="op">)</span> <span class="op">{</span> <span class="co">// Check if the button was clicked</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a>    <span class="dt">const</span> rolls <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span><span class="op">({</span> length<span class="op">:</span> numRolls <span class="op">});</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a>    rolls<span class="op">.</span><span class="fu">fill</span><span class="op">(</span><span class="dv">0</span><span class="op">).</span><span class="fu">forEach</span><span class="op">((</span>_<span class="op">,</span> i<span class="op">)</span> <span class="op">=&gt;</span> rolls<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="bu">Array</span><span class="op">.</span><span class="fu">from</span><span class="op">({</span> length<span class="op">:</span> numDice <span class="op">})</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a>      <span class="op">.</span><span class="fu">map</span><span class="op">(()</span> <span class="op">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span><span class="op">(</span><span class="bu">Math</span><span class="op">.</span><span class="fu">random</span><span class="op">()</span> <span class="op">*</span> <span class="dv">6</span><span class="op">)</span> <span class="op">+</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>      <span class="op">.</span><span class="fu">reduce</span><span class="op">((</span>a<span class="op">,</span> b<span class="op">)</span> <span class="op">=&gt;</span> a <span class="op">+</span> b<span class="op">));</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>    diceSums<span class="op">.</span><span class="fu">set</span><span class="op">(</span>rolls<span class="op">);</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>  <span class="op">}</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>  <span class="cf">return</span> <span class="fu">diceSums</span><span class="op">();</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="op">});</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co">// Display Functions</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>function <span class="fu">displayTextOutput</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>  <span class="dt">const</span> sums <span class="op">=</span> <span class="fu">diceSums</span><span class="op">();</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>  <span class="cf">return</span> sums <span class="op">===</span> <span class="kw">null</span> <span class="op">?</span> <span class="st">"No dice rolled yet!"</span> <span class="op">:</span> sums<span class="op">.</span><span class="fu">join</span><span class="op">(</span><span class="st">", "</span><span class="op">);</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="op">}</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a></span>
+<span id="cb1-39"><a href="#cb1-39"></a>function <span class="fu">plotDiceDistribution</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>  <span class="dt">const</span> sums <span class="op">=</span> <span class="fu">diceSums</span><span class="op">();</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>  <span class="cf">if</span> <span class="op">(</span>sums <span class="op">===</span> <span class="kw">null</span><span class="op">)</span> <span class="cf">return</span> <span class="kw">null</span><span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a>  <span class="dt">const</span> data <span class="op">=</span> sums<span class="op">.</span><span class="fu">map</span><span class="op">(</span>sum <span class="op">=&gt;</span> <span class="op">({</span> total<span class="op">:</span> sum <span class="op">}));</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a></span>
+<span id="cb1-44"><a href="#cb1-44"></a>  <span class="cf">return</span> Plot<span class="op">.</span><span class="fu">plot</span><span class="op">({</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>    x<span class="op">:</span> <span class="op">{</span> domain<span class="op">:</span> <span class="op">[</span><span class="bu">Math</span><span class="op">.</span><span class="fu">min</span><span class="op">(</span><span class="kw">...</span>sums<span class="op">),</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span><span class="op">(</span><span class="kw">...</span>sums<span class="op">)]},</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>    y<span class="op">:</span> <span class="op">{</span> grid<span class="op">:</span> <span class="kw">true</span><span class="op">},</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>    marks<span class="op">:</span> <span class="op">[</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>      Plot<span class="op">.</span><span class="fu">barY</span><span class="op">(</span>data<span class="op">,</span> Plot<span class="op">.</span><span class="fu">binX</span><span class="op">({</span>y<span class="op">:</span> <span class="st">"count"</span><span class="op">},</span> <span class="op">{</span>x<span class="op">:</span> <span class="st">"total"</span><span class="op">,</span> fill<span class="op">:</span> <span class="st">"steelblue"</span><span class="op">})),</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a>      Plot<span class="op">.</span><span class="fu">ruleY</span><span class="op">([</span><span class="dv">0</span><span class="op">])</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a>    <span class="op">],</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a>    marginTop<span class="op">:</span> <span class="dv">30</span><span class="op">,</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a>    marginLeft<span class="op">:</span> <span class="dv">50</span><span class="op">,</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a>    marginBottom<span class="op">:</span> <span class="dv">30</span></span>
+<span id="cb1-54"><a href="#cb1-54"></a>  <span class="op">});</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="op">}</span></span>
+<span id="cb1-56"><a href="#cb1-56"></a></span>
+<span id="cb1-57"><a href="#cb1-57"></a><span class="co">// Render the inputs</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a>numDice</span>
+<span id="cb1-59"><a href="#cb1-59"></a>numRolls</span>
+<span id="cb1-60"><a href="#cb1-60"></a>rollButton</span>
+<span id="cb1-61"><a href="#cb1-61"></a></span>
+<span id="cb1-62"><a href="#cb1-62"></a><span class="co">// Reactivity for Display Update</span></span>
+<span id="cb1-63"><a href="#cb1-63"></a><span class="dt">const</span> updateDisplay <span class="op">=</span> <span class="fu">viewof</span><span class="op">(()</span> <span class="op">=&gt;</span> <span class="op">{</span></span>
+<span id="cb1-64"><a href="#cb1-64"></a>  sumsText<span class="op">.</span><span class="fu">textContent</span> <span class="op">=</span> <span class="fu">displayTextOutput</span><span class="op">();</span></span>
+<span id="cb1-65"><a href="#cb1-65"></a>  <span class="dt">const</span> plot <span class="op">=</span> <span class="fu">plotDiceDistribution</span><span class="op">();</span></span>
+<span id="cb1-66"><a href="#cb1-66"></a>  dicePlot<span class="op">.</span><span class="fu">innerHTML</span> <span class="op">=</span> <span class="st">""</span><span class="op">;</span> <span class="co">// Clear the previous plot</span></span>
+<span id="cb1-67"><a href="#cb1-67"></a>  <span class="cf">if</span> <span class="op">(</span>plot<span class="op">)</span> dicePlot<span class="op">.</span><span class="fu">appendChild</span><span class="op">(</span>plot<span class="op">);</span></span>
+<span id="cb1-68"><a href="#cb1-68"></a><span class="op">});</span></span>
+<span id="cb1-69"><a href="#cb1-69"></a></span>
+<span id="cb1-70"><a href="#cb1-70"></a>diceSums<span class="op">.</span><span class="fu">subscribe</span><span class="op">(</span>updateDisplay<span class="op">);</span> <span class="co">// Subscribe to automatically update</span></span>
+<span id="cb1-71"><a href="#cb1-71"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+OJS Syntax Error (line 8, column 1)Unexpected token
+</div>
+</div>
+<div class="callout-body-container callout-body">
 
 </div>
 </div>
 </div>
-<div class="cell-output cell-output-display">
-<div>
-<div id="ojs-cell-1-2" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-</div>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Data</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="31" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 30;"><span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">rectY</span>(filtered<span class="op">,</span> </span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">binX</span>(</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">y</span><span class="op">:</span> <span class="st">"count"</span>}<span class="op">,</span> </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">x</span><span class="op">:</span> <span class="st">"body_mass_g"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span> <span class="dt">thresholds</span><span class="op">:</span> <span class="dv">20</span>}</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="dt">facet</span><span class="op">:</span> {</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>      <span class="dt">data</span><span class="op">:</span> filtered<span class="op">,</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"sex"</span><span class="op">,</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>      <span class="dt">y</span><span class="op">:</span> <span class="st">"species"</span><span class="op">,</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>      <span class="dt">marginRight</span><span class="op">:</span> <span class="dv">80</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">frame</span>()<span class="op">,</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-2" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="53" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 52;"><span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>Inputs<span class="op">.</span><span class="fu">table</span>(filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-3" data-nodetype="expression">
-
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="59" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 58;"><span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> <span class="fu">FileAttachment</span>(<span class="st">"palmer-penguins.csv"</span>)<span class="op">.</span><span class="fu">csv</span>({ <span class="dt">typed</span><span class="op">:</span> <span class="kw">true</span> })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-4" data-nodetype="declaration">
-
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="63" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 62;"><span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> data<span class="op">.</span><span class="fu">filter</span>(<span class="kw">function</span>(penguin) {</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> bill_length_min <span class="op">&lt;</span> penguin<span class="op">.</span><span class="at">bill_length_mm</span> <span class="op">&amp;&amp;</span></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>         islands<span class="op">.</span><span class="fu">includes</span>(penguin<span class="op">.</span><span class="at">island</span>)<span class="op">;</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div id="ojs-cell-5" data-nodetype="declaration">
-
-</div>
-</div>
 </div>
 
-
-<!-- -->
 
 
 </main> <!-- /main -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBiaWxsX2xlbmd0aF9taW4gPSBJbnB1dHMucmFuZ2UoXG4gIFszMiwgNTBdLCBcbiAge3ZhbHVlOiAzNSwgc3RlcDogMSwgbGFiZWw6IFwiQmlsbCBsZW5ndGggKG1pbik6XCJ9XG4pXG52aWV3b2YgaXNsYW5kcyA9IElucHV0cy5jaGVja2JveChcbiAgW1wiVG9yZ2Vyc2VuXCIsIFwiQmlzY29lXCIsIFwiRHJlYW1cIl0sIFxuICB7IHZhbHVlOiBbXCJUb3JnZXJzZW5cIiwgXCJCaXNjb2VcIl0sIFxuICAgIGxhYmVsOiBcIklzbGFuZHM6XCJcbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0yIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5yZWN0WShmaWx0ZXJlZCwgXG4gIFBsb3QuYmluWChcbiAgICB7eTogXCJjb3VudFwifSwgXG4gICAge3g6IFwiYm9keV9tYXNzX2dcIiwgZmlsbDogXCJzcGVjaWVzXCIsIHRocmVzaG9sZHM6IDIwfVxuICApKVxuICAucGxvdCh7XG4gICAgZmFjZXQ6IHtcbiAgICAgIGRhdGE6IGZpbHRlcmVkLFxuICAgICAgeDogXCJzZXhcIixcbiAgICAgIHk6IFwic3BlY2llc1wiLFxuICAgICAgbWFyZ2luUmlnaHQ6IDgwXG4gICAgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5mcmFtZSgpLFxuICAgIF1cbiAgfVxuKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiSW5wdXRzLnRhYmxlKGZpbHRlcmVkKVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZGF0YSA9IEZpbGVBdHRhY2htZW50KFwicGFsbWVyLXBlbmd1aW5zLmNzdlwiKS5jc3YoeyB0eXBlZDogdHJ1ZSB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiZmlsdGVyZWQgPSBkYXRhLmZpbHRlcihmdW5jdGlvbihwZW5ndWluKSB7XG4gIHJldHVybiBiaWxsX2xlbmd0aF9taW4gPCBwZW5ndWluLmJpbGxfbGVuZ3RoX21tICYmXG4gICAgICAgICBpc2xhbmRzLmluY2x1ZGVzKHBlbmd1aW4uaXNsYW5kKTtcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2JpbGxfbGVuZ3RoX21pbicpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdpc2xhbmRzJykifV19
+eyJjb250ZW50cyI6W119
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
@@ -411,57 +407,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
     clipboardModal.on('success', onCopySuccess);
-  }
-  const viewSource = window.document.getElementById('quarto-view-source') ||
-                     window.document.getElementById('quarto-code-tools-source');
-  if (viewSource) {
-    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-    viewSource.addEventListener("click", function(e) {
-      if (sourceUrl) {
-        // rstudio viewer pane
-        if (/\bcapabilities=\b/.test(window.location)) {
-          window.open(sourceUrl);
-        } else {
-          window.location.href = sourceUrl;
-        }
-      } else {
-        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-        modal.show();
-      }
-      return false;
-    });
-  }
-  function toggleCodeHandler(show) {
-    return function(e) {
-      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-      for (let i=0; i<detailsSrc.length; i++) {
-        const details = detailsSrc[i].parentElement;
-        if (show) {
-          details.open = true;
-        } else {
-          details.removeAttribute("open");
-        }
-      }
-      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
-      const fromCls = show ? "hidden" : "unhidden";
-      const toCls = show ? "unhidden" : "hidden";
-      for (let i=0; i<cellCodeDivs.length; i++) {
-        const codeDiv = cellCodeDivs[i];
-        if (codeDiv.classList.contains(fromCls)) {
-          codeDiv.classList.remove(fromCls);
-          codeDiv.classList.add(toCls);
-        } 
-      }
-      return false;
-    }
-  }
-  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-  if (hideAllCode) {
-    hideAllCode.addEventListener("click", toggleCodeHandler(false));
-  }
-  const showAllCode = window.document.getElementById("quarto-show-all-code");
-  if (showAllCode) {
-    showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
@@ -791,77 +736,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Penguins"</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: false</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    echo: false</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    keep-hidden: true</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>A simple example based on Allison Horst's <span class="co">[</span><span class="ot">Palmer Penguins</span><span class="co">](https://allisonhorst.github.io/palmerpenguins/)</span> dataset. Here we look at how penguin body mass varies across both sex and species (use the provided inputs to filter the dataset by bill length and island):</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="in">//| panel: input</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="in">viewof bill_length_min = Inputs.range(</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="in">  [32, 50], </span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="in">  {value: 35, step: 1, label: "Bill length (min):"}</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="in">viewof islands = Inputs.checkbox(</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="in">  ["Torgersen", "Biscoe", "Dream"], </span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="in">  { value: ["Torgersen", "Biscoe"], </span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="in">    label: "Islands:"</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="in">  }</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>::: {.panel-tabset}</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Plot</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="in">Plot.rectY(filtered, </span></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="in">  Plot.binX(</span></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="in">    {y: "count"}, </span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="in">    {x: "body_mass_g", fill: "species", thresholds: 20}</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="in">  ))</span></span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="in">  .plot({</span></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="in">    facet: {</span></span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="in">      data: filtered,</span></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="in">      x: "sex",</span></span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a><span class="in">      y: "species",</span></span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="in">      marginRight: 80</span></span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="in">    },</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="in">    marks: [</span></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="in">      Plot.frame(),</span></span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="in">    ]</span></span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="in">  }</span></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
-<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="in">Inputs.table(filtered)</span></span>
-<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
-<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a><span class="in">data = FileAttachment("palmer-penguins.csv").csv({ typed: true })</span></span>
-<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{ojs}</span></span>
-<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a><span class="in">filtered = data.filter(function(penguin) {</span></span>
-<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="in">  return bill_length_min &lt; penguin.bill_length_mm &amp;&amp;</span></span>
-<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="in">         islands.includes(penguin.island);</span></span>
-<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a><span class="in">})</span></span>
-<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
-</div></div></div></div></div>
+</script>
 </div> <!-- /content -->
 
 

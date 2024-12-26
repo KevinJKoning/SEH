@@ -12,11 +12,33 @@
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "1-data_generation.html",
+    "href": "1-data_generation.html",
+    "title": "Untitled",
     "section": "",
-    "text": "About this site"
+    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
+    "crumbs": [
+      "Home",
+      "Data Generation"
+    ]
+  },
+  {
+    "objectID": "1-data_generation.html#data-generation-processes",
+    "href": "1-data_generation.html#data-generation-processes",
+    "title": "Untitled",
+    "section": "",
+    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
+    "crumbs": [
+      "Home",
+      "Data Generation"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Quarto",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
     "objectID": "2-parameter_estimation.html",
@@ -52,32 +74,22 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Quarto",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "About this site"
   },
   {
-    "objectID": "1-data_generation.html",
-    "href": "1-data_generation.html",
-    "title": "Untitled",
+    "objectID": "1.2-dice_test.html",
+    "href": "1.2-dice_test.html",
+    "title": "Observable Dice Rolling",
     "section": "",
-    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
+    "text": "```{ojs}\n// Inputs\nconst numDice = Inputs.number({ value: 2, min: 1, max: 10, label: \"Number of Dice:\" });\nconst numRolls = Inputs.slider({ value: 100, min: 1, max: 10000, label: \"Number of Rolls:\" });\nconst rollButton = Inputs.button(\"Roll the Dice!\");\n\n// Reactive Data (using a reactive value for better practice)\nconst diceSums = reactive(null);\n\n// Roll Logic (using an observer to react to button clicks)\nconst runtime = new observablehq.Runtime();\nconst module = runtime.module();\n\nmodule.input(\"numDice\", numDice);\nmodule.input(\"numRolls\", numRolls);\n\nmodule.define(\"diceSums\", [\"numDice\", \"numRolls\", \"rollButton\"], (numDice, numRolls, rollButton) =&gt; {\n  if (rollButton) { // Check if the button was clicked\n    const rolls = Array.from({ length: numRolls });\n    rolls.fill(0).forEach((_, i) =&gt; rolls[i] = Array.from({ length: numDice })\n      .map(() =&gt; Math.floor(Math.random() * 6) + 1)\n      .reduce((a, b) =&gt; a + b));\n    diceSums.set(rolls);\n  }\n  return diceSums();\n});\n\n// Display Functions\nfunction displayTextOutput() {\n  const sums = diceSums();\n  return sums === null ? \"No dice rolled yet!\" : sums.join(\", \");\n}\n\nfunction plotDiceDistribution() {\n  const sums = diceSums();\n  if (sums === null) return null;\n  const data = sums.map(sum =&gt; ({ total: sum }));\n\n  return Plot.plot({\n    x: { domain: [Math.min(...sums), Math.max(...sums)]},\n    y: { grid: true},\n    marks: [\n      Plot.barY(data, Plot.binX({y: \"count\"}, {x: \"total\", fill: \"steelblue\"})),\n      Plot.ruleY([0])\n    ],\n    marginTop: 30,\n    marginLeft: 50,\n    marginBottom: 30\n  });\n}\n\n// Render the inputs\nnumDice\nnumRolls\nrollButton\n\n// Reactivity for Display Update\nconst updateDisplay = viewof(() =&gt; {\n  sumsText.textContent = displayTextOutput();\n  const plot = plotDiceDistribution();\n  dicePlot.innerHTML = \"\"; // Clear the previous plot\n  if (plot) dicePlot.appendChild(plot);\n});\n\ndiceSums.subscribe(updateDisplay); // Subscribe to automatically update\n```\n\n\n\n\n\n\n\nOJS Syntax Error (line 8, column 1)Unexpected token",
     "crumbs": [
       "Home",
-      "Data Generation"
-    ]
-  },
-  {
-    "objectID": "1-data_generation.html#data-generation-processes",
-    "href": "1-data_generation.html#data-generation-processes",
-    "title": "Untitled",
-    "section": "",
-    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
-    "crumbs": [
-      "Home",
-      "Data Generation"
+      "Data Generation",
+      "Observable Dice Rolling"
     ]
   }
 ]
