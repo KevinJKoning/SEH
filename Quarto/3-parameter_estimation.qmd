@@ -3,7 +3,7 @@ title: "Untitled"
 format: html
 ---
 
-## Parameter Estimation from Data
+## Parameter Estimation from Data TEMPORARY OUTLINE
 
 ### Bayes without Saying It
 - We know *something* about the process, i.e. a reasonable place to start

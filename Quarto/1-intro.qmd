@@ -1,0 +1,24 @@
+---
+title: Shiny Live Dice Example
+format: html
+---
+
+## Intro/Overview
+
+At its heart, I believe statistics is a looping process with only two steps:
+A) Describing the likelihood of data from a 'known' data generating process.
+B) Using data to estimate the likelihood of the parameters and form of a data generating process.
+
+The process can start with A) or B). To really drive it home the process is summarized in @fig-process below.
+
+```{mermaid}
+//| label: fig-process
+//| fig-cap: "Statistical Process"
+
+%%{init: {'theme':'neutral'}}%%
+graph TB
+    A["Data Generation"] -->|Likelihood \n of Data| B["Data"]
+    B -->|Likelihood of \n Data Generation| A
+```
+
+For convenience, we'll start *assuming* that we know the process generating the data we examine. In reality we usually have only clues. Regardless, starting here allows us to quickly examine the core concept of probability/likelihood. Once we have a good understanding of probability/likelihood, it will allow us to work in 'reverse' and to use the data to estimate the properties/parameters of the data generating process.

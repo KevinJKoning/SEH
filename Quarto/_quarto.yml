@@ -13,16 +13,16 @@ website:
     style: "docked"
     search: true
     contents:
+      - text: "Introduction"
+        href: 1-intro.qmd
       - text: "Data Generation"
-        href: 1-data_generation.qmd
+        href: 2-data_generation.qmd
         contents:
-          - 1.1-penguin_test.qmd
-          - 1.2-dice_test_obs.qmd
-          - 1.3-sine_test_shiny.qmd
-          - 1.4-dice_test_shiny.qmd
-          - 1.5-normal_likelihood_shiny.qmd
+          - 2.1-simple_data_generation.qmd
+          - 2.2-probability_distributions.qmd
+          - 2.3-test_processes_parameters.qmd
       - text: "Parameter Estimation"
-        href: 2-parameter_estimation.qmd
+        href: 3-parameter_estimation.qmd
 
 format:
   html:

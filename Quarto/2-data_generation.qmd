@@ -3,8 +3,9 @@ title: "Untitled"
 format: html
 ---
 
+Select a subchapter from the left hand menu
 
-## Data Generation Processes
+## Data Generation Processes TEMPORARY OUTLINE
 
 ### Dice Rolls
 - Create the data generating process

@@ -1,0 +1,71 @@
+---
+title: Shiny Live Dice Example
+format: html
+filters:
+  - shinylive
+---
+
+
+## Data Generation Dice Example
+
+We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process.
+
+Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.
+
+Please note it usually takes about 10 seconds for the app below to load.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
+            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    # Define a reactive calculation that depends on numDice and numRolls
+    @reactive.Calc
+    def dice_sums():
+        return [
+            np.random.randint(1, 7, input.numDice()).sum()
+            for _ in range(input.numRolls())
+        ]
+
+    @output
+    @render.plot
+    def dicePlot():
+        current_sums = dice_sums()
+        fig, ax = plt.subplots()
+
+        unique_sums, counts = np.unique(current_sums, return_counts=True)
+        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+
+        ax.set_title("Frequency of Dice Totals")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        plt.xticks(rotation=90)
+
+        return fig
+
+app = App(app_ui, server)
+```
+
+
+## Dice Likelihood
+
+To find the probability/likelihood of an event in our data generating process of dice rolls, we simply need to add up the frequency of that event, say how often there was total of twelve, and divide that by the total number of events. For example if we saw a total of twelve in 40 out of 5,000 roll-totals, the probability of rolling a total of twelve is approximately 40/5,000=0.0008.
+
+Now I know you're smart, and you're saying to yourself, I can figure out the *exact* probability of rolling a certain dice total. Of course you can for this example - but you probably can't for more realistic examples, and we want to learn techiques that work well in reality. 
+
+If you are concerned with the quality of our estimate, just rerun the data generating process and see if the outcome changes meaningfully - if it does, increase the number of times we run the data generating process until the output is stable.
