@@ -9,6 +9,8 @@ filters:
 The plot below allows you to control parameters used in the sine function.
 Experiment with the _period_, _amplitude_, and _phase shift_ to see how they affect the graph.
 
+It usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app...)
+
 ```{shinylive-python}
 #| standalone: true
 #| viewerHeight: 420
