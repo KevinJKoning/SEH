@@ -203,12 +203,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>It usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app…)</p>
+<p>It usually takes about 10 seconds for the app to below to load (your browser is creating a virtual environment, loading a web assembly version of Python, lauching a Shiny server, and then serving an app).</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 450
+#| viewerHeight: 550
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -220,38 +220,34 @@ app_ui = ui.page_fluid(
         ui.sidebar(
             ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
             ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
-            ui.input_action_button("rollBtn", "Roll the Dice!"),
         ),
         ui.output_plot("dicePlot", height="400px"),
     ),
 )
 
 def server(input, output, session):
-    # Initialize with default values
-    dice_sums = reactive.Value(
-        [np.random.randint(1, 7, 2).sum() for _ in range(100)]
-    )
-
-    @reactive.event(input.rollBtn)
-    def roll_dice():
-        sums = [np.random.randint(1, 7, input.numDice()).sum() 
-                for _ in range(input.numRolls())]
-        dice_sums.set(sums)
+    # Define a reactive calculation that depends on numDice and numRolls
+    @reactive.Calc
+    def dice_sums():
+        return [
+            np.random.randint(1, 7, input.numDice()).sum()
+            for _ in range(input.numRolls())
+        ]
 
     @output
     @render.plot
     def dicePlot():
-        current_sums = dice_sums.get()
+        current_sums = dice_sums()
         fig, ax = plt.subplots()
-        
-        # Create a histogram of the sums
+
         unique_sums, counts = np.unique(current_sums, return_counts=True)
         ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
-        
+
         ax.set_title("Frequency of Dice Totals")
         ax.set_xlabel("Dice Total")
         ax.set_ylabel("Frequency")
-        
+        plt.xticks(rotation=90)
+
         return fig
 
 app = App(app_ui, server)</code></pre>
