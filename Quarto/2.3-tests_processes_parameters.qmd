@@ -1,5 +1,5 @@
 ---
-title: Shiny Live Dice Example
+title: Wrap Up
 format: html
 filters:
   - shinylive

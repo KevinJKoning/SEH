@@ -1,5 +1,5 @@
 ---
-title: Shiny Live Dice Example
+title: Likelihood
 format: html
 filters:
   - shinylive
@@ -8,7 +8,9 @@ filters:
 
 ## More Data Generating Processes (Probability Distributions)
 
-When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so humanity has named them and [mostly] standardized their inputs/parameters. These common data generating processes are called *probability distributions*.
+When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so humanity has named them and [mostly] standardized their inputs/parameters. These common data generating processes are called *probability distributions*. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of rolls.
+
+**Some kind of graphic here?**
 
 A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
 
@@ -20,7 +22,7 @@ B) These characteristics determine the shape/frequency of the outcomes
 
 ## Normal/Gaussian Likelihood
 
-Hopefully it was fairly intuitive how to find the likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
+Hopefully it was fairly intuitive how to find the probability/likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
 
 
 ```{shinylive-python}

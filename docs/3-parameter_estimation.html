@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quarto</title>
+<title>Untitled – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -107,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quarto</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -145,26 +145,23 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Shiny Live Dice Example</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Probability Distributions</span></a>
+ <span class="menu-text">Shiny Live Dice Example</span></a>
   </div>
 </li>
           <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.3-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
-  </div>
-</li>
+ <span class="menu-text">2.3-test_processes_parameters.qmd</span>
+  </li>
       </ul>
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
+  <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Parameter Estimation</span></a>
   </div>
 </li>
@@ -173,15 +170,27 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#parameter-estimation-from-data-temporary-outline" id="toc-parameter-estimation-from-data-temporary-outline" class="nav-link active" data-scroll-target="#parameter-estimation-from-data-temporary-outline">Parameter Estimation from Data TEMPORARY OUTLINE</a>
+  <ul class="collapse">
+  <li><a href="#bayes-without-saying-it" id="toc-bayes-without-saying-it" class="nav-link" data-scroll-target="#bayes-without-saying-it">Bayes without Saying It</a></li>
+  <li><a href="#low-dimensional-search-grid" id="toc-low-dimensional-search-grid" class="nav-link" data-scroll-target="#low-dimensional-search-grid">Low Dimensional Search (Grid)</a></li>
+  <li><a href="#high-dimensional-search-mcmc" id="toc-high-dimensional-search-mcmc" class="nav-link" data-scroll-target="#high-dimensional-search-mcmc">High Dimensional Search (MCMC)</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Quarto</h1>
+<h1 class="title">Untitled</h1>
 </div>
 
 
@@ -198,10 +207,30 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<section id="parameter-estimation-from-data-temporary-outline" class="level2">
+<h2 class="anchored" data-anchor-id="parameter-estimation-from-data-temporary-outline">Parameter Estimation from Data TEMPORARY OUTLINE</h2>
+<section id="bayes-without-saying-it" class="level3">
+<h3 class="anchored" data-anchor-id="bayes-without-saying-it">Bayes without Saying It</h3>
+<ul>
+<li>We know <em>something</em> about the process, i.e.&nbsp;a reasonable place to start</li>
+<li>It may be as simple as we know the values will not be negative</li>
+</ul>
+</section>
+<section id="low-dimensional-search-grid" class="level3">
+<h3 class="anchored" data-anchor-id="low-dimensional-search-grid">Low Dimensional Search (Grid)</h3>
+</section>
+<section id="high-dimensional-search-mcmc" class="level3">
+<h3 class="anchored" data-anchor-id="high-dimensional-search-mcmc">High Dimensional Search (MCMC)</h3>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<ul>
+<li>If it’s not obvious, this is a loop, and you move to each part of the loop</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

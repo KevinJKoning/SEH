@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quarto</title>
+<title>Wrap Up – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -107,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quarto</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-tests_processes_parameters.html">Wrap Up</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -156,7 +156,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.3-tests_processes_parameters.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
@@ -173,15 +173,23 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#statistical-tests" id="toc-statistical-tests" class="nav-link active" data-scroll-target="#statistical-tests">Statistical Tests</a></li>
+  <li><a href="#arbitrarily-complicated-processes" id="toc-arbitrarily-complicated-processes" class="nav-link" data-scroll-target="#arbitrarily-complicated-processes">Arbitrarily Complicated Processes</a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-tests_processes_parameters.html">Wrap Up</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Quarto</h1>
+<h1 class="title">Wrap Up</h1>
 </div>
 
 
@@ -198,10 +206,23 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<section id="statistical-tests" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-tests">Statistical Tests</h2>
+<p>Traditional statistical education is somewhat obsessed with testing if two data generating processes are different. (Our approach not only allows for determining if two data generating processes are different, but also making predictions about future data from the process). A common example of these ‘significance tests’ is a human’s likelihood of dying while taking a medication vs not taking the medication. Obviously we prefer not to give people medications that are ineffective, so this is a reasonable question.</p>
+<p>The typical approach goes something like this - if I assume I know the characteristics of data generating process A, and I know the data generated by a possibly different data generating process we’ll call A/B - then how likely is the data, or even more extreme data/values, to come from A. If it is very unlikely to come from A, we’ll conclude it is coming from another process, B.</p>
+<p>That probably sounded somewhat confusing, and if you are confused, you are in good company. Many intelligent people publishing smart papers in reputable journals get significance testing not-quite-right, not to mention the arbitrary standard of rejecting a null hypothesis if p &lt; 0.05, which should also be adjusted to the situation. Subsequently this text will spend no time on hypothesis testing, other than to say if it’s important for you to determine if two data generating processes are different, I’m sure you can devise a method that makes sense and you can understand.</p>
+</section>
+<section id="arbitrarily-complicated-processes" class="level2">
+<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes">Arbitrarily Complicated Processes</h2>
+<p>We are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization is a directed acyclic graph (DAG).</p>
+<p>It is worth noting that a small number of parameters is generally called ‘Statistics’, modest to large number of parameters is called ‘Machine Learning’, and somewhere around a billion or more is called ‘Artificial Intelligence’.</p>
+</section>
+<section id="parameters" class="level2">
+<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<p>End with a discussion of parameters as they appear in probability distributions. Next we will move on to estimating these parameters in the second half of the book… (note that the second half will eventually need to cover MLE).</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

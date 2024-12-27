@@ -1,5 +1,5 @@
 ---
-title: Shiny Live Dice Example
+title: Data Generation
 format: html
 filters:
   - shinylive

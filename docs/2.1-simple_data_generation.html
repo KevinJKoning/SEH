@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quarto</title>
+<title>Data Generation – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,6 +39,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -89,7 +94,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -107,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quarto</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.1-simple_data_generation.html">Data Generation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -144,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Data Generation</span></a>
   </div>
 </li>
@@ -173,15 +178,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-generation-dice-example" id="toc-data-generation-dice-example" class="nav-link active" data-scroll-target="#data-generation-dice-example">Data Generation Dice Example</a></li>
+  <li><a href="#dice-likelihood" id="toc-dice-likelihood" class="nav-link" data-scroll-target="#dice-likelihood">Dice Likelihood</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.1-simple_data_generation.html">Data Generation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Quarto</h1>
+<h1 class="title">Data Generation</h1>
 </div>
 
 
@@ -198,10 +210,67 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<section id="data-generation-dice-example" class="level2">
+<h2 class="anchored" data-anchor-id="data-generation-dice-example">Data Generation Dice Example</h2>
+<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process.</p>
+<p>Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.</p>
+<p>Please note it usually takes about 10 seconds for the app below to load.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
+            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    # Define a reactive calculation that depends on numDice and numRolls
+    @reactive.Calc
+    def dice_sums():
+        return [
+            np.random.randint(1, 7, input.numDice()).sum()
+            for _ in range(input.numRolls())
+        ]
+
+    @output
+    @render.plot
+    def dicePlot():
+        current_sums = dice_sums()
+        fig, ax = plt.subplots()
+
+        unique_sums, counts = np.unique(current_sums, return_counts=True)
+        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+
+        ax.set_title("Frequency of Dice Totals")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        plt.xticks(rotation=90)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+</section>
+<section id="dice-likelihood" class="level2">
+<h2 class="anchored" data-anchor-id="dice-likelihood">Dice Likelihood</h2>
+<p>To find the probability/likelihood of an event in our data generating process of dice rolls, we simply need to add up the frequency of that event, say how often there was total of twelve, and divide that by the total number of events. For example if we saw a total of twelve in 40 out of 5,000 roll-totals, the probability of rolling a total of twelve is approximately 40/5,000=0.0008.</p>
+<p>Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well in reality.</p>
+<p>If you are concerned with the quality of our estimate, just rerun the data generating process and see if the outcome changes meaningfully - if it does, increase the number of times we run the data generating process until the output is stable.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

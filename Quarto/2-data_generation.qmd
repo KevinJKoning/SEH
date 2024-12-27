@@ -5,6 +5,8 @@ format: html
 
 Select a subchapter from the left hand menu
 
+TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY
+
 ## Data Generation Processes TEMPORARY OUTLINE
 
 ### Dice Rolls
