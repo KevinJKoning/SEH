@@ -12,26 +12,11 @@
     ]
   },
   {
-    "objectID": "1-data_generation.html",
-    "href": "1-data_generation.html",
-    "title": "Untitled",
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
-    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
-    "crumbs": [
-      "Home",
-      "Data Generation"
-    ]
-  },
-  {
-    "objectID": "1-data_generation.html#data-generation-processes",
-    "href": "1-data_generation.html#data-generation-processes",
-    "title": "Untitled",
-    "section": "",
-    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
-    "crumbs": [
-      "Home",
-      "Data Generation"
-    ]
+    "text": "About this site"
   },
   {
     "objectID": "index.html",
@@ -39,6 +24,18 @@
     "title": "Quarto",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "1.2-dice_test_obs.html",
+    "href": "1.2-dice_test_obs.html",
+    "title": "Observable Dice Rolling",
+    "section": "",
+    "text": "viewof numDice = Inputs.number({ value: 2, min: 1, max: 10, label: \"Number of Dice:\" });\nviewof numRolls = Inputs.slider({ value: 100, min: 1, max: 10000, label: \"Number of Rolls:\" });\nviewof rollButton = Inputs.button(\"Roll the Dice!\");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n```{ojs}\n// Reactive Data (using a reactive value for better practice)\nconst diceSums = reactive(null);\n\n// Roll Logic (using an observer to react to button clicks)\nconst runtime = new observablehq.Runtime();\nconst module = runtime.module();\n\nmodule.input(\"numDice\", numDice);\nmodule.input(\"numRolls\", numRolls);\n\nmodule.define(\"diceSums\", [\"numDice\", \"numRolls\", \"rollButton\"], (numDice, numRolls, rollButton) =&gt; {\n  if (rollButton) { // Check if the button was clicked\n    const rolls = Array.from({ length: numRolls });\n    rolls.fill(0).forEach((_, i) =&gt; rolls[i] = Array.from({ length: numDice })\n      .map(() =&gt; Math.floor(Math.random() * 6) + 1)\n      .reduce((a, b) =&gt; a + b));\n    diceSums.set(rolls);\n  }\n  return diceSums();\n});\n\n// Display Functions\nfunction displayTextOutput() {\n  const sums = diceSums();\n  return sums === null ? \"No dice rolled yet!\" : sums.join(\", \");\n}\n\nfunction plotDiceDistribution() {\n  const sums = diceSums();\n  if (sums === null) return null;\n  const data = sums.map(sum =&gt; ({ total: sum }));\n\n  return Plot.plot({\n    x: { domain: [Math.min(...sums), Math.max(...sums)]},\n    y: { grid: true},\n    marks: [\n      Plot.barY(data, Plot.binX({y: \"count\"}, {x: \"total\", fill: \"steelblue\"})),\n      Plot.ruleY([0])\n    ],\n    marginTop: 30,\n    marginLeft: 50,\n    marginBottom: 30\n  });\n}\n\n// Render the inputs\nnumDice\nnumRolls\nrollButton\n\n// Reactivity for Display Update\nconst updateDisplay = viewof(() =&gt; {\n  sumsText.textContent = displayTextOutput();\n  const plot = plotDiceDistribution();\n  dicePlot.innerHTML = \"\"; // Clear the previous plot\n  if (plot) dicePlot.appendChild(plot);\n});\n\ndiceSums.subscribe(updateDisplay); // Subscribe to automatically update\n```\n\n\n\n\n\n\n\nOJS Syntax Error (line 17, column 1)Unexpected token",
+    "crumbs": [
+      "Home",
+      "Data Generation",
+      "Observable Dice Rolling"
+    ]
   },
   {
     "objectID": "2-parameter_estimation.html",
@@ -74,22 +71,37 @@
     ]
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "1.3-dice_test_shiny.html",
+    "href": "1.3-dice_test_shiny.html",
+    "title": "Sine function",
     "section": "",
-    "text": "About this site"
-  },
-  {
-    "objectID": "1.2-dice_test.html",
-    "href": "1.2-dice_test.html",
-    "title": "Observable Dice Rolling",
-    "section": "",
-    "text": "```{ojs}\n// Inputs\nconst numDice = Inputs.number({ value: 2, min: 1, max: 10, label: \"Number of Dice:\" });\nconst numRolls = Inputs.slider({ value: 100, min: 1, max: 10000, label: \"Number of Rolls:\" });\nconst rollButton = Inputs.button(\"Roll the Dice!\");\n\n// Reactive Data (using a reactive value for better practice)\nconst diceSums = reactive(null);\n\n// Roll Logic (using an observer to react to button clicks)\nconst runtime = new observablehq.Runtime();\nconst module = runtime.module();\n\nmodule.input(\"numDice\", numDice);\nmodule.input(\"numRolls\", numRolls);\n\nmodule.define(\"diceSums\", [\"numDice\", \"numRolls\", \"rollButton\"], (numDice, numRolls, rollButton) =&gt; {\n  if (rollButton) { // Check if the button was clicked\n    const rolls = Array.from({ length: numRolls });\n    rolls.fill(0).forEach((_, i) =&gt; rolls[i] = Array.from({ length: numDice })\n      .map(() =&gt; Math.floor(Math.random() * 6) + 1)\n      .reduce((a, b) =&gt; a + b));\n    diceSums.set(rolls);\n  }\n  return diceSums();\n});\n\n// Display Functions\nfunction displayTextOutput() {\n  const sums = diceSums();\n  return sums === null ? \"No dice rolled yet!\" : sums.join(\", \");\n}\n\nfunction plotDiceDistribution() {\n  const sums = diceSums();\n  if (sums === null) return null;\n  const data = sums.map(sum =&gt; ({ total: sum }));\n\n  return Plot.plot({\n    x: { domain: [Math.min(...sums), Math.max(...sums)]},\n    y: { grid: true},\n    marks: [\n      Plot.barY(data, Plot.binX({y: \"count\"}, {x: \"total\", fill: \"steelblue\"})),\n      Plot.ruleY([0])\n    ],\n    marginTop: 30,\n    marginLeft: 50,\n    marginBottom: 30\n  });\n}\n\n// Render the inputs\nnumDice\nnumRolls\nrollButton\n\n// Reactivity for Display Update\nconst updateDisplay = viewof(() =&gt; {\n  sumsText.textContent = displayTextOutput();\n  const plot = plotDiceDistribution();\n  dicePlot.innerHTML = \"\"; // Clear the previous plot\n  if (plot) dicePlot.appendChild(plot);\n});\n\ndiceSums.subscribe(updateDisplay); // Subscribe to automatically update\n```\n\n\n\n\n\n\n\nOJS Syntax Error (line 8, column 1)Unexpected token",
+    "text": "The plot below allows you to control parameters used in the sine function. Experiment with the period, amplitude, and phase shift to see how they affect the graph.\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| viewerHeight: 420\n\nfrom shiny import App, render, ui\nimport numpy as np\nimport matplotlib.pyplot as plt\n\napp_ui = ui.page_fluid(\n    ui.layout_sidebar(\n        ui.sidebar(\n            ui.input_slider(\"period\", \"Period\", 0.5, 2, 1, step=0.5),\n            ui.input_slider(\"amplitude\", \"Amplitude\", 0, 2, 1, step=0.25),\n            ui.input_slider(\"shift\", \"Phase shift\", 0, 2, 0, step=0.1),\n        ),\n        ui.output_plot(\"plot\"),\n    ),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.plot(alt=\"Sine function\")\n    def plot():\n        t = np.arange(0.0, 4.0, 0.01)\n        s = input.amplitude() * np.sin(\n            (2 * np.pi / input.period()) * (t - input.shift() / 2)\n        )\n        fig, ax = plt.subplots()\n        ax.set_ylim([-2, 2])\n        ax.plot(t, s)\n        ax.grid()\n\n\napp = App(app_ui, server)",
     "crumbs": [
       "Home",
       "Data Generation",
-      "Observable Dice Rolling"
+      "Sine function"
+    ]
+  },
+  {
+    "objectID": "1-data_generation.html",
+    "href": "1-data_generation.html",
+    "title": "Untitled",
+    "section": "",
+    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
+    "crumbs": [
+      "Home",
+      "Data Generation"
+    ]
+  },
+  {
+    "objectID": "1-data_generation.html#data-generation-processes",
+    "href": "1-data_generation.html#data-generation-processes",
+    "title": "Untitled",
+    "section": "",
+    "text": "Create the data generating process\nIt’s easy to find the likelihood/probability of the outcomes\nNote how large number of dice is looking a lot like a normal/gaussian distribution\n\n\n\n\n\nEach distribution has assumptions about the data generating process\n\nNormal assumes many additive processes\nLognormal assumes many multiplicative processes\n\nAre idealized real process, but the tradeoff is simplicity of description with only a few parameters\n\n\n\n\n\nHistogams can help us approximate likelihood of continuous data\n\nOr we can understand probability density and cumulative distributions\n\nInclude log likelihood and the need for indepedence (not a time series)\nImportance of statistical assumptions",
+    "crumbs": [
+      "Home",
+      "Data Generation"
     ]
   }
 ]
