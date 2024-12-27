@@ -103,5 +103,29 @@
       "Home",
       "Data Generation"
     ]
+  },
+  {
+    "objectID": "1.3-sine_test_shiny.html",
+    "href": "1.3-sine_test_shiny.html",
+    "title": "Sine function",
+    "section": "",
+    "text": "The plot below allows you to control parameters used in the sine function. Experiment with the period, amplitude, and phase shift to see how they affect the graph.\nIt usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app…)\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| viewerHeight: 420\n\nfrom shiny import App, render, ui\nimport numpy as np\nimport matplotlib.pyplot as plt\n\napp_ui = ui.page_fluid(\n    ui.layout_sidebar(\n        ui.sidebar(\n            ui.input_slider(\"period\", \"Period\", 0.5, 2, 1, step=0.5),\n            ui.input_slider(\"amplitude\", \"Amplitude\", 0, 2, 1, step=0.25),\n            ui.input_slider(\"shift\", \"Phase shift\", 0, 2, 0, step=0.1),\n        ),\n        ui.output_plot(\"plot\"),\n    ),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.plot(alt=\"Sine function\")\n    def plot():\n        t = np.arange(0.0, 4.0, 0.01)\n        s = input.amplitude() * np.sin(\n            (2 * np.pi / input.period()) * (t - input.shift() / 2)\n        )\n        fig, ax = plt.subplots()\n        ax.set_ylim([-2, 2])\n        ax.plot(t, s)\n        ax.grid()\n\n\napp = App(app_ui, server)",
+    "crumbs": [
+      "Home",
+      "Data Generation",
+      "Sine function"
+    ]
+  },
+  {
+    "objectID": "1.4-dice_test_shiny.html",
+    "href": "1.4-dice_test_shiny.html",
+    "title": "Shiny Live Dice Example",
+    "section": "",
+    "text": "It usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app…)\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n#| viewerHeight: 450\n\nfrom shiny import App, ui, render, reactive\nimport numpy as np\nimport matplotlib.pyplot as plt\n\napp_ui = ui.page_fluid(\n    ui.h2(\"Dice Rolling Demo\"),\n    ui.layout_sidebar(\n        ui.sidebar(\n            ui.input_slider(\"numDice\", \"Number of Dice\", min=1, max=10, value=2, step=1),\n            ui.input_slider(\"numRolls\", \"Number of Rolls\", min=1, max=10000, value=100, step=1),\n            ui.input_action_button(\"rollBtn\", \"Roll the Dice!\"),\n        ),\n        ui.output_plot(\"dicePlot\", height=\"400px\"),\n    ),\n)\n\ndef server(input, output, session):\n    # Initialize with default values\n    dice_sums = reactive.Value(\n        [np.random.randint(1, 7, 2).sum() for _ in range(100)]\n    )\n\n    @reactive.event(input.rollBtn)\n    def roll_dice():\n        sums = [np.random.randint(1, 7, input.numDice()).sum() \n                for _ in range(input.numRolls())]\n        dice_sums.set(sums)\n\n    @output\n    @render.plot\n    def dicePlot():\n        current_sums = dice_sums.get()\n        fig, ax = plt.subplots()\n        \n        # Create a histogram of the sums\n        unique_sums, counts = np.unique(current_sums, return_counts=True)\n        ax.bar([str(s) for s in unique_sums], counts, color=\"steelblue\")\n        \n        ax.set_title(\"Frequency of Dice Totals\")\n        ax.set_xlabel(\"Dice Total\")\n        ax.set_ylabel(\"Frequency\")\n        \n        return fig\n\napp = App(app_ui, server)",
+    "crumbs": [
+      "Home",
+      "Data Generation",
+      "Shiny Live Dice Example"
+    ]
   }
 ]

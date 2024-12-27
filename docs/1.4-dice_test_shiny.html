@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Quarto</title>
+<title>Shiny Live Dice Example – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,6 +39,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -89,7 +94,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -107,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Quarto</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.4-dice_test_shiny.html">Shiny Live Dice Example</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -156,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./1.4-dice_test_shiny.html" class="sidebar-item-text sidebar-link">
+  <a href="./1.4-dice_test_shiny.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Shiny Live Dice Example</span></a>
   </div>
 </li>
@@ -179,9 +184,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./1-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./1.4-dice_test_shiny.html">Shiny Live Dice Example</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Quarto</h1>
+<h1 class="title">Shiny Live Dice Example</h1>
 </div>
 
 
@@ -198,8 +203,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is a Quarto website.</p>
-<p>To learn more about Quarto websites visit <a href="https://quarto.org/docs/websites" class="uri">https://quarto.org/docs/websites</a>.</p>
+<p>It usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app…)</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 450
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
+            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
+            ui.input_action_button("rollBtn", "Roll the Dice!"),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    # Initialize with default values
+    dice_sums = reactive.Value(
+        [np.random.randint(1, 7, 2).sum() for _ in range(100)]
+    )
+
+    @reactive.event(input.rollBtn)
+    def roll_dice():
+        sums = [np.random.randint(1, 7, input.numDice()).sum() 
+                for _ in range(input.numRolls())]
+        dice_sums.set(sums)
+
+    @output
+    @render.plot
+    def dicePlot():
+        current_sums = dice_sums.get()
+        fig, ax = plt.subplots()
+        
+        # Create a histogram of the sums
+        unique_sums, counts = np.unique(current_sums, return_counts=True)
+        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+        
+        ax.set_title("Frequency of Dice Totals")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
 
 
 

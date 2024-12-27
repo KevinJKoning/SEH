@@ -1,0 +1,59 @@
+---
+title: Shiny Live Dice Example
+format: html
+filters:
+  - shinylive
+---
+
+It usually takes about 10 seconds for the app to below to load (your browser is loading a web assembly version of python, pyodide, lauching a shiny server, and then serving an app...)
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 450
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
+            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
+            ui.input_action_button("rollBtn", "Roll the Dice!"),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    # Initialize with default values
+    dice_sums = reactive.Value(
+        [np.random.randint(1, 7, 2).sum() for _ in range(100)]
+    )
+
+    @reactive.event(input.rollBtn)
+    def roll_dice():
+        sums = [np.random.randint(1, 7, input.numDice()).sum() 
+                for _ in range(input.numRolls())]
+        dice_sums.set(sums)
+
+    @output
+    @render.plot
+    def dicePlot():
+        current_sums = dice_sums.get()
+        fig, ax = plt.subplots()
+        
+        # Create a histogram of the sums
+        unique_sums, counts = np.unique(current_sums, return_counts=True)
+        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+        
+        ax.set_title("Frequency of Dice Totals")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        
+        return fig
+
+app = App(app_ui, server)
+```
