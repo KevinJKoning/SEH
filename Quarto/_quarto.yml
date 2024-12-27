@@ -20,6 +20,7 @@ website:
           - 1.2-dice_test_obs.qmd
           - 1.3-sine_test_shiny.qmd
           - 1.4-dice_test_shiny.qmd
+          - 1.5-normal_likelihood_shiny.qmd
       - text: "Parameter Estimation"
         href: 2-parameter_estimation.qmd
 

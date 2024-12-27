@@ -1,0 +1,134 @@
+---
+title: Shiny Live Likelihood Example
+format: html
+filters:
+  - shinylive
+---
+
+
+Testing the likelihood app.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Likelihood Calculation"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+            ui.br(),
+            
+            ui.input_slider("muInput", "Mean (μ):", min=50, max=150, value=100, step=0.1),
+            ui.input_slider("varInput", "Variance (σ²):", min=1, max=200, value=10, step=1),
+            ui.input_action_button("mleBtn", "MLE"),
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+            ui.br(),
+            ui.br(),
+            
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+        ui.output_plot("normalPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    # Reactive storage of data: initialize 10 random points from Normal(100, sqrt(10))
+    data_vals = reactive.Value(np.random.normal(loc=100, scale=np.sqrt(10), size=10))
+
+    # Generate a new sample when 'NEW SAMPLE' button is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        data_vals.set(np.random.normal(loc=100, scale=np.sqrt(10), size=10))
+
+    # Display the current data in the sidebar
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join([str(round(val, 1)) for val in y])
+
+    # When 'MLE' is clicked, update muInput and varInput to the MLE estimates
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        y = data_vals()
+        n = len(y)
+        mle_mean = np.mean(y)
+        # MLE for variance uses 1/n factor instead of 1/(n-1)
+        mle_var = np.sum((y - mle_mean)**2) / n
+        # Update sliders with the MLE values
+        session.send_input_message("muInput", {"value": mle_mean})
+        session.send_input_message("varInput", {"value": mle_var})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+
+        # Avoid invalid variance
+        if var <= 0:
+            return float("nan")
+
+        # log-likelihood for Normal(mu, var)
+        # l(μ, σ²) = Σ [-0.5 * ln(2πσ²) - ((y_i - μ)²)/(2σ²)]
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood in the sidebar
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF for the chosen mu/var, and show data as points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        # Build a grid of x values around the data
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(-0.5 * ((x_vals - mu) / sigma)**2)
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+
+        # Plot the PDF line
+        ax.plot(x_vals, pdf_vals, color="blue", label="Normal PDF (μ={}, σ²={:.1f})".format(round(mu,1), round(var,1)))
+
+        # Plot the data points at y=0 (jitter them horizontally for visibility)
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        # Draw vertical line at mu
+        ax.axvline(mu, color="gray", linestyle="--")
+
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)  # Ensure PDF is visible from 0
+
+        return fig
+
+app = App(app_ui, server)
+
+```

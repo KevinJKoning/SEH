@@ -12,16 +12,14 @@ We start *assuming* that we know the process generating the data we examine. In 
 The process is summarized in @fig-process.
 
 ```{mermaid}
-#| label: fig-process
-#| fig-cap: "Statistical Process"
+//| label: fig-process
+//| fig-cap: "Statistical Process"
 
 %%{init: {'theme':'neutral'}}%%
 graph TB
     A["Data Generation"] -->|Likelihood \n of Data| B["Data"]
     B -->|Likelihood of \n Data Generation| A
 ```
-
-Confession that learning from traditional statistics sources will be confusing. I prefer this simple overview of statistics:
 
 
 ## Data Generation Dice Example
