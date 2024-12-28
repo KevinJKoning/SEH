@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Untitled – Quarto</title>
+<title>Likelihood Reverse – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,6 +39,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.2-probability_distributions_reverse.html">Likelihood Reverse</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -135,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link active">
+            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Generation</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -162,12 +167,29 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Parameter Estimation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Generation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Likelihood Reverse</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -178,22 +200,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-generation-processes-temporary-outline" id="toc-data-generation-processes-temporary-outline" class="nav-link active" data-scroll-target="#data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</a>
-  <ul class="collapse">
-  <li><a href="#dice-rolls" id="toc-dice-rolls" class="nav-link" data-scroll-target="#dice-rolls">Dice Rolls</a></li>
-  <li><a href="#normal-and-other-distributions" id="toc-normal-and-other-distributions" class="nav-link" data-scroll-target="#normal-and-other-distributions">Normal and Other Distributions</a></li>
-  <li><a href="#histograms-and-likelihood" id="toc-histograms-and-likelihood" class="nav-link" data-scroll-target="#histograms-and-likelihood">Histograms and Likelihood</a></li>
-  </ul></li>
-  <li><a href="#other-notes" id="toc-other-notes" class="nav-link" data-scroll-target="#other-notes">Other Notes</a></li>
+  <li><a href="#text" id="toc-text" class="nav-link active" data-scroll-target="#text">Text</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.2-probability_distributions_reverse.html">Likelihood Reverse</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Untitled</h1>
+<h1 class="title">Likelihood Reverse</h1>
 </div>
 
 
@@ -210,46 +226,169 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Select a subchapter from the left hand menu</p>
-<p>TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second. TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?</p>
-<section id="data-generation-processes-temporary-outline" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</h2>
-<section id="dice-rolls" class="level3">
-<h3 class="anchored" data-anchor-id="dice-rolls">Dice Rolls</h3>
-<ul>
-<li>Create the data generating process</li>
-<li>It’s easy to find the likelihood/probability of the outcomes</li>
-<li>Note how large number of dice is looking a lot like a normal/gaussian distribution</li>
-</ul>
-</section>
-<section id="normal-and-other-distributions" class="level3">
-<h3 class="anchored" data-anchor-id="normal-and-other-distributions">Normal and Other Distributions</h3>
-<ul>
-<li>Each distribution has assumptions about the data generating process
-<ul>
-<li>Normal assumes many additive processes</li>
-<li>Lognormal assumes many multiplicative processes</li>
-</ul></li>
-<li>Are idealized real process, but the tradeoff is simplicity of description with only a few parameters</li>
-</ul>
-</section>
-<section id="histograms-and-likelihood" class="level3">
-<h3 class="anchored" data-anchor-id="histograms-and-likelihood">Histograms and Likelihood</h3>
-<ul>
-<li>Histogams can help us approximate likelihood of continuous data
-<ul>
-<li>Or we can understand probability density and cumulative distributions</li>
-</ul></li>
-<li>Include log likelihood and the need for indepedence (not a time series)</li>
-<li>Importance of statistical assumptions</li>
-</ul>
-</section>
-</section>
-<section id="other-notes" class="level2">
-<h2 class="anchored" data-anchor-id="other-notes">Other Notes</h2>
-<p>Data Generation - Dice Rolls - Probability Distributions for Data Generation - Linear Regression</p>
-<p>Parameter Estimation - Dice Rolls (guess and check app) - Probability Distribution (enhanced normal app with MLE and adjustment of data generation) - Linear Regression (both frequentist with underlying assumption and bayesian)</p>
-<p>Conclusion.</p>
+<section id="text" class="level2">
+<h2 class="anchored" data-anchor-id="text">Text</h2>
+<p>Text.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Likelihood Calculation"),
+
+    # Row 1: Sliders
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=1, max=100, value=10, step=1
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Buttons, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("mleBtn", "MLE"),
+        ),
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Initialize data with 10 random points
+    data_vals = reactive.Value(
+        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+    )
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        data_vals.set(
+            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+        )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        y = data_vals()
+        n = len(y)
+        mle_mean = np.mean(y)
+        # MLE for variance uses 1/n factor
+        mle_var = np.sum((y - mle_mean)**2) / n
+        session.send_input_message("muInput", {"value": mle_mean})
+        session.send_input_message("varInput", {"value": mle_var})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+        if var &lt;= 0:
+            return float("nan")
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF and data points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
+            -0.5 * ((x_vals - mu) / sigma)**2
+        )
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(
+            x_vals, pdf_vals,
+            color="blue",
+            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
+        )
+
+        # Scatter the data at y=0 with some jitter
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        ax.axvline(mu, color="gray", linestyle="--")
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
 
 
 </section>

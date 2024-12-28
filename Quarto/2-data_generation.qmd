@@ -6,7 +6,8 @@ format: html
 Select a subchapter from the left hand menu
 
 TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY
-TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER
+TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second.
+TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?
 
 ## Data Generation Processes TEMPORARY OUTLINE
 
@@ -28,3 +29,19 @@ TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER
     - Or we can understand probability density and cumulative distributions
 - Include log likelihood and the need for indepedence (not a time series)
 - Importance of statistical assumptions
+
+
+
+## Other Notes
+
+Data Generation
+- Dice Rolls
+- Probability Distributions for Data Generation
+- Linear Regression
+
+Parameter Estimation
+- Dice Rolls (guess and check app)
+- Probability Distribution (enhanced normal app with MLE and adjustment of data generation)
+- Linear Regression (both frequentist with underlying assumption and bayesian)
+
+Conclusion.

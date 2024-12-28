@@ -23,6 +23,9 @@ website:
           - 2.3-tests_processes_parameters.qmd
       - text: "Parameter Estimation"
         href: 3-parameter_estimation.qmd
+        contents:
+          - 3.1-data_generation_reverse.qmd
+          - 3.2-probability_distributions_reverse.qmd
 
 format:
   html:

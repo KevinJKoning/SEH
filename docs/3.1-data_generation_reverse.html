@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Untitled – Quarto</title>
+<title>Data Generation – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,6 +39,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Data Generation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -135,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link active">
+            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Generation</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -162,12 +167,29 @@ ul.task-list li input[type="checkbox"] {
 </li>
       </ul>
   </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Parameter Estimation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data Generation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Likelihood Reverse</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -178,22 +200,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-generation-processes-temporary-outline" id="toc-data-generation-processes-temporary-outline" class="nav-link active" data-scroll-target="#data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</a>
-  <ul class="collapse">
-  <li><a href="#dice-rolls" id="toc-dice-rolls" class="nav-link" data-scroll-target="#dice-rolls">Dice Rolls</a></li>
-  <li><a href="#normal-and-other-distributions" id="toc-normal-and-other-distributions" class="nav-link" data-scroll-target="#normal-and-other-distributions">Normal and Other Distributions</a></li>
-  <li><a href="#histograms-and-likelihood" id="toc-histograms-and-likelihood" class="nav-link" data-scroll-target="#histograms-and-likelihood">Histograms and Likelihood</a></li>
-  </ul></li>
-  <li><a href="#other-notes" id="toc-other-notes" class="nav-link" data-scroll-target="#other-notes">Other Notes</a></li>
+  <li><a href="#data-generation-reverse" id="toc-data-generation-reverse" class="nav-link active" data-scroll-target="#data-generation-reverse">Data Generation Reverse</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Data Generation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Untitled</h1>
+<h1 class="title">Data Generation</h1>
 </div>
 
 
@@ -210,46 +226,93 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Select a subchapter from the left hand menu</p>
-<p>TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second. TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?</p>
-<section id="data-generation-processes-temporary-outline" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</h2>
-<section id="dice-rolls" class="level3">
-<h3 class="anchored" data-anchor-id="dice-rolls">Dice Rolls</h3>
-<ul>
-<li>Create the data generating process</li>
-<li>It’s easy to find the likelihood/probability of the outcomes</li>
-<li>Note how large number of dice is looking a lot like a normal/gaussian distribution</li>
-</ul>
-</section>
-<section id="normal-and-other-distributions" class="level3">
-<h3 class="anchored" data-anchor-id="normal-and-other-distributions">Normal and Other Distributions</h3>
-<ul>
-<li>Each distribution has assumptions about the data generating process
-<ul>
-<li>Normal assumes many additive processes</li>
-<li>Lognormal assumes many multiplicative processes</li>
-</ul></li>
-<li>Are idealized real process, but the tradeoff is simplicity of description with only a few parameters</li>
-</ul>
-</section>
-<section id="histograms-and-likelihood" class="level3">
-<h3 class="anchored" data-anchor-id="histograms-and-likelihood">Histograms and Likelihood</h3>
-<ul>
-<li>Histogams can help us approximate likelihood of continuous data
-<ul>
-<li>Or we can understand probability density and cumulative distributions</li>
-</ul></li>
-<li>Include log likelihood and the need for indepedence (not a time series)</li>
-<li>Importance of statistical assumptions</li>
-</ul>
-</section>
-</section>
-<section id="other-notes" class="level2">
-<h2 class="anchored" data-anchor-id="other-notes">Other Notes</h2>
-<p>Data Generation - Dice Rolls - Probability Distributions for Data Generation - Linear Regression</p>
-<p>Parameter Estimation - Dice Rolls (guess and check app) - Probability Distribution (enhanced normal app with MLE and adjustment of data generation) - Linear Regression (both frequentist with underlying assumption and bayesian)</p>
-<p>Conclusion.</p>
+<section id="data-generation-reverse" class="level2">
+<h2 class="anchored" data-anchor-id="data-generation-reverse">Data Generation Reverse</h2>
+<p>text here.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Precompute the "permanent" histogram for 7 dice, 10,000 rolls ---
+FIXED_NUM_DICE = 7
+FIXED_NUM_ROLLS = 10000
+
+fixed_sums = [np.random.randint(1, 7, FIXED_NUM_DICE).sum() for _ in range(FIXED_NUM_ROLLS)]
+fixed_unique_vals, fixed_counts = np.unique(fixed_sums, return_counts=True)
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "num_dice",
+                "Number of Dice (1–10)",
+                min=1,
+                max=10,
+                value=2,
+                step=1
+            ),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def user_sums():
+        # Always roll the user-selected dice 10,000 times
+        N_ROLLS = 10000
+        n_dice = input.num_dice()
+        rolls = [np.random.randint(1, 7, n_dice).sum() for _ in range(N_ROLLS)]
+        return rolls
+
+    @output
+    @render.plot
+    def dicePlot():
+        # Get the user’s histogram
+        sums = user_sums()
+        user_unique_vals, user_counts = np.unique(sums, return_counts=True)
+        
+        # Determine the union of x-values (totals) so both histograms can share the same axis
+        all_x = np.arange(
+            min(fixed_unique_vals[0], user_unique_vals[0]),
+            max(fixed_unique_vals[-1], user_unique_vals[-1]) + 1
+        )
+        
+        # Convert the unique/value arrays to dictionaries for easy indexing
+        fixed_map = dict(zip(fixed_unique_vals, fixed_counts))
+        user_map = dict(zip(user_unique_vals, user_counts))
+        
+        # Pull out frequency or 0 if total not present in the distribution
+        fixed_freqs = [fixed_map.get(x, 0) for x in all_x]
+        user_freqs  = [user_map.get(x, 0) for x in all_x]
+        
+        # Plot
+        fig, ax = plt.subplots()
+        
+        # Bar chart for the fixed 7-dice histogram
+        ax.bar(all_x, fixed_freqs, color="lightblue", alpha=0.6, label="Fixed: 7 Dice")
+        
+        # Overlay user histogram as points
+        ax.scatter(all_x, user_freqs, color="red", marker="o", label="User Selected Dice")
+        
+        ax.set_title("Update the Input Parameter to Match Observations")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        ax.legend()
+        
+        # Make x-axis tick at every possible total
+        plt.xticks(all_x, rotation=90)
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
 
 
 </section>

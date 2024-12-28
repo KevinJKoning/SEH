@@ -1,0 +1,95 @@
+---
+title: Data Generation
+format: html
+filters:
+  - shinylive
+---
+
+
+## Data Generation Reverse
+
+text here.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Precompute the "permanent" histogram for 7 dice, 10,000 rolls ---
+FIXED_NUM_DICE = 7
+FIXED_NUM_ROLLS = 10000
+
+fixed_sums = [np.random.randint(1, 7, FIXED_NUM_DICE).sum() for _ in range(FIXED_NUM_ROLLS)]
+fixed_unique_vals, fixed_counts = np.unique(fixed_sums, return_counts=True)
+
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling Demo"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "num_dice",
+                "Number of Dice (1–10)",
+                min=1,
+                max=10,
+                value=2,
+                step=1
+            ),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def user_sums():
+        # Always roll the user-selected dice 10,000 times
+        N_ROLLS = 10000
+        n_dice = input.num_dice()
+        rolls = [np.random.randint(1, 7, n_dice).sum() for _ in range(N_ROLLS)]
+        return rolls
+
+    @output
+    @render.plot
+    def dicePlot():
+        # Get the user’s histogram
+        sums = user_sums()
+        user_unique_vals, user_counts = np.unique(sums, return_counts=True)
+        
+        # Determine the union of x-values (totals) so both histograms can share the same axis
+        all_x = np.arange(
+            min(fixed_unique_vals[0], user_unique_vals[0]),
+            max(fixed_unique_vals[-1], user_unique_vals[-1]) + 1
+        )
+        
+        # Convert the unique/value arrays to dictionaries for easy indexing
+        fixed_map = dict(zip(fixed_unique_vals, fixed_counts))
+        user_map = dict(zip(user_unique_vals, user_counts))
+        
+        # Pull out frequency or 0 if total not present in the distribution
+        fixed_freqs = [fixed_map.get(x, 0) for x in all_x]
+        user_freqs  = [user_map.get(x, 0) for x in all_x]
+        
+        # Plot
+        fig, ax = plt.subplots()
+        
+        # Bar chart for the fixed 7-dice histogram
+        ax.bar(all_x, fixed_freqs, color="lightblue", alpha=0.6, label="Fixed: 7 Dice")
+        
+        # Overlay user histogram as points
+        ax.scatter(all_x, user_freqs, color="red", marker="o", label="User Selected Dice")
+        
+        ax.set_title("Update the Input Parameter to Match Observations")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        ax.legend()
+        
+        # Make x-axis tick at every possible total
+        plt.xticks(all_x, rotation=90)
+        
+        return fig
+
+app = App(app_ui, server)
+```
