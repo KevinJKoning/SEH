@@ -27,7 +27,7 @@ Hopefully it was fairly intuitive how to find the probability/likelihood of a ce
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 600
+#| viewerHeight: 700
 
 import math
 import numpy as np
@@ -193,8 +193,16 @@ It will be useful for us to also estimate the probability density of exact value
 ## Likelihood of Multiple Events
 
 So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes.
+Let's say we have $n$ independent events $E$. The probability of all these events occurring together is the product of their individual probabilities:
 
-**Equation for multiple outcomes, and the useful alternative of log-probabilty**
+$$\prod_{i=1}^{n} P(E_i)$$
+
+For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever *and* useful trick is to use the logarithm of the probability product:
+$$\sum_{i=1}^{n} log(P(E_i))$$
+
+You will find adding logarithms to be the standard for likelihood calculations.
+
+## Assumptions
 
 When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is [mostly] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.
 

@@ -12,8 +12,6 @@ We'd prefer not to spend too much time on toy examples, however, there are a lot
 
 Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.
 
-Please note it usually takes about 10 seconds for the app below to load.
-
 ```{shinylive-python}
 #| standalone: true
 #| viewerHeight: 550

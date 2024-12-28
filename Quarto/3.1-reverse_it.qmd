@@ -1,0 +1,10 @@
+---
+title: "Untitled"
+format: html
+---
+
+## Probability of a Data Generating Process
+
+If we assume a certain model of a data generating process - but it never seems to generate any data close the what is observed from the real data generating process, we can conclude that the model is bad.
+
+Once we get close though, it's much harder to tell if the model can be even more accurate...
