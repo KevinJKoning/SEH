@@ -1,0 +1,14 @@
+---
+title: Linear Data Generation
+format: html
+filters:
+  - shinylive
+---
+
+
+At some point you have probably been exposed to linear regression... You may roll your eyes at being asked to warp back to your early education... But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of machine learning methods.
+
+We're also going to approach this in a way that is likely backwards from your previous introduction. Typically you'll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e. finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?
+
+
+

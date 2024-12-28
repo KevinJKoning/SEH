@@ -5,13 +5,17 @@ format: html
 
 ## Intro/Overview
 
+It's not uncommon for an engineer to find themselves drawn into the world of statistics. Unfortunately it is an awfully confusing welcome, and good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated way to very quickly give you the trunk from which you can later construct the branches and leaves, rather than receiving the tree in random bits and assembling it yourself. It's goal is to reduce that confused period by at least an order of magnitude.
+
+I have a theory on why it's so confusing, but that only belongs in an appendix[1]... Statistics has a long and convoluted history. Almost all books and 'courses' are taught by professional statisticians and/or academics. I think this causes two major problems, they tend to get caught up in the sludge of past practice, and they tend to teach it in a way that fills at least a semester long college course (or roughly 100+ hours of attention/work). Subsequently statistics is an endlessly confusing subject to get introduced to. I don't think it needs to be...
+
 ::: {.callout-warning}
 This short 'book' is written by a practicing engineer - not a statistician or academic. It aims to show, very succinctly, that statistics at a conceptual level can be simple and straightforward. It aims to be useful, not right, although if anything is particularly incorrect or misleading, it should definitely be corrected, so please make a comment or pull request on the github repo. Lastly, thank you for reading!!!
 :::
 
 At its heart, I believe statistics is a looping process with only two steps:
 A) Describing the likelihood of data from a 'known' data generating process.
-B) Using data to estimate the likelihood of the parameters and form of a data generating process.
+B) Using data to estimate the likelihood of the form and parameters of a data generating process.
 
 The process can start with A) or B). To really drive it home the process is summarized in the figure below.
 
@@ -22,4 +26,4 @@ graph TB
     B -->|Likelihood of<br/>Data Generation| A
 ```
 
-For convenience, we'll start *assuming* that we know the process generating the data we examine. In reality we usually have only clues. Regardless, starting here allows us to quickly examine the core concept of probability/likelihood. Once we have a good understanding of probability/likelihood, it will allow us to work in 'reverse' and to use the data to estimate the properties/parameters of the data generating process.
+For convenience, we'll start *assuming* that we know the process generating the data we examine. In reality we usually have only clues. Regardless, starting here allows us to quickly examine the core concept of probability. Once we have a good understanding of probability, it will allow us to work in 'reverse' and use data to estimate the likelihood of the form and parameters of the data generating process.

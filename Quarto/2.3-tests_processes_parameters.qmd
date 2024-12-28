@@ -15,11 +15,7 @@ The typical approach goes something like this - if I assume I know the character
 
 That probably sounded somewhat confusing, and if you are confused, you are in good company. Many intelligent people publishing smart papers in reputable journals get significance testing not-quite-right, not to mention the arbitrary standard of rejecting a null hypothesis if p < 0.05, which should also be adjusted to the situation. Subsequently this text will spend no time on hypothesis testing, other than to say if it's important for you to determine if two data generating processes are different, I'm sure you can devise a method that makes sense and you can understand.
 
-## Arbitrarily Complicated Processes
 
-We are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization is a directed acyclic graph (DAG).
-
-It is worth noting that a small number of parameters is generally called 'Statistics', modest to large number of parameters is called 'Machine Learning', and somewhere around a billion or more is called 'Artificial Intelligence'.
 
 ## Parameters
 
