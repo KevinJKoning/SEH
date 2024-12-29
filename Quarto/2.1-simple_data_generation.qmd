@@ -5,10 +5,9 @@ filters:
   - shinylive
 ---
 
-
 ## Data Generation Dice Example
 
-We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process.
+We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process. As a starter, it is also convenient that the mathematical model we'll use is an awfully good approximation of the data generating process, so long as you're OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.
 
 Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.
 

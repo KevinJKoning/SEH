@@ -6,9 +6,9 @@ filters:
 ---
 
 
-## More Data Generating Processes (Probability Distributions)
+## More Data Generating Processes (Probability Distribution as Models)
 
-When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so humanity has named them and [mostly] standardized their inputs/parameters. These common data generating processes are called *probability distributions*. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
+When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
 
 A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
 
@@ -17,7 +17,7 @@ Additive processes will eventually create normal/gaussian distributions. It is w
 ::: {.callout-important}
 There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
 
-If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a data generating distribution. When we use it in the context of uncertainty, I will call it an uncertainty distribution. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
+If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
 
 If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.
 :::

@@ -20,7 +20,8 @@ website:
         contents:
           - 2.1-simple_data_generation.qmd
           - 2.2-probability_distributions.qmd
-          - 2.3-tests_processes_parameters.qmd
+          - 2.3-linear_data_generation.qmd
+          - 2.4-tests_processes_parameters.qmd
       - text: "Parameter Estimation"
         href: 3-parameter_estimation.qmd
         contents:

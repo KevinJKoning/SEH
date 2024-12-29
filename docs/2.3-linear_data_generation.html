@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Likelihood – Quarto</title>
+<title>Linear Data Generation – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,39 +71,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -144,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Likelihood</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Data Generation</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -187,13 +155,13 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link active">
+  <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Linear Data Generation</span></a>
   </div>
 </li>
@@ -250,21 +218,17 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link active" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
-  <li><a href="#arbitrarily-complicated-processes" id="toc-arbitrarily-complicated-processes" class="nav-link" data-scroll-target="#arbitrarily-complicated-processes">Arbitrarily Complicated Processes</a></li>
-  <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
-  <li><a href="#likelihood-of-multiple-events" id="toc-likelihood-of-multiple-events" class="nav-link" data-scroll-target="#likelihood-of-multiple-events">Likelihood of Multiple Events</a></li>
-  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
-  <li><a href="#always-a-data-generating-process" id="toc-always-a-data-generating-process" class="nav-link" data-scroll-target="#always-a-data-generating-process">Always a Data Generating Process?</a></li>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#more-models" id="toc-more-models" class="nav-link" data-scroll-target="#more-models">More Models</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Likelihood</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Data Generation</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Likelihood</h1>
+<h1 class="title">Linear Data Generation</h1>
 </div>
 
 
@@ -281,38 +245,10 @@ window.Quarto = {
 </header>
 
 
-<section id="more-data-generating-processes-probability-distribution-as-models" class="level2">
-<h2 class="anchored" data-anchor-id="more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</h2>
-<p>When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
-<p>A ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.</p>
-<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding dice and enough rolls, the outcomes look awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.</p>
-<p>If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a <em>probability distribution model</em>. When we use it in the context of uncertainty, I will call it an <em>uncertainty distribution</em>. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.</p>
-<p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
-</div>
-</div>
-<p><strong>Some kind of graphic here?</strong>. <strong>an example of a bayesian distribution with uncertainty in inputs producing a data generating distribution</strong></p>
-<p>KEEP?: The point here is that each data generating distribution is the basic form of: A) Each data generating process has inherent characteristics B) These characteristics determine the shape/frequency of the outcomes</p>
-</section>
-<section id="arbitrarily-complicated-processes" class="level2">
-<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes">Arbitrarily Complicated Processes</h2>
-<p>It’s important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).</p>
-<p>It is worth noting that a small number of parameters is generally called ‘Statistics’, modest to large number of parameters is called ‘Machine Learning’, and somewhere around a billion or more is called ‘Artificial Intelligence’.</p>
-</section>
-<section id="normalgaussian-likelihood" class="level2">
-<h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
-<p>TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.</p>
-<p>Hopefully it was fairly intuitive how to find the probability/likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Intro</h2>
+<p>At some point you have probably been exposed to linear regression… You may roll your eyes at being asked to warp back to your early education… But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of machine learning methods.</p>
+<p>We’re also going to approach this in a way that is likely backwards from your previous introduction. Typically you’ll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e.&nbsp;finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -325,29 +261,36 @@ import matplotlib.pyplot as plt
 from shiny import App, ui, reactive, render
 
 app_ui = ui.page_fluid(
-    ui.h2("Likelihood Calculation"),
+    ui.h2("Linear Regression Likelihood"),
 
-    # Row 1: Sliders
+    # Row 1: Sliders for alpha, beta, sigma^2, and n
     ui.row(
         ui.column(
-            4,
+            3,
             ui.input_slider(
-                "muInput", "Mean (μ):",
-                min=50, max=150, value=100, step=0.1
+                "alphaInput", "Intercept (α):",
+                min=-10, max=10, value=0, step=0.1
             ),
         ),
         ui.column(
-            4,
+            3,
+            ui.input_slider(
+                "betaInput", "Slope (β):",
+                min=-5, max=5, value=1, step=0.1
+            ),
+        ),
+        ui.column(
+            3,
             ui.input_slider(
                 "varInput", "Variance (σ²):",
-                min=1, max=200, value=10, step=1
+                min=0.1, max=10, value=1, step=0.1
             ),
         ),
         ui.column(
-            4,
+            3,
             ui.input_slider(
                 "nInput", "Number of samples:",
-                min=1, max=100, value=10, step=1
+                min=5, max=100, value=10, step=1
             ),
         ),
     ),
@@ -366,7 +309,7 @@ app_ui = ui.page_fluid(
         ),
         ui.column(
             4,
-            ui.h4("Current Data (Y):"),
+            ui.h4("Current Data (X, Y):"),
             ui.output_text_verbatim("dataText"),
         ),
         ui.column(
@@ -379,54 +322,90 @@ app_ui = ui.page_fluid(
     ui.br(),
 
     # Plot
-    ui.output_plot("normalPlot", height="400px"),
+    ui.output_plot("regressionPlot", height="400px"),
 )
 
 def server(input, output, session):
-    # Initialize data with 10 random points
-    data_vals = reactive.Value(
-        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
-    )
+    # Reactive value to store X and Y
+    data_vals = reactive.Value(None)
+
+    # Function to generate linear-regression data
+    def generate_data(n, alpha, beta, var):
+        # For simplicity, let X be a random uniform(0, 10)
+        X = np.random.uniform(0, 10, size=n)
+        # Y = alpha + beta*X + noise
+        Y = alpha + beta*X + np.random.normal(0, np.sqrt(var), size=n)
+        return X, Y
+
+    # Initialize data once
+    data_vals.set(generate_data(10, 0, 1, 1))
 
     # Generate a new sample when 'NEW SAMPLE' is pressed
     @reactive.Effect
     @reactive.event(input.newSampleBtn)
     def _():
         n = input.nInput()
-        data_vals.set(
-            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
-        )
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        data_vals.set(generate_data(n, alpha, beta, var))
 
     # Display the current data
     @output
     @render.text
     def dataText():
-        y = data_vals()
-        return ", ".join(str(round(val, 1)) for val in y)
+        X, Y = data_vals()
+        # Show a few decimal places
+        pairs_str = [
+            f"({round(xi,1)}, {round(yi,1)})" for xi, yi in zip(X, Y)
+        ]
+        return ", ".join(pairs_str)
 
-    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
+    # When 'MLE' is clicked, compute OLS estimates and update alpha, beta, var
     @reactive.Effect
     @reactive.event(input.mleBtn)
     def _():
-        y = data_vals()
-        n = len(y)
-        mle_mean = np.mean(y)
-        # MLE for variance uses 1/n factor
-        mle_var = np.sum((y - mle_mean)**2) / n
-        session.send_input_message("muInput", {"value": mle_mean})
-        session.send_input_message("varInput", {"value": mle_var})
+        X, Y = data_vals()
+        n = len(Y)
+
+        # Compute MLE (which in classical linear regression is the OLS solution)
+        X_mean = np.mean(X)
+        Y_mean = np.mean(Y)
+
+        # beta_hat = Cov(X,Y)/Var(X)
+        beta_hat = np.sum((X - X_mean)*(Y - Y_mean)) / np.sum((X - X_mean)**2)
+
+        # alpha_hat = mean(Y) - beta_hat*mean(X)
+        alpha_hat = Y_mean - beta_hat*X_mean
+
+        # var_hat = (1/n) * sum((y_i - alpha_hat - beta_hat*x_i)^2)
+        residuals = Y - (alpha_hat + beta_hat*X)
+        var_hat = np.sum(residuals**2) / n
+
+        # Update the UI sliders
+        session.send_input_message("alphaInput", {"value": alpha_hat})
+        session.send_input_message("betaInput", {"value": beta_hat})
+        session.send_input_message("varInput", {"value": var_hat})
 
     # Reactive expression for log-likelihood
     @reactive.Calc
     def log_likelihood():
-        y = data_vals()
-        mu = input.muInput()
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
         var = input.varInput()
-        n = len(y)
+        n = len(Y)
+
         if var &lt;= 0:
             return float("nan")
+
+        # Compute sum of squared residuals
+        residuals = Y - (alpha + beta*X)
+        ssr = np.sum(residuals**2)
+
+        # log-likelihood for linear regression
         term1 = -0.5 * n * math.log(2 * math.pi * var)
-        term2 = -0.5 * np.sum((y - mu)**2) / var
+        term2 = -0.5 * (ssr / var)
         return term1 + term2
 
     # Show the log-likelihood
@@ -436,92 +415,39 @@ def server(input, output, session):
         ll = log_likelihood()
         return str(round(ll, 2))
 
-    # Plot the normal PDF and data points
+    # Plot the data and the regression line
     @output
     @render.plot
-    def normalPlot():
-        y = data_vals()
-        mu = input.muInput()
+    def regressionPlot():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
         var = input.varInput()
-        sigma = math.sqrt(var)
-
-        x_min = min(y) - 3 * sigma
-        x_max = max(y) + 3 * sigma
-        x_vals = np.linspace(x_min, x_max, 200)
-        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
-            -0.5 * ((x_vals - mu) / sigma)**2
-        )
 
         fig, ax = plt.subplots(figsize=(6, 4))
-        ax.plot(
-            x_vals, pdf_vals,
-            color="blue",
-            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
-        )
 
-        # Scatter the data at y=0 with some jitter
-        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
-        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+        # Plot data points
+        ax.scatter(X, Y, color="blue", alpha=0.7, label="Data")
 
-        ax.axvline(mu, color="gray", linestyle="--")
-        ax.set_title("Normal PDF vs. Observed Data")
-        ax.set_xlabel("Y")
-        ax.set_ylabel("Density")
+        # Plot regression line from min(X) to max(X)
+        x_min, x_max = np.min(X), np.max(X)
+        x_vals = np.linspace(x_min, x_max, 100)
+        y_vals = alpha + beta * x_vals
+        ax.plot(x_vals, y_vals, color="red", label=f"Line (α={round(alpha,2)}, β={round(beta,2)})")
+
+        ax.set_title("Linear Regression Fit")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
         ax.legend()
-        ax.set_ylim(bottom=0)
+        ax.grid(True)
 
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>A simple way to understand the likelihood of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
-<p>It will be useful for us to also estimate the likelihood/density of exact values in continuous distributions… I think it’s best I only hand-wave at that now - but suffice it to say there are functions into which we can enter a value and a probability distribution and we receive a relative likelihood/density of that point vs other points.</p>
 </section>
-<section id="likelihood-of-multiple-events" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-of-multiple-events">Likelihood of Multiple Events</h2>
-<p>So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let’s say we have <span class="math inline">\(n\)</span> independent events <span class="math inline">\(E\)</span>. The probability of all these events occurring together is the product of their individual probabilities:</p>
-<p><span class="math display">\[\prod_{i=1}^{n} P(E_i)\]</span></p>
-<p>For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever <em>and</em> useful trick is to use the logarithm of the probability product: <span class="math display">\[\sum_{i=1}^{n} log(P(E_i))\]</span></p>
-<p>You will find adding logarithms to be the standard for likelihood calculations.</p>
-</section>
-<section id="assumptions" class="level2">
-<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
-<p>When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is [mostly] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.</p>
-<p>This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.</p>
-</section>
-<section id="always-a-data-generating-process" class="level2">
-<h2 class="anchored" data-anchor-id="always-a-data-generating-process">Always a Data Generating Process?</h2>
-<p>While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.</p>
-<p>However, it may still be possible to unify both these uses in the data generating process conceptual model. Consider the uncertainty about a value/parameter. A practitioner needs to choose the shape of this uncertainty. Do they believe the value is most likely some central value, but just not sure? Do they think it is equally likely to be any value, but with a set minimum or maximum? We could express these either with normal or uniform distributions, respectively. However, why did they choose normal or uniform? There must have been some aspect of a data generating process that led them to make that conclusion.</p>
-<p>The second half of the book we will figure out how to best find the form and parameters of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
-<p><strong>image of an probability distribution that seperates out uncertainty in knowledge for inherent variability in the outputs</strong></p>
-<p>In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    subgraph DGD[Data Generating Distribution]
-        subgraph UD[Uncertainty Distributions]
-            GammaMean[Gamma Distribution]
-            GammaVar[Gamma Distribution]
-        end
-        Mean[Mean]
-        Variance[Variance]
-        GammaMean --&gt; Mean
-        GammaVar --&gt; Variance
-        Mean --&gt; Normal
-        Variance --&gt; Normal
-        Normal[Normal Distribution]
-    end
-    Normal --&gt; Height[Height Observations]
-
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
+<section id="more-models" class="level2">
+<h2 class="anchored" data-anchor-id="more-models">More Models</h2>
+<p>We are gradually making more ‘bespoke’ models… There tend to be common types of models because they can be applied so generally, these include the generalized linear models and other ‘machine learning’ types of models like decision trees. However, there’s nothing in statistics that limits us to just these… If we have a specialized case, like modeling the motion of a spring, we can generate a</p>
 
 
 </section>
