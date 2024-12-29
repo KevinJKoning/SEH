@@ -5,25 +5,57 @@ format: html
 
 ## Intro/Overview
 
-It's not uncommon for an engineer to find themselves drawn into the world of statistics. Unfortunately it is an awfully confusing welcome, and good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated way to very quickly give you the trunk from which you can later construct the branches and leaves, rather than receiving the tree in random bits and assembling it yourself. It's goal is to reduce that confused period by at least an order of magnitude.
+It's not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the 'confusing welcome' and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.
 
-I have a theory on why it's so confusing, but that only belongs in an appendix[1]... Statistics has a long and convoluted history. Almost all books and 'courses' are taught by professional statisticians and/or academics. I think this causes two major problems, they tend to get caught up in the sludge of past practice, and they tend to teach it in a way that fills at least a semester long college course (or roughly 100+ hours of attention/work). Subsequently statistics is an endlessly confusing subject to get introduced to. I don't think it needs to be...
+The premise of this primer is that an engineer should think of statistics as a loop involving just two processes:
 
-::: {.callout-warning}
-This short 'book' is written by a practicing engineer - not a statistician or academic. It aims to show, very succinctly, that statistics at a conceptual level can be simple and straightforward. It aims to be useful, not right, although if anything is particularly incorrect or misleading, it should definitely be corrected, so please make a comment or pull request on the github repo. Lastly, thank you for reading!!!
+1.  Estimating the probability of data given a model of a data generating process.
+
+2.  Estimating the likelihood of a model, given the data.
+
+We will refer to the real-world process of interest as the **data generating process**, and we will attempt to summarize it mathematically with a **model**. When we work in the 'forward' direction, where the model is assumed constant, we will find the **probability** of the data. When we work in the 'reverse' direction, where we are trying to find the best model given the data, we will call it the **likelihood** of the model.
+
+These statements are summarized mathematically in @eq-1 and @eq-2, where D represents data and M represents a model.
+
+$$
+P(D \mid M)
+$$ {#eq-1}
+
+$$
+L(M \mid D)
+$$ {#eq-2}
+
+The equations above can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.
+
+In engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty... But the real world has plenty of uncertainty, and that's probably why you've been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:
+
+-   Aleatoric Uncertainty (Randomness)
+
+-   Epistemic Uncertainty (Lack of Knowledge)
+
+Statistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.
+
+::: callout-warning
+This primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!
 :::
 
-At its heart, I believe statistics is a looping process with only two steps:
-A) Describing the likelihood of data from a 'known' data generating process.
-B) Using data to estimate the likelihood of the form and parameters of a data generating process.
-
-The process can start with A) or B). To really drive it home the process is summarized in the figure below.
+In case the point hasn't been driven home with words and equations, I'll round it out with a diagram:
 
 ```{mermaid}
 %%{init: {'theme':'neutral'}}%%
 graph TB
-    A["Data Generation"] -->|Likelihood<br/>of Data| B["Data"]
+    A["Data Generation"] -->|Probability<br/>of Data| B["Data"]
     B -->|Likelihood of<br/>Data Generation| A
 ```
 
-For convenience, we'll start *assuming* that we know the process generating the data we examine. In reality we usually have only clues. Regardless, starting here allows us to quickly examine the core concept of probability. Once we have a good understanding of probability, it will allow us to work in 'reverse' and use data to estimate the likelihood of the form and parameters of the data generating process.
+Part 1 of this book focuses on 'probability of the data given the model' and Part 2 the 'likelihood of the model given the data'.
+
+**Glossary:**
+
+| **Term** | **Definition** | **Example** |
+|------------------|--------------------------------|----------------------|
+| **Data Generating Process** | A theoretical model describing how observed data are produced, often using probability distributions to represent mechanisms. | Rolling a fair six-sided die generates outcomes with equal probabilities for each face (1-6). |
+| **Probability** | A value from 0 to 1... |  |
+| **Likelihood** |  |  |
+| **Probability Distribution** | A function that describes the likelihood of different outcomes in a random experiment. | The normal distribution models heights in a population with a bell-shaped curve. |
+| **Random Variable** | A variable whose values depend on outcomes of a random phenomenon, often defined by a probability distribution. | The number of heads obtained in 10 coin flips is a random variable. |

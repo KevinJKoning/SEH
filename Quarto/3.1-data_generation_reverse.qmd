@@ -8,7 +8,11 @@ filters:
 
 ## Data Generation Reverse
 
-text here.
+In part one we wanted to understand the likelihood of the data from a set/known data generating process. In part two we want to take the data and find the most likely data generating process.
+
+The simple app below lets you select a model parameter, the number of dice to roll, such that you can see if your selection makes it match the data better or worse. See if you can find a parameter value that does a particularly good job of matching the data.
+
+I'm guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren't certain about the model generating it, we can work in 'reverse' to find a likely model that is generating that data.
 
 ```{shinylive-python}
 #| standalone: true

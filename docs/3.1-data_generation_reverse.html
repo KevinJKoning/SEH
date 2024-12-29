@@ -188,6 +188,18 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Likelihood Reverse</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.3-linear-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Test of new Linear Regression App</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.x-reverse_it.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Test of new Dice Rolling App</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -228,7 +240,9 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="data-generation-reverse" class="level2">
 <h2 class="anchored" data-anchor-id="data-generation-reverse">Data Generation Reverse</h2>
-<p>text here.</p>
+<p>In part one we wanted to understand the likelihood of the data from a set/known data generating process. In part two we want to take the data and find the most likely data generating process.</p>
+<p>The simple app below lets you select a model parameter, the number of dice to roll, such that you can see if your selection makes it match the data better or worse. See if you can find a parameter value that does a particularly good job of matching the data.</p>
+<p>I’m guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren’t certain about the model generating it, we can work in ‘reverse’ to find a likely model that is generating that data.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.

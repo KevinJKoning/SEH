@@ -3,9 +3,11 @@ title: "Untitled"
 format: html
 ---
 
+In the first half of the book, 
+
 Select a subchapter from the left hand menu
 
-TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY
+TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY - PROBABILITY GOING FORWARD, LIKELIHOOD GOING BACKWARD
 TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second.
 TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?
 
