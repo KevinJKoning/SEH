@@ -5,12 +5,11 @@ filters:
   - shinylive
 ---
 
-## Intro 
+## Intro
 
 At some point you have probably been exposed to linear regression... You may roll your eyes at being asked to warp back to your early education... But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of machine learning methods.
 
 We're also going to approach this in a way that is likely backwards from your previous introduction. Typically you'll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e. finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -207,12 +206,14 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-
-## Data Generation
+## Single Variable
 
 The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package ggplot2, the diamonds dataset.
 
+We're going to take a look at the relationship between size/carats and price. Here's a simply X-Y plot that shows us that relationship.
+
 ```{python}
+#| echo: false
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -233,61 +234,20 @@ plt.grid(True)
 plt.show()
 ```
 
+We're going to fit the data with a linear regression model, it will have this mathematical form:
+
+$$
+y_i = \beta_0 + \beta_1 x + \epsilon
+$$
+
+Where $\beta_0$ is the y-intercept, $\beta_1$ is the the slope, and $\epsilon$ is the error.
+
+We're leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.
+
+You've probably seen a linear regression line fit to data many times in your life, and I'm not going to bother you with one more. Instead I'm going to generate data based on what the model has 'learned', which I think will be more useful and interesting.
 
 ```{python}
-import statsmodels.api as sm
-
-# Add a constant term to the predictor variable (for the intercept)
-X = sm.add_constant(diamonds['carat'])
-y = diamonds['price']
-
-# Fit the linear regression model
-model = sm.OLS(y, X).fit()
-
-# Display the summary of the regression results
-print(model.summary())
-
-```
-
-
-
-```{python}
-import numpy as np
-
-# Define model parameters based on regression results
-intercept = -2564.4751
-slope = 8503.5628
-residual_std_dev = model.resid.std()  # Standard deviation of residuals
-
-# Generate new data points for carat
-X_new = np.linspace(0.2, 3, 1000)  # Example carat values
-
-# Simulate random noise
-random_noise = np.random.normal(loc=0, scale=residual_std_dev, size=len(X_new))
-
-# Generate new price values with variability
-Y_new = intercept + slope * X_new + random_noise
-
-# Create a DataFrame to store the new data
-new_data = pd.DataFrame({'carat': X_new, 'price': Y_new})
-
-# Visualize the simulated data
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x=new_data['carat'], y=new_data['price'], alpha=0.6)
-plt.title('Simulated Data Based on Linear Regression')
-plt.xlabel('Carat')
-plt.ylabel('Price')
-plt.grid(True)
-plt.show()
-```
-
-
-##
-OK, so we got all this fancy output, including a decently high R-squared value of 0.843. Since an R-squared value of 0 is a model that explains none of the variability in the result, and a value of 1 is that it explains all the variability, we conclude we've done a fairly good job at 0.843.
-
-
-
-```{python}
+#| echo: false
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -300,10 +260,10 @@ diamonds = diamonds[(diamonds['cut'] == 'Premium') & (diamonds['color'] == 'E')]
 # Plot 1: Relationship between Carat and Price
 intercept = -2564.4751
 slope = 8503.5628
-residual_std_dev = 3000  # Assumed value for demonstration; replace with actual std_dev
+residual_std_dev = 1503
 
 # Generate new data points for carat
-X_new = np.linspace(0.2, 3, 1000)  # Example carat values
+X_new = np.linspace(0.2, 3, 600)  # Example carat values
 
 # Simulate random noise
 random_noise = np.random.normal(loc=0, scale=residual_std_dev, size=len(X_new))
@@ -314,40 +274,40 @@ Y_new = intercept + slope * X_new + random_noise
 # Create a DataFrame to store the new data
 new_data = pd.DataFrame({'carat': X_new, 'price': Y_new})
 
-# Plot both side by side
-fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+# Plot both on the same graph
+plt.figure(figsize=(10, 6))
 
 # Original Data
-axes[0].scatter(diamonds['carat'], diamonds['price'], alpha=0.6, color='blue')
-axes[0].set_title('Original Data: Carat vs Price')
-axes[0].set_xlabel('Carat')
-axes[0].set_ylabel('Price')
-axes[0].grid(True)
+plt.scatter(diamonds['carat'], diamonds['price'], alpha=0.6, color='blue', label='Original Data')
 
 # Simulated Data
-axes[1].scatter(new_data['carat'], new_data['price'], alpha=0.6, color='orange')
-axes[1].set_title('Simulated Data: Carat vs Price')
-axes[1].set_xlabel('Carat')
-axes[1].set_ylabel('Price')
-axes[1].grid(True)
+plt.scatter(new_data['carat'], new_data['price'], alpha=0.6, color='orange', label='Simulated Data')
 
-plt.tight_layout()
+# Adding titles and labels
+plt.title('Carat vs Price: Original and Simulated Data')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.legend()
+plt.grid(True)
+
 plt.show()
 ```
 
-OK, let's point out a few things this model is doing wrong (and by the way, this is much easier to see when generating data):
--The model produces a decent number of negative values at small carats. I don't think this is real because noone has paid me to take a diamond before.
--The variation around the mean value is the same regardless of whether it is a 0.3 carat diamond or a 1.5 carat diamond.
+OK, let's point out a few things this model is doing wrong:
 
-The second one listed about is *Heteroscedasticity*, one of the funnest words in the english language.
+-   The model produces a decent number of negative values at small carats. I don't think this is real because no one has paid me to take a diamond before.
 
+-   The variation around the mean value is the same regardless of whether it is a 0.3 carat diamond or a 1.5 carat diamond. What's actually happening in the data is called *Heteroscedasticity*, a fine English word, and actually quite common.
 
-Observations about what's wrong, heteroscadicity, negative values...
+-   There are some important 'break points' in the data that a linear model is not going to capture, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.
 
+-   It seems large diamonds, of presumably poor or average quality, are not as valuable as the model seems to think.
 
-Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you ware also on the path to the dark side.
+Linear models are very interpretable, so someone familiar with them probably could have pointed out these flaws very early. However, when more variables are introduced or we use a more flexible modeling technique, data generation is going to be even more valuable.
 
+## Multi Variable
 
+Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you are also on the path to the dark side.
 
 ## More Models
 
