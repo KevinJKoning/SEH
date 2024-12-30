@@ -208,6 +208,11 @@ app = App(app_ui, server)
 ```
 
 
+## Data Generation
+
+The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a dataset made available with the ISLR2 R package...
+
+
 ## More Models
 
 We are gradually making more 'bespoke' models... There tend to be common types of models because they can be applied so generally, these include the generalized linear models and other 'machine learning' types of models like decision trees. However, there's nothing in statistics that limits us to just these... If we have a specialized case, like modeling the motion of a spring, we can generate a specialized model.

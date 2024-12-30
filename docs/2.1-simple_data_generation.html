@@ -72,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -161,7 +190,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear Data Generation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.4-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
@@ -212,8 +247,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-generation-dice-example" id="toc-data-generation-dice-example" class="nav-link active" data-scroll-target="#data-generation-dice-example">Data Generation Dice Example</a></li>
-  <li><a href="#dice-likelihood" id="toc-dice-likelihood" class="nav-link" data-scroll-target="#dice-likelihood">Dice Likelihood</a></li>
+  <li><a href="#data-generation-with-dice" id="toc-data-generation-with-dice" class="nav-link active" data-scroll-target="#data-generation-with-dice">Data Generation with Dice</a></li>
+  <li><a href="#dice-totals-probability" id="toc-dice-totals-probability" class="nav-link" data-scroll-target="#dice-totals-probability">Dice Totals Probability</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -239,9 +275,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="data-generation-dice-example" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-dice-example">Data Generation Dice Example</h2>
-<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. As a starter, it is also convenient that the mathematical model we’ll use is an awfully good approximation of the data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>
+<section id="data-generation-with-dice" class="level2">
+<h2 class="anchored" data-anchor-id="data-generation-with-dice">Data Generation with Dice</h2>
+<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we’ll use is an awfully good approximation of the real data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>
 <p>Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -291,11 +327,22 @@ def server(input, output, session):
 
 app = App(app_ui, server)</code></pre>
 </section>
-<section id="dice-likelihood" class="level2">
-<h2 class="anchored" data-anchor-id="dice-likelihood">Dice Likelihood</h2>
-<p>To find the probability/likelihood of an event in our data generating process of dice rolls, we simply need to add up the frequency of that event, say how often there was total of twelve, and divide that by the total number of events. For example if we saw a total of twelve in 40 out of 5,000 roll-totals, the probability of rolling a total of twelve is approximately 40/5,000=0.0008.</p>
-<p>Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well in reality.</p>
-<p>If you are concerned with the quality of our estimate, just rerun the data generating process and see if the outcome changes meaningfully - if it does, increase the number of times we run the data generating process until the output is stable.</p>
+<section id="dice-totals-probability" class="level2">
+<h2 class="anchored" data-anchor-id="dice-totals-probability">Dice Totals Probability</h2>
+<p>Our goal here is not to think too much about the data generating process or the model (that comes later!), what we really want to know now is the likelihood of a given dice total given a particular dice model. To estimate the probability <span class="math inline">\(P(E)\)</span> of an event <span class="math inline">\(E\)</span>, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:</p>
+<p><span class="math display">\[
+P(E) \approx \frac{\text{Number of times event } E \text{ occurs}}{\text{Total number of trials}} = \frac{40}{5000} = 0.008
+\]</span></p>
+<p>The accuracy of this estimate depends on the total number of trials as governed by the Law of Large Numbers. The standard error, which gives a measure of uncertainty in the estimate, is inversely proportional to the square root of the total number of trials. Specifically, the error in our estimate is:</p>
+<p><span class="math display">\[
+P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
+\]</span></p>
+<p>(Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well in reality.)</p>
+<p>In general, if you are concerned with the quality of an estimate with this approach, just rerun the data generating process and see if the outcome changes meaningfully - if it does, increase the number of times we run the data generating process until the output is stable enough for your application.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>What we intended to show here is we can build a model of a process, and use that model to determine how probable any outcome of the process is. We also see that the reliability of that estimate is related to the total number of samples from the process, with more samples leading to more reliable estimates.</p>
 
 
 </section>

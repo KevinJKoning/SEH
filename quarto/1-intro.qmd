@@ -27,6 +27,12 @@ $$ {#eq-2}
 
 The equations above can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.
 
+::: callout-note
+Now you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec...
+:::
+
+
+
 In engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty... But the real world has plenty of uncertainty, and that's probably why you've been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:
 
 -   Aleatoric Uncertainty (Randomness)
