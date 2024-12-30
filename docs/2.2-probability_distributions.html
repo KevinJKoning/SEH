@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Likelihood – Quarto</title>
+<title>Probability Distributions – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Likelihood</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -182,13 +182,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Dice Totals</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Likelihood</span></a>
+ <span class="menu-text">Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -262,9 +262,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Likelihood</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Likelihood</h1>
+<h1 class="title">Probability Distributions</h1>
 </div>
 
 
@@ -285,14 +285,14 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</h2>
 <p>When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
 <p>A ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.</p>
-<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding dice and enough rolls, the outcomes look awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
-<div class="callout callout-style-default callout-important callout-titled">
+<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important
+Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -301,8 +301,11 @@ Important
 <p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
 </div>
 </div>
-<p><strong>Some kind of graphic here?</strong>. <strong>an example of a bayesian distribution with uncertainty in inputs producing a data generating distribution</strong></p>
-<p>KEEP?: The point here is that each data generating distribution is the basic form of: A) Each data generating process has inherent characteristics B) These characteristics determine the shape/frequency of the outcomes</p>
+<p>The point here is that each probability distribution model has the basic form of:</p>
+<ol type="1">
+<li><p>The model is mimicing a [idealized] process with inherent characteristics</p></li>
+<li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
+</ol>
 </section>
 <section id="arbitrarily-complicated-processes" class="level2">
 <h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes">Arbitrarily Complicated Processes</h2>
@@ -491,9 +494,7 @@ app = App(app_ui, server)</code></pre>
 <section id="always-a-data-generating-process" class="level2">
 <h2 class="anchored" data-anchor-id="always-a-data-generating-process">Always a Data Generating Process?</h2>
 <p>While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.</p>
-<p>However, it may still be possible to unify both these uses in the data generating process conceptual model. Consider the uncertainty about a value/parameter. A practitioner needs to choose the shape of this uncertainty. Do they believe the value is most likely some central value, but just not sure? Do they think it is equally likely to be any value, but with a set minimum or maximum? We could express these either with normal or uniform distributions, respectively. However, why did they choose normal or uniform? There must have been some aspect of a data generating process that led them to make that conclusion.</p>
-<p>The second half of the book we will figure out how to best find the form and parameters of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
-<p><strong>image of an probability distribution that seperates out uncertainty in knowledge for inherent variability in the outputs</strong></p>
+<p>The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
 <p>In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">

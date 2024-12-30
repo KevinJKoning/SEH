@@ -150,13 +150,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Dice Totals</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Likelihood</span></a>
+ <span class="menu-text">Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -219,6 +219,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#data-generation" id="toc-data-generation" class="nav-link" data-scroll-target="#data-generation">Data Generation</a></li>
   <li><a href="#more-models" id="toc-more-models" class="nav-link" data-scroll-target="#more-models">More Models</a></li>
   </ul>
 </nav>
@@ -444,6 +445,10 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+</section>
+<section id="data-generation" class="level2">
+<h2 class="anchored" data-anchor-id="data-generation">Data Generation</h2>
+<p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a dataset made available with the ISLR2 R package…</p>
 </section>
 <section id="more-models" class="level2">
 <h2 class="anchored" data-anchor-id="more-models">More Models</h2>

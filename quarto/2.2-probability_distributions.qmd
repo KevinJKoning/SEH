@@ -1,20 +1,19 @@
 ---
-title: Likelihood
+title: Probability Distributions
 format: html
 filters:
   - shinylive
 ---
 
-
 ## More Data Generating Processes (Probability Distribution as Models)
 
-When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
+When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and \[mostly\] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
 
 A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
 
-Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding dice and enough rolls, the outcomes look awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
+Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
 
-::: {.callout-important}
+::: callout-warning
 There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
 
 If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
@@ -22,12 +21,11 @@ If teaching someone a new language and using a single word repeatedly with two d
 If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.
 :::
 
-**Some kind of graphic here?**. **an example of a bayesian distribution with uncertainty in inputs producing a data generating distribution**
+The point here is that each probability distribution model has the basic form of:
 
-KEEP?:
-The point here is that each data generating distribution is the basic form of:
-A) Each data generating process has inherent characteristics
-B) These characteristics determine the shape/frequency of the outcomes
+1.  The model is mimicing a \[idealized\] process with inherent characteristics
+
+2.  These characteristics determine the shape/frequency of the outcomes
 
 ## Arbitrarily Complicated Processes
 
@@ -35,13 +33,11 @@ It's important to note that we are not limited to simple processes that create k
 
 It is worth noting that a small number of parameters is generally called 'Statistics', modest to large number of parameters is called 'Machine Learning', and somewhere around a billion or more is called 'Artificial Intelligence'.
 
-
 ## Normal/Gaussian Likelihood
 
 TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.
 
 Hopefully it was fairly intuitive how to find the probability/likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -203,26 +199,23 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-
 A simple way to understand the likelihood of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.
 
 It will be useful for us to also estimate the likelihood/density of exact values in continuous distributions... I think it's best I only hand-wave at that now - but suffice it to say there are functions into which we can enter a value and a probability distribution and we receive a relative likelihood/density of that point vs other points.
 
 ## Likelihood of Multiple Events
 
-So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes.
-Let's say we have $n$ independent events $E$. The probability of all these events occurring together is the product of their individual probabilities:
+So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let's say we have $n$ independent events $E$. The probability of all these events occurring together is the product of their individual probabilities:
 
 $$\prod_{i=1}^{n} P(E_i)$$
 
-For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever *and* useful trick is to use the logarithm of the probability product:
-$$\sum_{i=1}^{n} log(P(E_i))$$
+For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) \* (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever *and* useful trick is to use the logarithm of the probability product: $$\sum_{i=1}^{n} log(P(E_i))$$
 
 You will find adding logarithms to be the standard for likelihood calculations.
 
 ## Assumptions
 
-When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is [mostly] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.
+When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is \[mostly\] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.
 
 This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.
 
@@ -230,13 +223,7 @@ This is also a lesson in statistics in general, although the approach outlined h
 
 While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.
 
-However, it may still be possible to unify both these uses in the data generating process conceptual model. Consider the uncertainty about a value/parameter. A practitioner needs to choose the shape of this uncertainty. Do they believe the value is most likely some central value, but just not sure? Do they think it is equally likely to be any value, but with a set minimum or maximum? We could express these either with normal or uniform distributions, respectively. However, why did they choose normal or uniform? There must have been some aspect of a data generating process that led them to make that conclusion.
-
-The second half of the book we will figure out how to best find the form and parameters of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way:
-1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs.
-2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don't have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.
-
-**image of an probability distribution that seperates out uncertainty in knowledge for inherent variability in the outputs**
+The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don't have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.
 
 In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).
 
