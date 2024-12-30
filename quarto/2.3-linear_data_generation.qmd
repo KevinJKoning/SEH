@@ -206,11 +206,11 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-## Single Variable
+## Single Variable Regression
 
-The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package ggplot2, the diamonds dataset.
+The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package *ggplot2* or the Python package *Seaborn* - it is the diamonds dataset which show sale price based on diamond characteristics.
 
-We're going to take a look at the relationship between size/carats and price. Here's a simply X-Y plot that shows us that relationship.
+Here's a simply X-Y plot that shows us the relationship between diamond size (carats) and price:
 
 ```{python}
 #| echo: false
@@ -240,7 +240,7 @@ $$
 y_i = \beta_0 + \beta_1 x + \epsilon
 $$
 
-Where $\beta_0$ is the y-intercept, $\beta_1$ is the the slope, and $\epsilon$ is the error.
+Where $\beta_0$ is the y-intercept, $\beta_1$ is the the slope, and $\epsilon$ is the error. The variable x will be the diamond size/carat and y will be the price.
 
 We're leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.
 
@@ -305,7 +305,9 @@ OK, let's point out a few things this model is doing wrong:
 
 Linear models are very interpretable, so someone familiar with them probably could have pointed out these flaws very early. However, when more variables are introduced or we use a more flexible modeling technique, data generation is going to be even more valuable.
 
-## Multi Variable
+## Multi Variable Regression
+
+There are actually some more columns/attributes/variables in the diamond dataset we didn't use. Often in life we know things like this exist but they are just not available. However, right now we'll use them and see if we can improve the model.
 
 Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you are also on the path to the dark side.
 
