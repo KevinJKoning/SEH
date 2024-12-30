@@ -210,7 +210,143 @@ app = App(app_ui, server)
 
 ## Data Generation
 
-The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a dataset made available with the ISLR2 R package...
+The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package ggplot2, the diamonds dataset.
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load the dataset
+file_path = "../datasets/diamonds.csv"
+diamonds = pd.read_csv(file_path)
+diamonds = diamonds[(diamonds['cut'] == 'Premium') & (diamonds['color'] == 'E')]
+
+
+# Plot the relationship between carat and price
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=diamonds, x='carat', y='price', alpha=0.6)
+plt.title('Relationship between Carat and Price of Diamonds')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.grid(True)
+plt.show()
+```
+
+
+```{python}
+import statsmodels.api as sm
+
+# Add a constant term to the predictor variable (for the intercept)
+X = sm.add_constant(diamonds['carat'])
+y = diamonds['price']
+
+# Fit the linear regression model
+model = sm.OLS(y, X).fit()
+
+# Display the summary of the regression results
+print(model.summary())
+
+```
+
+
+
+```{python}
+import numpy as np
+
+# Define model parameters based on regression results
+intercept = -2564.4751
+slope = 8503.5628
+residual_std_dev = model.resid.std()  # Standard deviation of residuals
+
+# Generate new data points for carat
+X_new = np.linspace(0.2, 3, 1000)  # Example carat values
+
+# Simulate random noise
+random_noise = np.random.normal(loc=0, scale=residual_std_dev, size=len(X_new))
+
+# Generate new price values with variability
+Y_new = intercept + slope * X_new + random_noise
+
+# Create a DataFrame to store the new data
+new_data = pd.DataFrame({'carat': X_new, 'price': Y_new})
+
+# Visualize the simulated data
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=new_data['carat'], y=new_data['price'], alpha=0.6)
+plt.title('Simulated Data Based on Linear Regression')
+plt.xlabel('Carat')
+plt.ylabel('Price')
+plt.grid(True)
+plt.show()
+```
+
+
+##
+OK, so we got all this fancy output, including a decently high R-squared value of 0.843. Since an R-squared value of 0 is a model that explains none of the variability in the result, and a value of 1 is that it explains all the variability, we conclude we've done a fairly good job at 0.843.
+
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the dataset
+file_path = "../datasets/diamonds.csv"
+diamonds = pd.read_csv(file_path)
+diamonds = diamonds[(diamonds['cut'] == 'Premium') & (diamonds['color'] == 'E')]
+
+# Plot 1: Relationship between Carat and Price
+intercept = -2564.4751
+slope = 8503.5628
+residual_std_dev = 3000  # Assumed value for demonstration; replace with actual std_dev
+
+# Generate new data points for carat
+X_new = np.linspace(0.2, 3, 1000)  # Example carat values
+
+# Simulate random noise
+random_noise = np.random.normal(loc=0, scale=residual_std_dev, size=len(X_new))
+
+# Generate new price values with variability
+Y_new = intercept + slope * X_new + random_noise
+
+# Create a DataFrame to store the new data
+new_data = pd.DataFrame({'carat': X_new, 'price': Y_new})
+
+# Plot both side by side
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+# Original Data
+axes[0].scatter(diamonds['carat'], diamonds['price'], alpha=0.6, color='blue')
+axes[0].set_title('Original Data: Carat vs Price')
+axes[0].set_xlabel('Carat')
+axes[0].set_ylabel('Price')
+axes[0].grid(True)
+
+# Simulated Data
+axes[1].scatter(new_data['carat'], new_data['price'], alpha=0.6, color='orange')
+axes[1].set_title('Simulated Data: Carat vs Price')
+axes[1].set_xlabel('Carat')
+axes[1].set_ylabel('Price')
+axes[1].grid(True)
+
+plt.tight_layout()
+plt.show()
+```
+
+OK, let's point out a few things this model is doing wrong (and by the way, this is much easier to see when generating data):
+-The model produces a decent number of negative values at small carats. I don't think this is real because noone has paid me to take a diamond before.
+-The variation around the mean value is the same regardless of whether it is a 0.3 carat diamond or a 1.5 carat diamond.
+
+The second one listed about is *Heteroscedasticity*, one of the funnest words in the english language.
+
+
+Observations about what's wrong, heteroscadicity, negative values...
+
+
+Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you ware also on the path to the dark side.
+
 
 
 ## More Models
