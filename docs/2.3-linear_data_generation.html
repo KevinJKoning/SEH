@@ -248,7 +248,14 @@ window.Quarto = {
    
   <ul>
   <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
-  <li><a href="#data-generation" id="toc-data-generation" class="nav-link" data-scroll-target="#data-generation">Data Generation</a></li>
+  <li><a href="#single-variable-regression" id="toc-single-variable-regression" class="nav-link" data-scroll-target="#single-variable-regression">Single Variable Regression</a>
+  <ul class="collapse">
+  <li><a href="#model-flaws" id="toc-model-flaws" class="nav-link" data-scroll-target="#model-flaws">Model Flaws</a></li>
+  <li><a href="#probability-of-the-data" id="toc-probability-of-the-data" class="nav-link" data-scroll-target="#probability-of-the-data">Probability of the Data</a></li>
+  </ul></li>
+  <li><a href="#multi-variable-regression" id="toc-multi-variable-regression" class="nav-link" data-scroll-target="#multi-variable-regression">Multi Variable Regression</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
   <li><a href="#more-models" id="toc-more-models" class="nav-link" data-scroll-target="#more-models">More Models</a></li>
   </ul>
 </nav>
@@ -475,11 +482,11 @@ def server(input, output, session):
 
 app = App(app_ui, server)</code></pre>
 </section>
-<section id="data-generation" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation">Data Generation</h2>
-<p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package ggplot2, the diamonds dataset.</p>
-<p>We’re going to take a look at the relationship between size/carats and price. Here’s a simply X-Y plot that shows us that relationship.</p>
-<div id="cc371dc4" class="cell" data-execution_count="1">
+<section id="single-variable-regression" class="level2">
+<h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
+<p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
+<p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
+<div id="6b7d4238" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -492,18 +499,20 @@ app = App(app_ui, server)</code></pre>
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x + \epsilon
 \]</span></p>
-<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error.</p>
+<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="9857d7b8" class="cell" data-execution_count="2">
+<div id="74c937bb" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="833" height="523" class="figure-img"></p>
+<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="836" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<section id="model-flaws" class="level3">
+<h3 class="anchored" data-anchor-id="model-flaws">Model Flaws</h3>
 <p>OK, let’s point out a few things this model is doing wrong:</p>
 <ul>
 <li><p>The model produces a decent number of negative values at small carats. I don’t think this is real because no one has paid me to take a diamond before.</p></li>
@@ -511,8 +520,29 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <li><p>There are some important ‘break points’ in the data that a linear model is not going to capture, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.</p></li>
 <li><p>It seems large diamonds, of presumably poor or average quality, are not as valuable as the model seems to think.</p></li>
 </ul>
-<p>Linear models are very interpretable</p>
+<p>Linear models are very interpretable, so someone familiar with them probably could have pointed out these flaws very early. However, when more variables are introduced or we use a more flexible modeling technique, data generation is going to be even more valuable.</p>
+</section>
+<section id="probability-of-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="probability-of-the-data">Probability of the Data</h3>
+<p>While we can expect all models to be flawed to some extent, using a model with some very obvious flaws makes estimating the probability of data quite dubious. For example, we have some data that is 5+ standard deviations away, which is rarer than one in a million. I don’t think the data is that rare, I think the model is just not very good.</p>
+</section>
+</section>
+<section id="multi-variable-regression" class="level2">
+<h2 class="anchored" data-anchor-id="multi-variable-regression">Multi Variable Regression</h2>
+<p>There are actually some more columns/attributes/variables in the diamond dataset we didn’t use. Often in life we know things like this exist but they are just not available. However, right now we’ll use them and see if we can improve the model.</p>
 <p>Now you’re thinking, well you just didn’t use a complicated enough model… Maybe throw a neural network at it. And while you aren’t all wrong - you are also on the path to the dark side.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>If you are interested in the many statistical/machine learning tools, I suggest you refer to <em>An Introduction to Statistical Learning</em> by James, Witten, Hastie, and Tibshirani.</p>
+<p>The various statistical/machine learning tools which include generalized linear regression and decision/regression trees have a distinct advantage and disadvantage: 1) So long as some basic criteria are met, you just apply the model to your data. 2) So long as some basic criteria are met, you just apply the model to your data.</p>
+<p>That was not a typo. The advantage is communicating how you performed the analysis mostly requires just naming the tool. You only need to ensure it is applied correctly.</p>
+<p>I say it is a disadvantage because you do not really think through your problem, and you do not really think through the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.</p>
+<p>In this primer we will leave all the other tools to other books, and we will instead use techniques that allow us to mold the model to our situation. This should only be done when you have at least <em>some</em> knowledge about the data generation process you are modeling - but it doesn’t take much and who tries to model data for a situation they know nothing about?</p>
+<p>Think bayes Allen Downey, Statistical Rethinking..</p>
+</section>
+<section id="causal-model-with-1.0-1.5-and-2.0-cut-points" class="level2">
+<h2 class="anchored" data-anchor-id="causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</h2>
 </section>
 <section id="more-models" class="level2">
 <h2 class="anchored" data-anchor-id="more-models">More Models</h2>

@@ -14,6 +14,8 @@ A 'coin-flip' process produces the binomial distribution, although the binomial 
 Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
 
 ::: callout-warning
+SHORTEN THIS.
+
 There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
 
 If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
@@ -27,17 +29,13 @@ The point here is that each probability distribution model has the basic form of
 
 2.  These characteristics determine the shape/frequency of the outcomes
 
-## Arbitrarily Complicated Processes
 
-It's important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).
-
-It is worth noting that a small number of parameters is generally called 'Statistics', modest to large number of parameters is called 'Machine Learning', and somewhere around a billion or more is called 'Artificial Intelligence'.
 
 ## Normal/Gaussian Likelihood
 
 TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.
 
-Hopefully it was fairly intuitive how to find the probability/likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
+Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
 
 ```{shinylive-python}
 #| standalone: true
@@ -199,11 +197,55 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-A simple way to understand the likelihood of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.
+A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.
 
-It will be useful for us to also estimate the likelihood/density of exact values in continuous distributions... I think it's best I only hand-wave at that now - but suffice it to say there are functions into which we can enter a value and a probability distribution and we receive a relative likelihood/density of that point vs other points.
+**Histogram of continuous data??**
 
-## Likelihood of Multiple Events
+It's tempting to leave the discussion here and to essentially just use histograms of the continuous data and our relative frequency technique to find the approximate probability of a value. However, there are unfortunately problems. The first one that comes to mind is the arbitrary size of the bins you choose, although for practical problems we can probably get around it. The final straw though is that having a robust understanding of probability distributions will pay big dividends later (so we can use standard likelihood techniques), so we slip a little further into the statistical void.
+
+## "Probability" of Continuous Data
+
+When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an *exact* value is effectively zero. 
+
+```{python}
+#| echo: false
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Define the range for the x-axis
+x = np.linspace(-4, 4, 1000)
+
+# Calculate the probability density function (PDF) of the standard normal distribution
+pdf = norm.pdf(x, loc=0, scale=1)
+
+# Create the plot
+plt.figure(figsize=(8, 5))
+plt.plot(x, pdf, label="Standard Normal Distribution", linewidth=2)
+plt.title("Standard Normal (Gaussian) Distribution", fontsize=14)
+plt.xlabel("x", fontsize=12)
+plt.ylabel("Probability Density", fontsize=12)
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.axvline(0, color='red', linestyle='--', label="Mean (μ = 0)")
+plt.legend(fontsize=12)
+plt.show()
+```
+
+Although we shouldn't intepret a point on the graph as a probability, we *can* interpret it as the *relative probability* of that location compared to another. For example if a point has a probability density of 0.4 and another at 0.2, we can conclude the point at 0.4 has twice the relative probability.
+
+::: callout-warning
+I've reserved the use of *likelihood* until the second half of this primer during which we'll find the best model based on the data from the data generating process. However, in other texts you will find also find descriptions of the relative probability of continuous distributions called the relative likelihood.
+:::
+
+## Probability of a Single Event
+
+When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extereme as the value that we observed. 
+
+HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.
+
+## Probability of Multiple Events
+
+Maybe not get too sucked into the probability of multiple events when we really want to get to likelihood???
 
 So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let's say we have $n$ independent events $E$. The probability of all these events occurring together is the product of their individual probabilities:
 
@@ -214,12 +256,13 @@ For example, if we flip a fair coin twice, the probability of getting heads both
 You will find adding logarithms to be the standard for likelihood calculations.
 
 ## Assumptions
-
+::: callout-warning
 When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is \[mostly\] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.
 
 This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.
+:::
 
-## Always a Data Generating Process?
+## Probability Distribution or Uncertainty?
 
 While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.
 

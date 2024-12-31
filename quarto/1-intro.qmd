@@ -22,7 +22,7 @@ P(D \mid M)
 $$ {#eq-1}
 
 $$
-L(M \mid D)
+\mathcal{L}(M \mid D)
 $$ {#eq-2}
 
 The equations above can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.

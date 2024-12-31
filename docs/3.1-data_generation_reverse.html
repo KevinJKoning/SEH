@@ -219,6 +219,8 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#data-generation-reverse" id="toc-data-generation-reverse" class="nav-link active" data-scroll-target="#data-generation-reverse">Data Generation Reverse</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
   </ul>
 </nav>
     </div>
@@ -248,7 +250,6 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="data-generation-reverse">Data Generation Reverse</h2>
 <p>In part one we wanted to understand the likelihood of the data from a set/known data generating process. In part two we want to take the data and find the most likely data generating process.</p>
 <p>The simple app below lets you select a model parameter, the number of dice to roll, such that you can see if your selection makes it match the data better or worse. See if you can find a parameter value that does a particularly good job of matching the data.</p>
-<p>I’m guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren’t certain about the model generating it, we can work in ‘reverse’ to find a likely model that is generating that data.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -333,6 +334,15 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+<p>I’m guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren’t certain about the model generating it, we can work in ‘reverse’ to find a likely model that is generating that data.</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>Before we dive too deep into the details, we are going to take a moment to reflect on what we’re attempting to do and common techniques to do it…</p>
+<p>When we were just generating data, it was obvious what variables went into the model, and what data came out of the model. However, we should do a better job of defining that now. Part of the issue here is that many names are used for many applications. We will call inputs predictor/feature variables, and we will call the outputs the outcome/target variables…</p>
+</section>
+<section id="note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="level2">
+<h2 class="anchored" data-anchor-id="note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</h2>
 
 
 </section>

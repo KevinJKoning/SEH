@@ -72,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -213,8 +242,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ordinary-least-squares-via-analytical-solution" id="toc-ordinary-least-squares-via-analytical-solution" class="nav-link active" data-scroll-target="#ordinary-least-squares-via-analytical-solution">Ordinary Least Squares via Analytical Solution</a></li>
+  <li><a href="#other-methods" id="toc-other-methods" class="nav-link" data-scroll-target="#other-methods">Other Methods</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -434,8 +470,18 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+<section id="ordinary-least-squares-via-analytical-solution" class="level3">
+<h3 class="anchored" data-anchor-id="ordinary-least-squares-via-analytical-solution">Ordinary Least Squares via Analytical Solution</h3>
+<p>The closed-form solution for linear regression minimizes the sum of squared residuals directly. Given a dataset with feature matrix X and target vector y :</p>
+<p><span class="math inline">\(\beta = (X^T X)^{-1} X^T y\)</span></p>
+<p>We can directly compute the coefficients, however, we are assuming normally distributed errors…</p>
+</section>
+<section id="other-methods" class="level3">
+<h3 class="anchored" data-anchor-id="other-methods">Other Methods</h3>
+<p>A model of our data generating process will essentially try to predict our response variable.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

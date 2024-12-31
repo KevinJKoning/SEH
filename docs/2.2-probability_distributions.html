@@ -251,11 +251,12 @@ window.Quarto = {
    
   <ul>
   <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link active" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
-  <li><a href="#arbitrarily-complicated-processes" id="toc-arbitrarily-complicated-processes" class="nav-link" data-scroll-target="#arbitrarily-complicated-processes">Arbitrarily Complicated Processes</a></li>
+  <li><a href="#arbitrarily-complicated-processes-move-to-later" id="toc-arbitrarily-complicated-processes-move-to-later" class="nav-link" data-scroll-target="#arbitrarily-complicated-processes-move-to-later">Arbitrarily Complicated Processes (MOVE TO LATER)</a></li>
   <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
-  <li><a href="#likelihood-of-multiple-events" id="toc-likelihood-of-multiple-events" class="nav-link" data-scroll-target="#likelihood-of-multiple-events">Likelihood of Multiple Events</a></li>
+  <li><a href="#probability-of-continuous-data" id="toc-probability-of-continuous-data" class="nav-link" data-scroll-target="#probability-of-continuous-data">“Probability” of Continuous Data</a></li>
+  <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
-  <li><a href="#always-a-data-generating-process" id="toc-always-a-data-generating-process" class="nav-link" data-scroll-target="#always-a-data-generating-process">Always a Data Generating Process?</a></li>
+  <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
   </ul>
 </nav>
     </div>
@@ -296,6 +297,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>SHORTEN THIS.</p>
 <p>There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.</p>
 <p>If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a <em>probability distribution model</em>. When we use it in the context of uncertainty, I will call it an <em>uncertainty distribution</em>. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.</p>
 <p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
@@ -307,15 +309,15 @@ Warning
 <li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
 </ol>
 </section>
-<section id="arbitrarily-complicated-processes" class="level2">
-<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes">Arbitrarily Complicated Processes</h2>
+<section id="arbitrarily-complicated-processes-move-to-later" class="level2">
+<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes-move-to-later">Arbitrarily Complicated Processes (MOVE TO LATER)</h2>
 <p>It’s important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).</p>
 <p>It is worth noting that a small number of parameters is generally called ‘Statistics’, modest to large number of parameters is called ‘Machine Learning’, and somewhere around a billion or more is called ‘Artificial Intelligence’.</p>
 </section>
 <section id="normalgaussian-likelihood" class="level2">
 <h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
 <p>TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.</p>
-<p>Hopefully it was fairly intuitive how to find the probability/likelihood of a certain dice-roll total. One advantage of that data generating process is the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
+<p>Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -476,11 +478,37 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>A simple way to understand the likelihood of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
-<p>It will be useful for us to also estimate the likelihood/density of exact values in continuous distributions… I think it’s best I only hand-wave at that now - but suffice it to say there are functions into which we can enter a value and a probability distribution and we receive a relative likelihood/density of that point vs other points.</p>
+<p>A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
 </section>
-<section id="likelihood-of-multiple-events" class="level2">
-<h2 class="anchored" data-anchor-id="likelihood-of-multiple-events">Likelihood of Multiple Events</h2>
+<section id="probability-of-continuous-data" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
+<p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, which for all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
+<div id="44b37208" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.2-probability_distributions_files/figure-html/cell-2-output-1.png" width="674" height="454" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Although we shouldn’t intepret a point on the graph as a probability, we <em>can</em> interpret it as the <em>relative probability</em> of that location compared to another. For example if a point has a probability density of 0.4 and another at 0.2, we can conclude the point at 0.4 has twice the relative probability.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I’ve reserved the use of <em>likelihood</em> until the second half of this primer during which we’ll find the best model based on the data from the data generating process. However, in other texts you will find also find descriptions of the relative probability of continuous distributions called the relative likelihood.</p>
+</div>
+</div>
+</section>
+<section id="probability-of-multiple-events" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
 <p>So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let’s say we have <span class="math inline">\(n\)</span> independent events <span class="math inline">\(E\)</span>. The probability of all these events occurring together is the product of their individual probabilities:</p>
 <p><span class="math display">\[\prod_{i=1}^{n} P(E_i)\]</span></p>
 <p>For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever <em>and</em> useful trick is to use the logarithm of the probability product: <span class="math display">\[\sum_{i=1}^{n} log(P(E_i))\]</span></p>
@@ -488,11 +516,23 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is [mostly] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.</p>
 <p>This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.</p>
+</div>
+</div>
 </section>
-<section id="always-a-data-generating-process" class="level2">
-<h2 class="anchored" data-anchor-id="always-a-data-generating-process">Always a Data Generating Process?</h2>
+<section id="probability-distribution-or-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</h2>
 <p>While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.</p>
 <p>The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
 <p>In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).</p>

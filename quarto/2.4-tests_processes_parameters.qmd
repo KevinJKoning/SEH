@@ -5,7 +5,11 @@ filters:
   - shinylive
 ---
 
+## Arbitrarily Complicated Processes
 
+It's important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).
+
+It is worth noting that a small number of parameters is generally called 'Statistics', modest to large number of parameters is called 'Machine Learning', and somewhere around a billion or more is called 'Artificial Intelligence'.
 
 ## Statistical Tests
 

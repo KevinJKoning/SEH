@@ -203,3 +203,14 @@ app = App(app_ui, server)
 ```
 
 
+### Ordinary Least Squares via Analytical Solution
+
+The closed-form solution for linear regression minimizes the sum of squared residuals directly. Given a dataset with feature matrix X and target vector y :
+
+$\beta = (X^T X)^{-1} X^T y$
+
+We can directly compute the coefficients, however, we are assuming normally distributed errors...
+
+### Other Methods
+
+A model of our data generating process will essentially try to predict our response variable.
