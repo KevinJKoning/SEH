@@ -2,4 +2,12 @@
 title: "About"
 ---
 
-About this site
+Although I already had a rough outline and some content, once I had a decent first draft of the primer's introduction I asked ChatGPT to sketch out a table of contents. Even with the the introduction giving a very clear direction, ChatGPT's table of contents mirrored every other statistical book I have read, and was completely different from what I was envisioning. And that's when I began to think I may be on to something meaningful.
+
+It should be no surprise that various large language models helped me write some of the more boilerplate tidbits of the primer and helped mash the code heavy parts into shape, I think that's now just modern life. However, I grimice when folks suggest using AI to write for them - for example give it a one sentence prompt and have it crank out a 4 paragraph work e-mail. Once AI has enormous context about your life, this may make sense. However, today, it is just a way to sound like the trillions of words already written by the rest of humanity, however polished. There's no reason to write something a large language model with no context can generate on the spot.
+
+I hope this helps you avoid a maze of confusion that I wandered through as I tried to grasp statistics. First as a graduate engineering student, and later as a professional engineer working in a risk management program of an energy utility. An even grander vision would be that someday, maybe I'll be able to feed in my intro to ChatGPT, and it will spit out something much closer to my table of contents.
+
+-Kevin
+
+

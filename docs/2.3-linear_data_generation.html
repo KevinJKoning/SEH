@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Data Generation – Quarto</title>
+<title>Linear Models – Statistics for Engineers in a Hurry (a Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Quarto</span>
+    <span class="navbar-title">Statistics for Engineers in a Hurry (a Primer)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -141,7 +141,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Data Generation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Models</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,7 +170,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Probability of Data</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -179,7 +179,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Totals</span></a>
+ <span class="menu-text">Dice</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -191,12 +191,18 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Linear Data Generation</span></a>
+ <span class="menu-text">Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bespoke Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
@@ -205,7 +211,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Parameter Estimation</span></a>
+ <span class="menu-text">Likelihood of Model</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -214,13 +220,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Dice Model Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Likelihood Reverse</span></a>
+ <span class="menu-text">Distribution Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -255,17 +261,15 @@ window.Quarto = {
   </ul></li>
   <li><a href="#multi-variable-regression" id="toc-multi-variable-regression" class="nav-link" data-scroll-target="#multi-variable-regression">Multi Variable Regression</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
-  <li><a href="#more-models" id="toc-more-models" class="nav-link" data-scroll-target="#more-models">More Models</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Data Generation</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Models</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Linear Data Generation</h1>
+<h1 class="title">Linear Models</h1>
 </div>
 
 
@@ -284,7 +288,7 @@ window.Quarto = {
 
 <section id="intro" class="level2">
 <h2 class="anchored" data-anchor-id="intro">Intro</h2>
-<p>At some point you have probably been exposed to linear regression… You may roll your eyes at being asked to warp back to your early education… But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of machine learning methods.</p>
+<p>At some point you have probably been exposed to linear regression… You may roll your eyes at being asked to warp back to your early education… But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.</p>
 <p>We’re also going to approach this in a way that is likely backwards from your previous introduction. Typically you’ll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e.&nbsp;finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -486,7 +490,7 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
 <p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
 <p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="6b7d4238" class="cell" data-execution_count="1">
+<div id="44e3542a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -502,7 +506,7 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="74c937bb" class="cell" data-execution_count="2">
+<div id="7a2a78de" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -540,13 +544,6 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>I say it is a disadvantage because you do not really think through your problem, and you do not really think through the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.</p>
 <p>In this primer we will leave all the other tools to other books, and we will instead use techniques that allow us to mold the model to our situation. This should only be done when you have at least <em>some</em> knowledge about the data generation process you are modeling - but it doesn’t take much and who tries to model data for a situation they know nothing about?</p>
 <p>Think bayes Allen Downey, Statistical Rethinking..</p>
-</section>
-<section id="causal-model-with-1.0-1.5-and-2.0-cut-points" class="level2">
-<h2 class="anchored" data-anchor-id="causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</h2>
-</section>
-<section id="more-models" class="level2">
-<h2 class="anchored" data-anchor-id="more-models">More Models</h2>
-<p>We are gradually making more ‘bespoke’ models… There tend to be common types of models because they can be applied so generally, these include the generalized linear models and other ‘machine learning’ types of models like decision trees. However, there’s nothing in statistics that limits us to just these… If we have a specialized case, like modeling the motion of a spring, we can generate a specialized model.</p>
 
 
 </section>

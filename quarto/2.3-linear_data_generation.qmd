@@ -1,5 +1,5 @@
 ---
-title: Linear Data Generation
+title: Linear Models
 format: html
 filters:
   - shinylive
@@ -7,7 +7,7 @@ filters:
 
 ## Intro
 
-At some point you have probably been exposed to linear regression... You may roll your eyes at being asked to warp back to your early education... But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of machine learning methods.
+At some point you have probably been exposed to linear regression... You may roll your eyes at being asked to warp back to your early education... But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.
 
 We're also going to approach this in a way that is likely backwards from your previous introduction. Typically you'll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e. finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?
 
@@ -332,9 +332,5 @@ In this primer we will leave all the other tools to other books, and we will ins
 
 Think bayes Allen Downey, Statistical Rethinking..
 
-## Causal Model with 1.0, 1.5, and 2.0 Cut Points
 
 
-## More Models
-
-We are gradually making more 'bespoke' models... There tend to be common types of models because they can be applied so generally, these include the generalized linear models and other 'machine learning' types of models like decision trees. However, there's nothing in statistics that limits us to just these... If we have a specialized case, like modeling the motion of a spring, we can generate a specialized model.

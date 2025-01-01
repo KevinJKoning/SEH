@@ -3,7 +3,7 @@ title: Introduction
 format: html
 ---
 
-## Intro/Overview
+## Welcome
 
 It's not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the 'confusing welcome' and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.
 
@@ -55,6 +55,8 @@ graph TB
 ```
 
 Part 1 of this book focuses on 'probability of the data given the model' and Part 2 the 'likelihood of the model given the data'.
+
+## Glossary
 
 **Glossary:**
 

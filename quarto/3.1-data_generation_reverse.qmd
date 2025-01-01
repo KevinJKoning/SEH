@@ -5,9 +5,9 @@ filters:
   - shinylive
 ---
 
-## Data Generation Reverse
+## Data Generation Reversed
 
-In part one we wanted to understand the likelihood of the data from a set/known data generating process. In part two we want to take the data and find the most likely data generating process.
+In part one we wanted to understand the probability of the data based on a fixed model of a data generating process. In part two we want to take the data and find the most likely model of the data generating process. It's reasonable to think of this as the 'reverse' of our previous approach in part one.
 
 The simple app below lets you select a model parameter, the number of dice to roll, such that you can see if your selection makes it match the data better or worse. See if you can find a parameter value that does a particularly good job of matching the data.
 
@@ -77,7 +77,7 @@ def server(input, output, session):
         fig, ax = plt.subplots()
         
         # Bar chart for the fixed 7-dice histogram
-        ax.bar(all_x, fixed_freqs, color="lightblue", alpha=0.6, label="Fixed: 7 Dice")
+        ax.bar(all_x, fixed_freqs, color="lightblue", alpha=0.6, label="Fixed Dice")
         
         # Overlay user histogram as points
         ax.scatter(all_x, user_freqs, color="red", marker="o", label="User Selected Dice")
@@ -97,32 +97,45 @@ app = App(app_ui, server)
 
 I'm guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren't certain about the model generating it, we can work in 'reverse' to find a likely model of the real world data generating process.
 
+## Likelihood
+
+In the previous dice example, we were just eyeballing the right model parameters to maximize the probability of observing our data under the model. We’d like a more consistent and mathematical way to achieve the same intent, which is called a **likelihood** function. In generic form, it looks like this:
+
+$$
+\mathcal{L}(\theta \mid \mathbf{y}) = \prod_{i=1}^{N} P(y_i \mid \theta)
+$$ 
+
+1. $\mathcal{L}(\theta \mid \mathbf{y})$: This represents the overall likelihood function, which measures the likelihood of the model parameters $\theta$ given the observed data $\mathbf{y}$. It aggregates the individual probability densities for continuous functions and probabilities for discrete functions across all data points, reflecting how well the parameters $\theta$ explain the entire dataset.
+
+2. $P(y_i \mid \theta)$: This is the individual probability density for continuous functions or probability for discrete functions for a single data point $i$. It represents the probability of observing the specific outcome $y_i$ under the model parameterized by $\theta$. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, Gaussian for continuous data). 
+
+3. $\prod_{i=1}^{N}$: This is the product operation, which multiplies the individual probabilities $P(y_i \mid \theta)$ across all $N$ data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.
+
+The specific form of the likelihood function is important and can change meaningfully depending on the problem... (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed...
+
+::: callout-note
 ## Loss Functions
 
-In the previous dice example, we were just eyeballing the right model parameters to minimize the difference between our predictions and our data. We'd like a more consistent and mathematical way to achieve the same intent, which is called a **loss function**. In generic form it looks like this:
+Likelihood is a specific form of a **loss function**. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:
 
 $$
 \mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 $$
 
-1. $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: 
-   This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
+1.  $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
 
-2. $\ell(y_i, \hat{y}_i)$:
-   This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. We want to pay particular attention to how the errors are distributed when selecting the loss function.
+2.  $\ell(y_i, \hat{y}_i)$: This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. 
 
-3. $\frac{1}{N} \sum_{i=1}^{N}$: 
-   This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
+3.  $\frac{1}{N} \sum_{i=1}^{N}$: This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
+:::
 
-The form of the loss function is important and can change meaningfully depending on the problem... (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed...
 
+We introduce loss functions here but will apply them next chapter??
 
 ## Methods
 
 Before we dive too deep into the details, we are going to take a moment to reflect on what we're attempting to do and common techniques to do it...
 
 When we were just generating data, it was obvious what variables went into the model, and what data came out of the model. However, we should do a better job of defining that now. Part of the issue here is that many names are used for many applications. We will call inputs predictor/feature variables, and we will call the outputs the outcome/target variables...
-
-
 
 ## Note in 3.2 we will go into the likelihood calculation itself

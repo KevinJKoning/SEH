@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Dice – Statistics for Engineers in a Hurry (a Primer)</title>
+<title>Wrap Up – Statistics for Engineers in a Hurry (a Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,11 +39,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<meta name="shinylive:serviceworker_dir" content=".">
-<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
-<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -72,35 +67,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -141,7 +107,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.1-simple_data_generation.html">Dice</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-tests_processes_parameters.html">Wrap Up</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -178,7 +144,7 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dice</span></a>
   </div>
 </li>
@@ -191,18 +157,18 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Data Generation</span></a>
+ <span class="menu-text">Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Data Generation</span></a>
+ <span class="menu-text">Bespoke Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
@@ -253,20 +219,18 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-generation-with-dice" id="toc-data-generation-with-dice" class="nav-link active" data-scroll-target="#data-generation-with-dice">Data Generation with Dice</a></li>
-  <li><a href="#dice-totals-probability" id="toc-dice-totals-probability" class="nav-link" data-scroll-target="#dice-totals-probability">Dice Totals Probability</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
-  <li><a href="#wait-not-so-fast" id="toc-wait-not-so-fast" class="nav-link" data-scroll-target="#wait-not-so-fast">Wait Not so Fast</a></li>
-  <li><a href="#wait-one-more" id="toc-wait-one-more" class="nav-link" data-scroll-target="#wait-one-more">Wait, One More!</a></li>
+  <li><a href="#arbitrarily-complicated-processes" id="toc-arbitrarily-complicated-processes" class="nav-link active" data-scroll-target="#arbitrarily-complicated-processes">Arbitrarily Complicated Processes</a></li>
+  <li><a href="#statistical-tests" id="toc-statistical-tests" class="nav-link" data-scroll-target="#statistical-tests">Statistical Tests</a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.1-simple_data_generation.html">Dice</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-tests_processes_parameters.html">Wrap Up</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Dice</h1>
+<h1 class="title">Wrap Up</h1>
 </div>
 
 
@@ -283,96 +247,20 @@ window.Quarto = {
 </header>
 
 
-<section id="data-generation-with-dice" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-with-dice">Data Generation with Dice</h2>
-<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we’ll use is an awfully good approximation of the real data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>
-<p>Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.</p>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 550
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-
-app_ui = ui.page_fluid(
-    ui.h2("Dice Rolling Demo"),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
-            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
-        ),
-        ui.output_plot("dicePlot", height="400px"),
-    ),
-)
-
-def server(input, output, session):
-    # Define a reactive calculation that depends on numDice and numRolls
-    @reactive.Calc
-    def dice_sums():
-        return [
-            np.random.randint(1, 7, input.numDice()).sum()
-            for _ in range(input.numRolls())
-        ]
-
-    @output
-    @render.plot
-    def dicePlot():
-        current_sums = dice_sums()
-        fig, ax = plt.subplots()
-
-        unique_sums, counts = np.unique(current_sums, return_counts=True)
-        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
-
-        ax.set_title("Frequency of Dice Totals")
-        ax.set_xlabel("Dice Total")
-        ax.set_ylabel("Frequency")
-        plt.xticks(rotation=90)
-
-        return fig
-
-app = App(app_ui, server)</code></pre>
+<section id="arbitrarily-complicated-processes" class="level2">
+<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes">Arbitrarily Complicated Processes</h2>
+<p>It’s important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).</p>
+<p>It is worth noting that a small number of parameters is generally called ‘Statistics’, modest to large number of parameters is called ‘Machine Learning’, and somewhere around a billion or more is called ‘Artificial Intelligence’.</p>
 </section>
-<section id="dice-totals-probability" class="level2">
-<h2 class="anchored" data-anchor-id="dice-totals-probability">Dice Totals Probability</h2>
-<p>Our goal here is not to think too much about the data generating process or the model (that comes later!), what we really want to know now is the likelihood of a particular dice total given a dice model. To estimate the probability <span class="math inline">\(P(E)\)</span> of an event <span class="math inline">\(E\)</span>, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:</p>
-<p><span class="math display">\[
-P(E) \approx \frac{\text{Number of times event } E \text{ occurs}}{\text{Total number of trials}} = \frac{40}{5000} = 0.008
-\]</span></p>
-<p>The accuracy of this estimate depends on the total number of trials as governed by the Law of Large Numbers. The standard error, which gives a measure of uncertainty in the estimate of a mean value, is proportional to one over the square root of the number of samples:</p>
-<p><span class="math display">\[
-P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
-\]</span></p>
-<p>Which indicates there are diminishing returns to just making the sample size larger. Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that’s still not enough, dig into exact/analytic methods.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Throughout this primer there will be several opportunities for exact/analytical solutions, but we will generally ignore them. Instead we will choose computation whenever it is plausible. Why? It’s simply a lot faster than figuring out some unknown depth of analysis, and we can usually have more confidence in the results because we’ve reduced the human error element. (Some may know an essay called the ‘The Bitter Lesson’ by Rich Sutton, which I think has a strong engineering corollary…). Be assured that solving problems through raw computation has it’s limits - there’s no way to compute through a bad algorithm, and often the right next step in that situation is to gain a more fundamental understanding through analysis. But we’re professionals in a hurry, we choose computation when it’s plausible.</p>
-</div>
-</div>
+<section id="statistical-tests" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-tests">Statistical Tests</h2>
+<p>Traditional statistical education is somewhat obsessed with testing if two data generating processes are different. (Our approach not only allows for determining if two data generating processes are different, but also making predictions about future data from the process). A common example of these ‘significance tests’ is a human’s likelihood of dying while taking a medication vs not taking the medication. Obviously we prefer not to give people medications that are ineffective, so this is a reasonable question.</p>
+<p>The typical approach goes something like this - if I assume I know the characteristics of data generating process A, and I know the data generated by a possibly different data generating process we’ll call A/B - then how likely is the data, or even more extreme data/values, to come from A. If it is very unlikely to come from A, we’ll conclude it is coming from another process, B.</p>
+<p>That probably sounded somewhat confusing, and if you are confused, you are in good company. Many intelligent people publishing smart papers in reputable journals get significance testing not-quite-right, not to mention the arbitrary standard of rejecting a null hypothesis if p &lt; 0.05, which should also be adjusted to the situation. Subsequently this text will spend no time on hypothesis testing, other than to say if it’s important for you to determine if two data generating processes are different, I’m sure you can devise a method that makes sense and you can understand.</p>
 </section>
-<section id="summary" class="level2">
-<h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>What we intended to show here is we can build a model of a process, and use that model to determine how probable any outcome of the process is. We also see that the reliability of that estimate is related to the total number of samples from the process, with more samples leading to more reliable estimates.</p>
-</section>
-<section id="wait-not-so-fast" class="level2">
-<h2 class="anchored" data-anchor-id="wait-not-so-fast">Wait Not so Fast</h2>
-<p>You may have a thought lingering in the back of your brain - why am I trusting you that your dice rolling model represents reality? Well, in general you shouldn’t trust any model. This is where real data is incredibly important. Preferably we’d have the data from real dice rolls, and although we shouldn’t expect a perfect match, we’d be able to at least get an intuition for whether the model was reasonable. Since this problem was so simple, and is relatively easy to verify analytically, we skipped this otherwise important step.</p>
-</section>
-<section id="wait-one-more" class="level2">
-<h2 class="anchored" data-anchor-id="wait-one-more">Wait, One More!</h2>
-<p>You may also have asked yourself - why can’t (or when should) I just use the real data to find the probability of an event? This would use the same technique as before, except the data would give count/frequency of the event divided by the total number of observations.</p>
-<p>The answer to that is - if you have enough data, you should do it that way! For example, if you’ve observed something about a dozen or more times in a dataset, dividing the count/frequency of that event by the total number of observations will give you quite a good estimate for its probability, given the same conditions as the dataset. It’s more complicated if you’ve only observed the event a couple times, and obviously impossible if you’ve observed it zero times. It’s also not possible if you want to make a change to the conditions that were used to generate the dataset… (discussion of uncertainty in those estimates at low counts????????, appendix material????)</p>
-<p>It’s quite common to be interested in the likelihood of an event in the tails (the far ends) of a distribution, however this is also where we need the most caution. Generally we will use some knowledge about the problem and the kind of data it is likely to produce combined with some sample of data to ground-truth the model parameters… However, since the tails of the distribution are rarely or never observed, we need a lot of caution and humility if we try to predict them.</p>
+<section id="parameters" class="level2">
+<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<p>End with a discussion of parameters as they appear in probability distributions. Next we will move on to estimating these parameters in the second half of the book… (note that the second half will eventually need to cover MLE).</p>
 
 
 </section>

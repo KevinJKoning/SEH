@@ -1,7 +1,5 @@
 ---
-title: "Quarto"
+title: "Statistics for Engineers in a Hurry (a Primer)"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Please use the Github repo for the book to make corrections or contributions: https://github.com/Bearsetc/SEH

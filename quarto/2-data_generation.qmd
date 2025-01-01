@@ -15,6 +15,7 @@ TODO: **BOLD** words that end up in a glossary
 TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY - PROBABILITY GOING FORWARD, LIKELIHOOD GOING BACKWARD
 TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second.
 TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?
+TODO: Do we have a description between statistics, machine learning, and AI in a good spot?
 
 ## Data Generation Processes TEMPORARY OUTLINE
 
