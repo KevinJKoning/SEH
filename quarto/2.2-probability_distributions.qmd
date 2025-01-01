@@ -239,9 +239,137 @@ I've reserved the use of *likelihood* until the second half of this primer durin
 
 ## Probability of a Single Event
 
-When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extereme as the value that we observed. 
+When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed. 
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Probability Calculator"),
+
+    # Row 1: Parameters and input value
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_numeric(
+                "xInput", "Value (x):",
+                value=110, min=0, max=200
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Probability output
+    ui.row(
+        ui.column(
+            12,
+            ui.h4("Probability (P(X ≥ x)):"),
+            ui.output_text("probOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Calculate probability
+    @reactive.Calc
+    def calculate_probability():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+        return 1 - stats.norm.cdf(x, mu, sigma)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the normal PDF with shaded area
+    @output
+    @render.plot
+    def normalPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Create x values for plotting
+        x_min = mu - 4 * sigma
+        x_max = mu + 4 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot the PDF
+        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
+        
+        # Shade the area for P(X ≥ x)
+        x_shade = x_vals[x_vals >= x]
+        y_shade = stats.norm.pdf(x_shade, mu, sigma)
+        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
+                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
+
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+
+        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+app = App(app_ui, server)
+```
 
 HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.
+
+Mathematically, what we just did is this:
+
+For a continuous random variable $X$ with a PDF $f(x)$, the probability of observing a value within a range $[a, b]$ is calculated as:
+
+$$
+P(a \leq X \leq b) = \int_a^b f(x) \, dx
+$$
+
+This integral represents the area under the curve of the PDF between $a$ and $b$. When we refer to probabilities of "as extreme or more extreme" values, we typically compute tail probabilities using similar integrals. For example, for a right-tailed probability beyond a point $c$, we evaluate:
+
+$$
+P(X \geq c) = \int_c^\infty f(x) \, dx
+$$
+
+
 
 ## Probability of Multiple Events
 

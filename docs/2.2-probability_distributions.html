@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -173,7 +173,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Probability of Data</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -182,7 +182,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Totals</span></a>
+ <span class="menu-text">Dice Probability</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -208,7 +208,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Parameter Estimation</span></a>
+ <span class="menu-text">Likelihood of Model</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -217,13 +217,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Dice Model Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Likelihood Reverse</span></a>
+ <span class="menu-text">Distribution Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -263,7 +263,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Data Generation</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Probability Distributions</h1>
 </div>
@@ -480,7 +480,7 @@ app = App(app_ui, server)</code></pre>
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
 <p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="c0c33ea7" class="cell" data-execution_count="1">
+<div id="4626d486" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -506,8 +506,129 @@ Warning
 </section>
 <section id="probability-of-a-single-event" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-a-single-event">Probability of a Single Event</h2>
-<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extereme as the value that we observed.</p>
+<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Probability Calculator"),
+
+    # Row 1: Parameters and input value
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_numeric(
+                "xInput", "Value (x):",
+                value=110, min=0, max=200
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Probability output
+    ui.row(
+        ui.column(
+            12,
+            ui.h4("Probability (P(X ≥ x)):"),
+            ui.output_text("probOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Calculate probability
+    @reactive.Calc
+    def calculate_probability():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+        return 1 - stats.norm.cdf(x, mu, sigma)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the normal PDF with shaded area
+    @output
+    @render.plot
+    def normalPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Create x values for plotting
+        x_min = mu - 4 * sigma
+        x_max = mu + 4 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot the PDF
+        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
+        
+        # Shade the area for P(X ≥ x)
+        x_shade = x_vals[x_vals &gt;= x]
+        y_shade = stats.norm.pdf(x_shade, mu, sigma)
+        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
+                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
+
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+
+        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
 <p>HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.</p>
+<p>Mathematically, what we just did is this:</p>
+<p>For a continuous random variable <span class="math inline">\(X\)</span> with a PDF <span class="math inline">\(f(x)\)</span>, the probability of observing a value within a range <span class="math inline">\([a, b]\)</span> is calculated as:</p>
+<p><span class="math display">\[
+P(a \leq X \leq b) = \int_a^b f(x) \, dx
+\]</span></p>
+<p>This integral represents the area under the curve of the PDF between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. When we refer to probabilities of “as extreme or more extreme” values, we typically compute tail probabilities using similar integrals. For example, for a right-tailed probability beyond a point <span class="math inline">\(c\)</span>, we evaluate:</p>
+<p><span class="math display">\[
+P(X \geq c) = \int_c^\infty f(x) \, dx
+\]</span></p>
 </section>
 <section id="probability-of-multiple-events" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
