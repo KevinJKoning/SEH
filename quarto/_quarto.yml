@@ -15,14 +15,14 @@ website:
     contents:
       - text: "Introduction"
         href: 1-intro.qmd
-      - text: "Data Generation"
+      - text: "Probability of Data"
         href: 2-data_generation.qmd
         contents:
           - 2.1-simple_data_generation.qmd
           - 2.2-probability_distributions.qmd
           - 2.3-linear_data_generation.qmd
           - 2.4-tests_processes_parameters.qmd
-      - text: "Parameter Estimation"
+      - text: "Likelihood of Model"
         href: 3-parameter_estimation.qmd
         contents:
           - 3.1-data_generation_reverse.qmd

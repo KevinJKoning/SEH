@@ -1,5 +1,5 @@
 ---
-title: Data Generation
+title: Dice Model Likelihood
 format: html
 filters:
   - shinylive
@@ -95,7 +95,27 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-I'm guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren't certain about the model generating it, we can work in 'reverse' to find a likely model that is generating that data.
+I'm guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren't certain about the model generating it, we can work in 'reverse' to find a likely model of the real world data generating process.
+
+## Loss Functions
+
+In the previous dice example, we were just eyeballing the right model parameters to minimize the difference between our predictions and our data. We'd like a more consistent and mathematical way to achieve the same intent, which is called a **loss function**. In generic form it looks like this:
+
+$$
+\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+$$
+
+1. $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: 
+   This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
+
+2. $\ell(y_i, \hat{y}_i)$:
+   This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. We want to pay particular attention to how the errors are distributed when selecting the loss function.
+
+3. $\frac{1}{N} \sum_{i=1}^{N}$: 
+   This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
+
+The form of the loss function is important and can change meaningfully depending on the problem... (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed...
+
 
 ## Methods
 

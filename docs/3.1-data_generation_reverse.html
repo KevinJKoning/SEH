@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Generation – Quarto</title>
+<title>Dice Model Likelihood – Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,6 +72,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -112,7 +141,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Data Generation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Dice Model Likelihood</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -141,7 +170,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Probability of Data</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -150,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Totals</span></a>
+ <span class="menu-text">Dice Probability</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -176,7 +205,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Parameter Estimation</span></a>
+ <span class="menu-text">Likelihood of Model</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -185,7 +214,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Data Generation</span></a>
+ <span class="menu-text">Dice Model Likelihood</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -219,6 +248,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#data-generation-reverse" id="toc-data-generation-reverse" class="nav-link active" data-scroll-target="#data-generation-reverse">Data Generation Reverse</a></li>
+  <li><a href="#loss-functions" id="toc-loss-functions" class="nav-link" data-scroll-target="#loss-functions">Loss Functions</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
   </ul>
@@ -227,9 +257,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Parameter Estimation</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Data Generation</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Dice Model Likelihood</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Data Generation</h1>
+<h1 class="title">Dice Model Likelihood</h1>
 </div>
 
 
@@ -334,7 +364,20 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>I’m guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren’t certain about the model generating it, we can work in ‘reverse’ to find a likely model that is generating that data.</p>
+<p>I’m guessing you succeeded. We want to be able to do that automatically, and with many more parameters, such that if we have data but aren’t certain about the model generating it, we can work in ‘reverse’ to find a likely model of the real world data generating process.</p>
+</section>
+<section id="loss-functions" class="level2">
+<h2 class="anchored" data-anchor-id="loss-functions">Loss Functions</h2>
+<p>In the previous dice example, we were just eyeballing the right model parameters to minimize the difference between our predictions and our data. We’d like a more consistent and mathematical way to achieve the same intent, which is called a <strong>loss function</strong>. In generic form it looks like this:</p>
+<p><span class="math display">\[
+\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+\]</span></p>
+<ol type="1">
+<li><p><span class="math inline">\(\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})\)</span>: This represents the overall loss function, which measures the difference between the true values <span class="math inline">\(\mathbf{y}\)</span> and the predicted values <span class="math inline">\(\hat{\mathbf{y}}\)</span>. It aggregates the individual losses across all data points.</p></li>
+<li><p><span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span>: This is the individual loss for a single data point <span class="math inline">\(i\)</span>. It can take different forms depending on the type of problem. We want to pay particular attention to how the errors are distributed when selecting the loss function.</p></li>
+<li><p><span class="math inline">\(\frac{1}{N} \sum_{i=1}^{N}\)</span>: This is the averaging operation, which sums up the individual losses <span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset and divides by <span class="math inline">\(N\)</span> to compute the average loss. This helps ensure that the loss function is independent of the dataset size.</p></li>
+</ol>
+<p>The form of the loss function is important and can change meaningfully depending on the problem… (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed…</p>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>

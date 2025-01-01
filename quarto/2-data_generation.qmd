@@ -5,8 +5,13 @@ format: html
 
 In the first half of the book, 
 
-Select a subchapter from the left hand menu
+Select a subchapter from the left hand menu...
 
+There are two recommended ways to work your way through this primer.
+A) Just go in top down order, this will introduce you first to the probability of data given a model of a data generating process, and it will work into models of greater and greater complexity.
+B) Do the first chapter in *probability of data*, then do the first chapter of *probability of model*, then the second chapter in both, etc. This bounces between the probability of the data and the likelihood of the model.
+
+TODO: **BOLD** words that end up in a glossary
 TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY - PROBABILITY GOING FORWARD, LIKELIHOOD GOING BACKWARD
 TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second.
 TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?

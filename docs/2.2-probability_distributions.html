@@ -251,9 +251,9 @@ window.Quarto = {
    
   <ul>
   <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link active" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
-  <li><a href="#arbitrarily-complicated-processes-move-to-later" id="toc-arbitrarily-complicated-processes-move-to-later" class="nav-link" data-scroll-target="#arbitrarily-complicated-processes-move-to-later">Arbitrarily Complicated Processes (MOVE TO LATER)</a></li>
   <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
   <li><a href="#probability-of-continuous-data" id="toc-probability-of-continuous-data" class="nav-link" data-scroll-target="#probability-of-continuous-data">“Probability” of Continuous Data</a></li>
+  <li><a href="#probability-of-a-single-event" id="toc-probability-of-a-single-event" class="nav-link" data-scroll-target="#probability-of-a-single-event">Probability of a Single Event</a></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
   <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
@@ -308,11 +308,6 @@ Warning
 <li><p>The model is mimicing a [idealized] process with inherent characteristics</p></li>
 <li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
 </ol>
-</section>
-<section id="arbitrarily-complicated-processes-move-to-later" class="level2">
-<h2 class="anchored" data-anchor-id="arbitrarily-complicated-processes-move-to-later">Arbitrarily Complicated Processes (MOVE TO LATER)</h2>
-<p>It’s important to note that we are not limited to simple processes that create known probability distributions. We can combine any set of imaginable computational steps, including any probability distributions, together to form a more accurate estimate of the data generating process. A helpful visualization of a more complicated process is a directed acyclic graph (DAG).</p>
-<p>It is worth noting that a small number of parameters is generally called ‘Statistics’, modest to large number of parameters is called ‘Machine Learning’, and somewhere around a billion or more is called ‘Artificial Intelligence’.</p>
 </section>
 <section id="normalgaussian-likelihood" class="level2">
 <h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
@@ -479,11 +474,13 @@ def server(input, output, session):
 
 app = App(app_ui, server)</code></pre>
 <p>A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
+<p><strong>Histogram of continuous data??</strong></p>
+<p>It’s tempting to leave the discussion here and to essentially just use histograms of the continuous data and our relative frequency technique to find the approximate probability of a value. However, there are unfortunately problems. The first one that comes to mind is the arbitrary size of the bins you choose, although for practical problems we can probably get around it. The final straw though is that having a robust understanding of probability distributions will pay big dividends later (so we can use standard likelihood techniques), so we slip a little further into the statistical void.</p>
 </section>
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
-<p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, which for all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="44b37208" class="cell" data-execution_count="1">
+<p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
+<div id="c0c33ea7" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -507,8 +504,14 @@ Warning
 </div>
 </div>
 </section>
+<section id="probability-of-a-single-event" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-a-single-event">Probability of a Single Event</h2>
+<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extereme as the value that we observed.</p>
+<p>HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.</p>
+</section>
 <section id="probability-of-multiple-events" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
+<p>Maybe not get too sucked into the probability of multiple events when we really want to get to likelihood???</p>
 <p>So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let’s say we have <span class="math inline">\(n\)</span> independent events <span class="math inline">\(E\)</span>. The probability of all these events occurring together is the product of their individual probabilities:</p>
 <p><span class="math display">\[\prod_{i=1}^{n} P(E_i)\]</span></p>
 <p>For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever <em>and</em> useful trick is to use the logarithm of the probability product: <span class="math display">\[\sum_{i=1}^{n} log(P(E_i))\]</span></p>

@@ -1,5 +1,5 @@
 ---
-title: Likelihood Reverse
+title: Distribution Likelihood
 format: html
 filters:
   - shinylive

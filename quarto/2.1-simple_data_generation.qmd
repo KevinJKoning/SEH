@@ -1,5 +1,5 @@
 ---
-title: Dice Totals
+title: Dice Probability
 format: html
 filters:
   - shinylive
