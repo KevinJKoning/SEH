@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Models – Statistics for Engineers in a Hurry (a Primer)</title>
+<title>Linear Regression – Statistics for Engineers in a Hurry (a Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -141,7 +141,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Regression</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -191,7 +191,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Linear Models</span></a>
+ <span class="menu-text">Linear Regression</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -260,16 +260,15 @@ window.Quarto = {
   <li><a href="#probability-of-the-data" id="toc-probability-of-the-data" class="nav-link" data-scroll-target="#probability-of-the-data">Probability of the Data</a></li>
   </ul></li>
   <li><a href="#multi-variable-regression" id="toc-multi-variable-regression" class="nav-link" data-scroll-target="#multi-variable-regression">Multi Variable Regression</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Models</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Linear Regression</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Linear Models</h1>
+<h1 class="title">Linear Regression</h1>
 </div>
 
 
@@ -490,7 +489,7 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
 <p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
 <p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="44e3542a" class="cell" data-execution_count="1">
+<div id="8508b52f" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -506,11 +505,11 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="7a2a78de" class="cell" data-execution_count="2">
+<div id="dd4fe770" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="836" height="523" class="figure-img"></p>
+<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="833" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -529,21 +528,13 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <section id="probability-of-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="probability-of-the-data">Probability of the Data</h3>
 <p>While we can expect all models to be flawed to some extent, using a model with some very obvious flaws makes estimating the probability of data quite dubious. For example, we have some data that is 5+ standard deviations away, which is rarer than one in a million. I don’t think the data is that rare, I think the model is just not very good.</p>
+<p><strong>NEEDS MORE MATH</strong></p>
 </section>
 </section>
 <section id="multi-variable-regression" class="level2">
 <h2 class="anchored" data-anchor-id="multi-variable-regression">Multi Variable Regression</h2>
 <p>There are actually some more columns/attributes/variables in the diamond dataset we didn’t use. Often in life we know things like this exist but they are just not available. However, right now we’ll use them and see if we can improve the model.</p>
 <p>Now you’re thinking, well you just didn’t use a complicated enough model… Maybe throw a neural network at it. And while you aren’t all wrong - you are also on the path to the dark side.</p>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<p>If you are interested in the many statistical/machine learning tools, I suggest you refer to <em>An Introduction to Statistical Learning</em> by James, Witten, Hastie, and Tibshirani.</p>
-<p>The various statistical/machine learning tools which include generalized linear regression and decision/regression trees have a distinct advantage and disadvantage: 1) So long as some basic criteria are met, you just apply the model to your data. 2) So long as some basic criteria are met, you just apply the model to your data.</p>
-<p>That was not a typo. The advantage is communicating how you performed the analysis mostly requires just naming the tool. You only need to ensure it is applied correctly.</p>
-<p>I say it is a disadvantage because you do not really think through your problem, and you do not really think through the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.</p>
-<p>In this primer we will leave all the other tools to other books, and we will instead use techniques that allow us to mold the model to our situation. This should only be done when you have at least <em>some</em> knowledge about the data generation process you are modeling - but it doesn’t take much and who tries to model data for a situation they know nothing about?</p>
-<p>Think bayes Allen Downey, Statistical Rethinking..</p>
 
 
 </section>

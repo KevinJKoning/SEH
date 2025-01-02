@@ -1,5 +1,5 @@
 ---
-title: Linear Models
+title: Linear Regression
 format: html
 filters:
   - shinylive
@@ -311,26 +311,12 @@ Linear models are very interpretable, so someone familiar with them probably cou
 
 While we can expect all models to be flawed to some extent, using a model with some very obvious flaws makes estimating the probability of data quite dubious. For example, we have some data that is 5+ standard deviations away, which is rarer than one in a million. I don't think the data is that rare, I think the model is just not very good.
 
+**NEEDS MORE MATH**
 
 ## Multi Variable Regression
 
 There are actually some more columns/attributes/variables in the diamond dataset we didn't use. Often in life we know things like this exist but they are just not available. However, right now we'll use them and see if we can improve the model.
 
 Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you are also on the path to the dark side.
-
-## References
-
-If you are interested in the many statistical/machine learning tools, I suggest you refer to *An Introduction to Statistical Learning* by James, Witten, Hastie, and Tibshirani.
-
-The various statistical/machine learning tools which include generalized linear regression and decision/regression trees have a distinct advantage and disadvantage: 1) So long as some basic criteria are met, you just apply the model to your data. 2) So long as some basic criteria are met, you just apply the model to your data.
-
-That was not a typo. The advantage is communicating how you performed the analysis mostly requires just naming the tool. You only need to ensure it is applied correctly.
-
-I say it is a disadvantage because you do not really think through your problem, and you do not really think through the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.
-
-In this primer we will leave all the other tools to other books, and we will instead use techniques that allow us to mold the model to our situation. This should only be done when you have at least *some* knowledge about the data generation process you are modeling - but it doesn't take much and who tries to model data for a situation they know nothing about?
-
-Think bayes Allen Downey, Statistical Rethinking..
-
 
 

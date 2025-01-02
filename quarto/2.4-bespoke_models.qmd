@@ -5,12 +5,43 @@ filters:
   - shinylive
 ---
 
-## The Rainbow
+## All the Models under the Rainbow
 
-Although this chapter is about creating bespoke models... we should mention all the generic statistical and machine learning models that may meet your needs.
+Before we get on with creating bespoke models... we should mention all the generic statistical and machine learning models that may meet your needs. If you are interested in the many statistical/machine learning tools, I suggest you refer to *An Introduction to Statistical Learning* by James, Witten, Hastie, and Tibshirani.
 
-We are gradually making more 'bespoke' models... There tend to be common types of models because they can be applied so generally, these include the generalized linear models and other 'machine learning' types of models like decision trees. However, there's nothing in statistics that limits us to just these... If we have a specialized case, like modeling the motion of a spring, we can generate a specialized model.
+The various statistical/machine learning tools which include generalized linear regression, decision/regression trees, and neural nets have a distinct advantage and disadvantage: 1) So long as some basic criteria are met, you just apply the model to your data. 2) So long as some basic criteria are met, you just apply the model to your data.
 
-Refer to statistical learning for more...
+That was not a typo. The advantage is both in the speed in which you can perform an analysis as well as the simplicity in communicating how you performed the analysis. I say it is a disadvantage because you are not forced to think through your problem, especially the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.
+
+In this primer we will leave all these other tools to other books, and we will instead focus on techniques that allow us to mold the model to our situation. This should only be done when you have at least *some* knowledge about the data generation process you are modeling - but it doesn't take much and who tries to model data for a situation they know nothing about?
+
+## Revisiting the Diamond Dataset
+
+In the diamond dataset there was something quite obvious to humans that is impossible for many statistical or machine learning tools to learn - the price premium when passing the 1.0, 1.5, and 2.0 carat thresholds.
 
 ## Causal Model with 1.0, 1.5, and 2.0 Cut Points
+
+If we reason about what is influencing the price of a diamond, once we remove the artificial value that is placed for passing the 1.0, 1.5, and 2.0 carat thresholds, the value appears to be a somewhat continuous and rational combination of the relevant characteristics, specifically color, cut, clarity, and size. If we seem to iron out that one wrinkle, we could have a very good model.
+
+We summarize our knowledge of the real data generating process in a causal diagram:
+
+```{mermaid}
+graph LR
+    cut --> linear_model
+    color --> linear_model
+    clarity --> linear_model
+    size --> linear_model
+    size --> carat_threshold
+    linear_model --> price
+    carat_threshold --> price
+```
+
+This shows that while we have two mechanisms influencing diamond price. While the cut, color, clarity, and size can be combined in a linear fashion to determine price, the size is also an input to a carat threshold model that will influence price.
+
+## Model Flexibility
+
+Engineers are typically familiar with solving systems of equations and the necessity that the system has the appropriate *degrees of freedom*, such that it is not overly constrained so there is no solution, and it is not underconstrained such that there are an infinite number of solutions.
+
+Statistical models that have too much flexibility can be optimized into all sorts of nonsensical solutions. Allowing a negative intercept in a linear regression model of the diamond dataset is one example, as it indicates customers will be paid to take small diamonds. I like to visualize this as a truss with beams/members that can contort into all sorts of nonsensical shapes. What we really want are beams/members that bend in reasonable ways.
+
+We can use our knowledge of the data generating process to create reasonable **priors** for our model. This is simply saying that we already know some reasonable range of values, or even a most likely value, for the parameters of the model. Common examples are not letting a parameter take a negative value, or that previous experience suggest the parameter is near a certain value. Setting a prior does not mean we force a parameter value on the model, it just eliminates the impossible values and nudges the model towards our prior knowledge. If the data is different...
