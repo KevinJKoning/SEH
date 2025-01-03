@@ -1,5 +1,5 @@
 ---
-title: Probability Distributions
+title: Continuous Probability Distributions
 format: html
 filters:
   - shinylive

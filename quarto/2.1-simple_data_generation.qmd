@@ -1,9 +1,17 @@
 ---
-title: Dice
+title: Discrete Probability Distributions
 format: html
 filters:
   - shinylive
 ---
+
+## Preview
+
+Here we begin the first half of the primer, which focuses on $P(D|M)$, the probability of the data given a model of a data generating process. Before we can talk about data from a model, we need to introduce models. The first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce 'discrete probability distributions' as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
+
+Once we have have some discussion of models under our belt, we will change our focus to the probability of data. We will start with the dice example and use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. We then show how discrete probability distributions can generate samples similar to our dice rolling model but for other processes. We then show how we could use the relative frequency technique with discrete probability distributions to find approximate probabilities. We then point out, like someone already performing an infinite number of samples, the exact probabilities have already been calculated, if we need to use themß.
+
+Finally, we show how we can use computation to calculate the approximate probability of multiple events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls.
 
 ## Data Generation with Dice
 
@@ -58,6 +66,19 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+## Discrete Probability Distributions as Data Generating Models
+
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes, such as flipping a coin. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called **discrete probability distributions**.
+
+### Binomial Distribution
+
+We use coin flipping as the basis of the binomial distribution, but be aware that the 'coin' does not need to be fair, or even close to fair.
+
+Some kinds of 
+
+### Poisson Distribution
+
+
 ## Dice Totals Probability
 
 Our goal here is not to think too much about the data generating process or the model (that comes later!), what we really want to know now is the likelihood of a particular dice total given a dice model. To estimate the probability $P(E)$ of an event $E$, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:
@@ -93,3 +114,4 @@ You may also have asked yourself - why can't (or when should) I just use the rea
 The answer to that is - if you have enough data, you should do it that way! For example, if you've observed something about a dozen or more times in a dataset, dividing the count/frequency of that event by the total number of observations will give you quite a good estimate for its probability, given the same conditions as the dataset. It's more complicated if you've only observed the event a couple times, and obviously impossible if you've observed it zero times. It's also not possible if you want to make a change to the conditions that were used to generate the dataset... (discussion of uncertainty in those estimates at low counts????????, appendix material????)
 
 It's quite common to be interested in the likelihood of an event in the tails (the far ends) of a distribution, however this is also where we need the most caution. Generally we will use some knowledge about the problem and the kind of data it is likely to produce combined with some sample of data to ground-truth the model parameters... However, since the tails of the distribution are rarely or never observed, we need a lot of caution and humility if we try to predict them.
+

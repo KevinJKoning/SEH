@@ -225,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#all-the-models-under-the-rainbow" id="toc-all-the-models-under-the-rainbow" class="nav-link active" data-scroll-target="#all-the-models-under-the-rainbow">All the Models under the Rainbow</a></li>
   <li><a href="#revisiting-the-diamond-dataset" id="toc-revisiting-the-diamond-dataset" class="nav-link" data-scroll-target="#revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</a></li>
   <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
-  <li><a href="#building-bespoke-models" id="toc-building-bespoke-models" class="nav-link" data-scroll-target="#building-bespoke-models">Building Bespoke Models</a></li>
+  <li><a href="#model-flexibility" id="toc-model-flexibility" class="nav-link" data-scroll-target="#model-flexibility">Model Flexibility</a></li>
   </ul>
 </nav>
     </div>
@@ -287,9 +287,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>This shows that while we have two mechanisms influencing diamond price. While the cut, color, clarity, and size can be combined in a linear fashion to determine price, the size is also an input to a carat threshold model that will influence price.</p>
 </section>
-<section id="building-bespoke-models" class="level2">
-<h2 class="anchored" data-anchor-id="building-bespoke-models">Building Bespoke Models</h2>
-<p>While</p>
+<section id="model-flexibility" class="level2">
+<h2 class="anchored" data-anchor-id="model-flexibility">Model Flexibility</h2>
+<p>Engineers are typically familiar with solving systems of equations and the necessity that the system has the appropriate <em>degrees of freedom</em>, such that it is not overly constrained so there is no solution, and it is not underconstrained such that there are an infinite number of solutions.</p>
+<p>Statistical models that have too much flexibility can be optimized into all sorts of nonsensical solutions. Allowing a negative intercept in a linear regression model of the diamond dataset is one example, as it indicates customers will be paid to take small diamonds. I like to visualize this as a truss with beams/members that can contort into all sorts of nonsensical shapes. What we really want are beams/members that bend in reasonable ways.</p>
+<p>We can use our knowledge of the data generating process to create reasonable <strong>priors</strong> for our model. This is simply saying that we already know some reasonable range of values, or even a most likely value, for the parameters of the model. Common examples are not letting a parameter take a negative value, or that previous experience suggest the parameter is near a certain value. Setting a prior does not mean we force a parameter value on the model, it just eliminates the impossible values and nudges the model towards our prior knowledge. If the data is different…</p>
 
 
 </section>

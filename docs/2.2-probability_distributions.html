@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Probability Distributions – Statistics for Engineers in a Hurry (a Primer)</title>
+<title>Continuous Probability Distributions – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -116,7 +116,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Statistics for Engineers in a Hurry (a Primer)</span>
+    <span class="navbar-title">Statistics for Engineers in a Hurry (an Illustrated Primer)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -144,7 +144,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Continuous Probability Distributions</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -182,24 +182,30 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Probability</span></a>
+ <span class="menu-text">Discrete Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Probability Distributions</span></a>
+ <span class="menu-text">Continuous Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Data Generation</span></a>
+ <span class="menu-text">Linear Regression</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bespoke Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
@@ -263,9 +269,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Probability Distributions</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-probability_distributions.html">Continuous Probability Distributions</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Probability Distributions</h1>
+<h1 class="title">Continuous Probability Distributions</h1>
 </div>
 
 
@@ -480,7 +486,7 @@ app = App(app_ui, server)</code></pre>
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
 <p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="4626d486" class="cell" data-execution_count="1">
+<div id="c5ff067b" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
