@@ -7,17 +7,19 @@ filters:
 
 ## Preview
 
-Here we begin the first half of the primer, which focuses on $P(D|M)$, the probability of the data given a model of a data generating process. Before we can talk about data from a model, we need to introduce models. The first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce 'discrete probability distributions' as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
+Here we begin the first half of the primer, which focuses on $P(D|M)$, the probability of the data given a model of a data generating process. Before we can talk about data from a model, however, we need to introduce models. This first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce 'discrete probability distributions' as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
 
-Once we have have some discussion of models under our belt, we will change our focus to the probability of data. We will start with the dice example and use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. We then show how discrete probability distributions can generate samples similar to our dice rolling model but for other processes. We then show how we could use the relative frequency technique with discrete probability distributions to find approximate probabilities. We then point out, like someone already performing an infinite number of samples, the exact probabilities have already been calculated, if we need to use themß.
+Once we have have some discussion of models under our belt, we will change our focus to the probability of data. We will start with a dice total example and use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. We then show how discrete probability distributions can generate samples similar to our dice rolling model, but for other processes. Next, we show how we could use the relative frequency technique with discrete probability distributions to find approximate probabilities. We also point out, like someone already performing an infinite number of samples, the exact probabilities have already been found for us.
 
-Finally, we show how we can use computation to calculate the approximate probability of multiple events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls.
+We then shift to the probability of multiple events based the laws of probability for independent events. We show how we can use computation to calculate the the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.
 
-## Data Generation with Dice
+## Models of Data Generating Processes
+
+### A Dice Total Model
 
 We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we'll use is an awfully good approximation of the real data generating process, so long as you're OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.
 
-Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls. Note how a larger number of rolls seems to give us smoother and more consistent results.
+A dice model is built into the app displayed beneath this paragraph. It will simulate rolling the number of dice you specify, as if you threw them out of a cup all at once, and total the value on those dice from the cup, which is considered one roll. Additionally, it will repeat rolling that cup of dice the number of times you specify, and summarize the results on a histogram. Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls.
 
 ```{shinylive-python}
 #| standalone: true
@@ -28,7 +30,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 app_ui = ui.page_fluid(
-    ui.h2("Dice Rolling Demo"),
+    ui.h2("Dice Rolling App"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
@@ -66,22 +68,62 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-## Discrete Probability Distributions as Data Generating Models
+Hopefully you've noted how a larger number of rolls seems to give us smoother and more consistent results. We will revisit this point more precisely in a later section.
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes, such as flipping a coin. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called **discrete probability distributions**.
+### Discrete Probability Distributions as Models of Data Generating Processes
 
-### Binomial Distribution
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.995 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called **discrete probability distributions**.
 
-We use coin flipping as the basis of the binomial distribution, but be aware that the 'coin' does not need to be fair, or even close to fair.
+Initially we want to think about discrete probability distributions in the same way we thought about our dice model, that it is a model that will generate random events from a data generating process of interest. Below are a couple examples to illustrate the point.
 
-Some kinds of 
+#### Binomial Distribution
 
-### Poisson Distribution
+The binomial distribution is a model that represents the number of successes in a fixed number of independent trials, where each trial has two possible outcomes (commonly referred to as “success” and “failure”). The probability of success can range between 0 and 1. We could continue with our testing example and let this distribution/model generate data for us with a probability of success ($p$) equal to 0.995 over 1,000 trials ($n$). We may expect about 995 succesful tests to be most common, but 1,000, 980, or even 500 are also possibilities. Actual probabilities are shown in the plot below.
 
+```{python}
+#| echo: false
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from scipy.stats import binom
 
-## Dice Totals Probability
+# Parameters for the binomial distribution
+n = 1000  # number of trials
+p = 0.995  # probability of success
 
-Our goal here is not to think too much about the data generating process or the model (that comes later!), what we really want to know now is the likelihood of a particular dice total given a dice model. To estimate the probability $P(E)$ of an event $E$, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:
+# Generate the range of possible successes
+x = np.arange(0, n+1)
+
+# Calculate the probability mass function (PMF)
+pmf = binom.pmf(x, n, p)
+
+# Plot the distribution
+plt.figure(figsize=(8, 4))
+sns.barplot(x=x, y=pmf, color="grey", edgecolor="black")
+plt.title("Binomial Distribution (n=1000, p=0.995)", fontsize=14)
+plt.xlabel("Number of Successes", fontsize=12)
+plt.ylabel("Probability", fontsize=12)
+plt.xlim(975, 1000)  # Focus on the most likely range
+plt.xticks(rotation=90, fontsize=12)  # Rotate x-axis labels 90 degrees
+plt.yticks(fontsize=12)
+plt.show()
+```
+
+#### Poisson Distribution
+
+The Poisson distribution is a model that describes the number of events occurring in a fixed interval of time or space, assuming that the events occur independently and at a constant average rate. For example, it might represent the number of phone calls received by a call center in an hour or the number of cars passing through a toll booth in a minute. The Poisson Distribution is similar to the Binomial distribution, except there are not a fixed number of trials, so there is not an upper limit to the number of events returned by a sample. However, values much larger than the average rate become incredibly unlikely.
+
+#### Summary
+
+We keep this section brief as there are plenty of easily accessible references for discrete probability distributions. Hopefully the point was made though - that each discrete probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.
+
+## Probability of Data
+
+Having given some background on models, we can now focus on the probability of the data, given the model $P(D|M)$.
+
+### Dice Totals Probability of Data
+
+We want to find the probability of a particular dice total (the data) given a dice model. To estimate the probability $P(E)$ of an event $E$, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:
 
 $$
 P(E) \approx \frac{\text{Number of times event } E \text{ occurs}}{\text{Total number of trials}} = \frac{40}{5000} = 0.008
@@ -95,9 +137,191 @@ $$
 
 Which indicates there are diminishing returns to just making the sample size larger. Now I know you're smart, and you're saying to yourself, I can figure out the *exact* probability of rolling a certain dice total. Of course you can for this example - but you probably can't for more realistic examples, and we want to learn techiques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that's still not enough, dig into exact/analytic methods.
 
+Here's another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 650
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Utility function to compute exact distribution of sums for n dice ---
+def dice_sum_distribution(n_dice):
+    """
+    Return a list 'dist' where dist[s] = probability of sum s for n_dice dice.
+    Indices go from 0 up to 6*n_dice. Only sums in range [n_dice..6*n_dice]
+    have nonzero probabilities.
+    """
+    # ways[s] = number of ways to get sum s
+    ways = [0] * (6*n_dice + 1)
+    ways[0] = 1  # base case
+
+    for _ in range(n_dice):
+        new_ways = [0] * (6*n_dice + 1)
+        for sum_val, count in enumerate(ways):
+            if count > 0:
+                for face in range(1, 7):
+                    new_ways[sum_val + face] += count
+        ways = new_ways
+
+    total_outcomes = 6 ** n_dice
+    dist = [count / total_outcomes for count in ways]
+    return dist
+
+# -------------------------- UI Definition ---------------------------
+app_ui = ui.page_fluid(
+    ui.h2("Dice Rolling App with Probability of Data"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
+            ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
+        ),
+        ui.output_plot("dicePlot", height="400px"),
+    ),
+
+    # Row to select dice total and display probabilities
+    ui.row(
+        ui.column(4,
+            ui.input_select(
+                "selectedTotal", 
+                "Select Dice Total", 
+                choices=[""]   # initially empty, will be updated dynamically
+            )
+        ),
+        ui.column(8,
+            ui.output_text("approxProbability"),
+            ui.output_text("exactProbability")
+        )
+    )
+)
+
+# -------------------------- Server Definition -------------------------
+def server(input, output, session):
+    # Reactive: Generate random sums based on numDice and numRolls
+    @reactive.Calc
+    def dice_sums():
+        return [
+            np.random.randint(1, 7, input.numDice()).sum()
+            for _ in range(input.numRolls())
+        ]
+
+    # Reactive: Exact distribution of sums for the current number of dice
+    @reactive.Calc
+    def exact_distribution():
+        return dice_sum_distribution(input.numDice())
+
+    # Dynamically update the choices in the 'selectedTotal' select input
+    @reactive.Effect
+    def _():
+        current_sums = dice_sums()
+        unique_sums = sorted(np.unique(current_sums))
+        ui.update_select(
+            "selectedTotal",
+            choices=[str(s) for s in unique_sums],
+            selected=str(unique_sums[0]) if len(unique_sums) > 0 else ""
+        )
+
+    # Plot the frequency of dice totals
+    @output
+    @render.plot
+    def dicePlot():
+        current_sums = dice_sums()
+
+        fig, ax = plt.subplots()
+        unique_sums, counts = np.unique(current_sums, return_counts=True)
+        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+
+        ax.set_title("Frequency of Dice Totals")
+        ax.set_xlabel("Dice Total")
+        ax.set_ylabel("Frequency")
+        plt.xticks(rotation=90)
+
+        return fig
+
+    # Approximate probability of the selected dice total
+    @output
+    @render.text
+    def approxProbability():
+        if not input.selectedTotal():
+            return "\nSelect a dice total to see probabilities."
+
+        current_sums = dice_sums()
+        selected_total = int(input.selectedTotal())
+
+        count = sum(1 for x in current_sums if x == selected_total)
+        if len(current_sums) == 0:
+            prob = 0
+        else:
+            prob = count / len(current_sums)
+
+        return f"\nApprox. Probability of {selected_total}: {prob:.4f}"
+
+    # Exact probability of the selected dice total
+    @output
+    @render.text
+    def exactProbability():
+        if not input.selectedTotal():
+            return ""
+
+        selected_total = int(input.selectedTotal())
+        dist = exact_distribution()
+
+        # If the selected total is out of range, probability is 0
+        if selected_total < 0 or selected_total >= len(dist):
+            prob = 0
+        else:
+            prob = dist[selected_total]
+
+        return f"Exact Probability of {selected_total}: {prob:.4f}"
+
+app = App(app_ui, server)
+```
+
+Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult. These events have become known as a 'black swan', a phrase that anyone in risk management should be quite familiar with. 
+
+
 ::: callout-note
+SHORTEN THIS
+
 Throughout this primer there will be several opportunities for exact/analytical solutions, but we will generally ignore them. Instead we will choose computation whenever it is plausible. Why? It's simply a lot faster than figuring out some unknown depth of analysis, and we can usually have more confidence in the results because we've reduced the human error element. (Some may know an essay called the 'The Bitter Lesson' by Rich Sutton, which I think has a strong engineering corollary...). Be assured that solving problems through raw computation has it's limits - there's no way to compute through a bad algorithm, and often the right next step in that situation is to gain a more fundamental understanding through analysis. But we're professionals in a hurry, we choose computation when it's plausible.
 :::
+
+### Discrete Probability Distributions Probability of Data
+...
+
+#### Relative Frequency Technique
+
+Show we can use relative frequency technique like with the dice.
+
+#### Exact Probabilities
+
+A handy thing about using discrete probability distributions is that we can also use them to get *exact* probabilities of an event/outcome given its parameters... Example...
+
+
+
+## Probability of Multiple Events
+
+So far we have only considered $P(D|M)$ where the data is a single event. However, it is more common to be have multiple data points, and we'd like to know the relative probability of that specific dataset vs other dataset we may have sampled.
+
+### Law of Probability and Independent Events
+
+First we need to know the law of probability and independent events... How independence is not time series. How we typically add log prob instead of multiply.
+
+### Calculating the Relative Probability of Multiple Events
+
+With that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We'll use the exact probabilities of getting each total... Let's assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.
+
+We'd like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.
+
+We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.
+
+
+### Comparison to Traditional Hypothesis Testing
+
+
+
 
 ## Summary
 
