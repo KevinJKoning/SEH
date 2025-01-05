@@ -238,7 +238,7 @@
     "href": "2.2-probability_distributions.html",
     "title": "Continuous Probability Distributions",
     "section": "",
-    "text": "When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of probability distributions as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.\nA ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.\nAdditive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.\n\n\n\n\n\n\nWarning\n\n\n\nSHORTEN THIS.\nThere is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.\nIf teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a probability distribution model. When we use it in the context of uncertainty, I will call it an uncertainty distribution. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.\nIf you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.\n\n\nThe point here is that each probability distribution model has the basic form of:\n\nThe model is mimicing a [idealized] process with inherent characteristics\nThese characteristics determine the shape/frequency of the outcomes",
+    "text": "We continue with \\(P(D|M)\\), the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same processes.. give us time for specific event = 0.\nWe constrain our models to producing a single continuous probability distribution to keep things simple. In future chapters we will relax this constraint to build more complex and accurate models.",
     "crumbs": [
       "Home",
       "Probability of Data",
@@ -249,8 +249,8 @@
     "objectID": "2.2-probability_distributions.html#more-data-generating-processes-probability-distribution-as-models",
     "href": "2.2-probability_distributions.html#more-data-generating-processes-probability-distribution-as-models",
     "title": "Continuous Probability Distributions",
-    "section": "",
-    "text": "When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of probability distributions as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.\nA ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.\nAdditive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.\n\n\n\n\n\n\nWarning\n\n\n\nSHORTEN THIS.\nThere is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.\nIf teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a probability distribution model. When we use it in the context of uncertainty, I will call it an uncertainty distribution. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.\nIf you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.\n\n\nThe point here is that each probability distribution model has the basic form of:\n\nThe model is mimicing a [idealized] process with inherent characteristics\nThese characteristics determine the shape/frequency of the outcomes",
+    "section": "More Data Generating Processes (Probability Distribution as Models)",
+    "text": "More Data Generating Processes (Probability Distribution as Models)\nWhen we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of probability distributions as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.\nA ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.\nAdditive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.\n\n\n\n\n\n\nWarning\n\n\n\nSHORTEN THIS.\nThere is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.\nIf teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a probability distribution model. When we use it in the context of uncertainty, I will call it an uncertainty distribution. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.\nIf you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.\n\n\nThe point here is that each probability distribution model has the basic form of:\n\nThe model is mimicing a [idealized] process with inherent characteristics\nThese characteristics determine the shape/frequency of the outcomes",
     "crumbs": [
       "Home",
       "Probability of Data",
@@ -1016,7 +1016,7 @@
     "href": "2.1-simple_data_generation.html#probability-of-multiple-events",
     "title": "Discrete Probability Distributions",
     "section": "Probability of Multiple Events",
-    "text": "Probability of Multiple Events\n\nLaw of Probability and Independent Events\n\n\nCalculating the Relative Probability of Multiple Events\n\n\nComparison to Traditional Hypothesis Testing",
+    "text": "Probability of Multiple Events\nSo far we have only considered \\(P(D|M)\\) where the data is a single event. However, it is more common to be have multiple data points, and we’d like to know the relative probability of that specific dataset vs other dataset we may have sampled.\n\nLaw of Probability and Independent Events\nFirst we need to know the law of probability and independent events… How independence is not time series. How we typically add log prob instead of multiply.\n\n\nCalculating the Relative Probability of Multiple Events\nWith that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We’ll use the exact probabilities of getting each total… Let’s assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.\nWe’d like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.\nWe then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.\n\n\nComparison to Traditional Hypothesis Testing",
     "crumbs": [
       "Home",
       "Probability of Data",
@@ -1045,6 +1045,172 @@
       "Home",
       "Probability of Data",
       "Discrete Probability Distributions"
+    ]
+  },
+  {
+    "objectID": "2.2-probability_distributions.html#preview",
+    "href": "2.2-probability_distributions.html#preview",
+    "title": "Continuous Probability Distributions",
+    "section": "",
+    "text": "We continue with \\(P(D|M)\\), the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same processes.. give us time for specific event = 0.\nWe constrain our models to producing a single continuous probability distribution to keep things simple. In future chapters we will relax this constraint to build more complex and accurate models.",
+    "crumbs": [
+      "Home",
+      "Probability of Data",
+      "Continuous Probability Distributions"
+    ]
+  },
+  {
+    "objectID": "0-intro.html",
+    "href": "0-intro.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "It’s not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the ‘confusing welcome’ and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.\nThe premise of this primer is that an engineer should think of statistics as a loop involving just two processes:\n\nEstimating the probability of data given a model of a data generating process.\nEstimating the likelihood of a model, given the data.\n\nWe will refer to the real-world process of interest as the data generating process, and we will attempt to summarize it mathematically with a model. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the probability of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the data, we will call it the likelihood of the model.\nThese statements are summarized mathematically in Equation 1 and Equation 2, where D represents data and M represents a model.\n\\[\nP(D \\mid M)\n\\tag{1}\\]\n\\[\n\\mathcal{L}(M \\mid D)\n\\tag{2}\\]\nThe equations above can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.\n\n\n\n\n\n\nNote\n\n\n\nNow you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec…",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#welcome",
+    "href": "0-intro.html#welcome",
+    "title": "Introduction",
+    "section": "",
+    "text": "It’s not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the ‘confusing welcome’ and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.\nThe premise of this primer is that an engineer should think of statistics as a loop involving just two processes:\n\nEstimating the probability of data given a model of a data generating process.\nEstimating the likelihood of a model, given the data.\n\nWe will refer to the real-world process of interest as the data generating process, and we will attempt to summarize it mathematically with a model. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the probability of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the data, we will call it the likelihood of the model.\nThese statements are summarized mathematically in Equation 1 and Equation 2, where D represents data and M represents a model.\n\\[\nP(D \\mid M)\n\\tag{1}\\]\n\\[\n\\mathcal{L}(M \\mid D)\n\\tag{2}\\]\nThe equations above can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.\n\n\n\n\n\n\nNote\n\n\n\nNow you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec…",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#glossary",
+    "href": "0-intro.html#glossary",
+    "title": "Introduction",
+    "section": "Glossary",
+    "text": "Glossary\nGlossary:\n\n\n\n\n\n\n\n\nTerm\nDefinition\nExample\n\n\n\n\nData Generating Process\nA theoretical model describing how observed data are produced, often using probability distributions to represent mechanisms.\nRolling a fair six-sided die generates outcomes with equal probabilities for each face (1-6).\n\n\nProbability\nA value from 0 to 1…\n\n\n\nLikelihood\n\n\n\n\nProbability Distribution\nA function that describes the likelihood of different outcomes in a random experiment.\nThe normal distribution models heights in a population with a bell-shaped curve.\n\n\nRandom Variable\nA variable whose values depend on outcomes of a random phenomenon, often defined by a probability distribution.\nThe number of heads obtained in 10 coin flips is a random variable.",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#models",
+    "href": "0-intro.html#models",
+    "title": "Introduction",
+    "section": "Models",
+    "text": "Models\nThe heart of this primer has already been introduced in the Welcome above, and when I began writing it, it was only two halfs, one focused on probability of data, the other on likelihood of model. However, in the first half I found I was consistently tripping up on explaining models. (Data, I think, requires less explanation)\nIn engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty… But the real world has plenty of uncertainty, and that’s probably why you’ve been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:\n\nAleatoric Uncertainty (Randomness)\nEpistemic Uncertainty (Lack of Knowledge)\n\nStatistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.\n\n\n\n\n\n\nWarning\n\n\n\nThis primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!\n\n\nIn case the point hasn’t been driven home with words and equations, I’ll round it out with a diagram:\n\n\n\n\n\n%%{init: {'theme':'neutral'}}%%\ngraph TB\n    A[\"Data Generation\"] --&gt;|Probability&lt;br/&gt;of Data| B[\"Data\"]\n    B --&gt;|Likelihood of&lt;br/&gt;Data Generation| A\n\n\n\n\n\n\nPart 1 of this book focuses on ‘probability of the data given the model’ and Part 2 the ‘likelihood of the model given the data’.",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#models-and-data",
+    "href": "0-intro.html#models-and-data",
+    "title": "Introduction",
+    "section": "Models and Data",
+    "text": "Models and Data\nThe heart of this primer has already been introduced in the Welcome above, and when I began writing it, it was only two halfs, one focused on probability of data, the other on likelihood of model. However, in the first half I found I was consistently tripping up on explaining models. Subsequently I pulled models and data into its own section to not muddy the others. However, I fear this puts drier or less interesting matter up front. You can avoid this by alternative ways of walking through the material, as described below in Reading Order.\nIn engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty… But the real world has plenty of uncertainty, and that’s probably why you’ve been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:\n\nAleatoric Uncertainty (Randomness)\nEpistemic Uncertainty (Lack of Knowledge)\n\nStatistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.\n\n\n\n\n\n\nWarning\n\n\n\nThis primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#reading-order",
+    "href": "0-intro.html#reading-order",
+    "title": "Introduction",
+    "section": "Reading Order",
+    "text": "Reading Order\nThe primer can obviously be read by just plowing down the table of contents on the left side of the page. This should be the most straightforward but possibly not the most interesting way to proceed. An alternative I recommend you consider is jumping through the first chapter of each major section, then the second chapter of each major section, and so on. This gets you into the material quicker…",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "0-intro.html#last-notes",
+    "href": "0-intro.html#last-notes",
+    "title": "Introduction",
+    "section": "Last Notes",
+    "text": "Last Notes\nIn case the point hasn’t been driven home with words and equations, I’ll round it out with a diagram:\n\n\n\n\n\n%%{init: {'theme':'neutral'}}%%\ngraph TB\n    A[\"Data Generation\"] --&gt;|Probability&lt;br/&gt;of Data| B[\"Data\"]\n    B --&gt;|Likelihood of&lt;br/&gt;Data Generation| A\n\n\n\n\n\n\nPart 1 of this book focuses on ‘probability of the data given the model’ and Part 2 the ‘likelihood of the model given the data’.",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html",
+    "href": "1-probabilistic_models.html",
+    "title": "Models and Data",
+    "section": "",
+    "text": "The heart of this primer has already been introduced in the Introduction, and when I began writing it, it was only two halfs, one focused on probability of data, the other on likelihood of model. However, in the first half I found I was consistently tripping up on explaining models. Subsequently I pulled models and data into its own section to not muddy the others. However, I fear this puts drier or less interesting matter up front.\nI have a recommendation for dealing with this which is to choose one of two paths: - Just proceed through the Models and Data as if you are in a hurry, as I’m sure you are. - Proceed with the to the heart of the primer, and only look back for reference.\nYou can avoid this by alternative ways of walking through the material, as described below in Reading Order.",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#authors-note",
+    "href": "1-probabilistic_models.html#authors-note",
+    "title": "Models and Data",
+    "section": "",
+    "text": "The heart of this primer has already been introduced in the Introduction, and when I began writing it, it was only two halfs, one focused on probability of data, the other on likelihood of model. However, in the first half I found I was consistently tripping up on explaining models. Subsequently I pulled models and data into its own section to not muddy the others. However, I fear this puts drier or less interesting matter up front.\nI have a recommendation for dealing with this which is to choose one of two paths: - Just proceed through the Models and Data as if you are in a hurry, as I’m sure you are. - Proceed with the to the heart of the primer, and only look back for reference.\nYou can avoid this by alternative ways of walking through the material, as described below in Reading Order.",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#preview",
+    "href": "1-probabilistic_models.html#preview",
+    "title": "Models and Data",
+    "section": "Preview",
+    "text": "Preview",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#models",
+    "href": "1-probabilistic_models.html#models",
+    "title": "Models and Data",
+    "section": "Models",
+    "text": "Models",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#data-and-p",
+    "href": "1-probabilistic_models.html#data-and-p",
+    "title": "Models and Data",
+    "section": "Data and P",
+    "text": "Data and P",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#data-and-parameters",
+    "href": "1-probabilistic_models.html#data-and-parameters",
+    "title": "Models and Data",
+    "section": "Data and Parameters",
+    "text": "Data and Parameters",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
+    ]
+  },
+  {
+    "objectID": "1-probabilistic_models.html#data-vs-parameters",
+    "href": "1-probabilistic_models.html#data-vs-parameters",
+    "title": "Models and Data",
+    "section": "Data vs Parameters",
+    "text": "Data vs Parameters\nI",
+    "crumbs": [
+      "Home",
+      "Models ands Data"
     ]
   }
 ]

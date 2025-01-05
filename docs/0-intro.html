@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Statistics for Engineers in a Hurry (a Primer) – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Introduction – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,39 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -89,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -107,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Statistics for Engineers in a Hurry (a Primer)</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0-intro.html">Introduction</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -129,7 +161,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0-intro.html" class="sidebar-item-text sidebar-link">
+  <a href="./0-intro.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
@@ -243,15 +275,25 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
+  <li><a href="#models-and-data" id="toc-models-and-data" class="nav-link" data-scroll-target="#models-and-data">Models and Data</a></li>
+  <li><a href="#reading-order" id="toc-reading-order" class="nav-link" data-scroll-target="#reading-order">Reading Order</a></li>
+  <li><a href="#last-notes" id="toc-last-notes" class="nav-link" data-scroll-target="#last-notes">Last Notes</a></li>
+  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Statistics for Engineers in a Hurry (a Primer)</h1>
+<h1 class="title">Introduction</h1>
 </div>
 
 
@@ -268,9 +310,131 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Please use the Github repo for the book to make corrections or contributions: https://github.com/Bearsetc/SEH</p>
+<section id="welcome" class="level2">
+<h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
+<p>It’s not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the ‘confusing welcome’ and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.</p>
+<p>The premise of this primer is that an engineer should think of statistics as a loop involving just two processes:</p>
+<ol type="1">
+<li><p>Estimating the probability of data given a model of a data generating process.</p></li>
+<li><p>Estimating the likelihood of a model, given the data.</p></li>
+</ol>
+<p>We will refer to the real-world process of interest as the <strong>data generating process</strong>, and we will attempt to summarize it mathematically with a <strong>model</strong>. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the <strong>probability</strong> of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the data, we will call it the <strong>likelihood</strong> of the model.</p>
+<p>These statements are summarized mathematically in <a href="#eq-1" class="quarto-xref">Equation&nbsp;1</a> and <a href="#eq-2" class="quarto-xref">Equation&nbsp;2</a>, where D represents data and M represents a model.</p>
+<p><span id="eq-1"><span class="math display">\[
+P(D \mid M)
+\tag{1}\]</span></span></p>
+<p><span id="eq-2"><span class="math display">\[
+\mathcal{L}(M \mid D)
+\tag{2}\]</span></span></p>
+<p>The equations above can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec…</p>
+</div>
+</div>
+</section>
+<section id="models-and-data" class="level2">
+<h2 class="anchored" data-anchor-id="models-and-data">Models and Data</h2>
+<p>The heart of this primer has already been introduced in the Welcome above, and when I began writing it, it was only two halfs, one focused on <em>probability of data</em>, the other on <em>likelihood of model</em>. However, in the first half I found I was consistently tripping up on explaining models. Subsequently I pulled models and data into its own section to not muddy the others. However, I fear this puts drier or less interesting matter up front. You can avoid this by alternative ways of walking through the material, as described below in Reading Order.</p>
+<p>In engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty… But the real world has plenty of uncertainty, and that’s probably why you’ve been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:</p>
+<ul>
+<li><p>Aleatoric Uncertainty (Randomness)</p></li>
+<li><p>Epistemic Uncertainty (Lack of Knowledge)</p></li>
+</ul>
+<p>Statistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!</p>
+</div>
+</div>
+</section>
+<section id="reading-order" class="level2">
+<h2 class="anchored" data-anchor-id="reading-order">Reading Order</h2>
+<p>The primer can obviously be read by just plowing down the table of contents on the left side of the page. This should be the most straightforward but possibly not the most interesting way to proceed. An alternative I recommend you consider is jumping through the first chapter of each major section, then the second chapter of each major section, and so on. This gets you into the material quicker…</p>
+</section>
+<section id="last-notes" class="level2">
+<h2 class="anchored" data-anchor-id="last-notes">Last Notes</h2>
+<p>In case the point hasn’t been driven home with words and equations, I’ll round it out with a diagram:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">%%{init: {'theme':'neutral'}}%%
+graph TB
+    A["Data Generation"] --&gt;|Probability&lt;br/&gt;of Data| B["Data"]
+    B --&gt;|Likelihood of&lt;br/&gt;Data Generation| A
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>Part 1 of this book focuses on ‘probability of the data given the model’ and Part 2 the ‘likelihood of the model given the data’.</p>
+</section>
+<section id="glossary" class="level2">
+<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
+<p><strong>Glossary:</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 44%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Term</strong></th>
+<th><strong>Definition</strong></th>
+<th><strong>Example</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Data Generating Process</strong></td>
+<td>A theoretical model describing how observed data are produced, often using probability distributions to represent mechanisms.</td>
+<td>Rolling a fair six-sided die generates outcomes with equal probabilities for each face (1-6).</td>
+</tr>
+<tr class="even">
+<td><strong>Probability</strong></td>
+<td>A value from 0 to 1…</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><strong>Likelihood</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td><strong>Probability Distribution</strong></td>
+<td>A function that describes the likelihood of different outcomes in a random experiment.</td>
+<td>The normal distribution models heights in a population with a bell-shaped curve.</td>
+</tr>
+<tr class="odd">
+<td><strong>Random Variable</strong></td>
+<td>A variable whose values depend on outcomes of a random phenomenon, often defined by a probability distribution.</td>
+<td>The number of heads obtained in 10 coin flips is a random variable.</td>
+</tr>
+</tbody>
+</table>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

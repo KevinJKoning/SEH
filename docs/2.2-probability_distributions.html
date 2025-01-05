@@ -256,7 +256,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link active" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
   <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
   <li><a href="#probability-of-continuous-data" id="toc-probability-of-continuous-data" class="nav-link" data-scroll-target="#probability-of-continuous-data">“Probability” of Continuous Data</a></li>
   <li><a href="#probability-of-a-single-event" id="toc-probability-of-a-single-event" class="nav-link" data-scroll-target="#probability-of-a-single-event">Probability of a Single Event</a></li>
@@ -288,6 +289,11 @@ window.Quarto = {
 </header>
 
 
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>We continue with <span class="math inline">\(P(D|M)\)</span>, the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same processes.. give us time for specific event = 0.</p>
+<p>We constrain our models to producing a single continuous probability distribution to keep things simple. In future chapters we will relax this constraint to build more complex and accurate models.</p>
+</section>
 <section id="more-data-generating-processes-probability-distribution-as-models" class="level2">
 <h2 class="anchored" data-anchor-id="more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</h2>
 <p>When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
@@ -486,7 +492,7 @@ app = App(app_ui, server)</code></pre>
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
 <p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="c5ff067b" class="cell" data-execution_count="1">
+<div id="6e13c4a8" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

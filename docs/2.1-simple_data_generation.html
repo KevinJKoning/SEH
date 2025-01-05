@@ -366,7 +366,7 @@ app = App(app_ui, server)</code></pre>
 <section id="binomial-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="binomial-distribution">Binomial Distribution</h4>
 <p>The binomial distribution is a model that represents the number of successes in a fixed number of independent trials, where each trial has two possible outcomes (commonly referred to as “success” and “failure”). The probability of success can range between 0 and 1. We could continue with our testing example and let this distribution/model generate data for us with a probability of success (<span class="math inline">\(p\)</span>) equal to 0.995 over 1,000 trials (<span class="math inline">\(n\)</span>). We may expect about 995 succesful tests to be most common, but 1,000, 980, or even 500 are also possibilities. Actual probabilities are shown in the plot below.</p>
-<div id="3f4f5cf8" class="cell" data-execution_count="1">
+<div id="de0f0c8e" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -572,11 +572,16 @@ Note
 </section>
 <section id="probability-of-multiple-events" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
+<p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to be have multiple data points, and we’d like to know the relative probability of that specific dataset vs other dataset we may have sampled.</p>
 <section id="law-of-probability-and-independent-events" class="level3">
 <h3 class="anchored" data-anchor-id="law-of-probability-and-independent-events">Law of Probability and Independent Events</h3>
+<p>First we need to know the law of probability and independent events… How independence is not time series. How we typically add log prob instead of multiply.</p>
 </section>
 <section id="calculating-the-relative-probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
+<p>With that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We’ll use the exact probabilities of getting each total… Let’s assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.</p>
+<p>We’d like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.</p>
+<p>We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.</p>
 </section>
 <section id="comparison-to-traditional-hypothesis-testing" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</h3>
