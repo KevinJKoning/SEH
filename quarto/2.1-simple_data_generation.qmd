@@ -7,11 +7,11 @@ filters:
 
 ## Preview
 
-Here we begin the first half of the primer, which focuses on $P(D|M)$, the probability of the data given a model of a data generating process. Before we can talk about data from a model, however, we need to introduce models. This first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce 'discrete probability distributions' as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
+In the first half of the primer we focus on $P(D|M)$, the probability of the [data]{style="text-decoration: underline;"} given a [model]{style="text-decoration: underline;"} of a data generating process. This first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce more *discrete probability distributions* as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
 
-Once we have have some discussion of models under our belt, we will change our focus to the probability of data. We will start with a dice total example and use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. We then show how discrete probability distributions can generate samples similar to our dice rolling model, but for other processes. Next, we show how we could use the relative frequency technique with discrete probability distributions to find approximate probabilities. We also point out, like someone already performing an infinite number of samples, the exact probabilities have already been found for us.
+Once we have have some discussion of models under our belt, we will change our focus to the probability of data. For any model we can use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. For the models where an analytical solution of $P(D|M)$ is available, we will compare exact probabilities to those estimated from relative frequency.
 
-We then shift to the probability of multiple events based the laws of probability for independent events. We show how we can use computation to calculate the the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.
+We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.
 
 ## Models of Data Generating Processes
 
@@ -72,46 +72,239 @@ Hopefully you've noted how a larger number of rolls seems to give us smoother an
 
 ### Discrete Probability Distributions as Models of Data Generating Processes
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.995 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called **discrete probability distributions**.
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.995 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
+
+::: callout-note
+If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this 'feature', but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we'd prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.
+:::
 
 Initially we want to think about discrete probability distributions in the same way we thought about our dice model, that it is a model that will generate random events from a data generating process of interest. Below are a couple examples to illustrate the point.
 
 #### Binomial Distribution
 
-The binomial distribution is a model that represents the number of successes in a fixed number of independent trials, where each trial has two possible outcomes (commonly referred to as “success” and “failure”). The probability of success can range between 0 and 1. We could continue with our testing example and let this distribution/model generate data for us with a probability of success ($p$) equal to 0.995 over 1,000 trials ($n$). We may expect about 995 succesful tests to be most common, but 1,000, 980, or even 500 are also possibilities. Actual probabilities are shown in the plot below.
+The binomial distribution is a model that represents the number of successes in a fixed number of independent trials, where each trial has two possible outcomes (commonly referred to as “success” and “failure”). The probability of success can range between 0 and 1. In the app below you can recreate something like the product testing scenario recently mentioned. Feel free to play around with the settings/parameters to get a feel for how the probability distribution behaves.
 
-```{python}
-#| echo: false
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
-from scipy.stats import binom
+import math
 
-# Parameters for the binomial distribution
-n = 1000  # number of trials
-p = 0.995  # probability of success
+app_ui = ui.page_fluid(
+    ui.h2("Binomial Distribution Simulation with Binned Histogram"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "numTrials", 
+                "Number of Trials (n)", 
+                min=1, 
+                max=10000, 
+                value=100, 
+                step=1
+            ),
+            ui.input_slider(
+                "probSuccess", 
+                "Probability of Success (p)", 
+                min=0.001, 
+                max=0.999, 
+                value=0.5, 
+                step=0.001
+            ),
+            # Removed the "Number of Simulations" slider
+            # Fixed number of simulations to 10,000
+        ),
+        ui.output_plot("binomPlot", height="400px"),
+    ),
+)
 
-# Generate the range of possible successes
-x = np.arange(0, n+1)
+def server(input, output, session):
+    # Fixed number of simulations
+    FIXED_NUM_SIMULATIONS = 10000
 
-# Calculate the probability mass function (PMF)
-pmf = binom.pmf(x, n, p)
+    # Reactive expression to generate binomial samples
+    @reactive.Calc
+    def binomial_samples():
+        n = input.numTrials()
+        p = input.probSuccess()
+        size = FIXED_NUM_SIMULATIONS
+        return np.random.binomial(n, p, size)
+    
+    # Function to determine optimal integer bin width
+    def determine_bin_width(data, max_bins=30):
+        data_min = data.min()
+        data_max = data.max()
+        data_range = data_max - data_min + 1  # +1 to include both endpoints
+        # Start with bin_width = 1 and increase until the number of bins <= max_bins
+        for bin_width in range(1, data_range + 1):
+            num_bins = math.ceil(data_range / bin_width)
+            if num_bins <= max_bins:
+                return bin_width
+        return 1  # Fallback to bin_width=1 if all else fails
+    
+    # Render the binomial distribution plot with limited bins
+    @output
+    @render.plot
+    def binomPlot():
+        samples = binomial_samples()
+        bin_width = determine_bin_width(samples, max_bins=30)
+        
+        # Define bin edges based on bin_width
+        data_min = samples.min()
+        data_max = samples.max()
+        bins = np.arange(data_min, data_max + bin_width, bin_width)
+        
+        # Compute histogram
+        counts, bin_edges = np.histogram(samples, bins=bins)
+        bin_centers = bin_edges[:-1] + bin_width / 2
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        ax.bar(bin_centers, counts, width=bin_width*0.9, color="steelblue", edgecolor="black", align='center')
+        
+        ax.set_title("Frequency of Successes in Binomial Simulations", fontsize=16)
+        ax.set_xlabel("Number of Successes", fontsize=14)
+        ax.set_ylabel("Frequency", fontsize=14)
+        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        
+        # Set x-axis ticks to be at bin centers
+        ax.set_xticks(bin_centers)
+        
+        # To avoid overcrowding, set a maximum number of x-ticks
+        if len(bin_centers) > 20:
+            step = math.ceil(len(bin_centers) / 20)
+            ax.set_xticks(bin_centers[::step])
+            ax.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
+        else:
+            ax.set_xticklabels([int(x) for x in bin_centers], rotation=90)
+        
+        plt.tight_layout()
+        
+        return fig
 
-# Plot the distribution
-plt.figure(figsize=(8, 4))
-sns.barplot(x=x, y=pmf, color="grey", edgecolor="black")
-plt.title("Binomial Distribution (n=1000, p=0.995)", fontsize=14)
-plt.xlabel("Number of Successes", fontsize=12)
-plt.ylabel("Probability", fontsize=12)
-plt.xlim(975, 1000)  # Focus on the most likely range
-plt.xticks(rotation=90, fontsize=12)  # Rotate x-axis labels 90 degrees
-plt.yticks(fontsize=12)
-plt.show()
+app = App(app_ui, server)
 ```
+
+
 
 #### Poisson Distribution
 
 The Poisson distribution is a model that describes the number of events occurring in a fixed interval of time or space, assuming that the events occur independently and at a constant average rate. For example, it might represent the number of phone calls received by a call center in an hour or the number of cars passing through a toll booth in a minute. The Poisson Distribution is similar to the Binomial distribution, except there are not a fixed number of trials, so there is not an upper limit to the number of events returned by a sample. However, values much larger than the average rate become incredibly unlikely.
+
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import poisson
+import math
+
+# Define the User Interface
+app_ui = ui.page_fluid(
+    ui.h2("Poisson Distribution Simulation"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "rate_param", 
+                "Rate Parameter (λ)", 
+                min=0.01, 
+                max=10.0, 
+                value=1.0, 
+                step=0.01
+            ),
+            ui.input_slider(
+                "num_trials",
+                "Number of Trials",
+                min=100,
+                max=10000,
+                value=10000,
+                step=100
+            )
+        ),
+        ui.output_plot("poissonPlot", height="400px"),
+    )
+)
+
+# Define the Server Logic
+def server(input, output, session):
+
+    # Reactive expression to get the number of simulations
+    @reactive.Calc
+    def num_simulations():
+        return input.num_trials()
+
+    # Reactive expression to generate Poisson samples
+    @reactive.Calc
+    def poisson_samples():
+        lam = input.rate_param()
+        n_trials = num_simulations()
+        return np.random.poisson(lam, n_trials)
+    
+    # Function to determine optimal integer bin width with a maximum number of bins
+    def determine_bin_width(data, max_bins=30):
+        data_min = data.min()
+        data_max = data.max()
+        data_range = data_max - data_min + 1  # +1 to include both endpoints
+        # Start with bin_width = 1 and increase until the number of bins <= max_bins
+        for bin_width in range(1, data_range + 1):
+            num_bins = math.ceil(data_range / bin_width)
+            if num_bins <= max_bins:
+                return bin_width
+        return 1  # Fallback to bin_width=1 if all else fails
+
+    # Render the Poisson distribution plot
+    @output
+    @render.plot
+    def poissonPlot():
+        samples = poisson_samples()
+        lam = input.rate_param()
+        
+        bin_width = determine_bin_width(samples, max_bins=30)
+        
+        # Define bin edges based on bin_width
+        data_min = samples.min()
+        data_max = samples.max()
+        bins = np.arange(data_min, data_max + bin_width, bin_width)
+        
+        # Compute histogram
+        counts, bin_edges = np.histogram(samples, bins=bins)
+        bin_centers = bin_edges[:-1] + bin_width / 2
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot the histogram
+        ax.bar(bin_centers, counts, width=bin_width*0.9, color="steelblue", edgecolor="black", align='center')
+        
+        ax.set_title(f"Poisson Distribution Simulation (λ = {lam})", fontsize=16)
+        ax.set_xlabel("Number of Events", fontsize=14)
+        ax.set_ylabel("Frequency", fontsize=14)
+        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        
+        # Set x-axis ticks to be at bin centers
+        ax.set_xticks(bin_centers)
+        
+        # To avoid overcrowding, set a maximum number of x-ticks
+        if len(bin_centers) > 20:
+            step = math.ceil(len(bin_centers) / 20)
+            ax.set_xticks(bin_centers[::step])
+            ax.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
+        else:
+            ax.set_xticklabels([int(x) for x in bin_centers], rotation=90)
+        
+        plt.tight_layout()
+        
+        return fig
+
+# Create the Shiny App
+app = App(app_ui, server)
+```
+
 
 #### Summary
 
@@ -279,8 +472,7 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult. These events have become known as a 'black swan', a phrase that anyone in risk management should be quite familiar with. 
-
+Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult.  
 
 ::: callout-note
 SHORTEN THIS
@@ -311,11 +503,93 @@ First we need to know the law of probability and independent events... How indep
 
 ### Calculating the Relative Probability of Multiple Events
 
-With that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We'll use the exact probabilities of getting each total... Let's assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.
+With that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We'll use the exact probabilities of getting each total for convenience... Let's assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.
 
 We'd like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.
 
 We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.
+
+
+**Note that we probably want to make this into an app**
+
+```{python}
+import random
+from collections import Counter
+
+def compute_probabilities_5dice():
+    """
+    Returns a dictionary mapping sum_of_five_dice -> probability,
+    using exact enumeration of all 6^5 possibilities.
+    """
+    sum_counter = Counter()
+    
+    # Enumerate all possible outcomes of rolling 5 dice
+    for d1 in range(1, 7):
+        for d2 in range(1, 7):
+            for d3 in range(1, 7):
+                for d4 in range(1, 7):
+                    for d5 in range(1, 7):
+                        total = d1 + d2 + d3 + d4 + d5
+                        sum_counter[total] += 1
+    
+    total_combinations = 6**5  # 7776
+    probabilities = {}
+    
+    # Convert counts to probabilities
+    for s in range(5, 31):  # possible sums: 5..30
+        probabilities[s] = sum_counter[s] / total_combinations
+    
+    return probabilities
+
+def probability_of_sequence(seq, prob_dict):
+    """
+    Given a sequence of sums (e.g., [5, 6, 27, 15, ...]) and a dictionary
+    of individual sum probabilities, compute the product (joint probability).
+    """
+    p = 1.0
+    for roll_sum in seq:
+        p *= prob_dict[roll_sum]
+    return p
+
+# 1. Compute the distribution of sums for five dice
+probabilities_5dice = compute_probabilities_5dice()
+
+# 2. The observed 10-roll sequence (example)
+observed_rolls = [5, 6, 27, 15, 10, 22, 11, 14, 30, 21]
+
+# Compute the probability of that observed sequence
+observed_prob = probability_of_sequence(observed_rolls, probabilities_5dice)
+print(f"Observed sequence probability: {observed_prob:.8e}")
+
+# 3. Run a simulation of 10-roll sequences
+N = 100_000  # number of simulations
+sums_range = list(range(5, 31))
+weights = [probabilities_5dice[s] for s in sums_range]
+
+simulated_probs = []
+for _ in range(N):
+    # randomly choose 10 sums according to their probabilities
+    random_sequence = random.choices(sums_range, weights=weights, k=10)
+    seq_prob = probability_of_sequence(random_sequence, probabilities_5dice)
+    simulated_probs.append(seq_prob)
+
+# 4. Determine how "uncommon" the observed probability is
+simulated_probs.sort()
+# Find how many are smaller than or equal to our observed probability
+count_less_equal = sum(1 for p in simulated_probs if p <= observed_prob)
+percentile = count_less_equal / N
+
+print(f"Out of {N} simulations, {count_less_equal} had probability <= observed probability.")
+print(f"Percentile rank of observed probability: {percentile:.4f}")
+
+if percentile < 0.05 or percentile > 0.95:
+    print("This 10-roll sequence is quite unusual (towards an extreme).")
+else:
+    print("This 10-roll sequence seems fairly common (towards the middle).")
+
+```
+
+
 
 
 ### Comparison to Traditional Hypothesis Testing
