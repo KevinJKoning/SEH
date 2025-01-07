@@ -296,7 +296,7 @@ window.Quarto = {
   <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
   <ul class="collapse">
   <li><a href="#dice-totals-probability-of-data" id="toc-dice-totals-probability-of-data" class="nav-link" data-scroll-target="#dice-totals-probability-of-data">Dice Totals Probability of Data</a></li>
-  <li><a href="#discrete-probability-distributions-probability-of-data" id="toc-discrete-probability-distributions-probability-of-data" class="nav-link" data-scroll-target="#discrete-probability-distributions-probability-of-data">Discrete Probability Distributions Probability of Data</a></li>
+  <li><a href="#exact-probabilities" id="toc-exact-probabilities" class="nav-link" data-scroll-target="#exact-probabilities">Exact Probabilities</a></li>
   </ul></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a>
   <ul class="collapse">
@@ -335,8 +335,8 @@ window.Quarto = {
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>In the first half of the primer we focus on <span class="math inline">\(P(D|M)\)</span>, the probability of the <span style="text-decoration: underline;">data</span> given a <span style="text-decoration: underline;">model</span> of a data generating process. This first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce more <em>discrete probability distributions</em> as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.</p>
-<p>Once we have have some discussion of models under our belt, we will change our focus to the probability of data. For any model we can use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. For the models where an analytical solution of <span class="math inline">\(P(D|M)\)</span> is available, we will compare exact probabilities to those estimated from relative frequency.</p>
-<p>We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.</p>
+<p>Once we have have some discussion of models under our belt, we will change our focus to the probability of data. For any model we can use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. Where an analytical solution of <span class="math inline">\(P(D|M)\)</span> is available, we will also compare exact probabilities to those estimated from relative frequency.</p>
+<p>We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.</p>
 </section>
 <section id="models-of-data-generating-processes" class="level2">
 <h2 class="anchored" data-anchor-id="models-of-data-generating-processes">Models of Data Generating Processes</h2>
@@ -498,7 +498,7 @@ def server(input, output, session):
         ax.set_title("Frequency of Successes in Binomial Simulations", fontsize=16)
         ax.set_xlabel("Number of Successes", fontsize=14)
         ax.set_ylabel("Frequency", fontsize=14)
-        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        #ax.grid(True, axis='y', linestyle='--', alpha=0.7)
         
         # Set x-axis ticks to be at bin centers
         ax.set_xticks(bin_centers)
@@ -547,7 +547,7 @@ app_ui = ui.page_fluid(
             ),
             ui.input_slider(
                 "num_trials",
-                "Number of Trials",
+                "Times to Repeat Sample",
                 min=100,
                 max=10000,
                 value=10000,
@@ -611,7 +611,7 @@ def server(input, output, session):
         ax.set_title(f"Poisson Distribution Simulation (λ = {lam})", fontsize=16)
         ax.set_xlabel("Number of Events", fontsize=14)
         ax.set_ylabel("Frequency", fontsize=14)
-        ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        #ax.grid(True, axis='y', linestyle='--', alpha=0.7)
         
         # Set x-axis ticks to be at bin centers
         ax.set_xticks(bin_centers)
@@ -639,7 +639,7 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="probability-of-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-data">Probability of Data</h2>
-<p>Having given some background on models, we can now focus on the probability of the data, given the model <span class="math inline">\(P(D|M)\)</span>.</p>
+<p>Having given some background on models, we can now focus on the probability of the data given the model, <span class="math inline">\(P(D|M)\)</span>.</p>
 <section id="dice-totals-probability-of-data" class="level3">
 <h3 class="anchored" data-anchor-id="dice-totals-probability-of-data">Dice Totals Probability of Data</h3>
 <p>We want to find the probability of a particular dice total (the data) given a dice model. To estimate the probability <span class="math inline">\(P(E)\)</span> of an event <span class="math inline">\(E\)</span>, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:</p>
@@ -656,7 +656,7 @@ P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 650
+#| viewerHeight: 550
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -692,23 +692,16 @@ app_ui = ui.page_fluid(
         ui.sidebar(
             ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
             ui.input_slider("numRolls", "Number of Rolls", min=1, max=10000, value=100, step=1),
-        ),
-        ui.output_plot("dicePlot", height="400px"),
-    ),
-
-    # Row to select dice total and display probabilities
-    ui.row(
-        ui.column(4,
             ui.input_select(
                 "selectedTotal", 
                 "Select Dice Total", 
-                choices=[""]   # initially empty, will be updated dynamically
-            )
-        ),
-        ui.column(8,
+                choices=[""],   # initially empty, will be updated dynamically
+                multiple=False,
+            ),
             ui.output_text("approxProbability"),
             ui.output_text("exactProbability")
-        )
+        ),
+        ui.output_plot("dicePlot", height="400px"),
     )
 )
 
@@ -760,7 +753,7 @@ def server(input, output, session):
     @render.text
     def approxProbability():
         if not input.selectedTotal():
-            return "\nSelect a dice total to see probabilities."
+            return "Select a dice total to see probabilities."
 
         current_sums = dice_sums()
         selected_total = int(input.selectedTotal())
@@ -771,7 +764,7 @@ def server(input, output, session):
         else:
             prob = count / len(current_sums)
 
-        return f"\nApprox. Probability of {selected_total}: {prob:.4f}"
+        return f"Approx. Probability of {selected_total}: {prob:.4f}"
 
     # Exact probability of the selected dice total
     @output
@@ -803,22 +796,52 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>SHORTEN THIS</p>
-<p>Throughout this primer there will be several opportunities for exact/analytical solutions, but we will generally ignore them. Instead we will choose computation whenever it is plausible. Why? It’s simply a lot faster than figuring out some unknown depth of analysis, and we can usually have more confidence in the results because we’ve reduced the human error element. (Some may know an essay called the ‘The Bitter Lesson’ by Rich Sutton, which I think has a strong engineering corollary…). Be assured that solving problems through raw computation has it’s limits - there’s no way to compute through a bad algorithm, and often the right next step in that situation is to gain a more fundamental understanding through analysis. But we’re professionals in a hurry, we choose computation when it’s plausible.</p>
+<p>A few readers may already know an essay called the ‘The Bitter Lesson’ by Rich Sutton. If you haven’t read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there’s no way to compute through a bad algorithm. But we’re professionals in a hurry, we choose computation whenever it’s plausible.</p>
 </div>
 </div>
+<p><strong>delete these???</strong> ### Discrete Probability Distributions Probability of Data … #### Relative Frequency Technique Show we can use relative frequency technique like with the dice.</p>
 </section>
-<section id="discrete-probability-distributions-probability-of-data" class="level3">
-<h3 class="anchored" data-anchor-id="discrete-probability-distributions-probability-of-data">Discrete Probability Distributions Probability of Data</h3>
-<p>…</p>
-<section id="relative-frequency-technique" class="level4">
-<h4 class="anchored" data-anchor-id="relative-frequency-technique">Relative Frequency Technique</h4>
-<p>Show we can use relative frequency technique like with the dice.</p>
-</section>
-<section id="exact-probabilities" class="level4">
-<h4 class="anchored" data-anchor-id="exact-probabilities">Exact Probabilities</h4>
-<p>A handy thing about using discrete probability distributions is that we can also use them to get <em>exact</em> probabilities of an event/outcome given its parameters… Example…</p>
-</section>
+<section id="exact-probabilities" class="level3">
+<h3 class="anchored" data-anchor-id="exact-probabilities">Exact Probabilities</h3>
+<p>Most of the primer is focused on simulation without going into the code itself, however, once you know what you’re after it’s not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we’ll walk through one of the few opportunities for some straightforward math.</p>
+<p>Let’s use the properties of the binomial probability distribution to determine the probability of having exactly 995 products pass inspection when we have a 0.995 pass rate and we inspect 1,000 products.</p>
+<ol type="1">
+<li><strong>Identify distribution parameters:</strong>
+<ul>
+<li>(n = 1000) (number of products tested)</li>
+<li>(k = 995) (number of products passing)</li>
+<li>(p = 0.995) (probability of a product passing)</li>
+</ul></li>
+<li><strong>Plug into the binomial probability formula:</strong></li>
+</ol>
+<p><span class="math display">\[
+P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
+\]</span></p>
+<p><span class="math display">\[
+P(X = 995) = \binom{1000}{995} (0.995)^{995} (0.005)^5
+\]</span></p>
+<ol start="3" type="1">
+<li><strong>Calculate the binomial coefficient:</strong></li>
+</ol>
+<p><span class="math display">\[
+\binom{1000}{995} = \frac{1000!}{995! \cdot 5!} = \frac{1000 \cdot 999 \cdot 998 \cdot 997 \cdot 996}{5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = 8,244,528,275
+\]</span></p>
+<ol start="4" type="1">
+<li><strong>Compute the probabilities:</strong></li>
+</ol>
+<p><span class="math display">\[
+(0.995)^{995} \approx 0.78029, \quad (0.005)^5 = 0.0000003125
+\]</span></p>
+<ol start="5" type="1">
+<li><strong>Combine terms:</strong></li>
+</ol>
+<p><span class="math display">\[
+P(X = 995) = 8,244,528,275 \cdot 0.78029 \cdot 0.0000003125
+\]</span></p>
+<p><span class="math display">\[
+P(X = 995) \approx 0.1759
+\]</span></p>
+<p><strong>Final Answer:</strong> The probability of passing exactly 995 products is approximately <strong>0.1759</strong> or <strong>17.59%</strong>.</p>
 </section>
 </section>
 <section id="probability-of-multiple-events" class="level2">
@@ -834,87 +857,221 @@ Note
 <p>We’d like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.</p>
 <p>We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.</p>
 <p><strong>Note that we probably want to make this into an app</strong></p>
-<div id="6974d4c1" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<div id="dd2a17f2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_probabilities_5dice():</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns a dictionary mapping sum_of_five_dice -&gt; probability,</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    using exact enumeration of all 6^5 possibilities.</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    sum_counter <span class="op">=</span> Counter()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Enumerate all possible outcomes of rolling 5 dice</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d1 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> d2 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> d3 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> d4 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">for</span> d5 <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                        total <span class="op">=</span> d1 <span class="op">+</span> d2 <span class="op">+</span> d3 <span class="op">+</span> d4 <span class="op">+</span> d5</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                        sum_counter[total] <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    total_combinations <span class="op">=</span> <span class="dv">6</span><span class="op">**</span><span class="dv">5</span>  <span class="co"># 7776</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> {}</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert counts to probabilities</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> s <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>, <span class="dv">31</span>):  <span class="co"># possible sums: 5..30</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        probabilities[s] <span class="op">=</span> sum_counter[s] <span class="op">/</span> total_combinations</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> probabilities</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> probability_of_sequence(seq, prob_dict):</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">    Given a sequence of sums (e.g., [5, 6, 27, 15, ...]) and a dictionary</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">    of individual sum probabilities, compute the product (joint probability).</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="fl">1.0</span></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> roll_sum <span class="kw">in</span> seq:</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        p <span class="op">*=</span> prob_dict[roll_sum]</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Compute the distribution of sums for five dice</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>probabilities_5dice <span class="op">=</span> compute_probabilities_5dice()</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. The observed 10-roll sequence (example)</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>observed_rolls <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">27</span>, <span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">22</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">30</span>, <span class="dv">21</span>]</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the probability of that observed sequence</span></span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>observed_prob <span class="op">=</span> probability_of_sequence(observed_rolls, probabilities_5dice)</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Observed sequence probability: </span><span class="sc">{</span>observed_prob<span class="sc">:.8e}</span><span class="ss">"</span>)</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Run a simulation of 10-roll sequences</span></span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">100_000</span>  <span class="co"># number of simulations</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>sums_range <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">5</span>, <span class="dv">31</span>))</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [probabilities_5dice[s] <span class="cf">for</span> s <span class="kw">in</span> sums_range]</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>simulated_probs <span class="op">=</span> []</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(N):</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># randomly choose 10 sums according to their probabilities</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    random_sequence <span class="op">=</span> random.choices(sums_range, weights<span class="op">=</span>weights, k<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    seq_prob <span class="op">=</span> probability_of_sequence(random_sequence, probabilities_5dice)</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    simulated_probs.append(seq_prob)</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Determine how "uncommon" the observed probability is</span></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>simulated_probs.sort()</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Find how many are smaller than or equal to our observed probability</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>count_less_equal <span class="op">=</span> <span class="bu">sum</span>(<span class="dv">1</span> <span class="cf">for</span> p <span class="kw">in</span> simulated_probs <span class="cf">if</span> p <span class="op">&lt;=</span> observed_prob)</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>percentile <span class="op">=</span> count_less_equal <span class="op">/</span> N</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Out of </span><span class="sc">{</span>N<span class="sc">}</span><span class="ss"> simulations, </span><span class="sc">{</span>count_less_equal<span class="sc">}</span><span class="ss"> had probability &lt;= observed probability."</span>)</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Percentile rank of observed probability: </span><span class="sc">{</span>percentile<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> percentile <span class="op">&lt;</span> <span class="fl">0.05</span> <span class="kw">or</span> percentile <span class="op">&gt;</span> <span class="fl">0.95</span>:</span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"This 10-roll sequence is quite unusual (towards an extreme)."</span>)</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"This 10-roll sequence seems fairly common (towards the middle)."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Observed sequence probability: 4.45879735e-22
-Out of 100000 simulations, 0 had probability &lt;= observed probability.
-Percentile rank of observed probability: 0.0000
-This 10-roll sequence is quite unusual (towards an extreme).</code></pre>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> roll_three_dice():</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Simulate rolling three dice and return their sum"""</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(np.random.randint(<span class="dv">1</span>, <span class="dv">7</span>, size<span class="op">=</span><span class="dv">3</span>))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_probability_of_sum(dice_sum):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate probability of getting a specific sum with three dice"""</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    possibilities <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    total_outcomes <span class="op">=</span> <span class="dv">216</span>  <span class="co"># 6^3 possible outcomes</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> i <span class="op">+</span> j <span class="op">+</span> k <span class="op">==</span> dice_sum:</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                    possibilities <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                    </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> possibilities <span class="op">/</span> total_outcomes</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_rolls():</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Simulate 10 rolls and calculate cumulative log probability"""</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    rolls <span class="op">=</span> [roll_three_dice() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>)]</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> [get_probability_of_sum(roll) <span class="cf">for</span> roll <span class="kw">in</span> rolls]</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate cumulative log probabilities</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    log_probs <span class="op">=</span> np.log10(probabilities)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    cumulative_log_probs <span class="op">=</span> np.cumsum(log_probs)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rolls, cumulative_log_probs</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform simulations</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>num_simulations <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>all_cumulative_probs <span class="op">=</span> []</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_simulations):</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    rolls, cum_probs <span class="op">=</span> simulate_rolls()</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    all_cumulative_probs.append(cum_probs)</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">11</span>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all simulations in darker gray</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> probs <span class="kw">in</span> all_cumulative_probs:</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, probs, color<span class="op">=</span><span class="st">'#404040'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Rolls'</span>)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Log10 Probability'</span>)</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Cumulative Log Probability of Multiple Three-Dice Rolls'</span>)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.1-simple_data_generation_files/figure-html/cell-2-output-1.png" width="819" height="523" class="figure-img"></p>
+</figure>
 </div>
 </div>
+</div>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 800
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+# --- Utility Functions ---
+
+def roll_three_dice():
+    """Simulate rolling three dice and return their sum."""
+    return np.sum(np.random.randint(1, 7, size=3))
+
+def get_probability_of_sum(dice_sum):
+    """Calculate probability of getting a specific sum with three dice."""
+    possibilities = 0
+    total_outcomes = 216  # 6^3 possible outcomes
+    
+    for i in range(1, 7):
+        for j in range(1, 7):
+            for k in range(1, 7):
+                if i + j + k == dice_sum:
+                    possibilities += 1
+                        
+    return possibilities / total_outcomes
+
+def simulate_rolls(num_rolls=10):
+    """Simulate a series of rolls and calculate cumulative log probability."""
+    rolls = [roll_three_dice() for _ in range(num_rolls)]
+    probabilities = [get_probability_of_sum(roll) for roll in rolls]
+    
+    # To handle log(0), replace zero probabilities with a very small number
+    probabilities = [p if p &gt; 0 else 1e-10 for p in probabilities]
+    log_probs = np.log10(probabilities)
+    cumulative_log_probs = np.cumsum(log_probs)
+    
+    return rolls, cumulative_log_probs
+
+# -------------------------- UI Definition ---------------------------
+app_ui = ui.page_fluid(
+    ui.h2("Three-Dice Roll Simulations with Cumulative Log Probability"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_select(
+                "selectedSim", 
+                "Select Simulation to Highlight", 
+                choices=[],   # initially empty, will be updated dynamically
+                multiple=False,
+            ),
+            ui.output_text("selectedDetails"),
+            ui.hr(),
+            ui.input_slider("numSimulations", "Number of Simulations", min=10, max=500, value=100, step=10),
+            ui.input_slider("numRolls", "Number of Rolls per Simulation", min=5, max=50, value=10, step=1),
+            ui.input_action_button("runSim", "Run Simulations")
+        ),
+        ui.output_plot("probPlot", height="500px"),
+    )
+)
+
+# -------------------------- Server Definition -------------------------
+def server(input, output, session):
+    # Reactive value to store simulations
+    simulations = reactive.Value([])
+    
+    # Reactive: Perform simulations when 'Run Simulations' button is clicked
+    @reactive.Effect
+    def _run_simulations():
+        input.runSim()  # Depend on the runSim button
+        num_sim = input.numSimulations()
+        num_rolls = input.numRolls()
+        new_simulations = []
+        for _ in range(num_sim):
+            _, cum_probs = simulate_rolls(num_rolls)
+            new_simulations.append(cum_probs)
+        simulations.set(new_simulations)
+        
+        # Update the select input choices
+        sim_choices = [f"Simulation {i+1}" for i in range(num_sim)]
+        ui.update_select(
+            "selectedSim",
+            choices=sim_choices,
+            selected=sim_choices[0] if sim_choices else ""
+        )
+    
+    # Initialize simulations on app start
+    @reactive.Effect
+    def _initialize():
+        input.runSim()  # Trigger initial simulation run
+    
+    # Plot the simulations, highlighting the selected one
+    @output
+    @render.plot
+    def probPlot():
+        sims = simulations()
+        num_sim = len(sims)
+        if num_sim == 0:
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, "No simulations to display.\nClick 'Run Simulations' to start.", 
+                    horizontalalignment='center', verticalalignment='center', fontsize=12)
+            ax.axis('off')
+            return fig
+        
+        num_rolls = len(sims[0])
+        x = np.arange(1, num_rolls + 1)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot all simulations in light gray
+        for probs in sims:
+            ax.plot(x, probs, color='#D3D3D3', alpha=0.5)
+        
+        # Highlight the selected simulation
+        selected = input.selectedSim()
+        if selected:
+            try:
+                sim_index = int(selected.split()[-1]) - 1
+                if 0 &lt;= sim_index &lt; num_sim:
+                    selected_probs = sims[sim_index]
+                    ax.plot(x, selected_probs, color='red', linewidth=2.5, label=selected)
+            except (IndexError, ValueError):
+                pass
+        
+        ax.set_xlabel('Number of Rolls')
+        ax.set_ylabel('Cumulative Log10 Probability')
+        ax.set_title('Cumulative Log Probability of Multiple Three-Dice Roll Simulations')
+        ax.grid(True)
+        if selected and 0 &lt;= sim_index &lt; num_sim:
+            ax.legend()
+        
+        plt.tight_layout()
+        return fig
+    
+    # Display details of the selected simulation
+    @output
+    @render.text
+    def selectedDetails():
+        sims = simulations()
+        selected = input.selectedSim()
+        if not selected:
+            return "No simulation selected."
+        try:
+            sim_index = int(selected.split()[-1]) - 1
+            if sim_index &lt; 0 or sim_index &gt;= len(sims):
+                return "Selected simulation is out of range."
+            # For demonstration, display the cumulative log probability at the last roll
+            final_log_prob = sims[sim_index][-1]
+            return f"{selected} Final Cumulative Log10 Probability: {final_log_prob:.4f}"
+        except (IndexError, ValueError):
+            return "Invalid selection."
+
+app = App(app_ui, server)</code></pre>
 </section>
 <section id="comparison-to-traditional-hypothesis-testing" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</h3>

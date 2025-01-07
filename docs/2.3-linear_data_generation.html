@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Linear Regression – Statistics for Engineers in a Hurry (a Primer)</title>
+<title>Linear Regression – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -113,7 +113,7 @@ window.Quarto = {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Statistics for Engineers in a Hurry (a Primer)</span>
+    <span class="navbar-title">Statistics for Engineers in a Hurry (an Illustrated Primer)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -179,13 +179,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice</span></a>
+ <span class="menu-text">Discrete Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Probability Distributions</span></a>
+ <span class="menu-text">Continuous Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -489,7 +489,7 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
 <p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
 <p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="8508b52f" class="cell" data-execution_count="1">
+<div id="518900c7" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -505,7 +505,7 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="dd4fe770" class="cell" data-execution_count="2">
+<div id="d59eb013" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
