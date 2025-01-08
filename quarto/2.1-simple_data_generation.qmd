@@ -17,7 +17,7 @@ We then shift to the probability of multiple events based on the laws of probabi
 
 ### A Dice Total Model
 
-We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we'll use is an awfully good approximation of the real data generating process, so long as you're OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.
+We'd prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we'll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we'll use is a good approximation of the real data generating process, so long as you're OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.
 
 A dice model is built into the app displayed beneath this paragraph. It will simulate rolling the number of dice you specify, as if you threw them out of a cup all at once, and total the value on those dice from the cup, which is considered one roll. Additionally, it will repeat rolling that cup of dice the number of times you specify, and summarize the results on a histogram. Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls.
 
@@ -72,7 +72,7 @@ Hopefully you've noted how a larger number of rolls seems to give us smoother an
 
 ### Discrete Probability Distributions as Models of Data Generating Processes
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.995 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
 
 ::: callout-note
 If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this 'feature', but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we'd prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.
@@ -334,7 +334,7 @@ Here's another version of the Dice Total App that you saw earlier - except it no
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 550
+#| viewerHeight: 560
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -471,65 +471,37 @@ Hopefully you can demonstrate to yourself that with enough samples, the approxim
 A few readers may already know an essay called the 'The Bitter Lesson' by Rich Sutton. If you haven't read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there's no way to compute through a bad algorithm. But we're professionals in a hurry, we choose computation whenever it's plausible.
 :::
 
-**delete these???**
-### Discrete Probability Distributions Probability of Data
-...
-#### Relative Frequency Technique
-Show we can use relative frequency technique like with the dice.
 
 ### Exact Probabilities
 
 Most of the primer is focused on simulation without going into the code itself, however, once you know what you're after it's not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we'll walk through one of the few opportunities for some straightforward math.
 
-Let's use the properties of the binomial probability distribution to determine the probability of having exactly 995 products pass inspection when we have a 0.995 pass rate and we inspect 1,000 products.
-
-1. **Identify distribution parameters:**
-   - \(n = 1000\) (number of products tested)
-   - \(k = 995\) (number of products passing)
-   - \(p = 0.995\) (probability of a product passing)
-
-2. **Plug into the binomial probability formula:**
+Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999^1,000.
 
 $$
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 $$
 
 $$
-P(X = 995) = \binom{1000}{995} (0.995)^{995} (0.005)^5
+P(X = 999) + P(X = 1,000) = \binom{1000}{999} (0.999)^{999} (0.001)^1 + (0.999)^{1,000}
 $$
 
-3. **Calculate the binomial coefficient:**
+The result is 0.736, so the chance of having a real pass rate of 0.999 and having less than 999 pass is 1 - 0.736 = 0.264. It's fairly plausible to have 0.999 pass rate and have a couple of products fail. However, if you had four or more fail, you should have a very hard time convincing management that it was just 'bad luck'. The more formal way to discuss this is *hypothesis testing*. 
 
-$$
-\binom{1000}{995} = \frac{1000!}{995! \cdot 5!} = \frac{1000 \cdot 999 \cdot 998 \cdot 997 \cdot 996}{5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = 8,244,528,275
-$$
-
-4. **Compute the probabilities:**
-
-$$
-(0.995)^{995} \approx 0.78029, \quad (0.005)^5 = 0.0000003125
-$$
-
-5. **Combine terms:**
-
-$$
-P(X = 995) = 8,244,528,275 \cdot 0.78029 \cdot 0.0000003125
-$$
-
-$$
-P(X = 995) \approx 0.1759
-$$
-
-**Final Answer:** The probability of passing exactly 995 products is approximately **0.1759** or **17.59%**.
+::: callout-warning
+An exorbitant amount of statistics is dedicated to hypothesis testing. There's no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that's because non-expert practitioners do not understand their statistical models. And there's good reasons they don't, they are often analytical mathematical 'magic' with buried assumptions. We take a different approach.
+:::
 
 
 ## Probability of Multiple Events
 
-So far we have only considered $P(D|M)$ where the data is a single event. However, it is more common to be have multiple data points, and we'd like to know the relative probability of that specific dataset vs other dataset we may have sampled.
+So far we have only considered $P(D|M)$ where the data is a single event. However, it is more common to have multiple data points, and we'd like to know the relative probability of that specific dataset vs other datasets we may have sampled. Again we'll use the *multiplication rule of independent events*. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all *time series*.
 
-### Law of Probability and Independent Events
+We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:
 
-First we need to know the law of probability and independent events... How independence is not time series. How we typically add log prob instead of multiply.
+$$
+P(A \cap B \cap C \cap \dots) = P(A) \cdot P(B) \cdot P(C) \cdot \dots = exp(\log(P(A)) + \log(P(B)) + \log(P(C)) + \dots))
+$$
 
 ### Calculating the Relative Probability of Multiple Events
 

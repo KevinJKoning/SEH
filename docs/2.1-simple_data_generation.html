@@ -342,7 +342,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="models-of-data-generating-processes">Models of Data Generating Processes</h2>
 <section id="a-dice-total-model" class="level3">
 <h3 class="anchored" data-anchor-id="a-dice-total-model">A Dice Total Model</h3>
-<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we’ll use is an awfully good approximation of the real data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>
+<p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we’ll use is a good approximation of the real data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>
 <p>A dice model is built into the app displayed beneath this paragraph. It will simulate rolling the number of dice you specify, as if you threw them out of a cup all at once, and total the value on those dice from the cup, which is considered one roll. Additionally, it will repeat rolling that cup of dice the number of times you specify, and summarize the results on a histogram. Play around with the two inputs/parameters of the dice rolling app below, the number of dice and the number of rolls.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -395,7 +395,7 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="discrete-probability-distributions-as-models-of-data-generating-processes" class="level3">
 <h3 class="anchored" data-anchor-id="discrete-probability-distributions-as-models-of-data-generating-processes">Discrete Probability Distributions as Models of Data Generating Processes</h3>
-<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.995 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
+<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -656,7 +656,7 @@ P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 550
+#| viewerHeight: 560
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -799,18 +799,17 @@ Note
 <p>A few readers may already know an essay called the ‘The Bitter Lesson’ by Rich Sutton. If you haven’t read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there’s no way to compute through a bad algorithm. But we’re professionals in a hurry, we choose computation whenever it’s plausible.</p>
 </div>
 </div>
-<p><strong>delete these???</strong> ### Discrete Probability Distributions Probability of Data … #### Relative Frequency Technique Show we can use relative frequency technique like with the dice.</p>
 </section>
 <section id="exact-probabilities" class="level3">
 <h3 class="anchored" data-anchor-id="exact-probabilities">Exact Probabilities</h3>
 <p>Most of the primer is focused on simulation without going into the code itself, however, once you know what you’re after it’s not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we’ll walk through one of the few opportunities for some straightforward math.</p>
-<p>Let’s use the properties of the binomial probability distribution to determine the probability of having exactly 995 products pass inspection when we have a 0.995 pass rate and we inspect 1,000 products.</p>
+<p>Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability.</p>
 <ol type="1">
 <li><strong>Identify distribution parameters:</strong>
 <ul>
-<li>(n = 1000) (number of products tested)</li>
-<li>(k = 995) (number of products passing)</li>
-<li>(p = 0.995) (probability of a product passing)</li>
+<li>(n = 1,000) (number of products tested)</li>
+<li>(k = 999 and 1,000) (number of products passing)</li>
+<li>(p = 0.999) (probability of a product passing)</li>
 </ul></li>
 <li><strong>Plug into the binomial probability formula:</strong></li>
 </ol>
@@ -818,7 +817,7 @@ Note
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 \]</span></p>
 <p><span class="math display">\[
-P(X = 995) = \binom{1000}{995} (0.995)^{995} (0.005)^5
+P(X = 999) = \binom{1000}{999} (0.999)^{999} (0.001)^1 +
 \]</span></p>
 <ol start="3" type="1">
 <li><strong>Calculate the binomial coefficient:</strong></li>
@@ -857,7 +856,7 @@ P(X = 995) \approx 0.1759
 <p>We’d like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.</p>
 <p>We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.</p>
 <p><strong>Note that we probably want to make this into an app</strong></p>
-<div id="dd2a17f2" class="cell" data-execution_count="1">
+<div id="faab5dcd" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
