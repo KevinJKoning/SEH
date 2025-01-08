@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -300,7 +266,6 @@ window.Quarto = {
   </ul></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a>
   <ul class="collapse">
-  <li><a href="#law-of-probability-and-independent-events" id="toc-law-of-probability-and-independent-events" class="nav-link" data-scroll-target="#law-of-probability-and-independent-events">Law of Probability and Independent Events</a></li>
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
   <li><a href="#comparison-to-traditional-hypothesis-testing" id="toc-comparison-to-traditional-hypothesis-testing" class="nav-link" data-scroll-target="#comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</a></li>
   </ul></li>
@@ -803,120 +768,41 @@ Note
 <section id="exact-probabilities" class="level3">
 <h3 class="anchored" data-anchor-id="exact-probabilities">Exact Probabilities</h3>
 <p>Most of the primer is focused on simulation without going into the code itself, however, once you know what you’re after it’s not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we’ll walk through one of the few opportunities for some straightforward math.</p>
-<p>Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability.</p>
-<ol type="1">
-<li><strong>Identify distribution parameters:</strong>
-<ul>
-<li>(n = 1,000) (number of products tested)</li>
-<li>(k = 999 and 1,000) (number of products passing)</li>
-<li>(p = 0.999) (probability of a product passing)</li>
-</ul></li>
-<li><strong>Plug into the binomial probability formula:</strong></li>
-</ol>
+<p>Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that <span class="math inline">\(P(X = 1000)\)</span> is simplified below based on the <em>multiplication rule of independent events</em> to equal 0.999^1,000.</p>
 <p><span class="math display">\[
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 \]</span></p>
 <p><span class="math display">\[
-P(X = 999) = \binom{1000}{999} (0.999)^{999} (0.001)^1 +
+P(X = 999) + P(X = 1,000) = \binom{1000}{999} (0.999)^{999} (0.001)^1 + (0.999)^{1,000}
 \]</span></p>
-<ol start="3" type="1">
-<li><strong>Calculate the binomial coefficient:</strong></li>
-</ol>
-<p><span class="math display">\[
-\binom{1000}{995} = \frac{1000!}{995! \cdot 5!} = \frac{1000 \cdot 999 \cdot 998 \cdot 997 \cdot 996}{5 \cdot 4 \cdot 3 \cdot 2 \cdot 1} = 8,244,528,275
-\]</span></p>
-<ol start="4" type="1">
-<li><strong>Compute the probabilities:</strong></li>
-</ol>
-<p><span class="math display">\[
-(0.995)^{995} \approx 0.78029, \quad (0.005)^5 = 0.0000003125
-\]</span></p>
-<ol start="5" type="1">
-<li><strong>Combine terms:</strong></li>
-</ol>
-<p><span class="math display">\[
-P(X = 995) = 8,244,528,275 \cdot 0.78029 \cdot 0.0000003125
-\]</span></p>
-<p><span class="math display">\[
-P(X = 995) \approx 0.1759
-\]</span></p>
-<p><strong>Final Answer:</strong> The probability of passing exactly 995 products is approximately <strong>0.1759</strong> or <strong>17.59%</strong>.</p>
+<p>The result is 0.736, so the chance of having a real pass rate of 0.999 and having less than 999 pass is 1 - 0.736 = 0.264. It’s fairly plausible to have 0.999 pass rate and have a couple of products fail. However, if you had four or more fail, you should have a very hard time convincing management that it was just ‘bad luck’. The more formal way to discuss this is <em>hypothesis testing</em>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An exorbitant amount of statistics is dedicated to hypothesis testing. There’s no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that’s because non-expert practitioners do not understand their statistical models. And there’s good reasons they don’t, they are often analytical mathematical ‘magic’ with buried assumptions. We take a different approach.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="probability-of-multiple-events" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
-<p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to be have multiple data points, and we’d like to know the relative probability of that specific dataset vs other dataset we may have sampled.</p>
-<section id="law-of-probability-and-independent-events" class="level3">
-<h3 class="anchored" data-anchor-id="law-of-probability-and-independent-events">Law of Probability and Independent Events</h3>
-<p>First we need to know the law of probability and independent events… How independence is not time series. How we typically add log prob instead of multiply.</p>
-</section>
+<p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to have multiple data points, and we’d like to know the relative probability of that specific dataset vs other datasets we may have sampled. Again we’ll use the <em>multiplication rule of independent events</em>. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all <em>time series</em>.</p>
+<p>We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:</p>
+<p><span class="math display">\[
+P(A \cap B \cap C \cap \dots) = P(A) \cdot P(B) \cdot P(C) \cdot \dots = exp(\log(P(A)) + \log(P(B)) + \log(P(C)) + \dots))
+\]</span></p>
 <section id="calculating-the-relative-probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
 <p>With that background we can simulate the probability of a multiple events. Assume we are rolling dice out of a cup and we have four dice. We’ll use the exact probabilities of getting each total for convenience… Let’s assume we rolled the dice out of the cup five times, and got 4, 6, 9, 10, 20. The probability of that is relatively straightforward, it is w * x * y * z.</p>
 <p>We’d like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.</p>
 <p>We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.</p>
-<p><strong>Note that we probably want to make this into an app</strong></p>
-<div id="faab5dcd" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> roll_three_dice():</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Simulate rolling three dice and return their sum"""</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(np.random.randint(<span class="dv">1</span>, <span class="dv">7</span>, size<span class="op">=</span><span class="dv">3</span>))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_probability_of_sum(dice_sum):</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate probability of getting a specific sum with three dice"""</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    possibilities <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    total_outcomes <span class="op">=</span> <span class="dv">216</span>  <span class="co"># 6^3 possible outcomes</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">7</span>):</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> i <span class="op">+</span> j <span class="op">+</span> k <span class="op">==</span> dice_sum:</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                    possibilities <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                    </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> possibilities <span class="op">/</span> total_outcomes</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simulate_rolls():</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Simulate 10 rolls and calculate cumulative log probability"""</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    rolls <span class="op">=</span> [roll_three_dice() <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>)]</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    probabilities <span class="op">=</span> [get_probability_of_sum(roll) <span class="cf">for</span> roll <span class="kw">in</span> rolls]</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate cumulative log probabilities</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    log_probs <span class="op">=</span> np.log10(probabilities)</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    cumulative_log_probs <span class="op">=</span> np.cumsum(log_probs)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rolls, cumulative_log_probs</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform simulations</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>num_simulations <span class="op">=</span> <span class="dv">200</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>all_cumulative_probs <span class="op">=</span> []</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_simulations):</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    rolls, cum_probs <span class="op">=</span> simulate_rolls()</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    all_cumulative_probs.append(cum_probs)</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="dv">11</span>)</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot all simulations in darker gray</span></span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> probs <span class="kw">in</span> all_cumulative_probs:</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, probs, color<span class="op">=</span><span class="st">'#404040'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Rolls'</span>)</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Log10 Probability'</span>)</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Cumulative Log Probability of Multiple Three-Dice Rolls'</span>)</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.1-simple_data_generation_files/figure-html/cell-2-output-1.png" width="819" height="523" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -1074,6 +960,9 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="comparison-to-traditional-hypothesis-testing" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</h3>
+<p><strong>Needs more edits</strong>*</p>
+<p>Traditional hypothesis testing essentially starts with a <em>null</em> model which we can think of as the status quo. If the data has less than a (traditionally) 0.05 probability of being generated by that <em>null</em> model, we assume that something other than the <em>null</em> model generated the data.</p>
+<p>There are two problems: - Most people do not understand the <em>null</em> models and what is truly a less than 0.05 probability - 0.05 is the traditional value, but hardly makes sense in many circumstances.</p>
 </section>
 </section>
 <section id="summary-1" class="level2">
