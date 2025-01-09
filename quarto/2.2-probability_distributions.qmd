@@ -7,7 +7,9 @@ filters:
 
 ## Preview
 
-We continue with $P(D|M)$, the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same processes.. give us time for specific event = 0.
+We continue with $P(D|M)$, the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same concepts apply, however there is a major wrinkle, in that the probability of any exact value on the real number line is effectively zero.
+
+Like we did for discrete probability distributions, we will touch on data generating models, the probability of a single event from the model, and the probability of multiple events from the model. However, since we are in a hurry, we will be briefer if the concept is similar to last section.
 
 We constrain our models to producing a single continuous probability distribution to keep things simple. In future chapters we will relax this constraint to build more complex and accurate models.
 
