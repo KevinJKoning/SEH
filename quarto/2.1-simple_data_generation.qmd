@@ -509,171 +509,7 @@ With that background we can simulate the probability of multiple events. Again, 
 
 Assume we are rolling dice out of a cup and we have three dice. We'll let most of our simulations use fair dice, and we'll show the log probability of each exact series of events as we perform rolls out of the cup. Note that for three dice, the values can range from 3 to 18, and values near the middle, such as 10, will be more common than those at the end, such as 3 or 18. The log probability of more rare events will be more negative. If we have a series of very unlikely events, the values will become negative more quickly.
 
-We're also going to include some rolls with a cup of 3 weighted dice. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.30. If we expect the outcomes of fair dice, we'll see that the weighted dice will usually trend towards being a fairly inprobable series of rolls. We can refer to the percentile of their log-probability to see exactly how unusual they are.
-
-**Older text to integrate or delete**
-
-We'd like to understand how uncommon that event is. To calculate this we will simulate many, say thousands, of rolls with a cup of four dice. It will get many different combinations, but for each one we can calculate the probability.
-
-We then sort all the probabilities from smallest to largest, and see where the specific roll, the 4, 6, 9, 10, 20, falls in those probabilities. If if falls somewhere near the middle, we consider it a common roll. If it falls at an extreme end, we may start to suspect we have unusual luck, or possibly that the dice are not fair.
-
-
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 800
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-
-# --- Utility Functions ---
-
-def roll_three_dice():
-    """Simulate rolling three dice and return their sum."""
-    return np.sum(np.random.randint(1, 7, size=3))
-
-def get_probability_of_sum(dice_sum):
-    """Calculate probability of getting a specific sum with three dice."""
-    possibilities = 0
-    total_outcomes = 216  # 6^3 possible outcomes
-    
-    for i in range(1, 7):
-        for j in range(1, 7):
-            for k in range(1, 7):
-                if i + j + k == dice_sum:
-                    possibilities += 1
-                        
-    return possibilities / total_outcomes
-
-def simulate_rolls(num_rolls=10):
-    """Simulate a series of rolls and calculate cumulative log probability."""
-    rolls = [roll_three_dice() for _ in range(num_rolls)]
-    probabilities = [get_probability_of_sum(roll) for roll in rolls]
-    
-    # To handle log(0), replace zero probabilities with a very small number
-    probabilities = [p if p > 0 else 1e-10 for p in probabilities]
-    log_probs = np.log10(probabilities)
-    cumulative_log_probs = np.cumsum(log_probs)
-    
-    return rolls, cumulative_log_probs
-
-# -------------------------- UI Definition ---------------------------
-app_ui = ui.page_fluid(
-    ui.h2("Three-Dice Roll Simulations with Cumulative Log Probability"),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_select(
-                "selectedSim", 
-                "Select Simulation to Highlight", 
-                choices=[],   # initially empty, will be updated dynamically
-                multiple=False,
-            ),
-            ui.output_text("selectedDetails"),
-            ui.hr(),
-            ui.input_slider("numSimulations", "Number of Simulations", min=10, max=500, value=100, step=10),
-            ui.input_slider("numRolls", "Number of Rolls per Simulation", min=5, max=50, value=10, step=1),
-            ui.input_action_button("runSim", "Run Simulations")
-        ),
-        ui.output_plot("probPlot", height="500px"),
-    )
-)
-
-# -------------------------- Server Definition -------------------------
-def server(input, output, session):
-    # Reactive value to store simulations
-    simulations = reactive.Value([])
-    
-    # Reactive: Perform simulations when 'Run Simulations' button is clicked
-    @reactive.Effect
-    def _run_simulations():
-        input.runSim()  # Depend on the runSim button
-        num_sim = input.numSimulations()
-        num_rolls = input.numRolls()
-        new_simulations = []
-        for _ in range(num_sim):
-            _, cum_probs = simulate_rolls(num_rolls)
-            new_simulations.append(cum_probs)
-        simulations.set(new_simulations)
-        
-        # Update the select input choices
-        sim_choices = [f"Simulation {i+1}" for i in range(num_sim)]
-        ui.update_select(
-            "selectedSim",
-            choices=sim_choices,
-            selected=sim_choices[0] if sim_choices else ""
-        )
-    
-    # Initialize simulations on app start
-    @reactive.Effect
-    def _initialize():
-        input.runSim()  # Trigger initial simulation run
-    
-    # Plot the simulations, highlighting the selected one
-    @output
-    @render.plot
-    def probPlot():
-        sims = simulations()
-        num_sim = len(sims)
-        if num_sim == 0:
-            fig, ax = plt.subplots()
-            ax.text(0.5, 0.5, "No simulations to display.\nClick 'Run Simulations' to start.", 
-                    horizontalalignment='center', verticalalignment='center', fontsize=12)
-            ax.axis('off')
-            return fig
-        
-        num_rolls = len(sims[0])
-        x = np.arange(1, num_rolls + 1)
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot all simulations in light gray
-        for probs in sims:
-            ax.plot(x, probs, color='#D3D3D3', alpha=0.5)
-        
-        # Highlight the selected simulation
-        selected = input.selectedSim()
-        if selected:
-            try:
-                sim_index = int(selected.split()[-1]) - 1
-                if 0 <= sim_index < num_sim:
-                    selected_probs = sims[sim_index]
-                    ax.plot(x, selected_probs, color='red', linewidth=2.5, label=selected)
-            except (IndexError, ValueError):
-                pass
-        
-        ax.set_xlabel('Number of Rolls')
-        ax.set_ylabel('Cumulative Log10 Probability')
-        ax.set_title('Cumulative Log Probability of Multiple Three-Dice Roll Simulations')
-        ax.grid(True)
-        if selected and 0 <= sim_index < num_sim:
-            ax.legend()
-        
-        plt.tight_layout()
-        return fig
-    
-    # Display details of the selected simulation
-    @output
-    @render.text
-    def selectedDetails():
-        sims = simulations()
-        selected = input.selectedSim()
-        if not selected:
-            return "No simulation selected."
-        try:
-            sim_index = int(selected.split()[-1]) - 1
-            if sim_index < 0 or sim_index >= len(sims):
-                return "Selected simulation is out of range."
-            # For demonstration, display the cumulative log probability at the last roll
-            final_log_prob = sims[sim_index][-1]
-            return f"{selected} Final Cumulative Log10 Probability: {final_log_prob:.4f}"
-        except (IndexError, ValueError):
-            return "Invalid selection."
-
-app = App(app_ui, server)
-```
-
-
-
+We're also going to include one series of rolls with a cup of 3 weighted dice, which will be the dotted blue line. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.3. If we expect the outcomes of fair dice, we'll see that the weighted dice will usually trend towards being a fairly improbable series of rolls. We can refer to the percentile of their log-probability to see how unusual they are.
 
 ```{shinylive-python}
 #| standalone: true
@@ -691,8 +527,7 @@ def roll_three_dice_fair():
 
 def roll_three_dice_weighted():
     """Simulate rolling three weighted dice and return their sum."""
-    # Define weights: 1=0.15, 2=0.15, 3=0.15, 4=0.15, 5=0.2, 6=0.2
-    weights = [0.15, 0.15, 0.15, 0.15, 0.2, 0.2]
+    weights = [0.10, 0.10, 0.15, 0.15, 0.2, 0.30]
     # Define possible outcomes
     outcomes = [1, 2, 3, 4, 5, 6]
     # Roll three weighted dice
@@ -712,17 +547,8 @@ def get_probability_of_sum(dice_sum):
     return possibilities / total_outcomes
 
 def get_probability_of_sum_weighted(dice_sum):
-    """Calculate probability of getting a specific sum with three weighted dice."""
-    weights = [0.10, 0.10, 0.15, 0.15, 0.2, 0.30]
-    outcomes = [1, 2, 3, 4, 5, 6]
-    # Generate all possible outcomes with their probabilities
-    from itertools import product
-    probabilities = {}
-    for a, b, c in product(outcomes, repeat=3):
-        s = a + b + c
-        prob = weights[a-1] * weights[b-1] * weights[c-1]
-        probabilities[s] = probabilities.get(s, 0) + prob
-    return probabilities.get(dice_sum, 0)
+    # We want to pretend it has the same probability and see how much of an outlier weighted dice are
+    return get_probability_of_sum(dice_sum)
 
 def simulate_rolls_fair(num_rolls=10):
     """Simulate a series of rolls with fair dice and calculate cumulative log probability."""
@@ -764,7 +590,7 @@ app_ui = ui.page_fluid(
             # Removed the Number of Simulations slider
             # Set Number of Simulations to 100 for fair and 5 for weighted
             # Retain Number of Rolls slider
-            ui.input_slider("numRolls", "Number of Rolls per Simulation", min=5, max=50, value=10, step=1),
+            ui.input_slider("numRolls", "Number of Rolls per Simulation", min=5, max=100, value=10, step=1),
             ui.input_action_button("runSim", "Run Simulations")
         ),
         ui.output_plot("probPlot", height="500px"),
@@ -790,8 +616,8 @@ def server(input, output, session):
             label = f"Simulation {i+1}"
             new_simulations.append((label, cum_probs))
         
-        # Run 5 weighted simulations
-        num_sim_weighted = 5
+        # Run 1 weighted simulations (was 5)
+        num_sim_weighted = 1
         for i in range(num_sim_weighted):
             _, cum_probs = simulate_rolls_weighted(num_rolls)
             label = f"Weighted Simulation {i+1}"
@@ -885,7 +711,7 @@ def server(input, output, session):
             # Compute percentile
             percentile = (np.sum(np.array(all_final_log_probs) <= final_log_prob) / len(all_final_log_probs)) * 100
             return (
-                f"**{label}**\n\n"
+                f"{label}\n\n"
                 f"Final Cumulative Log10 Probability: {final_log_prob:.4f}\n"
                 f"Percentile: {percentile:.2f}th"
             )
@@ -895,228 +721,11 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+You may notice that it's easier to spot the weighted dice with a longer series of rolls. In just a couple of rolls they often don't seem that unusual, but most of the time over 100 roles they have a markedly different slope than the other roles.
+
+When we calculate the percentile of the weighted dice, we are essentially calculating a p-value of a hypothesis test...
 
 
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 800
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-
-# --- Utility Functions ---
-
-def roll_three_dice_fair():
-    """Simulate rolling three fair dice and return their sum."""
-    return np.sum(np.random.randint(1, 7, size=3))
-
-def roll_three_dice_weighted():
-    """Simulate rolling three weighted dice and return their sum."""
-    # Define weights: 1=0.15, 2=0.15, 3=0.15, 4=0.15, 5=0.2, 6=0.2
-    weights = [0.15, 0.15, 0.15, 0.15, 0.2, 0.2]
-    # Define possible outcomes
-    outcomes = [1, 2, 3, 4, 5, 6]
-    # Roll three weighted dice
-    return np.sum(np.random.choice(outcomes, size=3, p=weights))
-
-def get_probability_of_sum(dice_sum):
-    """Calculate probability of getting a specific sum with three fair dice."""
-    possibilities = 0
-    total_outcomes = 216  # 6^3 possible outcomes
-    
-    for i in range(1, 7):
-        for j in range(1, 7):
-            for k in range(1, 7):
-                if i + j + k == dice_sum:
-                    possibilities += 1
-                        
-    return possibilities / total_outcomes
-
-def get_probability_of_sum_weighted(dice_sum):
-    """Calculate probability of getting a specific sum with three weighted dice."""
-    # Define weights: 1=0.15, 2=0.15, 3=0.15, 4=0.15, 5=0.2, 6=0.2
-    weights = [0.15, 0.15, 0.15, 0.15, 0.2, 0.2]
-    outcomes = [1, 2, 3, 4, 5, 6]
-    # Generate all possible outcomes with their probabilities
-    from itertools import product
-    probabilities = {}
-    for a, b, c in product(outcomes, repeat=3):
-        s = a + b + c
-        prob = weights[a-1] * weights[b-1] * weights[c-1]
-        probabilities[s] = probabilities.get(s, 0) + prob
-    return probabilities.get(dice_sum, 0)
-
-def simulate_rolls_fair(num_rolls=10):
-    """Simulate a series of rolls with fair dice and calculate cumulative log probability."""
-    rolls = [roll_three_dice_fair() for _ in range(num_rolls)]
-    probabilities = [get_probability_of_sum(roll) for roll in rolls]
-    
-    # To handle log(0), replace zero probabilities with a very small number
-    probabilities = [p if p > 0 else 1e-10 for p in probabilities]
-    log_probs = np.log10(probabilities)
-    cumulative_log_probs = np.cumsum(log_probs)
-    
-    return rolls, cumulative_log_probs
-
-def simulate_rolls_weighted(num_rolls=10):
-    """Simulate a series of rolls with weighted dice and calculate cumulative log probability."""
-    rolls = [roll_three_dice_weighted() for _ in range(num_rolls)]
-    probabilities = [get_probability_of_sum_weighted(roll) for roll in rolls]
-    
-    # To handle log(0), replace zero probabilities with a very small number
-    probabilities = [p if p > 0 else 1e-10 for p in probabilities]
-    log_probs = np.log10(probabilities)
-    cumulative_log_probs = np.cumsum(log_probs)
-    
-    return rolls, cumulative_log_probs
-
-# -------------------------- UI Definition ---------------------------
-app_ui = ui.page_fluid(
-    ui.h2("Three-Dice Roll Simulations with Cumulative Log Probability"),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_select(
-                "selectedSim", 
-                "Select Simulation to Highlight", 
-                choices=[],   # initially empty, will be updated dynamically
-                multiple=False,
-            ),
-            ui.output_ui("selectedDetails"),  # Changed from output_text to output_ui
-            ui.hr(),
-            # Removed the Number of Simulations slider
-            # Set Number of Simulations to 100 for fair and 5 for weighted
-            # Retain Number of Rolls slider
-            ui.input_slider("numRolls", "Number of Rolls per Simulation", min=5, max=50, value=10, step=1),
-            ui.input_action_button("runSim", "Run Simulations")
-        ),
-        ui.output_plot("probPlot", height="500px"),
-    )
-)
-
-# -------------------------- Server Definition -------------------------
-def server(input, output, session):
-    # Reactive value to store simulations as a list of tuples: (label, cum_log_probs)
-    simulations = reactive.Value([])
-    
-    # Reactive: Perform simulations when 'Run Simulations' button is clicked
-    @reactive.Effect
-    def _run_simulations():
-        input.runSim()  # Depend on the runSim button
-        num_rolls = input.numRolls()
-        new_simulations = []
-        
-        # Run 100 fair simulations
-        num_sim_fair = 100
-        for i in range(num_sim_fair):
-            _, cum_probs = simulate_rolls_fair(num_rolls)
-            label = f"Simulation {i+1}"
-            new_simulations.append((label, cum_probs))
-        
-        # Run 5 weighted simulations
-        num_sim_weighted = 5
-        for i in range(num_sim_weighted):
-            _, cum_probs = simulate_rolls_weighted(num_rolls)
-            label = f"Weighted Simulation {i+1}"
-            new_simulations.append((label, cum_probs))
-        
-        simulations.set(new_simulations)
-        
-        # Update the select input choices
-        sim_choices = [sim[0] for sim in new_simulations]
-        ui.update_select(
-            "selectedSim",
-            choices=sim_choices,
-            selected=sim_choices[0] if sim_choices else ""
-        )
-    
-    # Initialize simulations on app start
-    @reactive.Effect
-    def _initialize():
-        input.runSim()  # Trigger initial simulation run
-    
-    # Plot the simulations, highlighting the selected one
-    @output
-    @render.plot
-    def probPlot():
-        sims = simulations()
-        num_sim = len(sims)
-        if num_sim == 0:
-            fig, ax = plt.subplots()
-            ax.text(0.5, 0.5, "No simulations to display.\nClick 'Run Simulations' to start.", 
-                    horizontalalignment='center', verticalalignment='center', fontsize=12)
-            ax.axis('off')
-            return fig
-        
-        num_rolls = len(sims[0][1])
-        x = np.arange(1, num_rolls + 1)
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot all fair simulations in light gray
-        for label, probs in sims:
-            if label.startswith("Simulation "):
-                ax.plot(x, probs, color='#D3D3D3', alpha=0.5)
-        
-        # Plot all weighted simulations in blue
-        for label, probs in sims:
-            if label.startswith("Weighted Simulation "):
-                ax.plot(x, probs, color='blue', alpha=0.7, linestyle='--')
-        
-        # Highlight the selected simulation
-        selected = input.selectedSim()
-        if selected:
-            try:
-                # Find the simulation by label
-                selected_sim = next((sim for sim in sims if sim[0] == selected), None)
-                if selected_sim:
-                    label, selected_probs = selected_sim
-                    color = 'red' if label.startswith("Simulation ") else 'green'
-                    linestyle = '-' if label.startswith("Simulation ") else '--'
-                    ax.plot(x, selected_probs, color=color, linewidth=2.5, linestyle=linestyle, label=label)
-            except (IndexError, ValueError):
-                pass
-        
-        ax.set_xlabel('Number of Rolls')
-        ax.set_ylabel('Cumulative Log10 Probability')
-        ax.set_title('Cumulative Log Probability of Multiple Three-Dice Roll Simulations')
-        ax.grid(True)
-        if selected:
-            ax.legend()
-        
-        plt.tight_layout()
-        return fig
-    
-    # Display details of the selected simulation, including percentile
-    @output
-    @render.ui  # Changed from render.text to render.ui
-    def selectedDetails():
-        sims = simulations()
-        selected = input.selectedSim()
-        if not selected:
-            return ui.p("No simulation selected.")
-        try:
-            # Find the simulation by label
-            selected_sim = next((sim for sim in sims if sim[0] == selected), None)
-            if not selected_sim:
-                return ui.p("Selected simulation not found.")
-            label, cum_probs = selected_sim
-            # Get the final cumulative log probability
-            final_log_prob = cum_probs[-1]
-            # Collect all final cumulative log probabilities
-            all_final_log_probs = [sim[1][-1] for sim in sims]
-            # Compute percentile
-            percentile = (np.sum(np.array(all_final_log_probs) <= final_log_prob) / len(all_final_log_probs)) * 100
-            return ui.div(
-                ui.h4(f"{label}"),
-                ui.p(f"<strong>Final Cumulative Log10 Probability:</strong> {final_log_prob:.4f}"),
-                ui.p(f"<strong>Percentile:</strong> {percentile:.2f}th")
-            )
-        except (IndexError, ValueError):
-            return ui.p("Invalid selection.")
-
-app = App(app_ui, server)
-```
 
 
 
