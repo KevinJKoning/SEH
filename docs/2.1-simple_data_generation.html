@@ -267,11 +267,8 @@ window.Quarto = {
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a>
   <ul class="collapse">
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
-  <li><a href="#comparison-to-traditional-hypothesis-testing" id="toc-comparison-to-traditional-hypothesis-testing" class="nav-link" data-scroll-target="#comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</a></li>
   </ul></li>
   <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
-  <li><a href="#wait-not-so-fast" id="toc-wait-not-so-fast" class="nav-link" data-scroll-target="#wait-not-so-fast">Wait Not so Fast</a></li>
-  <li><a href="#wait-one-more" id="toc-wait-one-more" class="nav-link" data-scroll-target="#wait-one-more">Wait, One More!</a></li>
   </ul>
 </nav>
     </div>
@@ -786,23 +783,31 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>An exorbitant amount of statistics is dedicated to hypothesis testing. There’s no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that’s because non-expert practitioners do not understand their statistical models. And there’s good reasons they don’t, they are often analytical mathematical ‘magic’ with buried assumptions. We take a different approach.</p>
+<p>Much of statistics is dedicated to hypothesis testing. There’s no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that’s because non-expert practitioners do not understand their statistical models. And there’s good reasons they don’t, they are often analytical mathematical ‘magic’ with buried assumptions. We take a different approach.</p>
 </div>
 </div>
 </section>
 </section>
 <section id="probability-of-multiple-events" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
-<p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to have multiple data points, and we’d like to know the relative probability of that specific dataset vs other datasets we may have sampled. Again we’ll use the <em>multiplication rule of independent events</em>. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all <em>time series</em>.</p>
+<p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to have multiple events (i.e.&nbsp;multiple data points), and we’d like to know the probability of a specific dataset vs other datasets we may have sampled. To calculate probabilities we’ll use the <em>multiplication rule of independent events</em>. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all <em>time series</em>.</p>
 <p>We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:</p>
 <p><span class="math display">\[
-P(A \cap B \cap C \cap \dots) = P(A) \cdot P(B) \cdot P(C) \cdot \dots = exp(\log(P(A)) + \log(P(B)) + \log(P(C)) + \dots))
+P(A \cap B \cap C \cap \dots) = P(A) \cdot P(B) \cdot P(C) \cdot \dots = 10^{(\log_{10}(P(A)) + \log_{10}(P(B)) + \log_{10}(P(C)) + \dots))}
+\]</span></p>
+<p>Let’s work through a couple example calculations before extending it to a scenario that approximates more serious problems we’ll tackle later. What is the probability of rolling three dice out of a cup, where the total is 11, and then rolling the dice again, where the total is 7? We use the app above to get the probabilities of each roll, where 11 = 0.1250 and 7 = 0.0694.</p>
+<p><span class="math display">\[
+P(Roll 1 \cap Roll 2) = 0.1250 \cdot 0.0694 = 0.008675 = 10^{(\log_{10}(0.1250) + \log_{10}(0.0694))}
+\]</span></p>
+<p>If we stay in log probabilities, as that is generally more convenient:</p>
+<p><span class="math display">\[
+\log_{10}(P(Roll 1 \cap Roll 2)) = \log_{10}(0.1250) + \log_{10}(0.0694) = -0.9031 + -1.1586 = -2.0617
 \]</span></p>
 <section id="calculating-the-relative-probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
-<p>With that background we can simulate the probability of multiple events. Again, to have better intuition about the problem, we’ll use dice, although it can obviously be extended to other discrete probability distributions.</p>
-<p>Assume we are rolling dice out of a cup and we have three dice. We’ll let most of our simulations use fair dice, and we’ll show the log probability of each exact series of events as we perform rolls out of the cup. Note that for three dice, the values can range from 3 to 18, and values near the middle, such as 10, will be more common than those at the end, such as 3 or 18. The log probability of more rare events will be more negative. If we have a series of very unlikely events, the values will become negative more quickly.</p>
-<p>We’re also going to include one series of rolls with a cup of 3 weighted dice, which will be the dotted blue line. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.3. If we expect the outcomes of fair dice, we’ll see that the weighted dice will usually trend towards being a fairly improbable series of rolls. We can refer to the percentile of their log-probability to see exactly how unusual they are.</p>
+<p>With the background from the last section we can now simulate the probability of multiple events. However, often it is more useful to think about the relative probability of a long series of events rather than the absolute probability, since the absolute probability will be tiny. I think an example will help. Again, to have better intuition about the problem, we’ll use dice, although it can obviously be extended to other discrete probability distributions.</p>
+<p>We’ll extend the recent example of rolling three dice out of a cup. We’ll let most of our simulations use fair dice, and we’ll show the log probability of each exact series of events as we perform rolls out of the cup. Note that for three dice, the values can range from 3 to 18, and values near the middle, such as 10, will be more common than those at the end, such as 3 or 18. The log probability of more rare events will be more negative. If we have a series of very unlikely events, the values will become negative more quickly.</p>
+<p>We’re also going to include one series of rolls with a cup of 3 weighted dice, which will be the dotted blue line. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.3. If we expect the outcomes of fair dice, we’ll see that the weighted dice will usually trend towards being a fairly improbable series of rolls. We can refer to the percentile of their log-probability to see how unusual they are.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -1013,29 +1018,26 @@ def server(input, output, session):
             return "Invalid selection."
 
 app = App(app_ui, server)</code></pre>
-<p>You may notice that it’s easier to spot the weighted dice with a longer series of rolls. In just a couple of rolls they often don’t seem that unusual, but most of the time over 100 roles they have a markedly different slope than the other roles.</p>
-<p>When we calculate the percentile of the weighted dice, we are essentially calculating a p-value of a hypothesis test…</p>
-</section>
-<section id="comparison-to-traditional-hypothesis-testing" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-to-traditional-hypothesis-testing">Comparison to Traditional Hypothesis Testing</h3>
-<p><strong>Needs more edits</strong>*</p>
+<p>You may notice that it’s easier to spot the weighted dice with a longer series of rolls. In just a couple of rolls they often don’t seem that unusual, but most of the time over 100 roles they have a markedly different slope than the other roles. When we calculate the percentile of the weighted dice, we are approximating the p-value of a hypothesis test. The p-value essentially says, if you assume your model is correct, here is the probability of witnessing data as, or more, extreme than what you witnessed. If the p-value becomes small enough, you may suspect it’s not bad luck, but that the data is being generated by a different model.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Traditional hypothesis testing essentially starts with a <em>null</em> model which we can think of as the status quo. If the data has less than a (traditionally) 0.05 probability of being generated by that <em>null</em> model, we assume that something other than the <em>null</em> model generated the data.</p>
-<p>There are two problems: - Most people do not understand the <em>null</em> models and what is truly a less than 0.05 probability - 0.05 is the traditional value, but hardly makes sense in many circumstances.</p>
+<p>There are two problems: - Most people do not understand how the <em>null</em> model is estimating probability. - 0.05 is the traditional value, but hardly makes sense in many circumstances.</p>
+</div>
+</div>
 </section>
 </section>
 <section id="summary-1" class="level2">
 <h2 class="anchored" data-anchor-id="summary-1">Summary</h2>
 <p>What we intended to show here is we can build a model of a process, and use that model to determine how probable any outcome of the process is. We also see that the reliability of that estimate is related to the total number of samples from the process, with more samples leading to more reliable estimates.</p>
-</section>
-<section id="wait-not-so-fast" class="level2">
-<h2 class="anchored" data-anchor-id="wait-not-so-fast">Wait Not so Fast</h2>
-<p>You may have a thought lingering in the back of your brain - why am I trusting you that your dice rolling model represents reality? Well, in general you shouldn’t trust any model. This is where real data is incredibly important. Preferably we’d have the data from real dice rolls, and although we shouldn’t expect a perfect match, we’d be able to at least get an intuition for whether the model was reasonable. Since this problem was so simple, and is relatively easy to verify analytically, we skipped this otherwise important step.</p>
-</section>
-<section id="wait-one-more" class="level2">
-<h2 class="anchored" data-anchor-id="wait-one-more">Wait, One More!</h2>
-<p>You may also have asked yourself - why can’t (or when should) I just use the real data to find the probability of an event? This would use the same technique as before, except the data would give count/frequency of the event divided by the total number of observations.</p>
-<p>The answer to that is - if you have enough data, you should do it that way! For example, if you’ve observed something about a dozen or more times in a dataset, dividing the count/frequency of that event by the total number of observations will give you quite a good estimate for its probability, given the same conditions as the dataset. It’s more complicated if you’ve only observed the event a couple times, and obviously impossible if you’ve observed it zero times. It’s also not possible if you want to make a change to the conditions that were used to generate the dataset… (discussion of uncertainty in those estimates at low counts????????, appendix material????)</p>
-<p>It’s quite common to be interested in the likelihood of an event in the tails (the far ends) of a distribution, however this is also where we need the most caution. Generally we will use some knowledge about the problem and the kind of data it is likely to produce combined with some sample of data to ground-truth the model parameters… However, since the tails of the distribution are rarely or never observed, we need a lot of caution and humility if we try to predict them.</p>
 
 
 </section>
