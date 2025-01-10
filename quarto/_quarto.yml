@@ -29,6 +29,7 @@ website:
           - 3.1-data_generation_reverse.qmd
           - 3.2-probability_distributions_reverse.qmd
           - 3.3-linear-regression.qmd
+          - 3.4-Naive_Monte_Carlo.qmd
           - 3.x-reverse_it.qmd
 
 format:

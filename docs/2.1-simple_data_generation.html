@@ -237,6 +237,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./3.4-Naive_Monte_Carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Monte Carlo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./3.x-reverse_it.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Test of new Dice Rolling App</span></a>
   </div>
@@ -268,7 +274,6 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
   </ul></li>
-  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -773,13 +778,13 @@ P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 P(X = 999) + P(X = 1,000) = \binom{1000}{999} (0.999)^{999} (0.001)^1 + (0.999)^{1,000}
 \]</span></p>
 <p>The result is 0.736, so the chance of having a real pass rate of 0.999 and having less than 999 pass is 1 - 0.736 = 0.264. It’s fairly plausible to have 0.999 pass rate and have a couple of products fail. However, if you had four or more fail, you should have a very hard time convincing management that it was just ‘bad luck’. The more formal way to discuss this is <em>hypothesis testing</em>.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Warning
+Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -807,12 +812,12 @@ P(Roll 1 \cap Roll 2) = 0.1250 \cdot 0.0694 = 0.008675 = 10^{(\log_{10}(0.1250) 
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
 <p>With the background from the last section we can now simulate the probability of multiple events. However, often it is more useful to think about the relative probability of a long series of events rather than the absolute probability, since the absolute probability will be tiny. I think an example will help. Again, to have better intuition about the problem, we’ll use dice, although it can obviously be extended to other discrete probability distributions.</p>
 <p>We’ll extend the recent example of rolling three dice out of a cup. We’ll let most of our simulations use fair dice, and we’ll show the log probability of each exact series of events as we perform rolls out of the cup. Note that for three dice, the values can range from 3 to 18, and values near the middle, such as 10, will be more common than those at the end, such as 3 or 18. The log probability of more rare events will be more negative. If we have a series of very unlikely events, the values will become negative more quickly.</p>
-<p>We’re also going to include one series of rolls with a cup of 3 weighted dice, which will be the dotted blue line. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.3. If we expect the outcomes of fair dice, we’ll see that the weighted dice will usually trend towards being a fairly improbable series of rolls. We can refer to the percentile of their log-probability to see how unusual they are.</p>
+<p>We’re also going to include one series of rolls with a cup of three weighted dice, which will be the dotted blue line. The values and probabilities will be 1=0.10, 2=0.10, 3=0.15, 4=0.15, 5=0.2, 6=0.3. If we expect the outcomes of fair dice, we’ll see that the weighted dice will usually trend towards being a fairly improbable series of rolls. We can refer to the percentile of their log-probability to see how unusual they are.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 800
+#| viewerHeight: 650
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -908,8 +913,8 @@ def server(input, output, session):
         num_rolls = input.numRolls()
         new_simulations = []
         
-        # Run 100 fair simulations
-        num_sim_fair = 100
+        # Run 99 fair simulations (99 + 1 unfair = 100)
+        num_sim_fair = 99
         for i in range(num_sim_fair):
             _, cum_probs = simulate_rolls_fair(num_rolls)
             label = f"Simulation {i+1}"
@@ -1029,17 +1034,12 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Traditional hypothesis testing essentially starts with a <em>null</em> model which we can think of as the status quo. If the data has less than a (traditionally) 0.05 probability of being generated by that <em>null</em> model, we assume that something other than the <em>null</em> model generated the data.</p>
-<p>There are two problems: - Most people do not understand how the <em>null</em> model is estimating probability. - 0.05 is the traditional value, but hardly makes sense in many circumstances.</p>
+<p>Traditional hypothesis testing starts with a <em>null</em> model which we can think of as the status quo. If the data has less than a (traditionally) 0.05 probability of being generated by that <em>null</em> model, we assume that something other than the <em>null</em> model generated the data.</p>
 </div>
 </div>
-</section>
-</section>
-<section id="summary-1" class="level2">
-<h2 class="anchored" data-anchor-id="summary-1">Summary</h2>
-<p>What we intended to show here is we can build a model of a process, and use that model to determine how probable any outcome of the process is. We also see that the reliability of that estimate is related to the total number of samples from the process, with more samples leading to more reliable estimates.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
