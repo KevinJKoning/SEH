@@ -7,8 +7,20 @@ filters:
 
 ## Intro
 
-We use the term *naive* to distinguish this method from more advanced Monte Carlo methods. The advantage here will be simplicity, but it will not be a good solution with many parameters (due to the spareseness of high dimensional space), or where we do not have very good priors.
+We use the term *naive* to distinguish this method from more advanced Monte Carlo methods. The advantage here will be simplicity, but it will not be a good solution with many parameters (due to the spareseness of high dimensional space), or where we do not have good priors.
 
+::: callout-note
+If you're wondering why generate data for examples instead of using 'real' data sets, it's because it's the only way to have certainty in the data generating process. This allows us to see how well we fit the model. Obviously the goal is real data - but unfortunately you'll probably never know *exactly* what the data generating process was, and that makes understanding the accuracy of 'new' methods very difficult. 
+:::
+
+## Bayesian Methods
+
+For determining the $P(M|D)$, we will use Bayesian methods. There's a whole historical debate you could research, but when it comes to most scientific and engineering subjects, you wouldn't be studying the subject if you didn't have some prior information, even if you can only describe it as intuition. This prior information is valuable, and it should be included in the model. Priors are also valueable in more bespoke models due to their ability to limit solutions to those known to be plausible... 
+
+Allen Downey said it well when he stated in *Think Bayes* that if don't have much data you should use Bayesian methods, and when you have lots of data, it dominates the priors so you can still use Bayesian methods... (research the real quote).
+
+
+## Dataset
 
 
 ```{python}
@@ -40,6 +52,9 @@ plt.xlabel('Height (feet)')
 plt.ylabel('Frequency')
 plt.show()
 ```
+
+## Priors
+
 
 ```{python}
 # =========================
@@ -113,6 +128,9 @@ n = len(heights)
 data = heights
 
 # Vectorized computation of log-likelihoods
+# There's a hell of a lot happening in this one line. For each of the 10,000 random samples
+# from the prior, it is using each as the loc and scale of a norm dist to find the 
+# likelihood of getting the height data. Then summing the 100 to get a 10,000 lenth array
 log_likelihoods = norm.logpdf(data[:, np.newaxis], loc=mu_samples, scale=sigma_samples).sum(axis=0)
 
 # To prevent numerical underflow, we'll work with log-likelihoods
@@ -122,9 +140,10 @@ normalized_log_likelihood = log_likelihoods - max_log_likelihood
 likelihoods = np.exp(normalized_log_likelihood)
 
 # Compute posterior probabilities (unnormalized)
+# Due to flat priors posterior is just equivalent to the likelihoods
 posterior = likelihoods
 
-# Normalize the posterior
+# Normalize the posterior (so it sums to 1)
 posterior /= np.sum(posterior)
 
 # Verify that 'posterior' is one-dimensional
@@ -502,3 +521,305 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
+
+v2
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 900
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats import norm
+import pandas as pd
+
+app_ui = ui.page_fluid(
+    ui.h2("Bayesian Inference of Heights"),
+    ui.row(
+        ui.column(3,
+            ui.h4("True Parameters"),
+            ui.input_numeric(
+                "mu_true", 
+                "True Mean Height [feet]", 
+                value=5.5, 
+                min=4.0, 
+                max=7.0, 
+                step=0.1
+            ),
+            ui.input_numeric(
+                "sigma_true", 
+                "True Std Dev (σ_true) [feet]", 
+                value=0.3, 
+                min=0.1, 
+                max=1.0, 
+                step=0.05
+            ),
+        ),
+        ui.column(3,
+            ui.h4("Dataset Generation"),
+            ui.input_numeric(
+                "dataset_size", 
+                "Number of Persons", 
+                value=100, 
+                min=10, 
+                max=1000, 
+                step=10
+            ),
+        ),
+        ui.column(3,
+            ui.h4("Prior Ranges"),
+            ui.input_numeric(
+                "mu_prior_min", 
+                "μ Prior Minimum [feet]", 
+                value=4.0, 
+                min=0.0, 
+                max=6.0, 
+                step=0.1
+            ),
+            ui.input_numeric(
+                "mu_prior_max", 
+                "μ Prior Maximum [feet]", 
+                value=7.0, 
+                min=5.0, 
+                max=10.0, 
+                step=0.1
+            ),
+        ),
+        ui.column(3,
+            ui.h4("Prior Ranges & Sampling"),
+            ui.input_numeric(
+                "sigma_prior_min", 
+                "σ Prior Minimum [feet]", 
+                value=0.0, 
+                min=0.0, 
+                max=1.0, 
+                step=0.05
+            ),
+            ui.input_numeric(
+                "sigma_prior_max", 
+                "σ Prior Maximum [feet]", 
+                value=0.9, 
+                min=0.5, 
+                max=3.0, 
+                step=0.1
+            ),
+            ui.input_numeric(
+                "num_prior_samples", 
+                "Number of Prior Samples", 
+                value=10000, 
+                min=1000, 
+                max=100000, 
+                step=1000
+            ),
+        )
+    ),
+    ui.navset_tab(
+        ui.nav_panel("True Height Data", ui.output_plot("generated_heights_plot")),
+        ui.nav_panel("Prior", ui.output_plot("prior_distributions_plot")),
+        ui.nav_panel("Prior-Generated Heights", ui.output_plot("prior_generated_heights_plot")),
+        ui.nav_panel("Posterior", ui.output_plot("posterior_distributions_plot")),
+        ui.nav_panel("Parameter Plot", ui.output_plot("parameter_scatter_plot")),
+    )
+)
+
+
+def server(input, output, session):
+    # Reactive expression to generate dataset
+    @reactive.Calc
+    def heights():
+        np.random.seed(42)  # For reproducibility
+        mu = input.mu_true()
+        sigma = input.sigma_true()
+        size = input.dataset_size()
+        return np.random.normal(loc=mu, scale=sigma, size=size)
+    
+    # Reactive expressions for prior ranges
+    @reactive.Calc
+    def mu_prior_range():
+        return (input.mu_prior_min(), input.mu_prior_max())
+    
+    @reactive.Calc
+    def sigma_prior_range():
+        return (input.sigma_prior_min(), input.sigma_prior_max())
+    
+    # Reactive expression to sample from priors
+    @reactive.Calc
+    def prior_samples():
+        num_samples = input.num_prior_samples()
+        mu_min, mu_max = mu_prior_range()
+        sigma_min, sigma_max = sigma_prior_range()
+        
+        mu_samples = np.random.uniform(mu_min, mu_max, num_samples)
+        sigma_samples = np.random.uniform(sigma_min, sigma_max, num_samples)
+        # Avoid sigma=0
+        sigma_samples[sigma_samples == 0] = 1e-6
+        return mu_samples, sigma_samples
+    
+    # Reactive expression to generate heights from priors
+    @reactive.Calc
+    def heights_prior_samples():
+        mu_samples, sigma_samples = prior_samples()
+        return np.random.normal(loc=mu_samples, scale=sigma_samples)
+    
+    # Reactive expression to compute posterior
+    @reactive.Calc
+    def posterior():
+        data = heights()
+        mu_samples, sigma_samples = prior_samples()
+        n = len(data)
+        
+        # Compute log-likelihoods
+        log_likelihoods = norm.logpdf(data[:, np.newaxis], loc=mu_samples, scale=sigma_samples).sum(axis=0)
+        
+        # Normalize log-likelihoods to prevent underflow
+        max_log_likelihood = np.max(log_likelihoods)
+        normalized_log_likelihood = log_likelihoods - max_log_likelihood
+        likelihoods = np.exp(normalized_log_likelihood)
+        
+        # Posterior probabilities (unnormalized)
+        posterior_probs = likelihoods
+        
+        # Normalize posterior
+        posterior_probs /= np.sum(posterior_probs)
+        
+        return posterior_probs
+    
+    # Reactive expression to create DataFrame for posterior
+    @reactive.Calc
+    def posterior_df():
+        mu_samples, sigma_samples = prior_samples()
+        posterior_probs = posterior()
+        return pd.DataFrame({
+            'mu': mu_samples,
+            'sigma': sigma_samples,
+            'posterior': posterior_probs
+        })
+    
+    # Plot 1: Generated Heights Histogram
+    @output
+    @render.plot
+    def generated_heights_plot():
+        data = heights()
+        plt.figure(figsize=(8, 5))
+        sns.histplot(data, bins=15, kde=True, color='skyblue')
+        plt.title(f'Histogram of Generated Heights ({input.dataset_size()} Persons)')
+        plt.xlabel('Height (feet)')
+        plt.ylabel('Frequency')
+        plt.tight_layout()
+        return plt.gcf()
+    
+    # Plot 2: Prior Distributions for mu and sigma
+    @output
+    @render.plot
+    def prior_distributions_plot():
+        mu_min, mu_max = mu_prior_range()
+        sigma_min, sigma_max = sigma_prior_range()
+        
+        fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # Prior for mu
+        mu_values = np.linspace(mu_min, mu_max, 1000)
+        mu_prior = np.ones_like(mu_values) / (mu_max - mu_min)
+        ax[0].plot(mu_values, mu_prior, color='blue')
+        ax[0].set_title(r'Prior Distribution for $\mu$ (Mean Height)')
+        ax[0].set_xlabel(r'$\mu$ (feet)')
+        ax[0].set_ylabel('Probability Density')
+        
+        # Prior for sigma
+        sigma_values = np.linspace(sigma_min, sigma_max, 1000)
+        sigma_prior_dist = np.ones_like(sigma_values) / (sigma_max - sigma_min)
+        ax[1].plot(sigma_values, sigma_prior_dist, color='green')
+        ax[1].set_title(r'Prior Distribution for $\sigma$ (Std Dev)')
+        ax[1].set_xlabel(r'$\sigma$ (feet)')
+        ax[1].set_ylabel('Probability Density')
+        
+        plt.tight_layout()
+        return plt.gcf()
+    
+    # Plot 3: Heights Generated from Priors
+    @output
+    @render.plot
+    def prior_generated_heights_plot():
+        heights_prior = heights_prior_samples()
+        plt.figure(figsize=(8, 5))
+        sns.histplot(heights_prior, bins=50, kde=True, color='orange')
+        plt.title(f'Histogram of Heights Generated from Priors ({input.num_prior_samples()} Persons)')
+        plt.xlabel('Height (feet)')
+        plt.ylabel('Frequency')
+        plt.tight_layout()
+        return plt.gcf()
+    
+    # Plot 4: Posterior Distributions for mu and sigma
+    @output
+    @render.plot
+    def posterior_distributions_plot():
+        df = posterior_df()
+        mu_true = input.mu_true()
+        sigma_true = input.sigma_true()
+        
+        fig, ax = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # Posterior for mu
+        sns.histplot(data=df, x='mu', weights='posterior', bins=50, kde=True, color='purple', ax=ax[0])
+        ax[0].axvline(mu_true, color='red', linestyle='--', label=r'True $\mu$')
+        ax[0].set_title(r'Posterior Distribution for $\mu$')
+        ax[0].set_xlabel(r'$\mu$ (feet)')
+        ax[0].set_ylabel('Posterior Probability')
+        ax[0].legend()
+        
+        # Posterior for sigma
+        sns.histplot(data=df, x='sigma', weights='posterior', bins=50, kde=True, color='brown', ax=ax[1])
+        ax[1].axvline(sigma_true, color='red', linestyle='--', label=r'True $\sigma$')
+        ax[1].set_title(r'Posterior Distribution for $\sigma$')
+        ax[1].set_xlabel(r'$\sigma$ (feet)')
+        ax[1].set_ylabel('Posterior Probability')
+        ax[1].legend()
+        
+        plt.tight_layout()
+        return plt.gcf()
+    
+    # Plot 5: Scatter Plot of mu vs sigma with Log Posterior Probability
+    @output
+    @render.plot
+    def parameter_scatter_plot():
+        df = posterior_df()
+        mu_true = input.mu_true()
+        sigma_true = input.sigma_true()
+        
+        epsilon = 1e-10  # To avoid log(0)
+        log_posterior = np.log(df['posterior'] + epsilon)
+        
+        plt.figure(figsize=(10, 8))
+        scatter = plt.scatter(
+            df['mu'],
+            df['sigma'],
+            c=log_posterior,
+            cmap='viridis',
+            alpha=0.5,
+            s=10
+        )
+        cbar = plt.colorbar(scatter)
+        cbar.set_label('Log Posterior Probability')
+        
+        plt.axvline(mu_true, color='red', linestyle='--', label=r'True $\mu$')
+        plt.axhline(sigma_true, color='blue', linestyle='--', label=r'True $\sigma$')
+        
+        plt.title(r'Posterior Probability of $\mu$ and $\sigma$ (Log Scale)')
+        plt.xlabel(r'$\mu$ (feet)')
+        plt.ylabel(r'$\sigma$ (feet)')
+        plt.legend()
+        plt.tight_layout()
+        return plt.gcf()
+
+app = App(app_ui, server)
+```
+
+
+## Less Naive Monte Carlo
+
+If you paid attention to the Posterior Probability of $\mu$ and $\sigma$ plot, you probabiliy noticed that a *lot* of the points/space on the chart was consumed by areas of low probability. This was true even though we had few parameters (low dimensions) and good priors. The trick of the more advanced Monte Carlo techniques is how to find the areas of high likelihood and sample them efficiently. These include Hamiltonian Monte Carlo (HMC) and the No-U-Turn Sampler (NUTS). We'll use em, and thankfully the details are easily researched if you want to know more...
+
+
+

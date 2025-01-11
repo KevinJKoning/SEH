@@ -320,3 +320,8 @@ There are actually some more columns/attributes/variables in the diamond dataset
 Now you're thinking, well you just didn't use a complicated enough model... Maybe throw a neural network at it. And while you aren't all wrong - you are also on the path to the dark side.
 
 
+## Overfitting
+
+... It's easy to see how you can 'overfit' a multi-variate linear regression model, you just include too many parameters, e.g. parameters that are just noise that look good when training the model but actually hurt performance on a real 'test' dataset. It's also possible to overfit a linear regression model with one 'X' variable. If you don't know already I suggest you think about for a second... Alright, it's assuming there is a relationship to X, i.e. a slope, when in reality the model just varies around a constant mean value.
+
+

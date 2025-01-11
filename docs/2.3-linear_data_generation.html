@@ -237,6 +237,12 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./3.4-Naive_Monte_Carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Monte Carlo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./3.x-reverse_it.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Test of new Dice Rolling App</span></a>
   </div>
@@ -260,6 +266,7 @@ window.Quarto = {
   <li><a href="#probability-of-the-data" id="toc-probability-of-the-data" class="nav-link" data-scroll-target="#probability-of-the-data">Probability of the Data</a></li>
   </ul></li>
   <li><a href="#multi-variable-regression" id="toc-multi-variable-regression" class="nav-link" data-scroll-target="#multi-variable-regression">Multi Variable Regression</a></li>
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting">Overfitting</a></li>
   </ul>
 </nav>
     </div>
@@ -489,7 +496,7 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
 <p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
 <p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="518900c7" class="cell" data-execution_count="1">
+<div id="c916d54b" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -505,11 +512,11 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="d59eb013" class="cell" data-execution_count="2">
+<div id="a6b29f42" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="833" height="523" class="figure-img"></p>
+<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="836" height="523" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -535,6 +542,10 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <h2 class="anchored" data-anchor-id="multi-variable-regression">Multi Variable Regression</h2>
 <p>There are actually some more columns/attributes/variables in the diamond dataset we didn’t use. Often in life we know things like this exist but they are just not available. However, right now we’ll use them and see if we can improve the model.</p>
 <p>Now you’re thinking, well you just didn’t use a complicated enough model… Maybe throw a neural network at it. And while you aren’t all wrong - you are also on the path to the dark side.</p>
+</section>
+<section id="overfitting" class="level2">
+<h2 class="anchored" data-anchor-id="overfitting">Overfitting</h2>
+<p>… It’s easy to see how you can ‘overfit’ a multi-variate linear regression model, you just include too many parameters, e.g.&nbsp;parameters that are just noise that look good when training the model but actually hurt performance on a real ‘test’ dataset. It’s also possible to overfit a linear regression model with one ‘X’ variable. If you don’t know already I suggest you think about for a second… Alright, it’s assuming there is a relationship to X, i.e.&nbsp;a slope, when in reality the model just varies around a constant mean value.</p>
 
 
 </section>
