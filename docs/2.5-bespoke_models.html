@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bespoke Models – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Bespoke/Bayesian Models – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -110,7 +110,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke Models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke/Bayesian Models</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -147,13 +147,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1-discrete_probability_distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Discrete Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.2-continuous-probability-distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Continuous Probability Distributions</span></a>
   </div>
 </li>
@@ -172,13 +172,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Bespoke Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.6-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
+ <span class="menu-text">Bespoke/Bayesian Models</span></a>
   </div>
 </li>
       </ul>
@@ -194,13 +188,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.1-without_priors.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">With Priors</span></a>
   </div>
 </li>
@@ -234,7 +228,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#all-the-models-under-the-rainbow" id="toc-all-the-models-under-the-rainbow" class="nav-link active" data-scroll-target="#all-the-models-under-the-rainbow">All the Models under the Rainbow</a></li>
+  <li><a href="#bespokebayesian" id="toc-bespokebayesian" class="nav-link active" data-scroll-target="#bespokebayesian">Bespoke/Bayesian</a></li>
+  <li><a href="#all-the-models-under-the-rainbow" id="toc-all-the-models-under-the-rainbow" class="nav-link" data-scroll-target="#all-the-models-under-the-rainbow">All the Models under the Rainbow</a></li>
   <li><a href="#revisiting-the-diamond-dataset" id="toc-revisiting-the-diamond-dataset" class="nav-link" data-scroll-target="#revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</a></li>
   <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
   <li><a href="#model-flexibility" id="toc-model-flexibility" class="nav-link" data-scroll-target="#model-flexibility">Model Flexibility</a></li>
@@ -244,9 +239,9 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke Models</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke/Bayesian Models</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Bespoke Models</h1>
+<h1 class="title">Bespoke/Bayesian Models</h1>
 </div>
 
 
@@ -263,6 +258,10 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="bespokebayesian" class="level2">
+<h2 class="anchored" data-anchor-id="bespokebayesian">Bespoke/Bayesian</h2>
+<p>When we talk about custom models, these are frequently associated with causal diagrams and prior information… We typically wouldn’t create a custom model if we didn’t have a causal diagram and some prior beliefs in mind, and custom models typically do not work well without causal diagrams and prior beliefs…</p>
+</section>
 <section id="all-the-models-under-the-rainbow" class="level2">
 <h2 class="anchored" data-anchor-id="all-the-models-under-the-rainbow">All the Models under the Rainbow</h2>
 <p>Before we get on with creating bespoke models… we should mention all the generic statistical and machine learning models that may meet your needs. If you are interested in the many statistical/machine learning tools, I suggest you refer to <em>An Introduction to Statistical Learning</em> by James, Witten, Hastie, and Tibshirani.</p>

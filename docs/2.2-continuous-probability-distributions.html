@@ -265,7 +265,7 @@ window.Quarto = {
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
   <li><a href="#models-of-continuous-data-generating-processes" id="toc-models-of-continuous-data-generating-processes" class="nav-link" data-scroll-target="#models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</a>
   <ul class="collapse">
-  <li><a href="#the-random-rocket" id="toc-the-random-rocket" class="nav-link" data-scroll-target="#the-random-rocket">The Random Rocket</a></li>
+  <li><a href="#the-random-walk-rocket" id="toc-the-random-walk-rocket" class="nav-link" data-scroll-target="#the-random-walk-rocket">The Random <del>Walk</del> Rocket</a></li>
   </ul></li>
   <li><a href="#continuous-distributions-as-models-of-data-generating-processes" id="toc-continuous-distributions-as-models-of-data-generating-processes" class="nav-link" data-scroll-target="#continuous-distributions-as-models-of-data-generating-processes">Continuous Distributions as Models of Data Generating Processes</a>
   <ul class="collapse">
@@ -319,8 +319,8 @@ window.Quarto = {
 <section id="models-of-continuous-data-generating-processes" class="level2">
 <h2 class="anchored" data-anchor-id="models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</h2>
 <p>Like we said before - when we change the data generating process, the distribution of outcomes changes. Here we’ll examine data generating processes that create continuous data.</p>
-<section id="the-random-rocket" class="level3">
-<h3 class="anchored" data-anchor-id="the-random-rocket">The Random Rocket</h3>
+<section id="the-random-walk-rocket" class="level3">
+<h3 class="anchored" data-anchor-id="the-random-walk-rocket">The Random <del>Walk</del> Rocket</h3>
 <p>Let’s assume we are shooting a rocket into the sky and letting it land. We have designed a simple guidance system that will correct the rocket to fly vertically after deviating from vertical flight. However, before a correction, the rocket will have wandered slightly from its original launch point. For simplicity in modeling, we’ll assume it only wanders left and right. We also assume that the deviations in flight are totally random - i.e.&nbsp;there is not a tendency to always move in one of the two directions. We want to answer the question, how far away is our rocket likely to land?</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -536,7 +536,7 @@ app = App(app_ui, server)</code></pre>
 <li>It contains only positive values.</li>
 <li>It has a very long ‘tail’ on the right hand side. Another way to describe this is skewness.</li>
 </ul>
-<p>It’s worth noting that there are many real world problems where values can only take positive values.</p>
+<p>It’s worth noting that there are many real world problems where values can only be positive.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -666,7 +666,7 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>You may have guessed it’s related to the normal distribution in that if you have a set of values from the lognormal distribution, if you take the their log values and replot them, you’ll end up plotting values in a normal distribution.</p>
+<p>You may have guessed that if you have a set of values from the lognormal distribution, if you take the the log of their values and replot them, you’ll end up plotting values in a normal distribution.</p>
 </section>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary</h3>
@@ -677,20 +677,121 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="probability-of-data">Probability of Data</h2>
 <section id="probability-density-function" class="level3">
 <h3 class="anchored" data-anchor-id="probability-density-function">Probability <em>Density</em> Function</h3>
-<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve continued to create histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of the point within the bin? The problem is that, as we’ve noted earlier, probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
+<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve continued to create histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we’ve noted earlier, the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
 <p>To solve this, the probability density function does not give a true probability, it gives a value such that the following properties are true:</p>
 <ul>
 <li>The area under the curve sums to 1, i.e.&nbsp;all possible values have a total probability of 1.</li>
 <li>The values give the relative probability of that point vs other points.</li>
 </ul>
-<p>Both points are important but we’ll use the second one in the immediate future. That each point</p>
 </section>
 <section id="single-data-point-example" class="level3">
 <h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
 <p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed.</p>
+<p>In the app below, we find where the data point lies on the chart and then find the area, i.e.&nbsp;probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 600
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Probability Calculator"),
+    
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+            ui.input_numeric(
+                "xInput", "Value (x):",
+                value=105, min=0, max=200
+            ),
+            ui.br(),
+            ui.h4("Probability (P(X ≥ x)):"),
+            ui.output_text("probOutput"),
+            width=300
+        ),
+        
+        # Main panel
+        ui.output_plot("normalPlot", height="400px"),
+    )
+)
+
+def server(input, output, session):
+    # Calculate probability
+    @reactive.Calc
+    def calculate_probability():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+        return 1 - stats.norm.cdf(x, mu, sigma)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the normal PDF with shaded area
+    @output
+    @render.plot
+    def normalPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Create x values for plotting
+        x_min = mu - 4 * sigma
+        x_max = mu + 4 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot the PDF
+        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
+        
+        # Shade the area for P(X ≥ x)
+        x_shade = x_vals[x_vals &gt;= x]
+        y_shade = stats.norm.pdf(x_shade, mu, sigma)
+        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
+                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
+
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+
+        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>When we refer to probabilities of “as extreme or more extreme” values, we are effectively computing tail probabilities using integrals. For example, for a right-tailed probability beyond a point <span class="math inline">\(c\)</span>, we evaluate:</p>
+<p><span class="math display">\[
+P(X \geq c) = \int_c^\infty f(x) \, dx
+\]</span></p>
 </section>
 <section id="multiple-data-points-example" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-data-points-example">Multiple Data Points Example</h3>
+<p>For multiple data points, we are generally interested in the <em>relative</em> probability of one series of events vs some other series of events. This is utilizing bullet two from the properties of the probability density function given above.</p>
+<p><strong>TODO Left off here, need to fix up relative probability in app below, and possibly replicate the dice multiple event probability app</strong></p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -872,7 +973,7 @@ Warning
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
 <p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="5aed0a6d" class="cell" data-execution_count="1">
+<div id="3abbf575" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

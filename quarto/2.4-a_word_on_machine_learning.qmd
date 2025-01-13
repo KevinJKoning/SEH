@@ -35,6 +35,12 @@ $$
 - The summation aggregates the error across all data points.
 - Dividing by $N$ ensures the loss represents the average error.
 
+## Likelihood Function
+
+The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).
+
+It's a bit awkward to mention Likelihood here, because we have been trying to wait until the second half of the primer in order to tackle it head on. However, you probably have an expectation that Machine Learning will be covered, at least to some degree, and it makes sense to do that while introducing all the other types of models. I'll continue to make it awkward and just state that yes this is the difference, but to understand Likelihood we'll have to wait to the second half...
+
 ## Machine Learning Models
 
 The following are some of the most common machine learning models. *Supervised learning* means that there is a result or 'y' variable to learn from. *Unsupervised learning* does not have the result or 'y' variable, which is a little confusing - instead of trying to predict they are generally attempting some kind of categorization/clustering or simplification.

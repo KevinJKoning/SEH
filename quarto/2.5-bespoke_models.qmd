@@ -1,9 +1,14 @@
 ---
-title: Bespoke Models
+title: Bespoke/Bayesian Models
 format: html
 filters:
   - shinylive
 ---
+
+## Bespoke/Bayesian
+
+When we talk about custom models, these are frequently associated with causal diagrams and prior information... We typically wouldn't create a custom model if we didn't have a causal diagram and some prior beliefs in mind, and custom models typically do not work well without causal diagrams and prior beliefs...
+
 
 ## All the Models under the Rainbow
 

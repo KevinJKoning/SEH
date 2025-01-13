@@ -173,13 +173,13 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1-discrete_probability_distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Discrete Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.2-continuous-probability-distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Continuous Probability Distributions</span></a>
   </div>
 </li>
@@ -214,13 +214,13 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.1-without_priors.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">With Priors</span></a>
   </div>
 </li>
@@ -255,6 +255,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#loss-function" id="toc-loss-function" class="nav-link active" data-scroll-target="#loss-function">Loss Function</a></li>
+  <li><a href="#likelihood-function" id="toc-likelihood-function" class="nav-link" data-scroll-target="#likelihood-function">Likelihood Function</a></li>
   <li><a href="#machine-learning-models" id="toc-machine-learning-models" class="nav-link" data-scroll-target="#machine-learning-models">Machine Learning Models</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
@@ -316,6 +317,11 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 <li>Dividing by <span class="math inline">\(N\)</span> ensures the loss represents the average error.</li>
 </ul>
 </section>
+</section>
+<section id="likelihood-function" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-function">Likelihood Function</h2>
+<p>The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).</p>
+<p>It’s a bit awkward to mention Likelihood here, because we have been trying to wait until the second half of the primer in order to tackle it head on. However, you probably have an expectation that Machine Learning will be covered, at least to some degree, and it makes sense to do that while introducing all the other types of models. I’ll continue to make it awkward and just state that yes this is the difference, but to understand Likelihood we’ll have to wait to the second half…</p>
 </section>
 <section id="machine-learning-models" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning-models">Machine Learning Models</h2>
