@@ -191,19 +191,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Regression</span></a>
+ <span class="menu-text">Generalized Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Word on Machine Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bespoke Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
       </ul>
@@ -220,13 +220,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Model Likelihood</span></a>
+ <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Likelihood</span></a>
+ <span class="menu-text">With Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -260,7 +260,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
-  <li><a href="#models-of-data-generating-processes" id="toc-models-of-data-generating-processes" class="nav-link" data-scroll-target="#models-of-data-generating-processes">Models of Data Generating Processes</a>
+  <li><a href="#models-of-discrete-data-generating-processes" id="toc-models-of-discrete-data-generating-processes" class="nav-link" data-scroll-target="#models-of-discrete-data-generating-processes">Models of Discrete Data Generating Processes</a>
   <ul class="collapse">
   <li><a href="#a-dice-total-model" id="toc-a-dice-total-model" class="nav-link" data-scroll-target="#a-dice-total-model">A Dice Total Model</a></li>
   <li><a href="#discrete-probability-distributions-as-models-of-data-generating-processes" id="toc-discrete-probability-distributions-as-models-of-data-generating-processes" class="nav-link" data-scroll-target="#discrete-probability-distributions-as-models-of-data-generating-processes">Discrete Probability Distributions as Models of Data Generating Processes</a></li>
@@ -305,8 +305,8 @@ window.Quarto = {
 <p>Once we have have some discussion of models under our belt, we will change our focus to the probability of data. For any model we can use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. Where an analytical solution of <span class="math inline">\(P(D|M)\)</span> is available, we will also compare exact probabilities to those estimated from relative frequency.</p>
 <p>We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.</p>
 </section>
-<section id="models-of-data-generating-processes" class="level2">
-<h2 class="anchored" data-anchor-id="models-of-data-generating-processes">Models of Data Generating Processes</h2>
+<section id="models-of-discrete-data-generating-processes" class="level2">
+<h2 class="anchored" data-anchor-id="models-of-discrete-data-generating-processes">Models of Discrete Data Generating Processes</h2>
 <section id="a-dice-total-model" class="level3">
 <h3 class="anchored" data-anchor-id="a-dice-total-model">A Dice Total Model</h3>
 <p>We’d prefer not to spend too much time on toy examples, however, there are a lot of benefits to starting with something that is intuitive and simple. Subsequently we’ll use rolling dice as our first example of a data generating process. It is also convenient that the mathematical model we’ll use is a good approximation of the real data generating process, so long as you’re OK with ignoring all the physical bouncing of the dice and are content with just the result after a roll.</p>

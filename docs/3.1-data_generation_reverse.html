@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Dice Model Likelihood – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Without Priors – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -141,7 +141,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Dice Model Likelihood</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Without Priors</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -191,19 +191,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Regression</span></a>
+ <span class="menu-text">Generalized Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Word on Machine Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bespoke Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
       </ul>
@@ -220,19 +220,25 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Dice Model Likelihood</span></a>
+ <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Likelihood</span></a>
+ <span class="menu-text">With Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.3-linear-regression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Test of new Linear Regression App</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.4-Naive_Monte_Carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Monte Carlo</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -253,8 +259,13 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-generation-reversed" id="toc-data-generation-reversed" class="nav-link active" data-scroll-target="#data-generation-reversed">Data Generation Reversed</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#data-generation-reversed" id="toc-data-generation-reversed" class="nav-link" data-scroll-target="#data-generation-reversed">Data Generation Reversed</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a></li>
+  <li><a href="#continuous-data" id="toc-continuous-data" class="nav-link" data-scroll-target="#continuous-data">Continuous Data</a>
+  <ul class="collapse">
+  <li><a href="#normal-distribution-with-mle-estimate" id="toc-normal-distribution-with-mle-estimate" class="nav-link" data-scroll-target="#normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</a></li>
+  </ul></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
   </ul>
@@ -263,9 +274,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Dice Model Likelihood</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.1-data_generation_reverse.html">Without Priors</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Dice Model Likelihood</h1>
+<h1 class="title">Without Priors</h1>
 </div>
 
 
@@ -282,6 +293,11 @@ window.Quarto = {
 </header>
 
 
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>We finally flip to <span class="math inline">\(P(D|M)\)</span> the probability of a <span style="text-decoration: underline;">model</span> given the <span style="text-decoration: underline;">data</span>.</p>
+<p>Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then consider a continuous example before moving on to generalized linear models. We will save bespoke models for the next chapter that includes prior knowledge for estimating models.</p>
+</section>
 <section id="data-generation-reversed" class="level2">
 <h2 class="anchored" data-anchor-id="data-generation-reversed">Data Generation Reversed</h2>
 <p>In part one we wanted to understand the probability of the data based on a fixed model of a data generating process. In part two we want to take the data and find the most likely model of the data generating process. It’s reasonable to think of this as the ‘reverse’ of our previous approach in part one.</p>
@@ -384,6 +400,172 @@ app = App(app_ui, server)</code></pre>
 <li><p><span class="math inline">\(\prod_{i=1}^{N}\)</span>: This is the product operation, which multiplies the individual probabilities <span class="math inline">\(P(y_i \mid \theta)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.</p></li>
 </ol>
 <p>The specific form of the likelihood function is important and can change meaningfully depending on the problem… (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed…</p>
+</section>
+<section id="continuous-data" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-data">Continuous Data</h2>
+<section id="normal-distribution-with-mle-estimate" class="level3">
+<h3 class="anchored" data-anchor-id="normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</h3>
+<p>The following is a very similar app to what we saw earlier that just calculated with likelihood of the data. However, this time we also have ability to find the most likely model to explain the data, i.e the Maximimum Likelihood Estimate <em>MLE</em> …</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Likelihood Calculation"),
+
+    # Row 1: Sliders
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=1, max=100, value=10, step=1
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Buttons, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("mleBtn", "MLE"),
+        ),
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Initialize data with 10 random points
+    data_vals = reactive.Value(
+        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+    )
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        data_vals.set(
+            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+        )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        y = data_vals()
+        n = len(y)
+        mle_mean = np.mean(y)
+        # MLE for variance uses 1/n factor
+        mle_var = np.sum((y - mle_mean)**2) / n
+        session.send_input_message("muInput", {"value": mle_mean})
+        session.send_input_message("varInput", {"value": mle_var})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+        if var &lt;= 0:
+            return float("nan")
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF and data points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
+            -0.5 * ((x_vals - mu) / sigma)**2
+        )
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(
+            x_vals, pdf_vals,
+            color="blue",
+            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
+        )
+
+        # Scatter the data at y=0 with some jitter
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        ax.axvline(mu, color="gray", linestyle="--")
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -406,6 +588,7 @@ Loss Functions
 </div>
 </div>
 <p>We introduce loss functions here but will apply them next chapter??</p>
+</section>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>

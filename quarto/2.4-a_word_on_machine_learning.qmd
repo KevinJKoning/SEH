@@ -1,0 +1,58 @@
+---
+title: A Word on Machine Learning
+format: html
+filters:
+  - shinylive
+---
+
+I assume most engineers think of *machine learning* as a sexier discipline than statistics. In reality there is a *lot* of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it's best to include a little perspective on it, even if we will generally avoid the topic otherwise.
+
+Due to the amount of blur/overlap, this may not be a universally agreed distinction, but I define an important difference this way:
+
+* Statistical models are built around probability theory
+* Machine learning models are built around minimizing a loss function
+
+The confusing thing is that a lot of methods known as being machine learning have loss functions that are purely probabilistic - but the key is they *do not have to be*.
+
+## Loss Function
+
+A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ and the predicted values $\hat{y}$ The generic form of a loss function can be expressed as:
+
+$$
+L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+$$
+
+#### Variables:
+- $y_i$: The true value for the \(i\)-th data point.
+- $\hat{y}_i$: The predicted value for the \(i\)-th data point.
+- $\ell(y_i, \hat{y}_i)$: The individual error for the \(i\)-th data point, defined by a specific loss function (e.g., squared error, cross-entropy).
+- $N$: The total number of data points.
+
+#### Explanation:
+- The function $\ell(y_i, \hat{y}_i)$ depends on the task (regression or classification). 
+  - Example for regression: $\ell(y_i, \hat{y}_i) = (y_i - \hat{y}_i)^2$ (Mean Squared Error).
+  - Example for classification: $\ell(y_i, \hat{y}_i) = -[y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]$ (Binary Cross-Entropy).
+- The summation aggregates the error across all data points.
+- Dividing by $N$ ensures the loss represents the average error.
+
+## Machine Learning Models
+
+The following are some of the most common machine learning models. *Supervised learning* means that there is a result or 'y' variable to learn from. *Unsupervised learning* does not have the result or 'y' variable, which is a little confusing - instead of trying to predict they are generally attempting some kind of categorization/clustering or simplification.
+
+You may note that the first two on the list below, linear regression and logistic regression, would also firmly sit on most lists of common statistical models.
+
+#### Supervised Learning
+1. **Linear Regression**: Predicts continuous values.
+2. **Logistic Regression**: For binary or multi-class classification.
+3. **Decision Trees**: Simple, interpretable models for classification and regression.
+4. **Random Forest**: Ensemble of decision trees for better accuracy.
+5. **Gradient Boosting (e.g., XGBoost, LightGBM)**: Powerful ensemble method for structured data.
+6. **Support Vector Machines (SVM)**: For classification and regression.
+7. **Neural Networks**: Flexible models, basis of deep learning.
+
+#### Unsupervised Learning
+1. **k-Means Clustering**: Groups similar data points.
+2. **Principal Component Analysis (PCA)**: Reduces dimensionality while preserving variance.
+
+## Summary
+There are plently of resources for this topic... My suggestion is to start with 'Statistical Learning'....

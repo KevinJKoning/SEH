@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Generalized Linear Models – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Bespoke Models – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -39,11 +39,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<meta name="shinylive:serviceworker_dir" content=".">
-<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
-<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
-<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,36 +66,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -141,7 +110,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Generalized Linear Models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke Models</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -190,7 +159,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Generalized Linear Models</span></a>
   </div>
 </li>
@@ -202,8 +171,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Bespoke Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.6-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
       </ul>
@@ -259,23 +234,19 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
-  <li><a href="#single-variable-regression" id="toc-single-variable-regression" class="nav-link" data-scroll-target="#single-variable-regression">Single Variable Regression</a>
-  <ul class="collapse">
-  <li><a href="#model-flaws" id="toc-model-flaws" class="nav-link" data-scroll-target="#model-flaws">Model Flaws</a></li>
-  <li><a href="#probability-of-the-data" id="toc-probability-of-the-data" class="nav-link" data-scroll-target="#probability-of-the-data">Probability of the Data</a></li>
-  </ul></li>
-  <li><a href="#multi-variable-regression" id="toc-multi-variable-regression" class="nav-link" data-scroll-target="#multi-variable-regression">Multi Variable Regression</a></li>
-  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting">Overfitting</a></li>
+  <li><a href="#all-the-models-under-the-rainbow" id="toc-all-the-models-under-the-rainbow" class="nav-link active" data-scroll-target="#all-the-models-under-the-rainbow">All the Models under the Rainbow</a></li>
+  <li><a href="#revisiting-the-diamond-dataset" id="toc-revisiting-the-diamond-dataset" class="nav-link" data-scroll-target="#revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</a></li>
+  <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
+  <li><a href="#model-flexibility" id="toc-model-flexibility" class="nav-link" data-scroll-target="#model-flexibility">Model Flexibility</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-linear_data_generation.html">Generalized Linear Models</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.5-bespoke_models.html">Bespoke Models</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Generalized Linear Models</h1>
+<h1 class="title">Bespoke Models</h1>
 </div>
 
 
@@ -292,260 +263,47 @@ window.Quarto = {
 </header>
 
 
-<section id="intro" class="level2">
-<h2 class="anchored" data-anchor-id="intro">Intro</h2>
-<p>At some point you have probably been exposed to linear regression… You may roll your eyes at being asked to warp back to your early education… But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.</p>
-<p>We’re also going to approach this in a way that is likely backwards from your previous introduction. Typically you’ll be presented with some data and the task will be to find a best fit line through the data. Often this starts with a single explanatory variable, but can it can easily be extended to many more. The actual algorithm of the best fit line is usually hand waved as some sort of magic - tackling that magic, i.e.&nbsp;finding the data generating process that best fits the data, is saved for the second half of this primer. Here we will think about it in the forward direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?</p>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 700
-
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from shiny import App, ui, reactive, render
-
-app_ui = ui.page_fluid(
-    ui.h2("Linear Regression Likelihood"),
-
-    # Row 1: Sliders for alpha, beta, sigma^2, and n
-    ui.row(
-        ui.column(
-            3,
-            ui.input_slider(
-                "alphaInput", "Intercept (α):",
-                min=-10, max=10, value=0, step=0.1
-            ),
-        ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "betaInput", "Slope (β):",
-                min=-5, max=5, value=1, step=0.1
-            ),
-        ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=0.1, max=10, value=1, step=0.1
-            ),
-        ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "nInput", "Number of samples:",
-                min=5, max=100, value=10, step=1
-            ),
-        ),
-    ),
-
-    ui.br(),
-
-    # Row 2: Buttons, current data, and log-likelihood
-    ui.row(
-        ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
-        ui.column(
-            2,
-            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Current Data (X, Y):"),
-            ui.output_text_verbatim("dataText"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
-            ui.output_text("llOutput"),
-        ),
-    ),
-
-    ui.br(),
-
-    # Plot
-    ui.output_plot("regressionPlot", height="400px"),
-)
-
-def server(input, output, session):
-    # Reactive value to store X and Y
-    data_vals = reactive.Value(None)
-
-    # Function to generate linear-regression data
-    def generate_data(n, alpha, beta, var):
-        # For simplicity, let X be a random uniform(0, 10)
-        X = np.random.uniform(0, 10, size=n)
-        # Y = alpha + beta*X + noise
-        Y = alpha + beta*X + np.random.normal(0, np.sqrt(var), size=n)
-        return X, Y
-
-    # Initialize data once
-    data_vals.set(generate_data(10, 0, 1, 1))
-
-    # Generate a new sample when 'NEW SAMPLE' is pressed
-    @reactive.Effect
-    @reactive.event(input.newSampleBtn)
-    def _():
-        n = input.nInput()
-        alpha = input.alphaInput()
-        beta = input.betaInput()
-        var = input.varInput()
-        data_vals.set(generate_data(n, alpha, beta, var))
-
-    # Display the current data
-    @output
-    @render.text
-    def dataText():
-        X, Y = data_vals()
-        # Show a few decimal places
-        pairs_str = [
-            f"({round(xi,1)}, {round(yi,1)})" for xi, yi in zip(X, Y)
-        ]
-        return ", ".join(pairs_str)
-
-    # When 'MLE' is clicked, compute OLS estimates and update alpha, beta, var
-    @reactive.Effect
-    @reactive.event(input.mleBtn)
-    def _():
-        X, Y = data_vals()
-        n = len(Y)
-
-        # Compute MLE (which in classical linear regression is the OLS solution)
-        X_mean = np.mean(X)
-        Y_mean = np.mean(Y)
-
-        # beta_hat = Cov(X,Y)/Var(X)
-        beta_hat = np.sum((X - X_mean)*(Y - Y_mean)) / np.sum((X - X_mean)**2)
-
-        # alpha_hat = mean(Y) - beta_hat*mean(X)
-        alpha_hat = Y_mean - beta_hat*X_mean
-
-        # var_hat = (1/n) * sum((y_i - alpha_hat - beta_hat*x_i)^2)
-        residuals = Y - (alpha_hat + beta_hat*X)
-        var_hat = np.sum(residuals**2) / n
-
-        # Update the UI sliders
-        session.send_input_message("alphaInput", {"value": alpha_hat})
-        session.send_input_message("betaInput", {"value": beta_hat})
-        session.send_input_message("varInput", {"value": var_hat})
-
-    # Reactive expression for log-likelihood
-    @reactive.Calc
-    def log_likelihood():
-        X, Y = data_vals()
-        alpha = input.alphaInput()
-        beta = input.betaInput()
-        var = input.varInput()
-        n = len(Y)
-
-        if var &lt;= 0:
-            return float("nan")
-
-        # Compute sum of squared residuals
-        residuals = Y - (alpha + beta*X)
-        ssr = np.sum(residuals**2)
-
-        # log-likelihood for linear regression
-        term1 = -0.5 * n * math.log(2 * math.pi * var)
-        term2 = -0.5 * (ssr / var)
-        return term1 + term2
-
-    # Show the log-likelihood
-    @output
-    @render.text
-    def llOutput():
-        ll = log_likelihood()
-        return str(round(ll, 2))
-
-    # Plot the data and the regression line
-    @output
-    @render.plot
-    def regressionPlot():
-        X, Y = data_vals()
-        alpha = input.alphaInput()
-        beta = input.betaInput()
-        var = input.varInput()
-
-        fig, ax = plt.subplots(figsize=(6, 4))
-
-        # Plot data points
-        ax.scatter(X, Y, color="blue", alpha=0.7, label="Data")
-
-        # Plot regression line from min(X) to max(X)
-        x_min, x_max = np.min(X), np.max(X)
-        x_vals = np.linspace(x_min, x_max, 100)
-        y_vals = alpha + beta * x_vals
-        ax.plot(x_vals, y_vals, color="red", label=f"Line (α={round(alpha,2)}, β={round(beta,2)})")
-
-        ax.set_title("Linear Regression Fit")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.legend()
-        ax.grid(True)
-
-        return fig
-
-app = App(app_ui, server)</code></pre>
+<section id="all-the-models-under-the-rainbow" class="level2">
+<h2 class="anchored" data-anchor-id="all-the-models-under-the-rainbow">All the Models under the Rainbow</h2>
+<p>Before we get on with creating bespoke models… we should mention all the generic statistical and machine learning models that may meet your needs. If you are interested in the many statistical/machine learning tools, I suggest you refer to <em>An Introduction to Statistical Learning</em> by James, Witten, Hastie, and Tibshirani.</p>
+<p>The various statistical/machine learning tools which include generalized linear regression, decision/regression trees, and neural nets have a distinct advantage and disadvantage: 1) So long as some basic criteria are met, you just apply the model to your data. 2) So long as some basic criteria are met, you just apply the model to your data.</p>
+<p>That was not a typo. The advantage is both in the speed in which you can perform an analysis as well as the simplicity in communicating how you performed the analysis. I say it is a disadvantage because you are not forced to think through your problem, especially the assumptions that each tool is making. For example, in linear regression, you have a implicit prior assumption that the error term is constant and normally distributed.</p>
+<p>In this primer we will leave all these other tools to other books, and we will instead focus on techniques that allow us to mold the model to our situation. This should only be done when you have at least <em>some</em> knowledge about the data generation process you are modeling - but it doesn’t take much and who tries to model data for a situation they know nothing about?</p>
 </section>
-<section id="single-variable-regression" class="level2">
-<h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
-<p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
-<p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="1bcffc4b" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
+<section id="revisiting-the-diamond-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</h2>
+<p>In the diamond dataset there was something quite obvious to humans that is impossible for many statistical or machine learning tools to learn - the price premium when passing the 1.0, 1.5, and 2.0 carat thresholds.</p>
+</section>
+<section id="causal-model-with-1.0-1.5-and-2.0-cut-points" class="level2">
+<h2 class="anchored" data-anchor-id="causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</h2>
+<p>If we reason about what is influencing the price of a diamond, once we remove the artificial value that is placed for passing the 1.0, 1.5, and 2.0 carat thresholds, the value appears to be a somewhat continuous and rational combination of the relevant characteristics, specifically color, cut, clarity, and size. If we seem to iron out that one wrinkle, we could have a very good model.</p>
+<p>We summarize our knowledge of the real data generating process in a causal diagram:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
 <div>
-<figure class="figure">
-<p><img src="2.3-linear_data_generation_files/figure-html/cell-2-output-1.png" width="833" height="523" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We’re going to fit the data with a linear regression model, it will have this mathematical form:</p>
-<p><span class="math display">\[
-y_i = \beta_0 + \beta_1 x + \epsilon
-\]</span></p>
-<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
-<p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
-<p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="60779f34" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
+<p></p><figure class="figure"><p></p>
 <div>
-<figure class="figure">
-<p><img src="2.3-linear_data_generation_files/figure-html/cell-3-output-1.png" width="836" height="523" class="figure-img"></p>
-</figure>
+<pre class="mermaid mermaid-js">graph LR
+    cut --&gt; linear_model
+    color --&gt; linear_model
+    clarity --&gt; linear_model
+    size --&gt; linear_model
+    size --&gt; carat_threshold
+    linear_model --&gt; price
+    carat_threshold --&gt; price
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
 </div>
-<section id="model-flaws" class="level3">
-<h3 class="anchored" data-anchor-id="model-flaws">Model Flaws</h3>
-<p>OK, let’s point out a few things this model is doing wrong:</p>
-<ul>
-<li><p>The model produces a decent number of negative values at small carats. I don’t think this is real because no one has paid me to take a diamond before.</p></li>
-<li><p>The variation around the mean value is the same regardless of whether it is a 0.3 carat diamond or a 1.5 carat diamond. What’s actually happening in the data is called <em>Heteroscedasticity</em>, a fine English word, and actually quite common.</p></li>
-<li><p>There are some important ‘break points’ in the data that a linear model is not going to capture, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.</p></li>
-<li><p>It seems large diamonds, of presumably poor or average quality, are not as valuable as the model seems to think.</p></li>
-</ul>
-<p>Linear models are very interpretable, so someone familiar with them probably could have pointed out these flaws very early. However, when more variables are introduced or we use a more flexible modeling technique, data generation is going to be even more valuable.</p>
+<p>This shows that while we have two mechanisms influencing diamond price. While the cut, color, clarity, and size can be combined in a linear fashion to determine price, the size is also an input to a carat threshold model that will influence price.</p>
 </section>
-<section id="probability-of-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="probability-of-the-data">Probability of the Data</h3>
-<p>While we can expect all models to be flawed to some extent, using a model with some very obvious flaws makes estimating the probability of data quite dubious. For example, we have some data that is 5+ standard deviations away, which is rarer than one in a million. I don’t think the data is that rare, I think the model is just not very good.</p>
-<p><strong>NEEDS MORE MATH</strong></p>
-</section>
-</section>
-<section id="multi-variable-regression" class="level2">
-<h2 class="anchored" data-anchor-id="multi-variable-regression">Multi Variable Regression</h2>
-<p>There are actually some more columns/attributes/variables in the diamond dataset we didn’t use. Often in life we know things like this exist but they are just not available. However, right now we’ll use them and see if we can improve the model.</p>
-<p>Now you’re thinking, well you just didn’t use a complicated enough model… Maybe throw a neural network at it. And while you aren’t all wrong - you are also on the path to the dark side.</p>
-</section>
-<section id="overfitting" class="level2">
-<h2 class="anchored" data-anchor-id="overfitting">Overfitting</h2>
-<p>… It’s easy to see how you can ‘overfit’ a multi-variate linear regression model, you just include too many parameters, e.g.&nbsp;parameters that are just noise that look good when training the model but actually hurt performance on a real ‘test’ dataset. It’s also possible to overfit a linear regression model with one ‘X’ variable. If you don’t know already I suggest you think about for a second… Alright, it’s assuming there is a relationship to X, i.e.&nbsp;a slope, when in reality the model just varies around a constant mean value.</p>
+<section id="model-flexibility" class="level2">
+<h2 class="anchored" data-anchor-id="model-flexibility">Model Flexibility</h2>
+<p>Engineers are typically familiar with solving systems of equations and the necessity that the system has the appropriate <em>degrees of freedom</em>, such that it is not overly constrained so there is no solution, and it is not underconstrained such that there are an infinite number of solutions.</p>
+<p>Statistical models that have too much flexibility can be optimized into all sorts of nonsensical solutions. Allowing a negative intercept in a linear regression model of the diamond dataset is one example, as it indicates customers will be paid to take small diamonds. I like to visualize this as a truss with beams/members that can contort into all sorts of nonsensical shapes. What we really want are beams/members that bend in reasonable ways.</p>
+<p>We can use our knowledge of the data generating process to create reasonable <strong>priors</strong> for our model. This is simply saying that we already know some reasonable range of values, or even a most likely value, for the parameters of the model. Common examples are not letting a parameter take a negative value, or that previous experience suggest the parameter is near a certain value. Setting a prior does not mean we force a parameter value on the model, it just eliminates the impossible values and nudges the model towards our prior knowledge. If the data is different…</p>
 
 
 </section>

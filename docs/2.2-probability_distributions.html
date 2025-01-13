@@ -194,19 +194,19 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Regression</span></a>
+ <span class="menu-text">Generalized Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Word on Machine Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bespoke Models</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
   </div>
 </li>
       </ul>
@@ -223,13 +223,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Model Likelihood</span></a>
+ <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Likelihood</span></a>
+ <span class="menu-text">With Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -263,13 +263,28 @@ window.Quarto = {
    
   <ul>
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
-  <li><a href="#more-data-generating-processes-probability-distribution-as-models" id="toc-more-data-generating-processes-probability-distribution-as-models" class="nav-link" data-scroll-target="#more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</a></li>
+  <li><a href="#models-of-continuous-data-generating-processes" id="toc-models-of-continuous-data-generating-processes" class="nav-link" data-scroll-target="#models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</a>
+  <ul class="collapse">
+  <li><a href="#the-random-rocket" id="toc-the-random-rocket" class="nav-link" data-scroll-target="#the-random-rocket">The Random Rocket</a></li>
+  </ul></li>
+  <li><a href="#continuos-distributions-as-models-of-data-generating-processes" id="toc-continuos-distributions-as-models-of-data-generating-processes" class="nav-link" data-scroll-target="#continuos-distributions-as-models-of-data-generating-processes">Continuos Distributions as Models of Data Generating Processes</a>
+  <ul class="collapse">
+  <li><a href="#the-normal-distribution" id="toc-the-normal-distribution" class="nav-link" data-scroll-target="#the-normal-distribution">The Normal Distribution</a></li>
+  <li><a href="#the-lognormal-distribution" id="toc-the-lognormal-distribution" class="nav-link" data-scroll-target="#the-lognormal-distribution">The Lognormal Distribution</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
+  <ul class="collapse">
+  <li><a href="#single-data-point-example" id="toc-single-data-point-example" class="nav-link" data-scroll-target="#single-data-point-example">Single Data Point Example</a></li>
+  <li><a href="#multiple-data-points-example" id="toc-multiple-data-points-example" class="nav-link" data-scroll-target="#multiple-data-points-example">Multiple Data Points Example</a></li>
+  </ul></li>
   <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
   <li><a href="#probability-of-continuous-data" id="toc-probability-of-continuous-data" class="nav-link" data-scroll-target="#probability-of-continuous-data">“Probability” of Continuous Data</a></li>
   <li><a href="#probability-of-a-single-event" id="toc-probability-of-a-single-event" class="nav-link" data-scroll-target="#probability-of-a-single-event">Probability of a Single Event</a></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
   <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
+  <li><a href="#note-to-self" id="toc-note-to-self" class="nav-link" data-scroll-target="#note-to-self">Note to self</a></li>
   </ul>
 </nav>
     </div>
@@ -300,37 +315,110 @@ window.Quarto = {
 <p>We continue with <span class="math inline">\(P(D|M)\)</span>, the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same concepts apply, however there is a major wrinkle, in that the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
 <p>Like we did for discrete probability distributions, we will touch on data generating models, the probability of a single event from the model, and the probability of multiple events from the model. However, since we are in a hurry, we will be briefer if the concept is similar to last section.</p>
 </section>
-<section id="more-data-generating-processes-probability-distribution-as-models" class="level2">
-<h2 class="anchored" data-anchor-id="more-data-generating-processes-probability-distribution-as-models">More Data Generating Processes (Probability Distribution as Models)</h2>
-<p>When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
-<p>A ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.</p>
-<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
+<section id="models-of-continuous-data-generating-processes" class="level2">
+<h2 class="anchored" data-anchor-id="models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</h2>
+<p>Like we said before - when we change the data generating process, the distribution of outcomes changes. Here we’ll examine data generating processes that create continuous data.</p>
+<section id="the-random-rocket" class="level3">
+<h3 class="anchored" data-anchor-id="the-random-rocket">The Random Rocket</h3>
+<p>Let’s assume we are shooting a rocket into the sky and letting it land. We have designed a simple guidance system that will correct the rocket to fly vertically after deviating from vertical flight. However, before a correction, the rocket will have wandered slightly from its original launch point. For simplicity in modeling, we’ll assume it only wanders left and right. We also assume that the deviations in flight are totally random - i.e.&nbsp;there is not a tendency to always move in one of the two directions. We want to answer the question, how far away is our rocket likely to land?</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Random Rocket Simulator"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("stepSize", "Deviation Size", 
+                           min=0.01, max=10, value=1, step=0.01),
+            ui.input_slider("numSteps", "Number of Deviations", 
+                           min=10, max=1000, value=100, step=10),
+            ui.input_slider("numTrials", "Number of Trials", 
+                           min=10, max=10000, value=100, step=10),
+            ui.input_slider("numBins", "Number of Histogram Bins", 
+                           min=5, max=100, value=30, step=5),
+        ),
+        ui.output_plot("distPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def calculate_distances():
+        distances = []
+        for _ in range(input.numTrials()):
+            # Generate random steps between 0 and 1, then scale by step size
+            steps = np.random.uniform(0, 1, input.numSteps()) * input.stepSize()
+            # Calculate final position (sum of all steps)
+            final_position = np.sum(steps)
+            # Store the absolute distance from start
+            distances.append(final_position)
+        return distances
+
+    @output
+    @render.plot
+    def distPlot():
+        distances = calculate_distances()
+        fig, ax = plt.subplots()
+        
+        ax.hist(distances, bins=input.numBins(), color="steelblue", edgecolor="black")
+        ax.set_title("Distribution of Distances from Launch")
+        ax.set_xlabel("Distance from Start")
+        ax.set_ylabel("Frequency")
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>Even though this is similar to some other outputs we’ve seen, we need to stress a couple key points:</p>
+<ul>
+<li>The output values are no longer discrete/integers as we saw previously.</li>
+<li>It is still useful to visualize the results with a histogram - however, the app now lets choose the size of the bin.</li>
+</ul>
+<p>Previously the histograms you’ve seen had fairly obvious bins, they were just based on the discrete/integer results of our previous data generating processes. Now there is no obvious bin size to choose because the results are continuous.</p>
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Warning
+Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>SHORTEN THIS.</p>
-<p>There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.</p>
-<p>If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a <em>probability distribution model</em>. When we use it in the context of uncertainty, I will call it an <em>uncertainty distribution</em>. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.</p>
-<p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
+<p>There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.</p>
 </div>
 </div>
-<p>The point here is that each probability distribution model has the basic form of:</p>
-<ol type="1">
-<li><p>The model is mimicing a [idealized] process with inherent characteristics</p></li>
-<li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
-</ol>
 </section>
-<section id="normalgaussian-likelihood" class="level2">
-<h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
-<p>TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.</p>
-<p>Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
+</section>
+<section id="continuos-distributions-as-models-of-data-generating-processes" class="level2">
+<h2 class="anchored" data-anchor-id="continuos-distributions-as-models-of-data-generating-processes">Continuos Distributions as Models of Data Generating Processes</h2>
+<section id="the-normal-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="the-normal-distribution">The Normal Distribution</h3>
+<p>You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There’s actually a theorem for that, call the the <em>Central Limit Theorem</em>. You can easily research the details, but we’ll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And <em>almost</em> everything we’ve seen so far has utilized additive processes.</p>
+<p><strong>Normal Distribution Example</strong></p>
+</section>
+<section id="the-lognormal-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="the-lognormal-distribution">The Lognormal Distribution</h3>
+<p>Data generating processes do not need to be additive though, some processes tend to multiply the current step with the last one. These kinds of processes will create a notably different distribution, called the log-normal distribution…</p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>Again we keep this section brief as there are plenty of easily accessible references for continuous probability distributions. Hopefully the point was made though - that each continuous probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.</p>
+</section>
+</section>
+<section id="probability-of-data" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-data">Probability of Data</h2>
+<section id="single-data-point-example" class="level3">
+<h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
+</section>
+<section id="multiple-data-points-example" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-data-points-example">Multiple Data Points Example</h3>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -343,7 +431,7 @@ import matplotlib.pyplot as plt
 from shiny import App, ui, reactive, render
 
 app_ui = ui.page_fluid(
-    ui.h2("Likelihood Calculation"),
+    ui.h2("Relative Probability of Normally Distributed Data"),
 
     # Row 1: Sliders
     ui.row(
@@ -372,24 +460,20 @@ app_ui = ui.page_fluid(
 
     ui.br(),
 
-    # Row 2: Buttons, current data, and log-likelihood
+    # Row 2: Button, current data, and log-likelihood
     ui.row(
-        ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
         ui.column(
             2,
             ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
         ),
         ui.column(
-            4,
+            7,
             ui.h4("Current Data (Y):"),
             ui.output_text_verbatim("dataText"),
         ),
         ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
+            3,
+            ui.h4("Relative Probability:"),
             ui.output_text("llOutput"),
         ),
     ),
@@ -421,18 +505,6 @@ def server(input, output, session):
     def dataText():
         y = data_vals()
         return ", ".join(str(round(val, 1)) for val in y)
-
-    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
-    @reactive.Effect
-    @reactive.event(input.mleBtn)
-    def _():
-        y = data_vals()
-        n = len(y)
-        mle_mean = np.mean(y)
-        # MLE for variance uses 1/n factor
-        mle_var = np.sum((y - mle_mean)**2) / n
-        session.send_input_message("muInput", {"value": mle_mean})
-        session.send_input_message("varInput", {"value": mle_var})
 
     # Reactive expression for log-likelihood
     @reactive.Calc
@@ -491,6 +563,36 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+<p><strong>I think this is repeated but am not sure so not deleting quite yet</strong></p>
+<p>Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
+<p>A ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.</p>
+<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>SHORTEN THIS.</p>
+<p>There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.</p>
+<p>If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a <em>probability distribution model</em>. When we use it in the context of uncertainty, I will call it an <em>uncertainty distribution</em>. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.</p>
+<p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
+</div>
+</div>
+<p>The point here is that each probability distribution model has the basic form of:</p>
+<ol type="1">
+<li><p>The model is mimicing a [idealized] process with inherent characteristics</p></li>
+<li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
+</ol>
+</section>
+</section>
+<section id="normalgaussian-likelihood" class="level2">
+<h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
+<p>Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
 <p>A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
 <p><strong>Histogram of continuous data??</strong></p>
 <p>It’s tempting to leave the discussion here and to essentially just use histograms of the continuous data and our relative frequency technique to find the approximate probability of a value. However, there are unfortunately problems. The first one that comes to mind is the arbitrary size of the bins you choose, although for practical problems we can probably get around it. The final straw though is that having a robust understanding of probability distributions will pay big dividends later (so we can use standard likelihood techniques), so we slip a little further into the statistical void.</p>
@@ -498,7 +600,7 @@ app = App(app_ui, server)</code></pre>
 <section id="probability-of-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
 <p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
-<div id="d9acd972" class="cell" data-execution_count="1">
+<div id="dd41f223" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -705,6 +807,10 @@ Warning
 </div>
 </div>
 </div>
+</section>
+<section id="note-to-self" class="level2">
+<h2 class="anchored" data-anchor-id="note-to-self">Note to self</h2>
+<p>Models of wave heights could be a cool one.</p>
 
 
 </section>

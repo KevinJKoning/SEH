@@ -2,4 +2,6 @@
 title: "Statistics for Engineers in a Hurry (a Primer)"
 ---
 
+The premise of this Primer is that Engineers do not need to become statisticians to get a basic understanding of what statistics is and how to use it. This means utilizing key subsets of general statistical knowledge combined with lots of computation...
+
 Please use the Github repo for the book to make corrections or contributions: https://github.com/Bearsetc/SEH

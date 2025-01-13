@@ -13,7 +13,7 @@ Once we have have some discussion of models under our belt, we will change our f
 
 We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.
 
-## Models of Data Generating Processes
+## Models of Discrete Data Generating Processes
 
 ### A Dice Total Model
 

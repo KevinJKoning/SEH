@@ -11,37 +11,102 @@ We continue with $P(D|M)$, the probability of the data given a model of a data g
 
 Like we did for discrete probability distributions, we will touch on data generating models, the probability of a single event from the model, and the probability of multiple events from the model. However, since we are in a hurry, we will be briefer if the concept is similar to last section.
 
-## More Data Generating Processes (Probability Distribution as Models)
+## Models of Continuous Data Generating Processes
 
-When we change the data generating process, the distribution of outcomes changes. Some data generating processes are quite common, so statisticians have named them and \[mostly\] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
+Like we said before - when we change the data generating process, the distribution of outcomes changes. Here we'll examine data generating processes that create continuous data.
 
-A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
+### The Random Rocket
 
-Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
+Let's assume we are shooting a rocket into the sky and letting it land. We have designed a simple guidance system that will correct the rocket to fly vertically after deviating from vertical flight. However, before a correction, the rocket will have wandered slightly from its original launch point. For simplicity in modeling, we'll assume it only wanders left and right. We also assume that the deviations in flight are totally random - i.e. there is not a tendency to always move in one of the two directions. We want to answer the question, how far away is our rocket likely to land?
 
-::: callout-warning
-SHORTEN THIS.
 
-There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 550
 
-If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
 
-If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.
+app_ui = ui.page_fluid(
+    ui.h2("Random Rocket Simulator"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("stepSize", "Deviation Size", 
+                           min=0.01, max=10, value=1, step=0.01),
+            ui.input_slider("numSteps", "Number of Deviations", 
+                           min=10, max=1000, value=100, step=10),
+            ui.input_slider("numTrials", "Number of Trials", 
+                           min=10, max=10000, value=100, step=10),
+            ui.input_slider("numBins", "Number of Histogram Bins", 
+                           min=5, max=100, value=30, step=5),
+        ),
+        ui.output_plot("distPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def calculate_distances():
+        distances = []
+        for _ in range(input.numTrials()):
+            # Generate random steps between 0 and 1, then scale by step size
+            steps = np.random.uniform(0, 1, input.numSteps()) * input.stepSize()
+            # Calculate final position (sum of all steps)
+            final_position = np.sum(steps)
+            # Store the absolute distance from start
+            distances.append(final_position)
+        return distances
+
+    @output
+    @render.plot
+    def distPlot():
+        distances = calculate_distances()
+        fig, ax = plt.subplots()
+        
+        ax.hist(distances, bins=input.numBins(), color="steelblue", edgecolor="black")
+        ax.set_title("Distribution of Distances from Launch")
+        ax.set_xlabel("Distance from Start")
+        ax.set_ylabel("Frequency")
+
+        return fig
+
+app = App(app_ui, server)
+```
+
+Even though this is similar to some other outputs we've seen, we need to stress a couple key points:
+
+* The output values are no longer discrete/integers as we saw previously.
+* It is still useful to visualize the results with a histogram - however, the app now lets choose the size of the bin.
+
+Previously the histograms you've seen had fairly obvious bins, they were just based on the discrete/integer results of our previous data generating processes. Now there is no obvious bin size to choose because the results are continuous.
+
+::: callout-note
+There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.
 :::
 
-The point here is that each probability distribution model has the basic form of:
+## Continuos Distributions as Models of Data Generating Processes
 
-1.  The model is mimicing a \[idealized\] process with inherent characteristics
+### The Normal Distribution
 
-2.  These characteristics determine the shape/frequency of the outcomes
+You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There's actually a theorem for that, call the the *Central Limit Theorem*. You can easily research the details, but we'll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And *almost* everything we've seen so far has utilized additive processes.
+
+**Normal Distribution Example**
+
+### The Lognormal Distribution
+
+Data generating processes do not need to be additive though, some processes tend to multiply the current step with the last one. These kinds of processes will create a notably different distribution, called the log-normal distribution...
+
+### Summary
+
+Again we keep this section brief as there are plenty of easily accessible references for continuous probability distributions. Hopefully the point was made though - that each continuous probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.
 
 
+## Probability of Data
 
-## Normal/Gaussian Likelihood
+### Single Data Point Example
 
-TODO: We should not be able to change the data generating mechanism and only be able to change the data. Save changing the data generating mechanism for part 2.
-
-Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
+### Multiple Data Points Example
 
 ```{shinylive-python}
 #| standalone: true
@@ -53,7 +118,7 @@ import matplotlib.pyplot as plt
 from shiny import App, ui, reactive, render
 
 app_ui = ui.page_fluid(
-    ui.h2("Likelihood Calculation"),
+    ui.h2("Relative Probability of Normally Distributed Data"),
 
     # Row 1: Sliders
     ui.row(
@@ -82,24 +147,20 @@ app_ui = ui.page_fluid(
 
     ui.br(),
 
-    # Row 2: Buttons, current data, and log-likelihood
+    # Row 2: Button, current data, and log-likelihood
     ui.row(
-        ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
         ui.column(
             2,
             ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
         ),
         ui.column(
-            4,
+            7,
             ui.h4("Current Data (Y):"),
             ui.output_text_verbatim("dataText"),
         ),
         ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
+            3,
+            ui.h4("Relative Probability:"),
             ui.output_text("llOutput"),
         ),
     ),
@@ -131,18 +192,6 @@ def server(input, output, session):
     def dataText():
         y = data_vals()
         return ", ".join(str(round(val, 1)) for val in y)
-
-    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
-    @reactive.Effect
-    @reactive.event(input.mleBtn)
-    def _():
-        y = data_vals()
-        n = len(y)
-        mle_mean = np.mean(y)
-        # MLE for variance uses 1/n factor
-        mle_var = np.sum((y - mle_mean)**2) / n
-        session.send_input_message("muInput", {"value": mle_mean})
-        session.send_input_message("varInput", {"value": mle_var})
 
     # Reactive expression for log-likelihood
     @reactive.Calc
@@ -202,6 +251,39 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
+
+
+
+
+**I think this is repeated but am not sure so not deleting quite yet**
+
+Some data generating processes are quite common, so statisticians have named them and \[mostly\] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
+
+A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
+
+Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
+
+::: callout-warning
+SHORTEN THIS.
+
+There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
+
+If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
+
+If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.
+:::
+
+The point here is that each probability distribution model has the basic form of:
+
+1.  The model is mimicing a \[idealized\] process with inherent characteristics
+
+2.  These characteristics determine the shape/frequency of the outcomes
+
+
+
+## Normal/Gaussian Likelihood
+
+Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
 
 A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.
 
@@ -422,3 +504,9 @@ flowchart LR
     Normal --> Height[Height Observations]
 
 ```
+
+
+
+## Note to self
+
+Models of wave heights could be a cool one.

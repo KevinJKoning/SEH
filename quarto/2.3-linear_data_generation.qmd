@@ -1,5 +1,5 @@
 ---
-title: Linear Regression
+title: Generalized Linear Models
 format: html
 filters:
   - shinylive

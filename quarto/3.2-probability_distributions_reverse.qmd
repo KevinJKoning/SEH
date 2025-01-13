@@ -1,5 +1,5 @@
 ---
-title: Distribution Likelihood
+title: With Priors
 format: html
 filters:
   - shinylive
