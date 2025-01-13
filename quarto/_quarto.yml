@@ -18,16 +18,16 @@ website:
       - text: "Probability of Data"
         href: 2-data_generation.qmd
         contents:
-          - 2.1-simple_data_generation.qmd
-          - 2.2-probability_distributions.qmd
+          - 2.1-discrete_probability_distributions.qmd
+          - 2.2-continuous-probability-distributions.qmd
           - 2.3-linear_data_generation.qmd
           - 2.4-a_word_on_machine_learning.qmd  
           - 2.5-bespoke_models.qmd
       - text: "Likelihood of Model"
         href: 3-parameter_estimation.qmd
         contents:
-          - 3.1-data_generation_reverse.qmd
-          - 3.2-probability_distributions_reverse.qmd
+          - 3.1-without_priors.qmd
+          - 3.2-with_priors.qmd
           - 3.3-linear-regression.qmd
           - 3.4-Naive_Monte_Carlo.qmd
           - 3.x-reverse_it.qmd

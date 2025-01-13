@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Continuous Probability Distributions – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Statistics for Engineers in a Hurry (an Illustrated Primer)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-continuous-probability-distributions.html">Continuous Probability Distributions</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability of Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1-discrete_probability_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discrete Probability Distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.2-continuous-probability-distributions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Continuous Probability Distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Generalized Linear Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Word on Machine Learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bespoke Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Likelihood of Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-without_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Without Priors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">With Priors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.3-linear-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Test of new Linear Regression App</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.4-Naive_Monte_Carlo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Monte Carlo</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.x-reverse_it.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Test of new Dice Rolling App</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#models-of-continuous-data-generating-processes" id="toc-models-of-continuous-data-generating-processes" class="nav-link" data-scroll-target="#models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</a>
+  <ul class="collapse">
+  <li><a href="#the-random-rocket" id="toc-the-random-rocket" class="nav-link" data-scroll-target="#the-random-rocket">The Random Rocket</a></li>
+  </ul></li>
+  <li><a href="#continuous-distributions-as-models-of-data-generating-processes" id="toc-continuous-distributions-as-models-of-data-generating-processes" class="nav-link" data-scroll-target="#continuous-distributions-as-models-of-data-generating-processes">Continuous Distributions as Models of Data Generating Processes</a>
+  <ul class="collapse">
+  <li><a href="#the-normal-distribution" id="toc-the-normal-distribution" class="nav-link" data-scroll-target="#the-normal-distribution">The Normal Distribution</a></li>
+  <li><a href="#the-lognormal-distribution" id="toc-the-lognormal-distribution" class="nav-link" data-scroll-target="#the-lognormal-distribution">The Lognormal Distribution</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul></li>
+  <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
+  <ul class="collapse">
+  <li><a href="#probability-density-function" id="toc-probability-density-function" class="nav-link" data-scroll-target="#probability-density-function">Probability <em>Density</em> Function</a></li>
+  <li><a href="#single-data-point-example" id="toc-single-data-point-example" class="nav-link" data-scroll-target="#single-data-point-example">Single Data Point Example</a></li>
+  <li><a href="#multiple-data-points-example" id="toc-multiple-data-points-example" class="nav-link" data-scroll-target="#multiple-data-points-example">Multiple Data Points Example</a></li>
+  </ul></li>
+  <li><a href="#normalgaussian-likelihood" id="toc-normalgaussian-likelihood" class="nav-link" data-scroll-target="#normalgaussian-likelihood">Normal/Gaussian Likelihood</a></li>
+  <li><a href="#probability-of-continuous-data" id="toc-probability-of-continuous-data" class="nav-link" data-scroll-target="#probability-of-continuous-data">“Probability” of Continuous Data</a></li>
+  <li><a href="#probability-of-a-single-event" id="toc-probability-of-a-single-event" class="nav-link" data-scroll-target="#probability-of-a-single-event">Probability of a Single Event</a></li>
+  <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions">Assumptions</a></li>
+  <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
+  <li><a href="#note-to-self" id="toc-note-to-self" class="nav-link" data-scroll-target="#note-to-self">Note to self</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.2-continuous-probability-distributions.html">Continuous Probability Distributions</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Continuous Probability Distributions</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>We continue with <span class="math inline">\(P(D|M)\)</span>, the probability of the data given a model of a data generating process. Here we shift to models that produce continuous data (as opposed to discrete). Many of the same concepts apply, however there is a major wrinkle, in that the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
+<p>Like we did for discrete probability distributions, we will touch on data generating models, the probability of a single event from the model, and the probability of multiple events from the model. However, since we are in a hurry, we will be briefer if the concept is similar to last section.</p>
+</section>
+<section id="models-of-continuous-data-generating-processes" class="level2">
+<h2 class="anchored" data-anchor-id="models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</h2>
+<p>Like we said before - when we change the data generating process, the distribution of outcomes changes. Here we’ll examine data generating processes that create continuous data.</p>
+<section id="the-random-rocket" class="level3">
+<h3 class="anchored" data-anchor-id="the-random-rocket">The Random Rocket</h3>
+<p>Let’s assume we are shooting a rocket into the sky and letting it land. We have designed a simple guidance system that will correct the rocket to fly vertically after deviating from vertical flight. However, before a correction, the rocket will have wandered slightly from its original launch point. For simplicity in modeling, we’ll assume it only wanders left and right. We also assume that the deviations in flight are totally random - i.e.&nbsp;there is not a tendency to always move in one of the two directions. We want to answer the question, how far away is our rocket likely to land?</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Random Rocket Simulator"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("stepSize", "Deviation Size", 
+                           min=0.01, max=10, value=1, step=0.01),
+            ui.input_slider("numSteps", "Number of Deviations", 
+                           min=10, max=1000, value=100, step=10),
+            ui.input_slider("numTrials", "Number of Trials", 
+                           min=10, max=10000, value=100, step=10),
+            ui.input_slider("numBins", "Number of Histogram Bins", 
+                           min=5, max=100, value=30, step=5),
+        ),
+        ui.output_plot("distPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def calculate_distances():
+        distances = []
+        for _ in range(input.numTrials()):
+            # Generate random steps between 0 and 1, then scale by step size
+            steps = np.random.uniform(0, 1, input.numSteps()) * input.stepSize()
+            # Calculate final position (sum of all steps)
+            final_position = np.sum(steps)
+            # Store the absolute distance from start
+            distances.append(final_position)
+        return distances
+
+    @output
+    @render.plot
+    def distPlot():
+        distances = calculate_distances()
+        fig, ax = plt.subplots()
+        
+        ax.hist(distances, bins=input.numBins(), color="steelblue", edgecolor="black")
+        ax.set_title("Distribution of Distances from Launch")
+        ax.set_xlabel("Distance from Start")
+        ax.set_ylabel("Frequency")
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>Even though this is similar to some other outputs we’ve seen, we need to stress a couple key points:</p>
+<ul>
+<li>The output values are no longer discrete/integers as we saw previously.</li>
+<li>It is still useful to visualize the results with a histogram - however, the app now lets choose the size of the bin since there is no ‘right’ answer to the interval used.</li>
+</ul>
+<p>Previously the histograms you’ve seen had fairly obvious bins, they were just based on the discrete/integer results of our previous data generating processes. Now there is no obvious bin size to choose because the results are continuous.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="continuous-distributions-as-models-of-data-generating-processes" class="level2">
+<h2 class="anchored" data-anchor-id="continuous-distributions-as-models-of-data-generating-processes">Continuous Distributions as Models of Data Generating Processes</h2>
+<section id="the-normal-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="the-normal-distribution">The Normal Distribution</h3>
+<p>You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There’s actually a theorem for that, call the the <em>Central Limit Theorem</em>. You can easily research the details, but we’ll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And <em>almost</em> everything we’ve seen so far has utilized additive processes.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from scipy.stats import norm
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Simulation with Binned Histogram"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "mean", 
+                "Mean (μ)", 
+                min=-100.0, 
+                max=100.0, 
+                value=0.0, 
+                step=0.1
+            ),
+            ui.input_slider(
+                "stddev", 
+                "Standard Deviation (σ)", 
+                min=0.1, 
+                max=50.0, 
+                value=1.0, 
+                step=0.1
+            ),
+            ui.input_slider(
+                "num_trials",
+                "Number of Trials",
+                min=100,
+                max=10000,
+                value=1000,
+                step=100
+            ),
+            ui.input_slider(
+                "num_bins",
+                "Number of Bins",
+                min=10,
+                max=100,
+                value=30,
+                step=5
+            ),
+        ),
+        ui.output_plot("normPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def normal_samples():
+        mu = input.mean()
+        sigma = input.stddev()
+        size = input.num_trials()
+        return np.random.normal(mu, sigma, size)
+
+    @output
+    @render.plot
+    def normPlot():
+        samples = normal_samples()
+        
+        # Use the number of bins from the slider
+        num_bins = input.num_bins()
+        
+        # Compute histogram (both count and density)
+        counts_raw, bin_edges = np.histogram(samples, bins=num_bins)
+        counts_density, _ = np.histogram(samples, bins=num_bins, density=True)
+        bin_width = bin_edges[1] - bin_edges[0]
+        bin_centers = bin_edges[:-1] + bin_width / 2
+        
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+        
+        # Create the second y-axis sharing the same x-axis
+        ax2 = ax1.twinx()
+        
+        # Plot histogram with counts on left y-axis
+        bars = ax1.bar(bin_centers, counts_raw, width=bin_width*0.9, color="steelblue", 
+                      alpha=0.6, edgecolor="black", align='center', 
+                      label=f'Histogram (n={input.num_trials():,})')
+        
+        # Calculate theoretical normal distribution
+        x = np.linspace(min(samples), max(samples), 100)
+        pdf = norm.pdf(x, input.mean(), input.stddev())
+        
+        # Plot theoretical curve on right y-axis
+        line = ax2.plot(x, pdf, 'r-', lw=2, label='Normal PDF')[0]
+        
+        # Set labels and title
+        ax1.set_xlabel("Value", fontsize=14)
+        ax1.set_ylabel("Count", fontsize=12, color='steelblue')
+        ax2.set_ylabel("Density", fontsize=12, color='red')
+        plt.title("Normal Distribution: Histogram and PDF", fontsize=16)
+        
+        # Color the tick labels to match the respective plots
+        ax1.tick_params(axis='y', labelcolor='steelblue')
+        ax2.tick_params(axis='y', labelcolor='red')
+        
+        # Ensure both axes start at 0
+        ax1.set_ylim(bottom=0)
+        ax2.set_ylim(bottom=0)
+        
+        # Set x-axis ticks
+        if len(bin_centers) &gt; 20:
+            step = math.ceil(len(bin_centers) / 20)
+            ax1.set_xticks(bin_centers[::step])
+            ax1.set_xticklabels([f"{x:.2f}" for x in bin_centers[::step]], rotation=90)
+        else:
+            ax1.set_xticks(bin_centers)
+            ax1.set_xticklabels([f"{x:.2f}" for x in bin_centers], rotation=90)
+        
+        # Add legends for both axes
+        lines = [bars, line]
+        labels = [b.get_label() for b in lines]
+        ax1.legend(lines, labels, loc='upper left')
+        
+        plt.tight_layout()
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>We’ve also included the exact values of the <em>probability density function</em> (PDF) to suggest that the underlying distribution is continuous. Very soon we will dive deeper into the probability density function and see why it is a little trickier than the <em>probability mass function</em> that we saw with discrete distributions.</p>
+</section>
+<section id="the-lognormal-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="the-lognormal-distribution">The Lognormal Distribution</h3>
+<p>Data generating processes do not need to be additive though, some processes tend to multiply. These kinds of processes will create a notably different distribution, called the log-normal distribution. It has two important differences from the normal distribution:</p>
+<ul>
+<li>It contains only positive values.</li>
+<li>It has a very long ‘tail’ on the right hand side. Another way to describe this is skewness.</li>
+</ul>
+<p>It’s worth noting that there are many real world problems where values can only take positive values.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 550
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from scipy.stats import lognorm
+
+app_ui = ui.page_fluid(
+    ui.h2("Log-Normal Distribution Simulation with Binned Histogram"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "mu", 
+                "Log-mean (μ)", 
+                min=-2.0, 
+                max=2.0, 
+                value=0.0, 
+                step=0.1
+            ),
+            ui.input_slider(
+                "sigma", 
+                "Log-standard deviation (σ)", 
+                min=0.1, 
+                max=2.0, 
+                value=0.5, 
+                step=0.1
+            ),
+            ui.input_slider(
+                "num_trials",
+                "Number of Trials",
+                min=100,
+                max=10000,
+                value=1000,
+                step=100
+            ),
+            ui.input_slider(
+                "num_bins",
+                "Number of Bins",
+                min=10,
+                max=100,
+                value=30,
+                step=5
+            ),
+        ),
+        ui.output_plot("lognormPlot", height="400px"),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def lognormal_samples():
+        mu = input.mu()
+        sigma = input.sigma()
+        size = input.num_trials()
+        return np.random.lognormal(mu, sigma, size)
+
+    @output
+    @render.plot
+    def lognormPlot():
+        samples = lognormal_samples()
+        
+        # Use the number of bins from the slider
+        num_bins = input.num_bins()
+        
+        # Compute histogram (both count and density)
+        counts_raw, bin_edges = np.histogram(samples, bins=num_bins)
+        counts_density, _ = np.histogram(samples, bins=num_bins, density=True)
+        bin_width = bin_edges[1] - bin_edges[0]
+        bin_centers = bin_edges[:-1] + bin_width / 2
+        
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+        
+        # Create the second y-axis sharing the same x-axis
+        ax2 = ax1.twinx()
+        
+        # Plot histogram with counts on left y-axis
+        bars = ax1.bar(bin_centers, counts_raw, width=bin_width*0.9, color="steelblue", 
+                      alpha=0.6, edgecolor="black", align='center', 
+                      label=f'Histogram (n={input.num_trials():,})')
+        
+        # Calculate theoretical log-normal distribution
+        x = np.linspace(min(samples), max(samples), 1000)
+        pdf = lognorm.pdf(x, input.sigma(), scale=np.exp(input.mu()))
+        
+        # Plot theoretical curve on right y-axis
+        line = ax2.plot(x, pdf, 'r-', lw=2, label='Log-Normal PDF')[0]
+        
+        # Set labels and title
+        ax1.set_xlabel("Value", fontsize=14)
+        ax1.set_ylabel("Count", fontsize=12, color='steelblue')
+        ax2.set_ylabel("Density", fontsize=12, color='red')
+        plt.title("Log-Normal Distribution: Histogram and PDF", fontsize=16)
+        
+        # Color the tick labels to match the respective plots
+        ax1.tick_params(axis='y', labelcolor='steelblue')
+        ax2.tick_params(axis='y', labelcolor='red')
+        
+        # Ensure both axes start at 0
+        ax1.set_ylim(bottom=0)
+        ax2.set_ylim(bottom=0)
+        
+        # Set x-axis limits to focus on the main part of the distribution
+        upper_limit = np.percentile(samples, 99)  # Show up to 99th percentile
+        ax1.set_xlim(0, upper_limit)
+        
+        # Set x-axis ticks
+        if len(bin_centers) &gt; 20:
+            step = math.ceil(len(bin_centers) / 20)
+            ax1.set_xticks(bin_centers[::step])
+            ax1.set_xticklabels([f"{x:.2f}" for x in bin_centers[::step]], rotation=90)
+        else:
+            ax1.set_xticks(bin_centers)
+            ax1.set_xticklabels([f"{x:.2f}" for x in bin_centers], rotation=90)
+        
+        # Add legends for both axes
+        lines = [bars, line]
+        labels = [b.get_label() for b in lines]
+        ax1.legend(lines, labels, loc='upper right')
+        
+        plt.tight_layout()
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>You may have guessed it’s related to the normal distribution in that if you have a set of values from the lognormal distribution, if you take the their log values and replot them, you’ll end up plotting values in a normal distribution.</p>
+</section>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<p>Again we keep this section brief as there are plenty of easily accessible references for continuous probability distributions. Hopefully the point was made though - that each continuous probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.</p>
+</section>
+</section>
+<section id="probability-of-data" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-data">Probability of Data</h2>
+<section id="probability-density-function" class="level3">
+<h3 class="anchored" data-anchor-id="probability-density-function">Probability <em>Density</em> Function</h3>
+<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve continued to create histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of the point within the bin? The problem is that, as we’ve noted earlier, probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
+<p>To solve this, the probability density function does not give a true probability, it gives a value such that the following properties are true:</p>
+<ul>
+<li>The area under the curve sums to 1, i.e.&nbsp;all possible values have a total probability of 1.</li>
+<li>The values give the relative probability of that point vs other points.</li>
+</ul>
+<p>Both points are important but we’ll use the second one in the immediate future. That each point</p>
+</section>
+<section id="single-data-point-example" class="level3">
+<h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
+<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed.</p>
+</section>
+<section id="multiple-data-points-example" class="level3">
+<h3 class="anchored" data-anchor-id="multiple-data-points-example">Multiple Data Points Example</h3>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Relative Probability of Normally Distributed Data"),
+
+    # Row 1: Sliders
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=1, max=100, value=10, step=1
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Button, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            7,
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            3,
+            ui.h4("Relative Probability:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Initialize data with 10 random points
+    data_vals = reactive.Value(
+        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+    )
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        data_vals.set(
+            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+        )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+        if var &lt;= 0:
+            return float("nan")
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF and data points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
+            -0.5 * ((x_vals - mu) / sigma)**2
+        )
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(
+            x_vals, pdf_vals,
+            color="blue",
+            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
+        )
+
+        # Scatter the data at y=0 with some jitter
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        ax.axvline(mu, color="gray", linestyle="--")
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p><strong>I think this is repeated but am not sure so not deleting quite yet</strong></p>
+<p>Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
+<p>A ‘coin-flip’ process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn’t have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there’s no fixed maximum.</p>
+<p>Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn’t noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you’ll get the log-normal distribution.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>SHORTEN THIS.</p>
+<p>There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.</p>
+<p>If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I’ll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a <em>probability distribution model</em>. When we use it in the context of uncertainty, I will call it an <em>uncertainty distribution</em>. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it’s meaning explicitly I hope to aid your understanding substantially.</p>
+<p>If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.</p>
+</div>
+</div>
+<p>The point here is that each probability distribution model has the basic form of:</p>
+<ol type="1">
+<li><p>The model is mimicing a [idealized] process with inherent characteristics</p></li>
+<li><p>These characteristics determine the shape/frequency of the outcomes</p></li>
+</ol>
+</section>
+</section>
+<section id="normalgaussian-likelihood" class="level2">
+<h2 class="anchored" data-anchor-id="normalgaussian-likelihood">Normal/Gaussian Likelihood</h2>
+<p>Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.</p>
+<p>A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.</p>
+<p><strong>Histogram of continuous data??</strong></p>
+<p>It’s tempting to leave the discussion here and to essentially just use histograms of the continuous data and our relative frequency technique to find the approximate probability of a value. However, there are unfortunately problems. The first one that comes to mind is the arbitrary size of the bins you choose, although for practical problems we can probably get around it. The final straw though is that having a robust understanding of probability distributions will pay big dividends later (so we can use standard likelihood techniques), so we slip a little further into the statistical void.</p>
+</section>
+<section id="probability-of-continuous-data" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-continuous-data">“Probability” of Continuous Data</h2>
+<p>When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an <em>exact</em> value is effectively zero.</p>
+<div id="5aed0a6d" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.2-continuous-probability-distributions_files/figure-html/cell-2-output-1.png" width="674" height="454" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Although we shouldn’t intepret a point on the graph as a probability, we <em>can</em> interpret it as the <em>relative probability</em> of that location compared to another. For example if a point has a probability density of 0.4 and another at 0.2, we can conclude the point at 0.4 has twice the relative probability.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I’ve reserved the use of <em>likelihood</em> until the second half of this primer during which we’ll find the best model based on the data from the data generating process. However, in other texts you will find also find descriptions of the relative probability of continuous distributions called the relative likelihood.</p>
+</div>
+</div>
+</section>
+<section id="probability-of-a-single-event" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-a-single-event">Probability of a Single Event</h2>
+<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Probability Calculator"),
+
+    # Row 1: Parameters and input value
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_numeric(
+                "xInput", "Value (x):",
+                value=110, min=0, max=200
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Probability output
+    ui.row(
+        ui.column(
+            12,
+            ui.h4("Probability (P(X ≥ x)):"),
+            ui.output_text("probOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("normalPlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Calculate probability
+    @reactive.Calc
+    def calculate_probability():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+        return 1 - stats.norm.cdf(x, mu, sigma)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the normal PDF with shaded area
+    @output
+    @render.plot
+    def normalPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Create x values for plotting
+        x_min = mu - 4 * sigma
+        x_max = mu + 4 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot the PDF
+        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
+        
+        # Shade the area for P(X ≥ x)
+        x_shade = x_vals[x_vals &gt;= x]
+        y_shade = stats.norm.pdf(x_shade, mu, sigma)
+        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
+                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
+
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+
+        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.</p>
+<p>Mathematically, what we just did is this:</p>
+<p>For a continuous random variable <span class="math inline">\(X\)</span> with a PDF <span class="math inline">\(f(x)\)</span>, the probability of observing a value within a range <span class="math inline">\([a, b]\)</span> is calculated as:</p>
+<p><span class="math display">\[
+P(a \leq X \leq b) = \int_a^b f(x) \, dx
+\]</span></p>
+<p>This integral represents the area under the curve of the PDF between <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. When we refer to probabilities of “as extreme or more extreme” values, we typically compute tail probabilities using similar integrals. For example, for a right-tailed probability beyond a point <span class="math inline">\(c\)</span>, we evaluate:</p>
+<p><span class="math display">\[
+P(X \geq c) = \int_c^\infty f(x) \, dx
+\]</span></p>
+</section>
+<section id="probability-of-multiple-events" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
+<p>Maybe not get too sucked into the probability of multiple events when we really want to get to likelihood???</p>
+<p>So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let’s say we have <span class="math inline">\(n\)</span> independent events <span class="math inline">\(E\)</span>. The probability of all these events occurring together is the product of their individual probabilities:</p>
+<p><span class="math display">\[\prod_{i=1}^{n} P(E_i)\]</span></p>
+<p>For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) * (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever <em>and</em> useful trick is to use the logarithm of the probability product: <span class="math display">\[\sum_{i=1}^{n} log(P(E_i))\]</span></p>
+<p>You will find adding logarithms to be the standard for likelihood calculations.</p>
+</section>
+<section id="assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="assumptions">Assumptions</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is [mostly] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.</p>
+<p>This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.</p>
+</div>
+</div>
+</section>
+<section id="probability-distribution-or-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</h2>
+<p>While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.</p>
+<p>The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
+<p>In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph DGD[Data Generating Distribution]
+        subgraph UD[Uncertainty Distributions]
+            GammaMean[Gamma Distribution]
+            GammaVar[Gamma Distribution]
+        end
+        Mean[Mean]
+        Variance[Variance]
+        GammaMean --&gt; Mean
+        GammaVar --&gt; Variance
+        Mean --&gt; Normal
+        Variance --&gt; Normal
+        Normal[Normal Distribution]
+    end
+    Normal --&gt; Height[Height Observations]
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="note-to-self" class="level2">
+<h2 class="anchored" data-anchor-id="note-to-self">Note to self</h2>
+<p>Models of wave heights could be a cool one.</p>
+<p>We definitely want to mention the ways in which a probability distribution can be used - to generate data, to find the probability of data - and to also model the uncertainty of data, which is different than trying to model a process. (Uncertainty could be reduced to zero, while the variability in processes cannot).</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

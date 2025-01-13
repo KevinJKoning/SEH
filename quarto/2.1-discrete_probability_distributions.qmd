@@ -332,6 +332,8 @@ Which indicates there are diminishing returns to just making the sample size lar
 
 Here's another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs.
 
+**TODO add the probability mass function in the app and some text for it**
+
 ```{shinylive-python}
 #| standalone: true
 #| viewerHeight: 560
