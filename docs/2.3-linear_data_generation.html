@@ -203,7 +203,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bespoke Models</span></a>
+ <span class="menu-text">Bespoke/Bayesian Models</span></a>
   </div>
 </li>
       </ul>
@@ -259,7 +259,9 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Intro</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#intro" id="toc-intro" class="nav-link" data-scroll-target="#intro">Intro</a></li>
   <li><a href="#single-variable-regression" id="toc-single-variable-regression" class="nav-link" data-scroll-target="#single-variable-regression">Single Variable Regression</a>
   <ul class="collapse">
   <li><a href="#model-flaws" id="toc-model-flaws" class="nav-link" data-scroll-target="#model-flaws">Model Flaws</a></li>
@@ -292,6 +294,17 @@ window.Quarto = {
 </header>
 
 
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>We begin by clarifying data inputs vs model parameters. We then start with the most common linear model, linear regresion. Just like in previous chapters, we focus on generating data to understand our model. This will allow us to better understand the model assumptions.</p>
+<p>(note to self that heteroscadicity is what we can fix in the diamond dataset but the step functions will wait until Bespoke Models)</p>
+<p>While we avoid ‘tuning’ our models until the second half of the primer, we will use insights from generating data that allow us to ‘trade’ for a better model. We’ll be given a model that fits the data well as possible given our model constraints and we’ll use it to find the probability of data.</p>
+<p>We round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear. We’ll use those new models to find the probability of data given the model.</p>
+</section>
+<section id="parameters" class="level2">
+<h2 class="anchored" data-anchor-id="parameters">Parameters</h2>
+<p>Up to this point we have been modeling processes that require only <em>parameters</em> to create the output distribution. We can think of parameters as the settings of the model - examples of parameters we chose earlier were the number of dice to roll at a time, or the mean and standard deviation of a probability distribution. Once we chose the parameters, our</p>
+</section>
 <section id="intro" class="level2">
 <h2 class="anchored" data-anchor-id="intro">Intro</h2>
 <p>At some point you have probably been exposed to linear regression… You may roll your eyes at being asked to warp back to your early education… But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.</p>
@@ -496,7 +509,7 @@ app = App(app_ui, server)</code></pre>
 <h2 class="anchored" data-anchor-id="single-variable-regression">Single Variable Regression</h2>
 <p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which show sale price based on diamond characteristics.</p>
 <p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
-<div id="1bcffc4b" class="cell" data-execution_count="1">
+<div id="d7ebbc84" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -512,7 +525,7 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. The variable x will be the diamond size/carat and y will be the price.</p>
 <p>We’re leaving all the model fitting until part two of this primer, but suffice it to say I fit a linear model using standard techniques and the outputs included a common metric for accuracy called R-squared with a value of about 0.84. It ranges from 0 to 1 and values close to 1 indicate the model is good at explaining the variability in the data, so this is a reasonably good model.</p>
 <p>You’ve probably seen a linear regression line fit to data many times in your life, and I’m not going to bother you with one more. Instead I’m going to generate data based on what the model has ‘learned’, which I think will be more useful and interesting.</p>
-<div id="60779f34" class="cell" data-execution_count="2">
+<div id="2bd82e04" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

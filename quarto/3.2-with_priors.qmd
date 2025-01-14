@@ -176,4 +176,30 @@ app = App(app_ui, server)
 
 We have finally worked our way up to what I consider to be one of the most important topics... Likelihood...
 
+## Probability Distribution or Uncertainty?
+
+While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.
+
+The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don't have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.
+
+In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).
+
+```{mermaid}
+flowchart LR
+    subgraph DGD[Data Generating Distribution]
+        subgraph UD[Uncertainty Distributions]
+            GammaMean[Gamma Distribution]
+            GammaVar[Gamma Distribution]
+        end
+        Mean[Mean]
+        Variance[Variance]
+        GammaMean --> Mean
+        GammaVar --> Variance
+        Mean --> Normal
+        Variance --> Normal
+        Normal[Normal Distribution]
+    end
+    Normal --> Height[Height Observations]
+
+```
 

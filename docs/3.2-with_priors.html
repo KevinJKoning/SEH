@@ -71,6 +71,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -112,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">With Priors</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.2-with_priors.html">With Priors</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -174,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bespoke Models</span></a>
+ <span class="menu-text">Bespoke/Bayesian Models</span></a>
   </div>
 </li>
       </ul>
@@ -195,8 +198,11 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
           <li class="sidebar-item">
- <span class="menu-text">3.1-with_priors.qmd</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">With Priors</span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./3.3-linear-regression.html" class="sidebar-item-text sidebar-link">
@@ -229,13 +235,14 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#text" id="toc-text" class="nav-link active" data-scroll-target="#text">Text</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a></li>
+  <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.2-with_priors.html">With Priors</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">With Priors</h1>
 </div>
@@ -421,6 +428,39 @@ app = App(app_ui, server)</code></pre>
 <section id="likelihood" class="level2">
 <h2 class="anchored" data-anchor-id="likelihood">Likelihood</h2>
 <p>We have finally worked our way up to what I consider to be one of the most important topics… Likelihood…</p>
+</section>
+<section id="probability-distribution-or-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</h2>
+<p>While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.</p>
+<p>The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don’t have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.</p>
+<p>In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph DGD[Data Generating Distribution]
+        subgraph UD[Uncertainty Distributions]
+            GammaMean[Gamma Distribution]
+            GammaVar[Gamma Distribution]
+        end
+        Mean[Mean]
+        Variance[Variance]
+        GammaMean --&gt; Mean
+        GammaVar --&gt; Variance
+        Mean --&gt; Normal
+        Variance --&gt; Normal
+        Normal[Normal Distribution]
+    end
+    Normal --&gt; Height[Height Observations]
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 
 
 </section>

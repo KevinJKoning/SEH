@@ -85,11 +85,13 @@ Previously the histograms you've seen had fairly obvious bins, they were just ba
 There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.
 :::
 
-## Continuous Distributions as Models of Data Generating Processes
+### Continuous Distributions as Models of Data Generating Processes
 
-### The Normal Distribution
+#### The Normal Distribution
 
 You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There's actually a theorem for that, call the the *Central Limit Theorem*. You can easily research the details, but we'll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And *almost* everything we've seen so far has utilized additive processes.
+
+To summarize, the Normal distribution takes additive processes to the limit, in which they generate the perfect 'Bell Curve'. This is a great approximation for many variables, like height - but beware it is the logical extreme - height for example cannot be perfectly Normal, because it cannot have negative values.
 
 ```{shinylive-python}
 #| standalone: true
@@ -218,7 +220,7 @@ app = App(app_ui, server)
 
 We've also included the exact values of the *probability density function* (PDF) to suggest that the underlying distribution is continuous. Very soon we will dive deeper into the probability density function and see why it is a little trickier than the *probability mass function* that we saw with discrete distributions.
 
-### The Lognormal Distribution
+#### The Lognormal Distribution
 
 Data generating processes do not need to be additive though, some processes tend to multiply. These kinds of processes will create a notably different distribution, called the log-normal distribution. It has two important differences from the normal distribution:
 
@@ -358,10 +360,20 @@ app = App(app_ui, server)
 
 You may have guessed that if you have a set of values from the lognormal distribution, if you take the the log of their values and replot them, you'll end up plotting values in a normal distribution. 
 
-
-### Summary
+#### Summary
 
 Again we keep this section brief as there are plenty of easily accessible references for continuous probability distributions. Hopefully the point was made though - that each continuous probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.
+
+::: callout-note
+We should acknowledge that probability distributions can be used in different ways:
+
+* Generate data from a known distribution
+* Calculate the probability of data that has come from a known distribution
+* Communiciate uncertainty in the value of a parameter
+
+We haven't seen the third bullet yet, it will eventually come up in the second half of the primer. But it is fundamentally different than the other two in that it represents *knowledge*, and with additional *knowledge* the uncertainty can become zero. This is not the same as the inherent variation in statistical processes, for example, the variation in peoples height will not become zero with more knowledge.
+:::
+
 
 ## Probability of Data
 
@@ -482,10 +494,11 @@ P(X \geq c) = \int_c^\infty f(x) \, dx
 $$
 
 
-
 ### Multiple Data Points Example
 
-For multiple data points, we are generally interested in the *relative* probability of one series of events vs some other series of events. This is utilizing bullet two from the properties of the probability density function given above. 
+For multiple data points, we are interested in the *relative* probability of one series of events vs some other series of events. This is utilizing bullet two from the properties of the probability density function given above.
+
+*Need some discussion of probability of multiple independent events.*
 
 **TODO Left off here, need to fix up relative probability in app below, and possibly replicate the dice multiple event probability app**
 
@@ -640,203 +653,10 @@ app = App(app_ui, server)
 
 Some data generating processes are quite common, so statisticians have named them and \[mostly\] standardized their inputs/parameters. We can think of **probability distributions** as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you'll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.
 
-A 'coin-flip' process produces the binomial distribution, although the binomial distribution also has the nice property of not requiring that the coin is fair. The Poisson distribution models a process that results in a count, like a coin flip, but it doesn't have an upper limit because there are not a fixed number of trials. An example of this is a failure count, we can specify a rate at which failures occur, and we will typically observe generated failure rates near this value, but there's no fixed maximum.
-
-Additive processes will eventually create normal/gaussian distributions. It is why that distribution is so common in nature, and if interested in the details, research the Central Limit Theorem. If you hadn't noticed in the dice example, if you keep adding enough dice in enough rolls, the outcome looks awfully normal/gaussian. Of course not all processes interact in an additive way, if it tends to multiply instead, you'll get the log-normal distribution.
-
-::: callout-warning
-SHORTEN THIS.
-
-There is a little slight of hand that statisticians use without making it explicit - they use probability distributions in different contexts with different meanings. No doubt this is part of the confusing welcome. The other use of probability distributions, to describe uncertainty, we will touch on at the end of this chapter.
-
-If teaching someone a new language and using a single word repeatedly with two different meanings - it would be confusing. We can learn faster when things like this are explicitly disambiguated. I'll do that with the uses of probability distributions. When we use it in the context of data generation, I will refer to it as a *probability distribution model*. When we use it in the context of uncertainty, I will call it an *uncertainty distribution*. Just like the a single word with one spelling and two meanings, the math of the two cases will be exactly the same, but by calling out it's meaning explicitly I hope to aid your understanding substantially.
-
-If you want to a more detailed description of the two use cases, just briefly scroll to the end of this chapter.
-:::
-
-The point here is that each probability distribution model has the basic form of:
-
-1.  The model is mimicing a \[idealized\] process with inherent characteristics
-
-2.  These characteristics determine the shape/frequency of the outcomes
-
-
-
-## Normal/Gaussian Likelihood
-
-Hopefully it was fairly intuitive how to find the probability of a certain dice-roll total. One advantage of that data generating process and model is that the outcomes were discrete - a total of nine, for example is one discrete outcome. Many data generating processes produce continuous outcomes. One common example is height.
-
-A simple way to understand the probability of outcomes of a continuous process is to bin the values to certain ranges. Say heights of less than 4 feet, 4-5 feet, 5-6 feet, and 6-7 feet, and more than 7 feet. You can then use the same basic counting techniques we used earlier - how many outcomes are in the 5-6 feet bin, and divide that by the total number of outcomes. For example, the 5-6 feet bin may occur 740/1,000 times, for an approximate probability of 0.74.
-
-**Histogram of continuous data??**
-
-It's tempting to leave the discussion here and to essentially just use histograms of the continuous data and our relative frequency technique to find the approximate probability of a value. However, there are unfortunately problems. The first one that comes to mind is the arbitrary size of the bins you choose, although for practical problems we can probably get around it. The final straw though is that having a robust understanding of probability distributions will pay big dividends later (so we can use standard likelihood techniques), so we slip a little further into the statistical void.
-
-## "Probability" of Continuous Data
-
-When we plot a continuous probability distribution, we refer to any point as the probability density, and the area under the curve as the cumulative probability, where all the area is equal to one. An important point is the probability of an *exact* value is effectively zero. 
-
-```{python}
-#| echo: false
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-
-# Define the range for the x-axis
-x = np.linspace(-4, 4, 1000)
-
-# Calculate the probability density function (PDF) of the standard normal distribution
-pdf = norm.pdf(x, loc=0, scale=1)
-
-# Create the plot
-plt.figure(figsize=(8, 5))
-plt.plot(x, pdf, label="Standard Normal Distribution", linewidth=2)
-plt.title("Standard Normal (Gaussian) Distribution", fontsize=14)
-plt.xlabel("x", fontsize=12)
-plt.ylabel("Probability Density", fontsize=12)
-plt.grid(True, linestyle='--', alpha=0.6)
-plt.axvline(0, color='red', linestyle='--', label="Mean (μ = 0)")
-plt.legend(fontsize=12)
-plt.show()
-```
-
-Although we shouldn't intepret a point on the graph as a probability, we *can* interpret it as the *relative probability* of that location compared to another. For example if a point has a probability density of 0.4 and another at 0.2, we can conclude the point at 0.4 has twice the relative probability.
 
 ::: callout-warning
 I've reserved the use of *likelihood* until the second half of this primer during which we'll find the best model based on the data from the data generating process. However, in other texts you will find also find descriptions of the relative probability of continuous distributions called the relative likelihood.
 :::
-
-## Probability of a Single Event
-
-When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed. 
-
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 700
-
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
-from shiny import App, ui, reactive, render
-
-app_ui = ui.page_fluid(
-    ui.h2("Normal Distribution Probability Calculator"),
-
-    # Row 1: Parameters and input value
-    ui.row(
-        ui.column(
-            4,
-            ui.input_slider(
-                "muInput", "Mean (μ):",
-                min=50, max=150, value=100, step=0.1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=1, max=200, value=10, step=1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_numeric(
-                "xInput", "Value (x):",
-                value=110, min=0, max=200
-            ),
-        ),
-    ),
-
-    ui.br(),
-
-    # Row 2: Probability output
-    ui.row(
-        ui.column(
-            12,
-            ui.h4("Probability (P(X ≥ x)):"),
-            ui.output_text("probOutput"),
-        ),
-    ),
-
-    ui.br(),
-
-    # Plot
-    ui.output_plot("normalPlot", height="400px"),
-)
-
-def server(input, output, session):
-    # Calculate probability
-    @reactive.Calc
-    def calculate_probability():
-        mu = input.muInput()
-        var = input.varInput()
-        x = input.xInput()
-        sigma = math.sqrt(var)
-        return 1 - stats.norm.cdf(x, mu, sigma)
-
-    # Show the probability
-    @output
-    @render.text
-    def probOutput():
-        prob = calculate_probability()
-        return f"{prob:.4f}"
-
-    # Plot the normal PDF with shaded area
-    @output
-    @render.plot
-    def normalPlot():
-        mu = input.muInput()
-        var = input.varInput()
-        x = input.xInput()
-        sigma = math.sqrt(var)
-
-        # Create x values for plotting
-        x_min = mu - 4 * sigma
-        x_max = mu + 4 * sigma
-        x_vals = np.linspace(x_min, x_max, 200)
-        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot the PDF
-        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
-        
-        # Shade the area for P(X ≥ x)
-        x_shade = x_vals[x_vals >= x]
-        y_shade = stats.norm.pdf(x_shade, mu, sigma)
-        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
-                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
-
-        # Add vertical line at x
-        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
-
-        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Density")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        return fig
-
-app = App(app_ui, server)
-```
-
-HERE WE WANT TO VISUALIZE THE AREA UNDER THE CURVE.
-
-Mathematically, what we just did is this:
-
-For a continuous random variable $X$ with a PDF $f(x)$, the probability of observing a value within a range $[a, b]$ is calculated as:
-
-$$
-P(a \leq X \leq b) = \int_a^b f(x) \, dx
-$$
-
-This integral represents the area under the curve of the PDF between $a$ and $b$. When we refer to probabilities of "as extreme or more extreme" values, we typically compute tail probabilities using similar integrals. For example, for a right-tailed probability beyond a point $c$, we evaluate:
-
-$$
-P(X \geq c) = \int_c^\infty f(x) \, dx
-$$
 
 
 
@@ -844,52 +664,9 @@ $$
 
 Maybe not get too sucked into the probability of multiple events when we really want to get to likelihood???
 
-So far we only considered the probability/likelihood of a single outcome, however, we are often interested in the probability of multiple outcomes. Let's say we have $n$ independent events $E$. The probability of all these events occurring together is the product of their individual probabilities:
-
-$$\prod_{i=1}^{n} P(E_i)$$
-
-For example, if we flip a fair coin twice, the probability of getting heads both times is (1/2) \* (1/2) = 1/4. When dealing with many events or very small probabilities, multiplying probabilities can lead to numerical instability. A clever *and* useful trick is to use the logarithm of the probability product: $$\sum_{i=1}^{n} log(P(E_i))$$
-
-You will find adding logarithms to be the standard for likelihood calculations.
-
-## Assumptions
-::: callout-warning
-When determining the likelihood of multiple outcomes, there is an incredibly important assumption - that each event is \[mostly\] independent of each other. Perfect independence is rarely achieved, but as long as the correlations are not particularly strong, they are commonly ignored. In practice though, a common situation of not having independent events is the data in a time-series, do not assume independence in time-series data.
-
-This is also a lesson in statistics in general, although the approach outlined here tries to limit the need for assumptions, many traditional statistical approaches have assumptions hidden underneath, and a very common one is that some aspect of the data is normally distributed. BE CAREFUL OF ASSUMPTIONS.
-:::
-
-## Probability Distribution or Uncertainty?
-
-While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.
-
-The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don't have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.
-
-In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).
-
-```{mermaid}
-flowchart LR
-    subgraph DGD[Data Generating Distribution]
-        subgraph UD[Uncertainty Distributions]
-            GammaMean[Gamma Distribution]
-            GammaVar[Gamma Distribution]
-        end
-        Mean[Mean]
-        Variance[Variance]
-        GammaMean --> Mean
-        GammaVar --> Variance
-        Mean --> Normal
-        Variance --> Normal
-        Normal[Normal Distribution]
-    end
-    Normal --> Height[Height Observations]
-
-```
 
 
 
 ## Note to self
 
 Models of wave heights could be a cool one.
-
-We definitely want to mention the ways in which a probability distribution can be used - to generate data, to find the probability of data - and to also model the uncertainty of data, which is different than trying to model a process. (Uncertainty could be reduced to zero, while the variability in processes cannot).

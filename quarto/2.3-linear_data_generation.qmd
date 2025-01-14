@@ -5,6 +5,24 @@ filters:
   - shinylive
 ---
 
+## Preview
+
+We begin by clarifying data inputs vs model parameters. We then start with the most common linear model, linear regresion. Just like in previous chapters, we focus on generating data to understand our model. This will allow us to better understand the model assumptions.
+
+(note to self that heteroscadicity is what we can fix in the diamond dataset but the step functions will wait until Bespoke Models)
+
+While we avoid 'tuning' our models until the second half of the primer, we will use insights from generating data that allow us to 'trade' for a  better model. We'll be given a model that fits the data well as possible given our model constraints and we'll use it to find the probability of data.
+
+We round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear. We'll use those new models to find the probability of data given the model.
+
+
+
+
+## Parameters
+
+Up to this point we have been modeling processes that require only *parameters* to create the output distribution. We can think of parameters as the settings of the model - examples of parameters we chose earlier were the number of dice to roll at a time, or the mean and standard deviation of a probability distribution. Once we chose the parameters, our 
+
+
 ## Intro
 
 At some point you have probably been exposed to linear regression... You may roll your eyes at being asked to warp back to your early education... But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.
