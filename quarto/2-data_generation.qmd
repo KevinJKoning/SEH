@@ -23,45 +23,17 @@ graph TD
 ```
 
 
-TODO: **BOLD** words that end up in a glossary
-TODO: NEED TO CLEAN UP USE OF LIKELIHOOD AND PROBABILITY - PROBABILITY GOING FORWARD, LIKELIHOOD GOING BACKWARD
-TODO: Need to only have data generation in the first normal likelihood app, MLE and changing the data generating distribution in the second.
-TODO: APP FOR DIFFERENT PROBABILITY DISTRIBUTIONS, MAKE IT ITS OWN SUBCHAPTER?
-TODO: Do we have a description between statistics, machine learning, and AI in a good spot?
-
 ## Data Generation Processes TEMPORARY OUTLINE
 
-### Dice Rolls
-- Create the data generating process
-- It's easy to find the likelihood/probability of the outcomes
-- Note how large number of dice is looking a lot like a normal/gaussian distribution
+THEMES:
 
-### Normal and Other Distributions
+- Obviously the loop of P(D|M) and P(M|D)
+- Computation instead of analysis
 
-- Each distribution has assumptions about the data generating process
-    - Normal assumes many additive processes
-    - Lognormal assumes many multiplicative processes
-- Are idealized real process, but the tradeoff is simplicity of description with only a few parameters
+DIFFICULTIES:
 
-### Histograms and Likelihood
+- It's elegant to introduce probability distributions, linear models, etc... as all models of data generating processes.
+- We emphasis data generation and models over analytical probability distributions because nothing in real life actually follows the probability distributions
+- However, where po
 
-- Histogams can help us approximate likelihood of continuous data
-    - Or we can understand probability density and cumulative distributions
-- Include log likelihood and the need for indepedence (not a time series)
-- Importance of statistical assumptions
-
-
-
-## Other Notes
-
-Data Generation
-- Dice Rolls
-- Probability Distributions for Data Generation
-- Linear Regression
-
-Parameter Estimation
-- Dice Rolls (guess and check app)
-- Probability Distribution (enhanced normal app with MLE and adjustment of data generation)
-- Linear Regression (both frequentist with underlying assumption and bayesian)
-
-Conclusion.
+PROBABILITY DISTRIBUTIONS ARE A SPECIAL SUBSET OF MODELS IN WHICH IT'S SIMPLE TO COMPUTE THE PROBABILITY GIVEN ONLY THE PARAMETERS. OTHERWISE YOU HAVE TO GENERATE AN ENTIER DATA SET.

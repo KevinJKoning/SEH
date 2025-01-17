@@ -72,7 +72,7 @@ Hopefully you've noted how a larger number of rolls seems to give us smoother an
 
 ### Discrete Probability Distributions as Models of Data Generating Processes
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that are important to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
 
 ::: callout-note
 If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this 'feature', but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we'd prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.
@@ -83,7 +83,6 @@ Initially we want to think about discrete probability distributions in the same 
 #### Binomial Distribution
 
 The binomial distribution is a model that represents the number of successes in a fixed number of independent trials, where each trial has two possible outcomes (commonly referred to as “success” and “failure”). The probability of success can range between 0 and 1. In the app below you can recreate something like the product testing scenario recently mentioned. Feel free to play around with the settings/parameters to get a feel for how the probability distribution behaves.
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -188,12 +187,9 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-
-
 #### Poisson Distribution
 
 The Poisson distribution is a model that describes the number of events occurring in a fixed interval of time or space, assuming that the events occur independently and at a constant average rate. For example, it might represent the number of phone calls received by a call center in an hour or the number of cars passing through a toll booth in a minute. The Poisson Distribution is similar to the Binomial distribution, except there are not a fixed number of trials, so there is not an upper limit to the number of events returned by a sample. However, values much larger than the average rate become incredibly unlikely.
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -305,7 +301,6 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-
 #### Summary
 
 We keep this section brief as there are plenty of easily accessible references for discrete probability distributions. Hopefully the point was made though - that each discrete probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.
@@ -331,8 +326,6 @@ $$
 Which indicates there are diminishing returns to just making the sample size larger. Now I know you're smart, and you're saying to yourself, I can figure out the *exact* probability of rolling a certain dice total. Of course you can for this example - but you probably can't for more realistic examples, and we want to learn techiques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that's still not enough, dig into exact/analytic methods.
 
 Here's another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs.
-
-**TODO add the probability mass function in the app and some text for it**
 
 ```{shinylive-python}
 #| standalone: true
@@ -467,18 +460,17 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult.  
+Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult.
 
 ::: callout-note
 A few readers may already know an essay called the 'The Bitter Lesson' by Rich Sutton. If you haven't read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there's no way to compute through a bad algorithm. But we're professionals in a hurry, we choose computation whenever it's plausible.
 :::
 
-
 ### Exact Probabilities
 
 Most of the primer is focused on simulation without going into the code itself, however, once you know what you're after it's not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we'll walk through one of the few opportunities for some straightforward math.
 
-Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999^1,000.
+Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999\^1,000.
 
 $$
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
@@ -488,14 +480,57 @@ $$
 P(X = 999) + P(X = 1,000) = \binom{1000}{999} (0.999)^{999} (0.001)^1 + (0.999)^{1,000}
 $$
 
-The result is 0.736, so the chance of having a real pass rate of 0.999 and having less than 999 pass is 1 - 0.736 = 0.264. It's fairly plausible to have 0.999 pass rate and have a couple of products fail. However, if you had four or more fail, you should have a very hard time convincing management that it was just 'bad luck'. The more formal way to discuss this is *hypothesis testing*. 
+The result is 0.736, so the chance of having a real pass rate of 0.999 and having less than 999 pass is 1 - 0.736 = 0.264. It's fairly plausible to have 0.999 pass rate and have a couple of products fail. However, if you had four or more fail, you should have a very hard time convincing management that it was just 'bad luck'. The more formal way to discuss this is *hypothesis testing*.
 
 ::: callout-note
 Much of statistics is dedicated to hypothesis testing. There's no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that's because non-expert practitioners do not understand their statistical models. And there's good reasons they don't, they are often analytical mathematical 'magic' with buried assumptions. We take a different approach.
 :::
 
+### Named Probability Distributions are Special
 
-## Probability of Multiple Events
+We intentionally introduced *probability distributions* as models of a data generating process to demystify them and quickly introduce some examples. However, it's worth slowing down for a moment to understand what *probability distributions* are in general, and what makes the named probability distributions statisticians use so frequently special.
+
+#### Probability Distributions
+
+In words, we can intuitively describe a data generating process that has a distribution of outcomes, such as 'the sum of three dice when rolled out of a cup'. This glosses over some aspects a statistician would want to call out explicitly:
+
+-   There is some *sample space* that has possible *outcomes.* For example, if the three dice are rolled out of the cup a possible outcome is they show a 2, 5, and 3. A roll of 9, -1, and 4 is not in the *sample space.*
+
+-   A *random variable* describes how an outcome is translated into a numeric value. Our examples sum the dice, but a different random variable of the same outcome could count how many times a dice shows a 4.
+
+-   Finally, if we determine how often values of the *random variable* appear, we get a *probability distribution.*
+
+Again, we say that more intuitively by stating that we have a data generating process that has a distribution of outcomes. This process does not need to be something that is amenable to a nice closed-form analytic solution.
+
+#### Named Probability Distributions
+
+The named probability distributions are special cases that have been very useful to statisticians.
+
+-   They describe a common event.
+
+-   They can be succinctly described with mathematical expressions, which are frequently closed-form analytic solutions, but not always.
+
+-   ...
+
+However, the named probability distributions do hold a very special place in statistics. (we refer to n
+
+**We should have something that goes back to using computation to approximate probabilities, probably with the binomial distribution, and also have that smooth our way into probability of multiple events**
+
+::: callout-important
+The introduction to probability distributions attempted to demystify them before they even became mystical... However, they hold an beguiling place of importance in statistics. Why probability distributions holds such a special place in statistics I think is very confusing to engineers. I think it's important to consider them as just a subset of all possible models of data generating processes, however, they have properties that makes them an extremely useful subset:
+
+-   Describe common processes
+
+-   Reverse probability
+
+-   Describe 'meta' processes'
+
+-   (Later will describe uncertainty)
+
+We can think of probability distributions as a special cases of models that have an analytic/closed form solution for the 'inverse' calculation of going backwards from the data they generate to probabilities. The real world, however, doesn't fit into nice analytic solutions, which is why we lean so heavily on sampling/bootstrapping. But that doesn't mean there will not be circumstances in which easily calculating the probability from data is not useful. Ultimately, and especially with errors, we will find probability distributions to be useful...
+:::
+
+### Probability of Multiple Events
 
 So far we have only considered $P(D|M)$ where the data is a single event. However, it is more common to have multiple events (i.e. multiple data points), and we'd like to know the probability of a specific dataset vs other datasets we may have sampled. To calculate probabilities we'll use the *multiplication rule of independent events*. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all *time series*.
 
@@ -519,7 +554,7 @@ $$
 
 ### Calculating the Relative Probability of Multiple Events
 
-With the background from the last section we can now simulate the probability of multiple events. However, often it is more useful to think about the relative probability of a long series of events rather than the absolute probability, since the absolute probability will be tiny. I think an example will help. Again, to have better intuition about the problem, we'll use dice, although it can obviously be extended to other discrete probability distributions. 
+With the background from the last section we can now simulate the probability of multiple events. However, often it is more useful to think about the relative probability of a long series of events rather than the absolute probability, since the absolute probability will be tiny. I think an example will help. Again, to have better intuition about the problem, we'll use dice, although it can obviously be extended to other discrete probability distributions.
 
 We'll extend the recent example of rolling three dice out of a cup. We'll let most of our simulations use fair dice, and we'll show the log probability of each exact series of events as we perform rolls out of the cup. Note that for three dice, the values can range from 3 to 18, and values near the middle, such as 10, will be more common than those at the end, such as 3 or 18. The log probability of more rare events will be more negative. If we have a series of very unlikely events, the values will become negative more quickly.
 
@@ -740,4 +775,3 @@ You may notice that it's easier to spot the weighted dice with a longer series o
 ::: callout-note
 Traditional hypothesis testing starts with a *null* model which we can think of as the status quo. If the data has less than a (traditionally) 0.05 probability of being generated by that *null* model, we assume that something other than the *null* model generated the data.
 :::
-

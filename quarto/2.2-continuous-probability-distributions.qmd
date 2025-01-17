@@ -81,6 +81,8 @@ Even though this is similar to some other outputs we've seen, we need to stress 
 
 Previously the histograms you've seen had fairly obvious bins, they were just based on the discrete/integer results of our previous data generating processes. Now there is no obvious bin size to choose because the results are continuous.
 
+**We should include cumulative distances to preview that, and a discussion that we can't find the probability of an exact value, but we can find the probability of greater or lesser**
+
 ::: callout-note
 There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.
 :::

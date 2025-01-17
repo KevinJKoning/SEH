@@ -269,9 +269,8 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#dice-totals-probability-of-data" id="toc-dice-totals-probability-of-data" class="nav-link" data-scroll-target="#dice-totals-probability-of-data">Dice Totals Probability of Data</a></li>
   <li><a href="#exact-probabilities" id="toc-exact-probabilities" class="nav-link" data-scroll-target="#exact-probabilities">Exact Probabilities</a></li>
-  </ul></li>
-  <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a>
-  <ul class="collapse">
+  <li><a href="#named-probability-distributions-are-special" id="toc-named-probability-distributions-are-special" class="nav-link" data-scroll-target="#named-probability-distributions-are-special">Named Probability Distributions are Special</a></li>
+  <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
   </ul></li>
   </ul>
@@ -362,7 +361,7 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="discrete-probability-distributions-as-models-of-data-generating-processes" class="level3">
 <h3 class="anchored" data-anchor-id="discrete-probability-distributions-as-models-of-data-generating-processes">Discrete Probability Distributions as Models of Data Generating Processes</h3>
-<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that have been interesting to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
+<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that are important to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -619,7 +618,6 @@ P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
 \]</span></p>
 <p>Which indicates there are diminishing returns to just making the sample size larger. Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that’s still not enough, dig into exact/analytic methods.</p>
 <p>Here’s another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs.</p>
-<p><strong>TODO add the probability mass function in the app and some text for it</strong></p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -793,9 +791,53 @@ Note
 </div>
 </div>
 </section>
+<section id="named-probability-distributions-are-special" class="level3">
+<h3 class="anchored" data-anchor-id="named-probability-distributions-are-special">Named Probability Distributions are Special</h3>
+<p>We intentionally introduced <em>probability distributions</em> as models of a data generating process to demystify them and quickly introduce some examples. However, it’s worth slowing down for a moment to understand what <em>probability distributions</em> are in general, and what makes the named probability distributions statisticians use so frequently special.</p>
+<section id="probability-distributions" class="level4">
+<h4 class="anchored" data-anchor-id="probability-distributions">Probability Distributions</h4>
+<p>In words, we can intuitively describe a data generating process that has a distribution of outcomes, such as ‘the sum of three dice when rolled out of a cup’. This glosses over some aspects a statistician would want to call out explicitly:</p>
+<ul>
+<li><p>There is some <em>sample space</em> that has possible <em>outcomes.</em> For example, if the three dice are rolled out of the cup a possible outcome is they show a 2, 5, and 3. A roll of 9, -1, and 4 is not in the <em>sample space.</em></p></li>
+<li><p>A <em>random variable</em> describes how an outcome is translated into a numeric value. Our examples sum the dice, but a different random variable of the same outcome could count how many times a dice shows a 4.</p></li>
+<li><p>Finally, if we determine how often values of the <em>random variable</em> appear, we get a <em>probability distribution.</em></p></li>
+</ul>
+<p>Again, we say that more intuitively by stating that we have a data generating process that has a distribution of outcomes. This process does not need to be something that is amenable to a nice closed-form analytic solution.</p>
 </section>
-<section id="probability-of-multiple-events" class="level2">
-<h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
+<section id="named-probability-distributions" class="level4">
+<h4 class="anchored" data-anchor-id="named-probability-distributions">Named Probability Distributions</h4>
+<p>The named probability distributions are special cases that have been very useful to statisticians.</p>
+<ul>
+<li><p>They describe a common event.</p></li>
+<li><p>They can be succinctly described with mathematical expressions, which are frequently closed-form analytic solutions, but not always.</p></li>
+<li><p>…</p></li>
+</ul>
+<p>However, the named probability distributions do hold a very special place in statistics. (we refer to n</p>
+<p><strong>We should have something that goes back to using computation to approximate probabilities, probably with the binomial distribution, and also have that smooth our way into probability of multiple events</strong></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The introduction to probability distributions attempted to demystify them before they even became mystical… However, they hold an beguiling place of importance in statistics. Why probability distributions holds such a special place in statistics I think is very confusing to engineers. I think it’s important to consider them as just a subset of all possible models of data generating processes, however, they have properties that makes them an extremely useful subset:</p>
+<ul>
+<li><p>Describe common processes</p></li>
+<li><p>Reverse probability</p></li>
+<li><p>Describe ‘meta’ processes’</p></li>
+<li><p>(Later will describe uncertainty)</p></li>
+</ul>
+<p>We can think of probability distributions as a special cases of models that have an analytic/closed form solution for the ‘inverse’ calculation of going backwards from the data they generate to probabilities. The real world, however, doesn’t fit into nice analytic solutions, which is why we lean so heavily on sampling/bootstrapping. But that doesn’t mean there will not be circumstances in which easily calculating the probability from data is not useful. Ultimately, and especially with errors, we will find probability distributions to be useful…</p>
+</div>
+</div>
+</section>
+</section>
+<section id="probability-of-multiple-events" class="level3">
+<h3 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h3>
 <p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to have multiple events (i.e.&nbsp;multiple data points), and we’d like to know the probability of a specific dataset vs other datasets we may have sampled. To calculate probabilities we’ll use the <em>multiplication rule of independent events</em>. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all <em>time series</em>.</p>
 <p>We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:</p>
 <p><span class="math display">\[
@@ -809,6 +851,7 @@ P(Roll 1 \cap Roll 2) = 0.1250 \cdot 0.0694 = 0.008675 = 10^{(\log_{10}(0.1250) 
 <p><span class="math display">\[
 \log_{10}(P(Roll 1 \cap Roll 2)) = \log_{10}(0.1250) + \log_{10}(0.0694) = -0.9031 + -1.1586 = -2.0617
 \]</span></p>
+</section>
 <section id="calculating-the-relative-probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
 <p>With the background from the last section we can now simulate the probability of multiple events. However, often it is more useful to think about the relative probability of a long series of events rather than the absolute probability, since the absolute probability will be tiny. I think an example will help. Again, to have better intuition about the problem, we’ll use dice, although it can obviously be extended to other discrete probability distributions.</p>
