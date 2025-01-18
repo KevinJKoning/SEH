@@ -271,7 +271,6 @@ window.Quarto = {
   <li><a href="#single-data-point-example" id="toc-single-data-point-example" class="nav-link" data-scroll-target="#single-data-point-example">Single Data Point Example</a></li>
   <li><a href="#multiple-data-points-example" id="toc-multiple-data-points-example" class="nav-link" data-scroll-target="#multiple-data-points-example">Multiple Data Points Example</a></li>
   </ul></li>
-  <li><a href="#note-to-self" id="toc-note-to-self" class="nav-link" data-scroll-target="#note-to-self">Note to self</a></li>
   </ul>
 </nav>
     </div>
@@ -708,7 +707,7 @@ Note
 <p>We return to the main theme of the first half of the primer, the probability of data given a model, <span class="math inline">\(P(D|M)\)</span>.</p>
 <section id="probability-density-function" class="level3">
 <h3 class="anchored" data-anchor-id="probability-density-function">Probability <em>Density</em> Function</h3>
-<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve created histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we’ve noted earlier, the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
+<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve created histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency technique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we’ve noted earlier, the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
 <p>To solve this, the probability density function does not give a true probability, it gives a value such that the following properties are true:</p>
 <ul>
 <li>The area under the curve sums to 1, i.e.&nbsp;all possible values have a total probability of 1.</li>
@@ -717,7 +716,7 @@ Note
 </section>
 <section id="single-data-point-example" class="level3">
 <h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
-<p>As already mentioned, referring to the probability of an exact value on the real number line is meaningless. Instead, we refer to either the relative probability of a value, or the probability of getting a value as extreme or more extreme than the value that we observed. With a single data point we will use examples of the ‘as extreme or more extreme’ approach.</p>
+<p>As already mentioned, referring to the probability of an exact value on the real number line is meaningless. Instead, we refer to either the relative probability of a value, or the probability of getting a value as extreme or more extreme than the value that we observed. With a single data point we use an example of the ‘as extreme or more extreme’ approach.</p>
 <p>In the app below, we find where the data point lies on the chart and then find the area, i.e.&nbsp;probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above. Note that we can get this value more directly if we work from the cumulative distribution, as shown in the other plot tab.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -1195,14 +1194,10 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-</section>
-</section>
-</section>
-<section id="note-to-self" class="level2">
-<h2 class="anchored" data-anchor-id="note-to-self">Note to self</h2>
-<p>Models of wave heights could be a cool one.</p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
