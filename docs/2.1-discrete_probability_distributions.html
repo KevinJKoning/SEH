@@ -268,8 +268,7 @@ window.Quarto = {
   <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
   <ul class="collapse">
   <li><a href="#dice-totals-probability-of-data" id="toc-dice-totals-probability-of-data" class="nav-link" data-scroll-target="#dice-totals-probability-of-data">Dice Totals Probability of Data</a></li>
-  <li><a href="#exact-probabilities" id="toc-exact-probabilities" class="nav-link" data-scroll-target="#exact-probabilities">Exact Probabilities</a></li>
-  <li><a href="#named-probability-distributions-are-special" id="toc-named-probability-distributions-are-special" class="nav-link" data-scroll-target="#named-probability-distributions-are-special">Named Probability Distributions are Special</a></li>
+  <li><a href="#exact-probabilities-from-a-named-probability-distributions" id="toc-exact-probabilities-from-a-named-probability-distributions" class="nav-link" data-scroll-target="#exact-probabilities-from-a-named-probability-distributions">Exact Probabilities from a Named Probability Distributions</a></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
   </ul></li>
@@ -361,7 +360,7 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="discrete-probability-distributions-as-models-of-data-generating-processes" class="level3">
 <h3 class="anchored" data-anchor-id="discrete-probability-distributions-as-models-of-data-generating-processes">Discrete Probability Distributions as Models of Data Generating Processes</h3>
-<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency of the possible events/outcomes changes. There are a number of discrete processes that are important to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
+<p>In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency (distribution) of the outcomes change. There are a number of discrete processes that are important to statisticians, and they have been formalized into mathematical models called <em>discrete probability distributions</em>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -372,7 +371,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this ‘feature’, but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we’d prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.</p>
+<p>If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this feature, but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we’d prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.</p>
 </div>
 </div>
 <p>Initially we want to think about discrete probability distributions in the same way we thought about our dice model, that it is a model that will generate random events from a data generating process of interest. Below are a couple examples to illustrate the point.</p>
@@ -599,7 +598,7 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="summary" class="level4">
 <h4 class="anchored" data-anchor-id="summary">Summary</h4>
-<p>We keep this section brief as there are plenty of easily accessible references for discrete probability distributions. Hopefully the point was made though - that each discrete probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcome of the process.</p>
+<p>We keep this section brief as there are plenty of easily accessible references for discrete probability distributions. Hopefully the point was made though - that each discrete probability distribution is built on an idealized data generating process, and we can sample from the distribution as a way to model the outcomes of a process.</p>
 </section>
 </section>
 </section>
@@ -616,8 +615,8 @@ P(E) \approx \frac{\text{Number of times event } E \text{ occurs}}{\text{Total n
 <p><span class="math display">\[
 P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
 \]</span></p>
-<p>Which indicates there are diminishing returns to just making the sample size larger. Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techiques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that’s still not enough, dig into exact/analytic methods.</p>
-<p>Here’s another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs.</p>
+<p>Which indicates there are diminishing returns to just making the sample size larger. Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techniques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that’s still not enough, dig into exact/analytic methods.</p>
+<p>Here’s another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs. It also shows the relative frequency of the dice sums, i.e.&nbsp;a true probability distribution where the sum of the probabilities equals one.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -653,7 +652,7 @@ def dice_sum_distribution(n_dice):
 
 # -------------------------- UI Definition ---------------------------
 app_ui = ui.page_fluid(
-    ui.h2("Dice Rolling App with Probability of Data"),
+    ui.h2("Dice Rolling App with Probability Mass Function"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_slider("numDice", "Number of Dice", min=1, max=10, value=2, step=1),
@@ -697,19 +696,39 @@ def server(input, output, session):
             selected=str(unique_sums[0]) if len(unique_sums) &gt; 0 else ""
         )
 
-    # Plot the frequency of dice totals
+    # Plot the relative frequency of dice totals
     @output
     @render.plot
     def dicePlot():
         current_sums = dice_sums()
-
+        
         fig, ax = plt.subplots()
+        
+        # Get theoretical distribution first to set x-axis limits
+        dist = exact_distribution()
+        theoretical_sums = range(input.numDice(), 6*input.numDice()+1)
+        theoretical_probs = [dist[i] for i in theoretical_sums]
+        
+        # Create dictionary to store empirical probabilities for all possible sums
+        empirical_dict = {i: 0 for i in theoretical_sums}
         unique_sums, counts = np.unique(current_sums, return_counts=True)
-        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+        for sum_val, count in zip(unique_sums, counts):
+            if sum_val in empirical_dict:
+                empirical_dict[sum_val] = count / len(current_sums)
+        
+        # Plot empirical distribution
+        ax.bar([str(s) for s in theoretical_sums], 
+               [empirical_dict[s] for s in theoretical_sums],
+               color="steelblue", label="Empirical")
+        
+        # Plot theoretical distribution
+        ax.plot([str(s) for s in theoretical_sums], theoretical_probs, 
+                'r', marker='_', linestyle='', label="Theoretical")
 
-        ax.set_title("Frequency of Dice Totals")
+        ax.set_title("Probability Mass Function of Dice Totals")
         ax.set_xlabel("Dice Total")
-        ax.set_ylabel("Frequency")
+        ax.set_ylabel("Probability")
+        ax.legend()
         plt.xticks(rotation=90)
 
         return fig
@@ -766,10 +785,10 @@ Note
 </div>
 </div>
 </section>
-<section id="exact-probabilities" class="level3">
-<h3 class="anchored" data-anchor-id="exact-probabilities">Exact Probabilities</h3>
-<p>Most of the primer is focused on simulation without going into the code itself, however, once you know what you’re after it’s not that hard to reproduce in whatever computational environment you prefer. Since the exact probabilities of discrete probability distributions can be computed by hand, we’ll walk through one of the few opportunities for some straightforward math.</p>
-<p>Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that <span class="math inline">\(P(X = 1000)\)</span> is simplified below based on the <em>multiplication rule of independent events</em> to equal 0.999^1,000.</p>
+<section id="exact-probabilities-from-a-named-probability-distributions" class="level3">
+<h3 class="anchored" data-anchor-id="exact-probabilities-from-a-named-probability-distributions">Exact Probabilities from a Named Probability Distributions</h3>
+<p>Here we provide an example of the more ‘typical’ use of a probability distribution, to compute the probability of an event. Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.</p>
+<p>We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that <span class="math inline">\(P(X = 1000)\)</span> is simplified below based on the <em>multiplication rule of independent events</em> to equal 0.999^1,000. Also, if you’re unfamiliar with the n over k in parenthesis, look up ‘n choose k’.</p>
 <p><span class="math display">\[
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
 \]</span></p>
@@ -790,51 +809,6 @@ Note
 <p>Much of statistics is dedicated to hypothesis testing. There’s no reason for this primer to repeat such a repeated topic. The problem though, is that in the real world, folks get it wrong. I have a simple hypothesis for this, and that’s because non-expert practitioners do not understand their statistical models. And there’s good reasons they don’t, they are often analytical mathematical ‘magic’ with buried assumptions. We take a different approach.</p>
 </div>
 </div>
-</section>
-<section id="named-probability-distributions-are-special" class="level3">
-<h3 class="anchored" data-anchor-id="named-probability-distributions-are-special">Named Probability Distributions are Special</h3>
-<p>We intentionally introduced <em>probability distributions</em> as models of a data generating process to demystify them and quickly introduce some examples. However, it’s worth slowing down for a moment to understand what <em>probability distributions</em> are in general, and what makes the named probability distributions statisticians use so frequently special.</p>
-<section id="probability-distributions" class="level4">
-<h4 class="anchored" data-anchor-id="probability-distributions">Probability Distributions</h4>
-<p>In words, we can intuitively describe a data generating process that has a distribution of outcomes, such as ‘the sum of three dice when rolled out of a cup’. This glosses over some aspects a statistician would want to call out explicitly:</p>
-<ul>
-<li><p>There is some <em>sample space</em> that has possible <em>outcomes.</em> For example, if the three dice are rolled out of the cup a possible outcome is they show a 2, 5, and 3. A roll of 9, -1, and 4 is not in the <em>sample space.</em></p></li>
-<li><p>A <em>random variable</em> describes how an outcome is translated into a numeric value. Our examples sum the dice, but a different random variable of the same outcome could count how many times a dice shows a 4.</p></li>
-<li><p>Finally, if we determine how often values of the <em>random variable</em> appear, we get a <em>probability distribution.</em></p></li>
-</ul>
-<p>Again, we say that more intuitively by stating that we have a data generating process that has a distribution of outcomes. This process does not need to be something that is amenable to a nice closed-form analytic solution.</p>
-</section>
-<section id="named-probability-distributions" class="level4">
-<h4 class="anchored" data-anchor-id="named-probability-distributions">Named Probability Distributions</h4>
-<p>The named probability distributions are special cases that have been very useful to statisticians.</p>
-<ul>
-<li><p>They describe a common event.</p></li>
-<li><p>They can be succinctly described with mathematical expressions, which are frequently closed-form analytic solutions, but not always.</p></li>
-<li><p>…</p></li>
-</ul>
-<p>However, the named probability distributions do hold a very special place in statistics. (we refer to n</p>
-<p><strong>We should have something that goes back to using computation to approximate probabilities, probably with the binomial distribution, and also have that smooth our way into probability of multiple events</strong></p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The introduction to probability distributions attempted to demystify them before they even became mystical… However, they hold an beguiling place of importance in statistics. Why probability distributions holds such a special place in statistics I think is very confusing to engineers. I think it’s important to consider them as just a subset of all possible models of data generating processes, however, they have properties that makes them an extremely useful subset:</p>
-<ul>
-<li><p>Describe common processes</p></li>
-<li><p>Reverse probability</p></li>
-<li><p>Describe ‘meta’ processes’</p></li>
-<li><p>(Later will describe uncertainty)</p></li>
-</ul>
-<p>We can think of probability distributions as a special cases of models that have an analytic/closed form solution for the ‘inverse’ calculation of going backwards from the data they generate to probabilities. The real world, however, doesn’t fit into nice analytic solutions, which is why we lean so heavily on sampling/bootstrapping. But that doesn’t mean there will not be circumstances in which easily calculating the probability from data is not useful. Ultimately, and especially with errors, we will find probability distributions to be useful…</p>
-</div>
-</div>
-</section>
 </section>
 <section id="probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h3>
