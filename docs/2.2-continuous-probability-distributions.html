@@ -271,7 +271,6 @@ window.Quarto = {
   <li><a href="#single-data-point-example" id="toc-single-data-point-example" class="nav-link" data-scroll-target="#single-data-point-example">Single Data Point Example</a></li>
   <li><a href="#multiple-data-points-example" id="toc-multiple-data-points-example" class="nav-link" data-scroll-target="#multiple-data-points-example">Multiple Data Points Example</a></li>
   </ul></li>
-  <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#note-to-self" id="toc-note-to-self" class="nav-link" data-scroll-target="#note-to-self">Note to self</a></li>
   </ul>
 </nav>
@@ -706,9 +705,10 @@ Note
 </section>
 <section id="probability-of-data" class="level2">
 <h2 class="anchored" data-anchor-id="probability-of-data">Probability of Data</h2>
+<p>We return to the main theme of the first half of the primer, the probability of data given a model, <span class="math inline">\(P(D|M)\)</span>.</p>
 <section id="probability-density-function" class="level3">
 <h3 class="anchored" data-anchor-id="probability-density-function">Probability <em>Density</em> Function</h3>
-<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve continued to create histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we’ve noted earlier, the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
+<p>We’ve been hinting that the probability density function would require some explanation, and we’ve finally come to the right place to tackle it. We’ve created histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It’s possible to use our relative frequency techinique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we’ve noted earlier, the probability of any exact value on the real number line <span class="math inline">\(\mathbb{R}\)</span> is effectively zero.</p>
 <p>To solve this, the probability density function does not give a true probability, it gives a value such that the following properties are true:</p>
 <ul>
 <li>The area under the curve sums to 1, i.e.&nbsp;all possible values have a total probability of 1.</li>
@@ -718,7 +718,7 @@ Note
 <section id="single-data-point-example" class="level3">
 <h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
 <p>As already mentioned, referring to the probability of an exact value on the real number line is meaningless. Instead, we refer to either the relative probability of a value, or the probability of getting a value as extreme or more extreme than the value that we observed. With a single data point we will use examples of the ‘as extreme or more extreme’ approach.</p>
-<p>In the app below, we find where the data point lies on the chart and then find the area, i.e.&nbsp;probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above.</p>
+<p>In the app below, we find where the data point lies on the chart and then find the area, i.e.&nbsp;probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above. Note that we can get this value more directly if we work from the cumulative distribution, as shown in the other plot tab.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -858,12 +858,14 @@ app = App(app_ui, server)</code></pre>
 <p><span class="math display">\[
 P(X \geq c) = \int_c^\infty f(x) \, dx
 \]</span></p>
+<p>Those who prefer to avoid calculus (and what engineer doesn’t?), can simply utilize the cumulative (CDF) plot.</p>
 </section>
 <section id="multiple-data-points-example" class="level3">
 <h3 class="anchored" data-anchor-id="multiple-data-points-example">Multiple Data Points Example</h3>
-<p>For multiple data points, we are interested in the <em>relative</em> probability of one series of events vs some other series of events. This is utilizing bullet two from the properties of the probability density function given above.</p>
-<p><em>Need some discussion of probability of multiple independent events.</em></p>
-<p><strong>TODO Left off here, need to fix up relative probability in app below, and possibly replicate the dice multiple event probability app</strong></p>
+<section id="relative-probability" class="level4">
+<h4 class="anchored" data-anchor-id="relative-probability">Relative Probability</h4>
+<p>For multiple data points, we are interested in the <em>relative</em> probability of one series of events vs some other series of events. This is utilizing bullet two from the properties of the probability density function given above. In the example below we will multiply the probability densities similar to how we multiplied actual probabilities in the previous chapter on discrete probability distributions - this should given you reason to pause - the reason we can do this is that we will only use the results for relative comparison, and <em>not</em> as an absolute probability.</p>
+<p>Again, we assume that in the series of events each event is independent. And again, this typically cannot be proven to be strictly true - however avoid the cases where it is obviously <em>not true</em>, such as time series. Also, we use only log probabilities and addition (in contrast with the more obvious multiplication of non-log probabilities) as they are more convenient.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -878,47 +880,46 @@ from shiny import App, ui, reactive, render
 app_ui = ui.page_fluid(
     ui.h2("Relative Probability of Normally Distributed Data"),
 
-    # Row 1: Sliders
+    # Row 1: Sliders and New Sample button
     ui.row(
         ui.column(
-            4,
+            5,
             ui.input_slider(
                 "muInput", "Mean (μ):",
                 min=50, max=150, value=100, step=0.1
             ),
         ),
         ui.column(
-            4,
+            5,
             ui.input_slider(
                 "varInput", "Variance (σ²):",
                 min=1, max=200, value=10, step=1
             ),
         ),
         ui.column(
-            4,
-            ui.input_slider(
-                "nInput", "Number of samples:",
-                min=1, max=100, value=10, step=1
-            ),
+            2,
+            ui.br(),
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
         ),
     ),
 
     ui.br(),
 
-    # Row 2: Button, current data, and log-likelihood
+    # Row 2: All data and probabilities
     ui.row(
         ui.column(
-            2,
-            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
-        ),
-        ui.column(
-            7,
+            4,
             ui.h4("Current Data (Y):"),
             ui.output_text_verbatim("dataText"),
         ),
         ui.column(
+            5,
+            ui.h4("Log Relative Probabilities:"),
+            ui.output_text_verbatim("pointLogProbs"),
+        ),
+        ui.column(
             3,
-            ui.h4("Relative Probability:"),
+            ui.h4("Log Sum:"),
             ui.output_text("llOutput"),
         ),
     ),
@@ -930,18 +931,17 @@ app_ui = ui.page_fluid(
 )
 
 def server(input, output, session):
-    # Initialize data with 10 random points
+    # Initialize data with 5 random points
     data_vals = reactive.Value(
-        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+        np.random.normal(loc=100, scale=np.sqrt(10), size=5)
     )
 
     # Generate a new sample when 'NEW SAMPLE' is pressed
     @reactive.Effect
     @reactive.event(input.newSampleBtn)
     def _():
-        n = input.nInput()
         data_vals.set(
-            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+            np.random.normal(loc=100, scale=np.sqrt(10), size=5)
         )
 
     # Display the current data
@@ -951,18 +951,33 @@ def server(input, output, session):
         y = data_vals()
         return ", ".join(str(round(val, 1)) for val in y)
 
-    # Reactive expression for log-likelihood
+    # Calculate log probability for each point
     @reactive.Calc
-    def log_likelihood():
+    def point_log_probs():
         y = data_vals()
         mu = input.muInput()
         var = input.varInput()
-        n = len(y)
         if var &lt;= 0:
-            return float("nan")
-        term1 = -0.5 * n * math.log(2 * math.pi * var)
-        term2 = -0.5 * np.sum((y - mu)**2) / var
-        return term1 + term2
+            return [float("nan")] * len(y)
+        
+        log_probs = []
+        for yi in y:
+            term1 = -0.5 * math.log(2 * math.pi * var)
+            term2 = -0.5 * ((yi - mu)**2) / var
+            log_probs.append(term1 + term2)
+        return log_probs
+
+    # Display individual log probabilities
+    @output
+    @render.text
+    def pointLogProbs():
+        probs = point_log_probs()
+        return ", ".join(f"{p:.2f}" for p in probs)
+
+    # Reactive expression for total log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        return sum(point_log_probs())
 
     # Show the log-likelihood
     @output
@@ -1008,6 +1023,7 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+<p>As you adjust the parameters of the probability distribution, the relative probability of seeing the data changes. When the probability distribution is far away from the points, we see the sum of the probabilities becomes smaller (less likely). When the probability distribution is near the points, the sum gets larger, showing it is comparitively more likely.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1018,14 +1034,169 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>I’ve reserved the use of <em>likelihood</em> until the second half of this primer during which we’ll find the best model based on the data from the data generating process. However, in other texts you will find also find descriptions of the relative probability of continuous distributions called the relative likelihood.</p>
+<p>I’ve reserved the use of <em>likelihood</em> until the second half of this primer during which we’ll find the best model based on the data from the data generating process. However, in other texts you will also find descriptions of the relative probability of continuous distributions called the relative likelihood.</p>
 </div>
 </div>
 </section>
+<section id="approximate-p-value" class="level4">
+<h4 class="anchored" data-anchor-id="approximate-p-value">Approximate P-Value</h4>
+<p>In the following app, there will be 100 samples of a series of 10 events. Each of those will have been generated from a Normal distribution with a mean of 100 and a variance of 10. You can then create your own series of 10 events, sampled from a Normal distribution with a mean and variance of your choosing. The relative probability of your series of 10 events will be calculated as if they had come from a distribution with a mean of 100 and a variance of 10. The percentile shown will indicate how unusual your series of events appears to be.</p>
+<p>Like the similar app for discrete distributions, this is an approximation of your data sets p-value. If your dataset is in a reasonable percentile, you have little evidence to assume it was not created by the <em>null</em> model with mean of 100 and variance of 10. If it is at an extreme percentile, you may reasonably suspect it was generated by a different data generating process.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 800
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Approximate P-Value Calculator"),
+    ui.p("Generate your own series of 10 events from a Normal distribution with your chosen mean and variance. The probability will be calculated assuming the events came from a Normal(μ=100, σ²=10) distribution."),
+
+    # Row 1: Sliders and New Sample button
+    ui.row(
+        ui.column(
+            5,
+            ui.input_slider(
+                "muInput", "Your Mean (μ):",
+                min=80, max=120, value=95, step=0.1
+            ),
+        ),
+        ui.column(
+            5,
+            ui.input_slider(
+                "varInput", "Your Variance (σ²):",
+                min=1, max=100, value=20, step=1
+            ),
+        ),
+        ui.column(
+            2,
+            ui.br(),
+            ui.input_action_button("newSampleBtn", "NEW SAMPLES"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Data and percentile
+    ui.row(
+        ui.column(
+            9,
+            ui.h4("Your Data:"),
+            ui.output_text_verbatim("dataText1"),
+        ),
+        ui.column(
+            3,
+            ui.h4("Percentile:"),
+            ui.output_text("percentileOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("cumulativePlot", height="400px"),
+)
+
+def server(input, output, session):
+    # Initialize user's data and reference datasets
+    data_vals1 = reactive.Value(None)
+    reference_data = reactive.Value(None)
+
+    # Generate new samples when parameters change or button is pressed
+    @reactive.Effect
+    @reactive.event(input.muInput, input.varInput, input.newSampleBtn)
+    def _():
+        data_vals1.set(
+            np.random.normal(loc=input.muInput(), scale=np.sqrt(input.varInput()), size=10)
+        )
+        reference_data.set(
+            [np.random.normal(loc=100, scale=np.sqrt(10), size=10) for _ in range(100)]
+        )
+
+    # Initial data generation
+    @reactive.Effect
+    def _():
+        if data_vals1() is None:
+            data_vals1.set(
+                np.random.normal(loc=95, scale=np.sqrt(20), size=10)
+            )
+        if reference_data() is None:
+            reference_data.set(
+                [np.random.normal(loc=100, scale=np.sqrt(10), size=10) for _ in range(100)]
+            )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText1():
+        y = data_vals1()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # Calculate cumulative log probabilities
+    def calc_cum_log_probs(data, mu=100, var=10):  # Default parameters set to true distribution
+        cum_probs = []
+        running_sum = 0
+        
+        for yi in data:
+            term1 = -0.5 * math.log(2 * math.pi * var)
+            term2 = -0.5 * ((yi - mu)**2) / var
+            running_sum += (term1 + term2)
+            cum_probs.append(running_sum)
+            
+        return cum_probs
+
+    # Calculate and show the percentile
+    @output
+    @render.text
+    def percentileOutput():
+        user_final_prob = calc_cum_log_probs(data_vals1())[-1]
+        ref_final_probs = [calc_cum_log_probs(ref_data)[-1] 
+                          for ref_data in reference_data()]
+        percentile = sum(1 for x in ref_final_probs if x &lt; user_final_prob) / len(ref_final_probs) * 100
+        return f"{percentile:.1f}%"
+
+    # Plot the cumulative log probabilities
+    @output
+    @render.plot
+    def cumulativePlot():
+        # Calculate probabilities for user's data
+        user_probs = calc_cum_log_probs(data_vals1())
+        
+        # Calculate probabilities for reference data
+        ref_probs_list = [calc_cum_log_probs(data) 
+                         for data in reference_data()]
+
+        events = range(1, 11)  # 10 events
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot reference lines in gray
+        for ref_probs in ref_probs_list:
+            ax.plot(events, ref_probs, 'gray', alpha=0.1, linewidth=1)
+
+        # Plot user's line in red
+        ax.plot(events, user_probs, 'r-', label='Your samples', 
+                linewidth=2, alpha=1.0)
+
+        # Add a dummy plot for the reference distribution legend
+        ax.plot([], [], 'gray', alpha=0.5, label='100 samples from N(100,10)')
+
+        ax.set_title("Cumulative Log Probability vs. Number of Events")
+        ax.set_xlabel("Number of Events")
+        ax.set_ylabel("Cumulative Log Probability")
+        ax.grid(True, alpha=0.3)
+        ax.legend()
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
 </section>
-<section id="probability-of-multiple-events" class="level2">
-<h2 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h2>
-<p>Maybe not get too sucked into the probability of multiple events when we really want to get to likelihood???</p>
+</section>
 </section>
 <section id="note-to-self" class="level2">
 <h2 class="anchored" data-anchor-id="note-to-self">Note to self</h2>
