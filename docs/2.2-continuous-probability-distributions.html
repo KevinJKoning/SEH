@@ -313,7 +313,7 @@ window.Quarto = {
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 550
+#| viewerHeight: 600
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -332,7 +332,14 @@ app_ui = ui.page_fluid(
             ui.input_slider("numBins", "Number of Histogram Bins", 
                            min=5, max=100, value=30, step=5),
         ),
-        ui.output_plot("distPlot", height="400px"),
+        ui.navset_tab(
+            ui.nav_panel("Histogram",
+                ui.output_plot("distPlot", height="400px"),
+            ),
+            ui.nav_panel("Percentile Plot",
+                ui.output_plot("percentilePlot", height="400px"),
+            ),
+        ),
     ),
 )
 
@@ -341,11 +348,8 @@ def server(input, output, session):
     def calculate_distances():
         distances = []
         for _ in range(input.numTrials()):
-            # Generate random steps between 0 and 1, then scale by step size
             steps = np.random.uniform(0, 1, input.numSteps()) * input.stepSize()
-            # Calculate final position (sum of all steps)
             final_position = np.sum(steps)
-            # Store the absolute distance from start
             distances.append(final_position)
         return distances
 
@@ -362,14 +366,32 @@ def server(input, output, session):
 
         return fig
 
+    @output
+    @render.plot
+    def percentilePlot():
+        distances = calculate_distances()
+        fig, ax = plt.subplots()
+        
+        # Calculate percentiles
+        sorted_distances = np.sort(distances)
+        percentiles = np.linspace(0, 100, len(distances))
+        
+        ax.plot(sorted_distances, percentiles, color="steelblue")
+        ax.set_title("Percentile Plot of Distances")
+        ax.set_xlabel("Distance from Start")
+        ax.set_ylabel("Percentile")
+        ax.grid(True)
+
+        return fig
+
 app = App(app_ui, server)</code></pre>
-<p>Even though this is similar to some other outputs we’ve seen, we need to stress a couple key points:</p>
+<p>Even though this is similar to some other outputs we’ve seen, we need to stress a few key points:</p>
 <ul>
 <li>The output values are no longer discrete/integers as we saw previously.</li>
-<li>It is still useful to visualize the results with a histogram - however, the app now lets choose the size of the bin since there is no ‘right’ answer to the interval used.</li>
+<li>The app now lets choose the size of the bin since there is no ‘right’ answer to the interval used.</li>
+<li>There is now a <em>percentile plot</em> option for the type of graph generated.</li>
+<li>The percentile plot shows, in a cumulative fashion, what percent of distances are closer to the start.</li>
 </ul>
-<p>Previously the histograms you’ve seen had fairly obvious bins, they were just based on the discrete/integer results of our previous data generating processes. Now there is no obvious bin size to choose because the results are continuous.</p>
-<p><strong>We should include cumulative distances to preview that, and a discussion that we can’t find the probability of an exact value, but we can find the probability of greater or lesser</strong></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -380,16 +402,17 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>There is, at least in some respects, a more elegant way to visualize continuous data, which is to use the cumulative distribution of values based on their percentile rank. It starts at zero (nothing is smaller) and increases to one (where everything is smaller). There are a number of ways cumulative distributions can be helpful - however, they have a major downside in that many distributions tend to look the same when plotted this way.</p>
+<p>The percentile plot is a foreshadowing of another way to compute continuous probability distributions, called the cumulative distribution function. This approach can remove some confusing properties of continuous probability distributions, however, it tends to make the shape of the distribution harder to interpret as many distributions tend to look similar.</p>
 </div>
 </div>
 </section>
 <section id="continuous-distributions-as-models-of-data-generating-processes" class="level3">
 <h3 class="anchored" data-anchor-id="continuous-distributions-as-models-of-data-generating-processes">Continuous Distributions as Models of Data Generating Processes</h3>
+<p>The real world is full of data generating processes, each of which has a probability distribution, and very few, if any, would match the named probability distributions used constantly in statistics. That doesn’t mean the named distributions aren’t useful - they are extremely useful approximations due to their ability to model common processes and calculate <span class="math inline">\(P(D|M)\)</span> easily.</p>
 <section id="the-normal-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="the-normal-distribution">The Normal Distribution</h4>
-<p>You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There’s actually a theorem for that, call the the <em>Central Limit Theorem</em>. You can easily research the details, but we’ll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And <em>almost</em> everything we’ve seen so far has utilized additive processes.</p>
-<p>To summarize, the Normal distribution takes additive processes to the limit, in which they generate the perfect ‘Bell Curve’. This is a great approximation for many variables, like height - but beware it is the logical extreme - height for example cannot be perfectly Normal, because it cannot have negative values.</p>
+<p>You may have spotted a trend in the Random Rocket example, as well as a lot of our earlier examples. Whenever we increased the number of samples, the histograms started to look an awful lot like the well-known normal/gaussian distribution. There’s actually a theorem for that, called the the <em>Central Limit Theorem</em>. You can easily research the details, but we’ll summarize it by saying that any data generating process that is additive in nature tends to produce normal/gaussian distributions. And <em>almost</em> everything we’ve seen so far has utilized additive processes.</p>
+<p>To restate slightly from our perspective of models of data generating processes, the Normal distribution takes additive processes to the limit, in which they generate the perfect ‘Bell Curve’. Normal distributions are a good approximation for modeling the variability/variation in many things. An example is modeling height - but beware it is the logical extreme - real heights cannot be perfectly Normal, because they cannot have negative values.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -515,7 +538,7 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>We’ve also included the exact values of the <em>probability density function</em> (PDF) to suggest that the underlying distribution is continuous. Very soon we will dive deeper into the probability density function and see why it is a little trickier than the <em>probability mass function</em> that we saw with discrete distributions.</p>
+<p>We’ve also included the exact values of the <em>probability density function</em> (PDF) to suggest that the underlying distribution is continuous.</p>
 </section>
 <section id="the-lognormal-distribution" class="level4">
 <h4 class="anchored" data-anchor-id="the-lognormal-distribution">The Lognormal Distribution</h4>
@@ -524,7 +547,7 @@ app = App(app_ui, server)</code></pre>
 <li>It contains only positive values.</li>
 <li>It has a very long ‘tail’ on the right hand side. Another way to describe this is skewness.</li>
 </ul>
-<p>It’s worth noting that there are many real world problems where values can only be positive.</p>
+<p>It’s worth noting that there are many real world problems where values can only be positive. This simple fact also implies that many real distributions skew towards larger values.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -669,11 +692,11 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>We should acknowledge that probability distributions can be used in different ways:</p>
+<p>We’ve touched on this briefly, but we should explicitly acknowledge that the named probability distributions can be used in different ways:</p>
 <ul>
-<li>Generate data from a known distribution</li>
-<li>Calculate the probability of data that has come from a known distribution</li>
-<li>Communiciate uncertainty in the value of a parameter</li>
+<li>Generate data from a known distribution.</li>
+<li>Calculate the probability of data that has come from a known distribution.</li>
+<li>Communiciate uncertainty in the value of a parameter.</li>
 </ul>
 <p>We haven’t seen the third bullet yet, it will eventually come up in the second half of the primer. But it is fundamentally different than the other two in that it represents <em>knowledge</em>, and with additional <em>knowledge</em> the uncertainty can become zero. This is not the same as the inherent variation in statistical processes, for example, the variation in peoples height will not become zero with more knowledge.</p>
 </div>
@@ -694,7 +717,7 @@ Note
 </section>
 <section id="single-data-point-example" class="level3">
 <h3 class="anchored" data-anchor-id="single-data-point-example">Single Data Point Example</h3>
-<p>When discussing continuous probability distributions, the probability of a specific value is effectively zero, so talking about the probability of that value is meaningless. Instead, we generally talk about the probability of getting a value as extreme or more extreme than the value that we observed.</p>
+<p>As already mentioned, referring to the probability of an exact value on the real number line is meaningless. Instead, we refer to either the relative probability of a value, or the probability of getting a value as extreme or more extreme than the value that we observed. With a single data point we will use examples of the ‘as extreme or more extreme’ approach.</p>
 <p>In the app below, we find where the data point lies on the chart and then find the area, i.e.&nbsp;probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -731,8 +754,15 @@ app_ui = ui.page_fluid(
             width=300
         ),
         
-        # Main panel
-        ui.output_plot("normalPlot", height="400px"),
+        # Main panel with tabset
+        ui.navset_tab(
+            ui.nav_panel("PDF Plot",
+                ui.output_plot("normalPlot", height="400px"),
+            ),
+            ui.nav_panel("CDF Plot",
+                ui.output_plot("cdfPlot", height="400px"),
+            ),
+        ),
     )
 )
 
@@ -762,7 +792,6 @@ def server(input, output, session):
         x = input.xInput()
         sigma = math.sqrt(var)
 
-        # Create x values for plotting
         x_min = mu - 4 * sigma
         x_max = mu + 4 * sigma
         x_vals = np.linspace(x_min, x_max, 200)
@@ -770,21 +799,55 @@ def server(input, output, session):
 
         fig, ax = plt.subplots(figsize=(10, 6))
         
-        # Plot the PDF
         ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
         
-        # Shade the area for P(X ≥ x)
         x_shade = x_vals[x_vals &gt;= x]
         y_shade = stats.norm.pdf(x_shade, mu, sigma)
         ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
                        label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
 
-        # Add vertical line at x
         ax.axvline(x, color='red', linestyle='--', alpha=0.5)
 
         ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
         ax.set_xlabel("X")
         ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+    # Plot the CDF
+    @output
+    @render.plot
+    def cdfPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Generate random data
+        data = np.random.normal(mu, sigma, 1000)
+        
+        # Calculate empirical CDF
+        sorted_data = np.sort(data)
+        empirical_cdf = np.arange(1, len(data) + 1) / len(data)
+        
+        # Calculate theoretical CDF
+        x_vals = np.linspace(mu - 4*sigma, mu + 4*sigma, 200)
+        theoretical_cdf = stats.norm.cdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot empirical and theoretical CDFs
+        ax.plot(sorted_data, empirical_cdf, 'b-', label='Empirical CDF', alpha=0.7)
+        ax.plot(x_vals, theoretical_cdf, 'r--', label='Theoretical CDF')
+        
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+        
+        ax.set_title(f"Cumulative Distribution Function (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Cumulative Probability")
         ax.legend()
         ax.grid(True, alpha=0.3)
 
@@ -945,8 +1008,6 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p><strong>I think this is repeated but am not sure so not deleting quite yet</strong></p>
-<p>Some data generating processes are quite common, so statisticians have named them and [mostly] standardized their inputs/parameters. We can think of <strong>probability distributions</strong> as models of common data generating processes. You can generate a random event from a probability distribution like we generated a single dice roll. If you generate an infinite number of events, you’ll get a very smooth curve called the probability density, which is similar to what we saw when we really cranked up the number of dice rolls earlier.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
