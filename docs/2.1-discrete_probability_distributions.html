@@ -607,15 +607,23 @@ app = App(app_ui, server)</code></pre>
 <p>Having given some background on models, we can now focus on the probability of the data given the model, <span class="math inline">\(P(D|M)\)</span>.</p>
 <section id="dice-totals-probability-of-data" class="level3">
 <h3 class="anchored" data-anchor-id="dice-totals-probability-of-data">Dice Totals Probability of Data</h3>
+<section id="relative-frequency" class="level4">
+<h4 class="anchored" data-anchor-id="relative-frequency">Relative Frequency</h4>
 <p>We want to find the probability of a particular dice total (the data) given a dice model. To estimate the probability <span class="math inline">\(P(E)\)</span> of an event <span class="math inline">\(E\)</span>, we can use the relative frequency approach. This involves counting the number of occurrences of the event E and dividing it by the total number of trials. For example, if we observed a total of twelve occur in 40 out of 5,000 dice rolls, the probability estimate is:</p>
 <p><span class="math display">\[
 P(E) \approx \frac{\text{Number of times event } E \text{ occurs}}{\text{Total number of trials}} = \frac{40}{5000} = 0.008
 \]</span></p>
+</section>
+<section id="law-of-large-numbers" class="level4">
+<h4 class="anchored" data-anchor-id="law-of-large-numbers">Law of Large Numbers</h4>
 <p>The accuracy of this estimate depends on the total number of trials as governed by the Law of Large Numbers. The standard error, which gives a measure of uncertainty in the estimate of a mean value, is proportional to one over the square root of the number of samples:</p>
 <p><span class="math display">\[
 P_{\text{error}} \propto \frac{1}{\sqrt{N_{\text{total}}}}
 \]</span></p>
 <p>Which indicates there are diminishing returns to just making the sample size larger. Now I know you’re smart, and you’re saying to yourself, I can figure out the <em>exact</em> probability of rolling a certain dice total. Of course you can for this example - but you probably can’t for more realistic examples, and we want to learn techniques that work well for real problems. In general, if you are concerned with the quality of an estimate with this approach, just rerun the model and see if the outcome changes meaningfully - if it does, increase the number of times we run the model until the output is stable enough for your application. If that’s still not enough, dig into exact/analytic methods.</p>
+</section>
+<section id="revised-dice-app" class="level4">
+<h4 class="anchored" data-anchor-id="revised-dice-app">Revised Dice App</h4>
 <p>Here’s another version of the Dice Total App that you saw earlier - except it now has additional functionality to calculate the approximate and exact probability of a certain dice total based on your inputs. It also shows the relative frequency of the dice sums, i.e.&nbsp;a true probability distribution where the sum of the probabilities equals one.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
@@ -785,9 +793,10 @@ Note
 </div>
 </div>
 </section>
+</section>
 <section id="exact-probabilities-from-a-named-probability-distributions" class="level3">
 <h3 class="anchored" data-anchor-id="exact-probabilities-from-a-named-probability-distributions">Exact Probabilities from a Named Probability Distributions</h3>
-<p>Here we provide an example of the more ‘typical’ use of a probability distribution, to compute the probability of an event. Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.</p>
+<p>Here we provide an example of the more ‘typical’ use of a named probability distribution, to compute the probability of an event. Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.</p>
 <p>We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that <span class="math inline">\(P(X = 1000)\)</span> is simplified below based on the <em>multiplication rule of independent events</em> to equal 0.999^1,000. Also, if you’re unfamiliar with the n over k in parenthesis, look up ‘n choose k’.</p>
 <p><span class="math display">\[
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
@@ -813,10 +822,15 @@ Note
 <section id="probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="probability-of-multiple-events">Probability of Multiple Events</h3>
 <p>So far we have only considered <span class="math inline">\(P(D|M)\)</span> where the data is a single event. However, it is more common to have multiple events (i.e.&nbsp;multiple data points), and we’d like to know the probability of a specific dataset vs other datasets we may have sampled. To calculate probabilities we’ll use the <em>multiplication rule of independent events</em>. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all <em>time series</em>.</p>
+<section id="numerical-stability" class="level4">
+<h4 class="anchored" data-anchor-id="numerical-stability">Numerical Stability</h4>
 <p>We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:</p>
 <p><span class="math display">\[
 P(A \cap B \cap C \cap \dots) = P(A) \cdot P(B) \cdot P(C) \cdot \dots = 10^{(\log_{10}(P(A)) + \log_{10}(P(B)) + \log_{10}(P(C)) + \dots))}
 \]</span></p>
+</section>
+<section id="example" class="level4">
+<h4 class="anchored" data-anchor-id="example">Example</h4>
 <p>Let’s work through a couple example calculations before extending it to a scenario that approximates more serious problems we’ll tackle later. What is the probability of rolling three dice out of a cup, where the total is 11, and then rolling the dice again, where the total is 7? We use the app above to get the probabilities of each roll, where 11 = 0.1250 and 7 = 0.0694.</p>
 <p><span class="math display">\[
 P(Roll 1 \cap Roll 2) = 0.1250 \cdot 0.0694 = 0.008675 = 10^{(\log_{10}(0.1250) + \log_{10}(0.0694))}
@@ -825,6 +839,7 @@ P(Roll 1 \cap Roll 2) = 0.1250 \cdot 0.0694 = 0.008675 = 10^{(\log_{10}(0.1250) 
 <p><span class="math display">\[
 \log_{10}(P(Roll 1 \cap Roll 2)) = \log_{10}(0.1250) + \log_{10}(0.0694) = -0.9031 + -1.1586 = -2.0617
 \]</span></p>
+</section>
 </section>
 <section id="calculating-the-relative-probability-of-multiple-events" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</h3>
