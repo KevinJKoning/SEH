@@ -212,32 +212,32 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.1-simple_data_generation.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.1-discrete_probability_distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Discrete Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.2-probability_distributions.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.2-continuous-probability-distributions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Continuous Probability Distributions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Linear Regression</span></a>
+ <span class="menu-text">Generalized Linear Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-bespoke_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bespoke Models</span></a>
+  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">A Word on Machine Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.5-tests_processes_parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Wrap Up</span></a>
+  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bespoke/Bayesian Models</span></a>
   </div>
 </li>
       </ul>
@@ -253,14 +253,14 @@ window.Quarto = {
       <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.1-data_generation_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dice Model Likelihood</span></a>
+  <a href="./3.1-without_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Without Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./3.2-probability_distributions_reverse.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Distribution Likelihood</span></a>
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">With Priors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -347,7 +347,7 @@ Note
 </section>
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
-<div id="56b240ff" class="cell" data-execution_count="1">
+<div id="bf5e5a74" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -386,7 +386,7 @@ Note
 </section>
 <section id="priors" class="level2">
 <h2 class="anchored" data-anchor-id="priors">Priors</h2>
-<div id="7c721051" class="cell" data-execution_count="2">
+<div id="093eb7bf" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Define Priors (Corrected)</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -425,7 +425,7 @@ Note
 </div>
 </div>
 </div>
-<div id="6ac26dc6" class="cell" data-execution_count="3">
+<div id="0cd30063" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Sample from Priors</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -458,7 +458,7 @@ Note
 </div>
 </div>
 </div>
-<div id="59c0acfa" class="cell" data-execution_count="4">
+<div id="a6900754" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Naive Monte Carlo (Corrected)</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -530,7 +530,7 @@ Note
 </div>
 </div>
 </div>
-<div id="f56708e9" class="cell" data-execution_count="5">
+<div id="8169c90a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualize Parameter Likelihood (Log-Scaled Color)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
