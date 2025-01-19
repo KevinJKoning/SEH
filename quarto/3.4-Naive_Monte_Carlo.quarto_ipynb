@@ -29,7 +29,7 @@
         "\n",
         "## Dataset\n"
       ],
-      "id": "b70ca4a9"
+      "id": "d5c97dec"
     },
     {
       "cell_type": "code",
@@ -63,7 +63,7 @@
         "plt.ylabel('Frequency')\n",
         "plt.show()"
       ],
-      "id": "f07ab9ff",
+      "id": "515694da",
       "execution_count": null,
       "outputs": []
     },
@@ -73,7 +73,7 @@
       "source": [
         "## Priors\n"
       ],
-      "id": "6fd2ac25"
+      "id": "69e47ddb"
     },
     {
       "cell_type": "code",
@@ -110,7 +110,7 @@
         "\n",
         "plt.show()"
       ],
-      "id": "2c0c6f86",
+      "id": "84183555",
       "execution_count": null,
       "outputs": []
     },
@@ -143,7 +143,7 @@
         "plt.ylabel('Frequency')\n",
         "plt.show()"
       ],
-      "id": "4e3f3476",
+      "id": "e15d9764",
       "execution_count": null,
       "outputs": []
     },
@@ -212,7 +212,7 @@
         "plt.tight_layout()\n",
         "plt.show()"
       ],
-      "id": "797fb393",
+      "id": "c5433cb9",
       "execution_count": null,
       "outputs": []
     },
@@ -265,7 +265,7 @@
         "# Display the plot\n",
         "plt.show()"
       ],
-      "id": "68253f2f",
+      "id": "af885aea",
       "execution_count": null,
       "outputs": []
     },
@@ -864,7 +864,7 @@
         "\n",
         "If you paid attention to the Posterior Probability of $\\mu$ and $\\sigma$ plot, you probabiliy noticed that a *lot* of the points/space on the chart was consumed by areas of low probability. This was true even though we had few parameters (low dimensions) and good priors. The trick of the more advanced Monte Carlo techniques is how to find the areas of high likelihood and sample them efficiently. These include Hamiltonian Monte Carlo (HMC) and the No-U-Turn Sampler (NUTS). We'll use em, and thankfully the details are easily researched if you want to know more...\n"
       ],
-      "id": "428ea4cf"
+      "id": "81b2b6a9"
     }
   ],
   "metadata": {

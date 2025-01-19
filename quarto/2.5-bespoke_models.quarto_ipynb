@@ -37,7 +37,7 @@
         "\n",
         "Here's a simply X-Y plot that shows us the relationship between diamond size (carats) and price:\n"
       ],
-      "id": "c4bcd602"
+      "id": "fd0509c9"
     },
     {
       "cell_type": "code",
@@ -63,7 +63,7 @@
         "plt.grid(True)\n",
         "plt.show()"
       ],
-      "id": "d9ef0b57",
+      "id": "a6b9ecef",
       "execution_count": null,
       "outputs": []
     },
@@ -100,7 +100,7 @@
         "\n",
         "We can use our knowledge of the data generating process to create reasonable **priors** for our model. This is simply saying that we already know some reasonable range of values, or even a most likely value, for the parameters of the model. Common examples are not letting a parameter take a negative value, or that previous experience suggest the parameter is near a certain value. Setting a prior does not mean we force a parameter value on the model, it just eliminates the impossible values and nudges the model towards our prior knowledge. If the data is different..."
       ],
-      "id": "fc3638cf"
+      "id": "7e6bda27"
     }
   ],
   "metadata": {
