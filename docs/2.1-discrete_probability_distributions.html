@@ -268,7 +268,7 @@ window.Quarto = {
   <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
   <ul class="collapse">
   <li><a href="#dice-totals-probability-of-data" id="toc-dice-totals-probability-of-data" class="nav-link" data-scroll-target="#dice-totals-probability-of-data">Dice Totals Probability of Data</a></li>
-  <li><a href="#exact-probabilities-from-a-named-probability-distributions" id="toc-exact-probabilities-from-a-named-probability-distributions" class="nav-link" data-scroll-target="#exact-probabilities-from-a-named-probability-distributions">Exact Probabilities from a Named Probability Distributions</a></li>
+  <li><a href="#exact-probabilities-from-a-discrete-probability-distribution" id="toc-exact-probabilities-from-a-discrete-probability-distribution" class="nav-link" data-scroll-target="#exact-probabilities-from-a-discrete-probability-distribution">Exact Probabilities from a Discrete Probability Distribution</a></li>
   <li><a href="#probability-of-multiple-events" id="toc-probability-of-multiple-events" class="nav-link" data-scroll-target="#probability-of-multiple-events">Probability of Multiple Events</a></li>
   <li><a href="#calculating-the-relative-probability-of-multiple-events" id="toc-calculating-the-relative-probability-of-multiple-events" class="nav-link" data-scroll-target="#calculating-the-relative-probability-of-multiple-events">Calculating the Relative Probability of Multiple Events</a></li>
   </ul></li>
@@ -794,9 +794,9 @@ Note
 </div>
 </section>
 </section>
-<section id="exact-probabilities-from-a-named-probability-distributions" class="level3">
-<h3 class="anchored" data-anchor-id="exact-probabilities-from-a-named-probability-distributions">Exact Probabilities from a Named Probability Distributions</h3>
-<p>Here we provide an example of the more ‘typical’ use of a named probability distribution, to compute the probability of an event. Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.</p>
+<section id="exact-probabilities-from-a-discrete-probability-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="exact-probabilities-from-a-discrete-probability-distribution">Exact Probabilities from a Discrete Probability Distribution</h3>
+<p>Here we provide an example of the more ‘typical’ use of a discrete probability distribution, to compute the probability of an event. Let’s use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.</p>
 <p>We’ll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that <span class="math inline">\(P(X = 1000)\)</span> is simplified below based on the <em>multiplication rule of independent events</em> to equal 0.999^1,000. Also, if you’re unfamiliar with the n over k in parenthesis, look up ‘n choose k’.</p>
 <p><span class="math display">\[
 P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}

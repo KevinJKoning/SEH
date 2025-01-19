@@ -228,7 +228,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#bespokebayesian" id="toc-bespokebayesian" class="nav-link active" data-scroll-target="#bespokebayesian">Bespoke/Bayesian</a></li>
+  <li><a href="#bespokebayesian" id="toc-bespokebayesian" class="nav-link active" data-scroll-target="#bespokebayesian">Bespoke/Bayesian</a>
+  <ul class="collapse">
+  <li><a href="#causal-diagrams" id="toc-causal-diagrams" class="nav-link" data-scroll-target="#causal-diagrams">Causal Diagrams</a></li>
+  </ul></li>
   <li><a href="#all-the-models-under-the-rainbow" id="toc-all-the-models-under-the-rainbow" class="nav-link" data-scroll-target="#all-the-models-under-the-rainbow">All the Models under the Rainbow</a></li>
   <li><a href="#revisiting-the-diamond-dataset" id="toc-revisiting-the-diamond-dataset" class="nav-link" data-scroll-target="#revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</a></li>
   <li><a href="#causal-model-with-1.0-1.5-and-2.0-cut-points" id="toc-causal-model-with-1.0-1.5-and-2.0-cut-points" class="nav-link" data-scroll-target="#causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</a></li>
@@ -261,6 +264,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="bespokebayesian" class="level2">
 <h2 class="anchored" data-anchor-id="bespokebayesian">Bespoke/Bayesian</h2>
 <p>When we talk about custom models, these are frequently associated with causal diagrams and prior information… We typically wouldn’t create a custom model if we didn’t have a causal diagram and some prior beliefs in mind, and custom models typically do not work well without causal diagrams and prior beliefs…</p>
+<section id="causal-diagrams" class="level3">
+<h3 class="anchored" data-anchor-id="causal-diagrams">Causal Diagrams</h3>
+</section>
 </section>
 <section id="all-the-models-under-the-rainbow" class="level2">
 <h2 class="anchored" data-anchor-id="all-the-models-under-the-rainbow">All the Models under the Rainbow</h2>
@@ -272,6 +278,16 @@ ul.task-list li input[type="checkbox"] {
 <section id="revisiting-the-diamond-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="revisiting-the-diamond-dataset">Revisiting the Diamond Dataset</h2>
 <p>In the diamond dataset there was something quite obvious to humans that is impossible for many statistical or machine learning tools to learn - the price premium when passing the 1.0, 1.5, and 2.0 carat thresholds.</p>
+<p>Here’s a simply X-Y plot that shows us the relationship between diamond size (carats) and price:</p>
+<div id="7f492eb6" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2.5-bespoke_models_files/figure-html/cell-2-output-1.png" width="833" height="523" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="causal-model-with-1.0-1.5-and-2.0-cut-points" class="level2">
 <h2 class="anchored" data-anchor-id="causal-model-with-1.0-1.5-and-2.0-cut-points">Causal Model with 1.0, 1.5, and 2.0 Cut Points</h2>

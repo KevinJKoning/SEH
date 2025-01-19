@@ -13,6 +13,8 @@ B) Do the first chapter in *probability of data*, then do the first chapter of *
 
 ## Notes to self
 
+NEED TO BETTER USE REFERENCE TO PROBABILITY DISTRIBUTIONS AND NAMED PROBABILITY DISTRIBUTIONS
+
 ```{mermaid}
 graph TD
   subgraph ModelSystem[ ]

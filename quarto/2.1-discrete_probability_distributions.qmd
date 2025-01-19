@@ -492,9 +492,9 @@ Hopefully you can demonstrate to yourself that with enough samples, the approxim
 A few readers may already know an essay called the 'The Bitter Lesson' by Rich Sutton. If you haven't read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there's no way to compute through a bad algorithm. But we're professionals in a hurry, we choose computation whenever it's plausible.
 :::
 
-### Exact Probabilities from a Named Probability Distributions
+### Exact Probabilities from a Discrete Probability Distribution
 
-Here we provide an example of the more 'typical' use of a named probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. 
+Here we provide an example of the more 'typical' use of a discrete probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. 
 
 We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999\^1,000. Also, if you're unfamiliar with the n over k in parenthesis, look up 'n choose k'.
 
