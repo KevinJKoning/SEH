@@ -7,7 +7,7 @@ filters:
 
 ## Preview
 
-Previously our models only had parameters/settings, but now we use models that can also ingest data. We start with the most common generalized linear model, linear regression. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumpions that we would have been likely to miss otherwise.
+Previously our models only had parameters/settings, but now we use models that can also ingest data. We start with the most common generalized linear model, linear regression. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumptions that we would have been likely to miss otherwise.
 
 As usual, after we understand our models, we'll use them to find the probability of data. Finally, we round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear.
 
@@ -21,7 +21,7 @@ This touches on something we mentioned back in the introduction, Aleatoric Uncer
 
 ## Linear Regression
 
-At some point you have probably been exposed to linear regression, and I expect you may roll your eyes for being exposed to a topic so 'remedial'. But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.
+At some point you have probably been exposed to linear regression, and we expect you may roll your eyes for being exposed to a topic so 'remedial'. But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.
 
 We're also going to approach this in a way that is likely backwards from your previous introduction. Typically you'll be presented with some data and the task will be to find a best fit line through the data. Here we will think about it in the other direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?
 
@@ -29,7 +29,7 @@ We're also going to approach this in a way that is likely backwards from your pr
 
 The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package *ggplot2* or the Python package *Seaborn* - it is the diamonds dataset which includes sale price among other diamond characteristics. The dataset displayed below as been made smaller via stratified sampling based on carats.
 
-Play around with the app and make some notes-to-self about the differences between the original and generated data.
+Play around with the app below based on linear regression and make some notes-to-self about the differences between the original and generated data.
 
 ```{shinylive-python}
 #| standalone: true
@@ -454,7 +454,7 @@ ID,carat,cut,color,clarity,depth,table,price,x,y,z
 diamonds = pd.read_csv(io.StringIO(data_str))
 
 app_ui = ui.page_fluid(
-    ui.h2("Diamond Price Modeling"),
+    ui.h2("Linear Regression Diamond Price Modeling"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_slider("num_points", "Number of Simulated Points", 
@@ -519,9 +519,9 @@ app = App(app_ui, server)
 
 After seeing it work, let's point out some defencies in this model:
 
-*   The model produces a decent number of negative values at small carats. We don't think this is real because no one has paid us to take a diamond before.
-*   The variation around the mean value in the generated data is the same regardless of whether it is 0.3 or 1.5 carats, but that doesn't match the data.
-*   There are some important 'break points' in the data that the linear model is not capturing, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.
+-   The model produces a decent number of negative values at small carats. We don't think this is real because no one has paid us to take a diamond before.
+-   The variation around the mean value in the generated data is the same regardless of whether it is 0.3 or 1.5 carats, but that doesn't match the data.
+-   There are some important 'break points' in the data that the linear model is not capturing, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.
 
 The change in variability from small carat values to large values is called *Heteroscedasticity*, a fine word for a dinner party, and actually quite common. However, when a model underpredicts variation at extreme values, points in those areas will have far too much 'leverage' on the model fit. Practically all linear models assume constant variance, which is frequently an erroneous assumption. We'll correct that in our model soon. (It will also help with the the prediction of negative values, but the break points will need to wait until a later chapter).
 
@@ -537,7 +537,7 @@ Where $\beta_0$ is the y-intercept, $\beta_1$ is the the slope, and $\epsilon$ i
 
 #### Accounting for Heteroscadicity in a Linear Model
 
-Let's modify the model to tackle the issue of heteroscadicity. It will not become obvious why until the second half of the primer, but this will break the standard assumptions of linear regression models and the ability to fit it using standard statistical analytic procedures. (Thus the reason so many linear models exist with this flaw regardless of how common heteroscadicity is).
+Let's modify the model to tackle the issue of heteroscadicity. It will not become obvious why until the second half of the primer, but this will break the standard assumptions of linear regression models and the ability to fit it using standard analytical solutions. (Thus the reason so many linear models exist with this flaw regardless of how common heteroscadicity is).
 
 Here's our new mathematical model:
 
@@ -1043,6 +1043,16 @@ Ahhhhh, isn't that better? I'd like to stress that very few people would have no
 
 Our model accuracy is also suffering from some epistemic uncertainty. Initially we included only size/carats, which we intuited (probably correctly) would be the most important predictor variable. However, there are other useful predictor variables, including depth, cut, color, and clarity. In the app below, observe how the R-squared accuracy metric changes as you include different variables.
 
+Here's a view of the raw data. We will not include all the variables in our multi-variable linear regression model, but it's good to see what is avaialable.
+
+| ID    | carat | cut       | color | clarity | depth | table | price | x    | y    | z    |
+|-------|-------|-----------|-------|---------|-------|-------|-------|------|------|------|
+| 51657 | 0.3   | Ideal     | G     | VS2     | 62.3  | 58.0  | 545   | 4.26 | 4.28 | 2.66 |
+| 34838 | 0.3   | Premium   | G     | VVS2    | 60.8  | 58.0  | 878   | 4.38 | 4.34 | 2.65 |
+| 9718  | 0.3   | Ideal     | H     | VVS2    | 62.1  | 54.0  | 590   | 4.32 | 4.35 | 2.69 |
+| 46635 | 0.3   | Very Good | E     | SI1     | 62.7  | 60.0  | 526   | 4.24 | 4.28 | 2.67 |
+| 31852 | 0.3   | Premium   | G     | VS1     | 62.2  | 59.0  | 776   | 4.28 | 4.24 | 2.65 |
+
 ```{shinylive-python}
 #| standalone: true
 #| viewerHeight: 600
@@ -1469,7 +1479,7 @@ ID,carat,cut,color,clarity,depth,table,price,x,y,z
 diamonds = pd.read_csv(io.StringIO(data_str))
 
 app_ui = ui.page_fluid(
-    ui.h2("Diamond Price Modeling - Multiple Linear Regression"),
+    ui.h2("Multiple Linear Regression Diamond Price Modeling"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_checkbox_group(
@@ -1597,7 +1607,7 @@ app = App(app_ui, server)
 
 You should notice that the other variables are helpful in improving the fit of the model. However, some are more useful than others and none are close to the importance of size/carats.
 
-A discussion on including the 'right' variables is a very lengthy topic. We'll summarize it by saying the obvious first - if the variable has no ability to make better *predictions*, it should not be included. However, even this statement has a nuance, we said *predictions* since even completely unrelated variables can make a *training* dataset fit better (we haven't even mentioned training test splitting yet!!!). The other thing to mention is that a variable can be not useful *enough* to warrant the additional model complexity of including it...
+A discussion on including the 'right' variables is a very lengthy topic. We'll summarize it by only saying the obvious - if the variable has no ability to make better *predictions*, it should not be included. However, even this statement has a nuance, we said *predictions* since even completely unrelated variables can make a *training* dataset fit better (we haven't even mentioned training test splitting yet!!!). The other thing to mention is that a variable can be not useful *enough* to warrant the additional model complexity of including it...
 
 #### Mathematical Form
 
@@ -1607,24 +1617,160 @@ $$
 y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \dots + \beta_n x_n + \epsilon
 $$
 
+Note that this is the traditional form of multi-variate regression where the $\epsilon$ term is constant. Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.
+
 #### Non-Numeric Inputs
 
 ##### Categorical
 
-Generalized Linear Models have the ability to consume non-numeric data, although you may consider it to be not particularly elegant. Effectively we need a parameter for every possible non-numeric data value, such as when cut = Ideal, cut = Premium, or cut = Good. As you can imagine this can lead to a lot of extra parameters... Each parameter adjusts the output accordingly if the non-numeric data value is present in the input, otherwise it does nothing.
+Generalized Linear Models have the ability to consume non-numeric data, although you may consider it to be not particularly elegant. Effectively we need a parameter for every possible non-numeric data value, such as when cut = Ideal, cut = Premium, or cut = Good. As you can imagine this can lead to a lot of extra parameters, each of which you may call an indicator variable coefficient. Each parameter adjusts the output accordingly if the non-numeric data value is present in the input, otherwise it does nothing.
 
-##### Ordinal
+##### Ordinal Data
 
 There's actually another option for non-numeric data, and that's if the data is *ordinal*. Ordinal data is non-numeric, but it has a natural progression, such as Bad, OK, Good. If we expect that the impact of each step in our ordinal data is approximately the same (the impact of Bad to OK is about the same as OK to Good), we can significantly reduce the number of parameters needed to just one per category. The data becomes a set of integers that map to the qualitative value in the correct order, and the parameter is then predicting the impact of a *step* in the ordinal value.
 
 ##### An Aside on Overfitting
 
-More parameters significantly increases the risk of *overfitting*, which is fitting to noise instead of signal. Because of the many different combinations of diamond characteristics and the inherent variability in the sales price, a perculiarity of a particular dataset may create a ????? parameter where OK is better than Good. However, if we use ordinal values, this will not happen. This is an important case where a human with a causal understanding of the data generating process knows better than the unthinking 'golem' of a statistical procedure.
+More parameters significantly increases the risk of *overfitting*, which is fitting to noise instead of signal. It is dangerous because a model can fit existing data extremely well but then do a terrible job when it matters most, at predicting future data.
 
+Because of the many different combinations of diamond characteristics and the inherent variability in the sales price, a perculiarity of a particular dataset may create an indicator variable parameter where OK is better than Good. However, if we use ordinal values, this will not happen. This is an important case where a human with a causal understanding of the data generating process knows better than the unthinking 'golem' of a statistical procedure.
 
-### Other Generalized....
+### Generalized Linear Models
 
-We name this chapter Generalized
+We name this chapter Generalized Linear Models, even though admittedly we have and will focus mostly on linear regression. The point however, is that what's learned with linear regression can be extended to many datasets that are not linear, but can be easily transformed to *look* linear. Typically the transformation will also assume that the variability $\epsilon$ follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial or Poisson distributions.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 800
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression, PoissonRegressor
+from sklearn.metrics import r2_score
+import pandas as pd
+
+app_ui = ui.page_fluid(
+    ui.h2("Linear vs Poisson Regression Comparison"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("sample_size", "Sample Size", 
+                           min=50, max=500, value=100),
+            ui.input_slider("slope", "True Slope", 
+                           min=0.1, max=2.0, value=0.5, step=0.1),
+            ui.output_text("equation"),
+        ),
+        ui.navset_tab(
+            ui.nav_panel("Linear Regression",
+                ui.output_plot("linearPlot", height="400px"),
+                ui.br(),
+                ui.output_text("linear_r2"),
+            ),
+            ui.nav_panel("Poisson Regression",
+                ui.output_plot("poissonPlot", height="400px"),
+                ui.br(),
+                ui.output_text("poisson_r2"),
+            ),
+        ),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def generate_data():
+        n = input.sample_size()
+        X = np.linspace(0, 10, n).reshape(-1, 1)
+        
+        # Generate mean response using exponential function
+        intercept = 1.0  # Fixed intercept
+        lambda_true = np.exp(intercept + input.slope() * X.ravel())
+        
+        # Generate Poisson distributed response with fixed noise level
+        y = np.random.poisson(lambda_true * 1.5)  # Higher fixed noise level
+        
+        return X, y
+
+    @output
+    @render.text
+    def equation():
+        return (
+            f"True Data Generation Model:\n\n"
+            f"y ~ Poisson(λ)\n"
+            f"λ = exp(1.0 + {input.slope():.1f}x)"
+        )
+
+    @output
+    @render.plot
+    def linearPlot():
+        X, y = generate_data()
+        
+        # Fit linear model
+        lr = LinearRegression()
+        lr.fit(X, y)
+        
+        # Generate predictions
+        X_pred = np.linspace(0, 10, 100).reshape(-1, 1)
+        y_lr_pred = lr.predict(X_pred)
+        
+        # Create plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.scatter(X, y, color='black', alpha=0.5, label='Data')
+        ax.plot(X_pred, y_lr_pred, 'r-', label='Linear Regression')
+        
+        ax.set_title("Linear Regression Fit")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y (Count)")
+        ax.legend()
+        
+        return fig
+
+    @output
+    @render.plot
+    def poissonPlot():
+        X, y = generate_data()
+        
+        # Fit Poisson model
+        pr = PoissonRegressor()
+        pr.fit(X, y)
+        
+        # Generate predictions
+        X_pred = np.linspace(0, 10, 100).reshape(-1, 1)
+        y_pr_pred = pr.predict(X_pred)
+        
+        # Create plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.scatter(X, y, color='black', alpha=0.5, label='Data')
+        ax.plot(X_pred, y_pr_pred, 'b-', label='Poisson Regression')
+        
+        ax.set_title("Poisson Regression Fit")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y (Count)")
+        ax.legend()
+        
+        return fig
+
+    @output
+    @render.text
+    def linear_r2():
+        X, y = generate_data()
+        lr = LinearRegression()
+        lr.fit(X, y)
+        y_lr_pred = lr.predict(X)
+        r2 = r2_score(y, y_lr_pred)
+        return f"R² Score: {r2:.3f}"
+
+    @output
+    @render.text
+    def poisson_r2():
+        X, y = generate_data()
+        pr = PoissonRegressor()
+        pr.fit(X, y)
+        y_pr_pred = pr.predict(X)
+        r2 = r2_score(y, y_pr_pred)
+        return f"R² Score: {r2:.3f}"
+
+app = App(app_ui, server)
+```
 
 Poisson Regression has a nice property in that it does not assume that the error term is constant, but that it increases with the rate...
 
