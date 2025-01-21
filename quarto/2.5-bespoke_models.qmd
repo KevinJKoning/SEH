@@ -7,35 +7,32 @@ filters:
 
 ## Preview
 
-
 Not really a preview yet.
 
 There are *many* different statistical and machine learning models that have specific niches and applications. We chose only Generalized Linear Models as they are reasonably easy to understand and very useful, but there are many resources available for other models. What Generalized Linear Models and most other statistical models have in common, however, is that they have a set structure. If that structure fits your problem well, that's great, as it's simple to apply and simple to document/explain.
 
 There are a couple main problems with choosing an 'off the shelf' model:
 
-* They often do little to help explain the underlying process.
-* They are rarely easy to improve for a special case.
+-   They often do little to help explain the underlying process.
+-   They are rarely easy to improve for a special case.
 
 The heart of why these problems exists is that most statistical models are generic tools built for common patterns that typically rely on analytical solutions.
 
 We can, of course, develop models that operate in any way we see fit. While there isn't a single right way to develop a model for a specific data generating process, it is very common to be drawn towards Bayesian statistical paradigms when doing so. Below are some advantages of Bayesian approaches:
 
-* They can be tightly integrated with causal models, explaining the underlying process.
-* There are very flexible and robust methods to fit the models like Hamiltonian Monte Carlo.
-* They can integrate prior information into the parameter values:
-  - This can incorporate expert input, which is especially useful when data is sparse.
-  - It can also constrain the possible solutions, reducing the extreme flexibility that may find nonsensical solutions.
+-   They can be tightly integrated with causal models, explaining the underlying process.
+-   There are very flexible and robust methods to fit the models like Hamiltonian Monte Carlo.
+-   They can integrate prior information into the parameter values:
+    -   This can incorporate expert input, which is especially useful when data is sparse.
+    -   It can also constrain the possible solutions, reducing the extreme flexibility that may find nonsensical solutions.
 
 ## Bespoke/Bayesian
 
 When we talk about custom models, these are frequently associated with causal diagrams and prior information... We typically wouldn't create a custom model if we didn't have a causal diagram and some prior beliefs in mind, and custom models typically do not work well without causal diagrams and prior beliefs...
 
-
 ### Causal Diagrams
 
-
-## All the Models under the Rainbow
+## All the Models
 
 Before we get on with creating bespoke models... we should mention all the generic statistical and machine learning models that may meet your needs. If you are interested in the many statistical/machine learning tools, I suggest you refer to *An Introduction to Statistical Learning* by James, Witten, Hastie, and Tibshirani.
 
@@ -73,12 +70,11 @@ plt.grid(True)
 plt.show()
 ```
 
-
 ## Causal Model with 1.0, 1.5, and 2.0 Cut Points
 
 If we reason about what is influencing the price of a diamond, once we remove the artificial value that is placed for passing the 1.0, 1.5, and 2.0 carat thresholds, the value appears to be a somewhat continuous and rational combination of the relevant characteristics, specifically color, cut, clarity, and size.
 
-We summarize our knowledge of the real data generating process in a causal diagram:
+We summarize our current state of  knowledge of the real data generating process in a causal diagram:
 
 ```{mermaid}
 graph LR
@@ -101,7 +97,7 @@ Statistical models that have too much flexibility can be optimized into all sort
 
 We can use our knowledge of the data generating process to create reasonable **priors** for our model. This is simply saying that we already know some reasonable range of values, or even a most likely value, for the parameters of the model. Common examples are not letting a parameter take a negative value, or that previous experience suggest the parameter is near a certain value. Setting a prior does not mean we force a parameter value on the model, it just eliminates the impossible values and nudges the model towards our prior knowledge. If the data is different...
 
-
+### Test
 
 ```{shinylive-python}
 #| standalone: true

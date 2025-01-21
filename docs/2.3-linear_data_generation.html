@@ -827,7 +827,7 @@ y_i = \beta_0 + \beta_1 x + \epsilon
 <p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x + x \epsilon
 \]</span></p>
-<p>Here’s the new app:</p>
+<p>Here’s the new app (it seems to be taking a very long time to load due to the extra libraries required to solve the new model):</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -837,6 +837,8 @@ y_i = \beta_0 + \beta_1 x + x \epsilon
 from shiny import App, ui, render, reactive
 import pandas as pd
 import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 import io
 
@@ -1273,11 +1275,27 @@ def server(input, output, session):
     @reactive.Calc
     def generate_simulated_data():
         # Fit a linear model to the real data
-        X = diamonds['carat'].values.reshape(-1, 1)
+        # X = diamonds['carat'].values.reshape(-1, 1)
+        # y = diamonds['price'].values
+        # # THIS ISN'T ACTUALLY USING THE NEW MODEL
+        # coefficients = np.polyfit(X.flatten(), y, 1)
+        # slope, intercept = coefficients
+
+        # Extract data
+        X = diamonds['carat'].values  # No need to reshape for statsmodels
         y = diamonds['price'].values
-        coefficients = np.polyfit(X.flatten(), y, 1)
-        slope, intercept = coefficients
-        
+
+        # Create a DataFrame for statsmodels
+        import pandas as pd
+        data = pd.DataFrame({'carat': X, 'price': y})
+
+        # Fit a GLM using the Gamma family with an identity link function
+        glm_model = smf.glm("price ~ carat", data=data, family=sm.families.Gamma(sm.families.links.identity())).fit()
+
+        # Extract estimated coefficients
+        intercept, slope = glm_model.params
+        # End revision of model
+
         # Generate new X values
         X_new = np.linspace(diamonds['carat'].min(), diamonds['carat'].max(), input.num_points())
         
@@ -1318,7 +1336,7 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>Ahhhhh, isn’t that better? I’d like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data. It does still have the flaw of some negative values, but it is much less severe.</p>
+<p>That fits the change in variance with price much better, although it could still use some improvements. I’d like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data.</p>
 </section>
 </section>
 <section id="multi-variable-linear-regression" class="level3">

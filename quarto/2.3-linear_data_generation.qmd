@@ -545,7 +545,7 @@ $$
 y_i = \beta_0 + \beta_1 x + x \epsilon
 $$
 
-Here's the new app:
+Here's the new app (it seems to be taking a very long time to load due to the extra libraries required to solve the new model):
 
 ```{shinylive-python}
 #| standalone: true
@@ -554,6 +554,8 @@ Here's the new app:
 from shiny import App, ui, render, reactive
 import pandas as pd
 import numpy as np
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
 import matplotlib.pyplot as plt
 import io
 
@@ -990,11 +992,27 @@ def server(input, output, session):
     @reactive.Calc
     def generate_simulated_data():
         # Fit a linear model to the real data
-        X = diamonds['carat'].values.reshape(-1, 1)
+        # X = diamonds['carat'].values.reshape(-1, 1)
+        # y = diamonds['price'].values
+        # # THIS ISN'T ACTUALLY USING THE NEW MODEL
+        # coefficients = np.polyfit(X.flatten(), y, 1)
+        # slope, intercept = coefficients
+
+        # Extract data
+        X = diamonds['carat'].values  # No need to reshape for statsmodels
         y = diamonds['price'].values
-        coefficients = np.polyfit(X.flatten(), y, 1)
-        slope, intercept = coefficients
-        
+
+        # Create a DataFrame for statsmodels
+        import pandas as pd
+        data = pd.DataFrame({'carat': X, 'price': y})
+
+        # Fit a GLM using the Gamma family with an identity link function
+        glm_model = smf.glm("price ~ carat", data=data, family=sm.families.Gamma(sm.families.links.identity())).fit()
+
+        # Extract estimated coefficients
+        intercept, slope = glm_model.params
+        # End revision of model
+
         # Generate new X values
         X_new = np.linspace(diamonds['carat'].min(), diamonds['carat'].max(), input.num_points())
         
@@ -1037,7 +1055,7 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-Ahhhhh, isn't that better? I'd like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data. It does still have the flaw of some negative values, but it is much less severe.
+That fits the change in variance with price much better, although it could still use some improvements. I'd like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data.
 
 ### Multi-Variable Linear Regression
 

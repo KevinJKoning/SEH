@@ -414,7 +414,7 @@ To solve this, the probability density function does not give a true probability
 
 As already mentioned, referring to the probability of an exact value on the real number line is meaningless. Instead, we refer to either the relative probability of a value, or the probability of getting a value as extreme or more extreme than the value that we observed. With a single data point we use an example of the 'as extreme or more extreme' approach.
 
-In the app below, we find where the data point lies on the chart and then find the area, i.e. probability, of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above. Note that we can get this value more directly if we work from the cumulative distribution, as shown in the other plot tab.
+In the app below, we find where the data point lies on the chart and then find the area under all larger values. The area is equal to the probability of sampling points larger than the observation. This is utilizing bullet one from the properties of the probability density function given above. Note that we can get this value more directly if we work from the cumulative distribution, as shown in the other plot tab.
 
 ```{shinylive-python}
 #| standalone: true
