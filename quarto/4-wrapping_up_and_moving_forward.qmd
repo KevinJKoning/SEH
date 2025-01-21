@@ -1,0 +1,29 @@
+
+
+```{r}
+# Test basic computations
+print("Basic Computation Test")
+print(2 + 2)  # Should return 4
+
+# Check R version
+print("R Version:")
+print(R.version.string)
+
+# Test package loading
+print("Checking Installed Packages")
+if (!require(ggplot2)) {
+  install.packages("ggplot2", repos = "http://cran.us.r-project.org")
+}
+library(ggplot2)
+print("ggplot2 Loaded Successfully")
+
+# Generate a simple plot
+print("Generating Test Plot")
+x <- seq(0, 10, length.out = 100)
+y <- sin(x)
+
+plot(x, y, type = "l", col = "blue", main = "Test Plot", xlab = "X values", ylab = "sin(X)")
+
+print("R Test Completed Successfully!")
+
+```
