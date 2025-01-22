@@ -20,8 +20,8 @@ website:
         contents:
           - 2.1-discrete_probability_distributions.qmd
           - 2.2-continuous-probability-distributions.qmd
-          - 2.3-linear_data_generation.qmd
-          - 2.4-a_word_on_machine_learning.qmd  
+          - 2.3-statistical_models.qmd
+          - 2.4-machine_learning.qmd  
       - text: "Likelihood of Model"
         href: 3-parameter_estimation.qmd
         contents:

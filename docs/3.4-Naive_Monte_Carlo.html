@@ -175,7 +175,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.4-Naive_Monte_Carlo.html">Naive Monte Carlo</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Naive Monte Carlo</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -224,20 +224,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.3-linear_data_generation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Generalized Linear Models</span></a>
+  <a href="./2.3-statistical_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Statistical Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-a_word_on_machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">A Word on Machine Learning</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./2.5-bespoke_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Bespoke/Bayesian Models</span></a>
+  <a href="./2.4-machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Machine Learning</span></a>
   </div>
 </li>
       </ul>
@@ -263,24 +257,6 @@ window.Quarto = {
  <span class="menu-text">With Priors</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3.3-linear-regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Test of new Linear Regression App</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3.4-Naive_Monte_Carlo.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Naive Monte Carlo</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./3.x-reverse_it.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Test of new Dice Rolling App</span></a>
-  </div>
-</li>
       </ul>
   </li>
     </ul>
@@ -304,7 +280,7 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./3-parameter_estimation.html">Likelihood of Model</a></li><li class="breadcrumb-item"><a href="./3.4-Naive_Monte_Carlo.html">Naive Monte Carlo</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Naive Monte Carlo</h1>
 </div>
@@ -347,7 +323,7 @@ Note
 </section>
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
-<div id="7f4ed5fc" class="cell" data-execution_count="1">
+<div id="e6cb475b" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -386,7 +362,7 @@ Note
 </section>
 <section id="priors" class="level2">
 <h2 class="anchored" data-anchor-id="priors">Priors</h2>
-<div id="a409ab4f" class="cell" data-execution_count="2">
+<div id="b853c805" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Define Priors (Corrected)</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -425,7 +401,7 @@ Note
 </div>
 </div>
 </div>
-<div id="9eff5c7d" class="cell" data-execution_count="3">
+<div id="83ef36bf" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Sample from Priors</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -458,7 +434,7 @@ Note
 </div>
 </div>
 </div>
-<div id="9257a30a" class="cell" data-execution_count="4">
+<div id="d143e744" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Naive Monte Carlo (Corrected)</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
@@ -530,7 +506,7 @@ Note
 </div>
 </div>
 </div>
-<div id="fe1f0ca8" class="cell" data-execution_count="5">
+<div id="a12668ad" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualize Parameter Likelihood (Log-Scaled Color)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># =========================</span></span>

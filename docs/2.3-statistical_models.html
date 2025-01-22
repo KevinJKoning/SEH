@@ -1,37 +1,302 @@
----
-title: Generalized Linear Models
-format: html
-filters:
-  - shinylive
----
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-## Preview
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.39">
 
-Previously our models only had parameters/settings, but now we use models that can also ingest data. We start with the most common generalized linear model, linear regression. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumptions that we would have been likely to miss otherwise.
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-As usual, after we understand our models, we'll use them to find the probability of data. Finally, we round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear.
 
-## Parameters vs Data
+<title>Statistical Models – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
 
-Up to this point we have been using models that require only *parameters* to simulate a data generating process. We can think of parameters as the settings of the model - examples of parameters we chose earlier were the number of dice to roll at a time, or the mean and variance of a probability distribution.
 
-Generally the model parameters are set/constant for any specific data generating process. However, we can have predictor variables (called *features* in machine learning) that tell us something useful for predicting the outcome. For example, we can model a random human's height with no other information, but if we're told the person is female, we can model more accurately. We can do this by adding another model parameter that responds to that data input and adjusts the mean height accordingly.
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2204267ba3465bf97d1f19466c0824b7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<meta name="shinylive:serviceworker_dir" content=".">
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/load-shinylive-sw.js" type="module"></script>
+<script src="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/run-python-blocks.js" type="module"></script>
+<link href="site_libs/quarto-contrib/shinylive-0.9.3/shinylive/shinylive.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
 
-This touches on something we mentioned back in the introduction, Aleatoric Uncertainty (Randomness), and Epistemic Uncertainty (Lack of Knowledge). The uncertainty in most of our models is due to Epistemic Uncertainty, that is we are missing the data or the understanding in process to make an accurate prediction. We can imagine if we had enough predictor variables about a person's genetics, diet, and lifestyle, and we understood the interactions of that data, we could vastly improve a model for their height. We could expect there would still be some Aleatoric Uncertainty, but it's likely to be small in comparison.
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-## Linear Regression
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
-At some point you have probably been exposed to linear regression, and we expect you may roll your eyes for being exposed to a topic so 'remedial'. But linear regression, and it's generalized cousins, are an incredibly useful set of techniques in themselves, and *truly* understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.
+<link rel="stylesheet" href="styles.css">
+</head>
 
-We're also going to approach this in a way that is likely backwards from your previous introduction. Typically you'll be presented with some data and the task will be to find a best fit line through the data. Here we will think about it in the other direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?
+<body class="nav-sidebar docked nav-fixed">
 
-### Single Variable Linear Regression
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Statistics for Engineers in a Hurry (an Illustrated Primer)</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-statistical_models.html">Statistical Models</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./1-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./2-data_generation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Probability of Data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.1-discrete_probability_distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Discrete Probability Distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.2-continuous-probability-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous Probability Distributions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.3-statistical_models.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Statistical Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./2.4-machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Machine Learning</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./3-parameter_estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Likelihood of Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.1-without_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Without Priors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./3.2-with_priors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">With Priors</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#parameters-vs-data" id="toc-parameters-vs-data" class="nav-link" data-scroll-target="#parameters-vs-data">Parameters vs Data</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">Linear Regression</a>
+  <ul class="collapse">
+  <li><a href="#single-variable-linear-regression" id="toc-single-variable-linear-regression" class="nav-link" data-scroll-target="#single-variable-linear-regression">Single Variable Linear Regression</a></li>
+  <li><a href="#multi-variable-linear-regression" id="toc-multi-variable-linear-regression" class="nav-link" data-scroll-target="#multi-variable-linear-regression">Multi-Variable Linear Regression</a></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models">Generalized Linear Models</a></li>
+  </ul></li>
+  <li><a href="#probability-of-the-data" id="toc-probability-of-the-data" class="nav-link" data-scroll-target="#probability-of-the-data">Probability of the Data</a>
+  <ul class="collapse">
+  <li><a href="#probability-of-data-with-initial-single-variable-linear-regression" id="toc-probability-of-data-with-initial-single-variable-linear-regression" class="nav-link" data-scroll-target="#probability-of-data-with-initial-single-variable-linear-regression">Probability of Data with Initial Single Variable Linear Regression</a></li>
+  <li><a href="#probability-of-the-data-with-revised-single-varibale-linear-regression" id="toc-probability-of-the-data-with-revised-single-varibale-linear-regression" class="nav-link" data-scroll-target="#probability-of-the-data-with-revised-single-varibale-linear-regression">Probability of the Data with Revised Single Varibale Linear Regression</a></li>
+  </ul></li>
+  <li><a href="#overfitting" id="toc-overfitting" class="nav-link" data-scroll-target="#overfitting">Overfitting</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
 
-The great thing about data generation with a model is that it is going to show you *what it knows* and not *what you think it knows*. Let's walk through an example with a common dataset made available with the R package *ggplot2* or the Python package *Seaborn* - it is the diamonds dataset which includes sale price among other diamond characteristics. The dataset displayed below as been made smaller via stratified sampling based on carats.
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.3-statistical_models.html">Statistical Models</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Statistical Models</h1>
+</div>
 
-Play around with the app below based on linear regression and make some notes-to-self about the differences between the original and generated data.
 
-```{shinylive-python}
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>Previously our models only had parameters/settings, but now we use models that can also ingest data. We start with the most common generalized linear model, linear regression. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumptions that we would have been likely to miss otherwise.</p>
+<p>As usual, after we understand our models, we’ll use them to find the probability of data. Finally, we round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear.</p>
+</section>
+<section id="parameters-vs-data" class="level2">
+<h2 class="anchored" data-anchor-id="parameters-vs-data">Parameters vs Data</h2>
+<p>Up to this point we have been using models that require only <em>parameters</em> to simulate a data generating process. We can think of parameters as the settings of the model - examples of parameters we chose earlier were the number of dice to roll at a time, or the mean and variance of a probability distribution.</p>
+<p>Generally the model parameters are set/constant for any specific data generating process. However, we can have predictor variables (called <em>features</em> in machine learning) that tell us something useful for predicting the outcome. For example, we can model a random human’s height with no other information, but if we’re told the person is female, we can model more accurately. We can do this by adding another model parameter that responds to that data input and adjusts the mean height accordingly.</p>
+<p>This touches on something we mentioned back in the introduction, Aleatoric Uncertainty (Randomness), and Epistemic Uncertainty (Lack of Knowledge). The uncertainty in most of our models is due to Epistemic Uncertainty, that is we are missing the data or the understanding in process to make an accurate prediction. We can imagine if we had enough predictor variables about a person’s genetics, diet, and lifestyle, and we understood the interactions of that data, we could vastly improve a model for their height. We could expect there would still be some Aleatoric Uncertainty, but it’s likely to be small in comparison.</p>
+</section>
+<section id="linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression">Linear Regression</h2>
+<p>At some point you have probably been exposed to linear regression, and we expect you may roll your eyes for being exposed to a topic so ‘remedial’. But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.</p>
+<p>We’re also going to approach this in a way that is likely backwards from your previous introduction. Typically you’ll be presented with some data and the task will be to find a best fit line through the data. Here we will think about it in the other direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?</p>
+<section id="single-variable-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="single-variable-linear-regression">Single Variable Linear Regression</h3>
+<p>The great thing about data generation with a model is that it is going to show you <em>what it knows</em> and not <em>what you think it knows</em>. Let’s walk through an example with a common dataset made available with the R package <em>ggplot2</em> or the Python package <em>Seaborn</em> - it is the diamonds dataset which includes sale price among other diamond characteristics. The dataset displayed below as been made smaller via stratified sampling based on carats.</p>
+<p>Play around with the app below based on linear regression and make some notes-to-self about the differences between the original and generated data.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 650
 
@@ -519,34 +784,31 @@ def server(input, output, session):
         
         return fig
 
-app = App(app_ui, server)
-```
-
-#### Model Flaws
-
-After seeing it work, let's point out some defencies in this model:
-
--   It seems any reasonable setting produces some negative values at small carats. We don't think this is real because no one has paid us to take a diamond before.
--   The variation around the mean value in the generated data is the same regardless of whether it is 0.3 or 1.5 carats, but that doesn't match the data.
--   There are some important 'break points' in the data that the linear model is not capturing, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.
-
-The change in variability from small carat values to large values is called *Heteroscedasticity*, a fine word for a dinner party, and actually quite common. However, when a model underpredicts variation at extreme values, points in those areas will have far too much 'leverage' on the model fit. Practically all linear models assume constant variance, which is frequently an erroneous assumption. We'll correct that in our model soon. (It will also help with the the prediction of negative values, but the break points will need to wait until a later chapter).
-
-#### Mathematical Form
-
-The single variable linear regression model has this mathematical form:
-
-$$
+app = App(app_ui, server)</code></pre>
+<section id="model-flaws" class="level4">
+<h4 class="anchored" data-anchor-id="model-flaws">Model Flaws</h4>
+<p>After seeing it work, let’s point out some defencies in this model:</p>
+<ul>
+<li>It seems any reasonable setting produces some negative values at small carats. We don’t think this is real because no one has paid us to take a diamond before.</li>
+<li>The variation around the mean value in the generated data is the same regardless of whether it is 0.3 or 1.5 carats, but that doesn’t match the data.</li>
+<li>There are some important ‘break points’ in the data that the linear model is not capturing, like the extra premium placed on a 1.00 carat diamond vs 0.99 carats.</li>
+</ul>
+<p>The change in variability from small carat values to large values is called <em>Heteroscedasticity</em>, a fine word for a dinner party, and actually quite common. However, when a model underpredicts variation at extreme values, points in those areas will have far too much ‘leverage’ on the model fit. Practically all linear models assume constant variance, which is frequently an erroneous assumption. We’ll correct that in our model soon. (It will also help with the the prediction of negative values, but the break points will need to wait until a later chapter).</p>
+</section>
+<section id="mathematical-form" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-form">Mathematical Form</h4>
+<p>The single variable linear regression model has this mathematical form:</p>
+<p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x + \epsilon
-$$
-
-Where $\beta_0$ is the y-intercept, $\beta_1$ is the the slope, and $\epsilon$ is the error. In the diamond model the $x$ variable is the diamond size/carat and $y$ is the price.
-
-#### Testing Inverse Link with Gamma Distribution
-
-A long running theme is to just use computation instead of complex analytical solutions... But since those can be elegant, we'll use them when appropriate... Here:
-
-```{shinylive-python}
+\]</span></p>
+<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. In the diamond model the <span class="math inline">\(x\)</span> variable is the diamond size/carat and <span class="math inline">\(y\)</span> is the price.</p>
+</section>
+<section id="testing-inverse-link-with-gamma-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="testing-inverse-link-with-gamma-distribution">Testing Inverse Link with Gamma Distribution</h4>
+<p>A long running theme is to just use computation instead of complex analytical solutions… But since those can be elegant, we’ll use them when appropriate… Here:</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 650
 
@@ -1040,23 +1302,19 @@ def server(input, output, session):
         
         return fig
 
-app = App(app_ui, server)
-```
-
-
-#### Accounting for Heteroscadicity in a Linear Model
-
-Let's modify the model to tackle the issue of heteroscadicity. It will not become obvious why until the second half of the primer, but this will break the standard assumptions of linear regression models and the ability to fit it using standard analytical solutions. (Thus the reason so many linear models exist with this flaw regardless of how common heteroscadicity is).
-
-Here's our new mathematical model:
-
-$$
+app = App(app_ui, server)</code></pre>
+</section>
+<section id="accounting-for-heteroscadicity-in-a-linear-model" class="level4">
+<h4 class="anchored" data-anchor-id="accounting-for-heteroscadicity-in-a-linear-model">Accounting for Heteroscadicity in a Linear Model</h4>
+<p>Let’s modify the model to tackle the issue of heteroscadicity. It will not become obvious why until the second half of the primer, but this will break the standard assumptions of linear regression models and the ability to fit it using standard analytical solutions. (Thus the reason so many linear models exist with this flaw regardless of how common heteroscadicity is).</p>
+<p>Here’s our new mathematical model:</p>
+<p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x + x \epsilon
-$$
-
-Here's the new app (it seems to be taking a very long time to load due to the extra libraries required to solve the new model):
-
-```{shinylive-python}
+\]</span></p>
+<p>Here’s the new app (it seems to be taking a very long time to load due to the extra libraries required to solve the new model):</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 650
 
@@ -1561,26 +1819,114 @@ def server(input, output, session):
         
         return fig
 
-app = App(app_ui, server)
-```
-
-That fits the change in variance with price much better, although it could still use some improvements. I'd like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data.
-
-### Multi-Variable Linear Regression
-
-Our model accuracy is also suffering from some epistemic uncertainty. Initially we included only size/carats, which we intuited (probably correctly) would be the most important predictor variable. However, there are other useful predictor variables, including depth, cut, color, and clarity. In the app below, observe how the R-squared accuracy metric changes as you include different variables.
-
-Here's a view of the raw data. We will not include all the variables in our multi-variable linear regression model, but it's good to see what is avaialable.
-
-| ID    | carat | cut       | color | clarity | depth | table | price | x    | y    | z    |
-|-------|-------|-----------|-------|---------|-------|-------|-------|------|------|------|
-| 51657 | 0.3   | Ideal     | G     | VS2     | 62.3  | 58.0  | 545   | 4.26 | 4.28 | 2.66 |
-| 34838 | 0.3   | Premium   | G     | VVS2    | 60.8  | 58.0  | 878   | 4.38 | 4.34 | 2.65 |
-| 9718  | 0.3   | Ideal     | H     | VVS2    | 62.1  | 54.0  | 590   | 4.32 | 4.35 | 2.69 |
-| 46635 | 0.3   | Very Good | E     | SI1     | 62.7  | 60.0  | 526   | 4.24 | 4.28 | 2.67 |
-| 31852 | 0.3   | Premium   | G     | VS1     | 62.2  | 59.0  | 776   | 4.28 | 4.24 | 2.65 |
-
-```{shinylive-python}
+app = App(app_ui, server)</code></pre>
+<p>That fits the change in variance with price much better, although it could still use some improvements. I’d like to stress that very few people would have noticed the flaw in the previous linear regression model unless we had used it to generate data.</p>
+</section>
+</section>
+<section id="multi-variable-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="multi-variable-linear-regression">Multi-Variable Linear Regression</h3>
+<p>Our model accuracy is also suffering from some epistemic uncertainty. Initially we included only size/carats, which we intuited (probably correctly) would be the most important predictor variable. However, there are other useful predictor variables, including depth, cut, color, and clarity. In the app below, observe how the R-squared accuracy metric changes as you include different variables.</p>
+<p>Here’s a view of the raw data. We will not include all the variables in our multi-variable linear regression model, but it’s good to see what is avaialable.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>carat</th>
+<th>cut</th>
+<th>color</th>
+<th>clarity</th>
+<th>depth</th>
+<th>table</th>
+<th>price</th>
+<th>x</th>
+<th>y</th>
+<th>z</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>51657</td>
+<td>0.3</td>
+<td>Ideal</td>
+<td>G</td>
+<td>VS2</td>
+<td>62.3</td>
+<td>58.0</td>
+<td>545</td>
+<td>4.26</td>
+<td>4.28</td>
+<td>2.66</td>
+</tr>
+<tr class="even">
+<td>34838</td>
+<td>0.3</td>
+<td>Premium</td>
+<td>G</td>
+<td>VVS2</td>
+<td>60.8</td>
+<td>58.0</td>
+<td>878</td>
+<td>4.38</td>
+<td>4.34</td>
+<td>2.65</td>
+</tr>
+<tr class="odd">
+<td>9718</td>
+<td>0.3</td>
+<td>Ideal</td>
+<td>H</td>
+<td>VVS2</td>
+<td>62.1</td>
+<td>54.0</td>
+<td>590</td>
+<td>4.32</td>
+<td>4.35</td>
+<td>2.69</td>
+</tr>
+<tr class="even">
+<td>46635</td>
+<td>0.3</td>
+<td>Very Good</td>
+<td>E</td>
+<td>SI1</td>
+<td>62.7</td>
+<td>60.0</td>
+<td>526</td>
+<td>4.24</td>
+<td>4.28</td>
+<td>2.67</td>
+</tr>
+<tr class="odd">
+<td>31852</td>
+<td>0.3</td>
+<td>Premium</td>
+<td>G</td>
+<td>VS1</td>
+<td>62.2</td>
+<td>59.0</td>
+<td>776</td>
+<td>4.28</td>
+<td>4.24</td>
+<td>2.65</td>
+</tr>
+</tbody>
+</table>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 600
 
@@ -2129,44 +2475,40 @@ def server(input, output, session):
         return summary
 
 app = App(app_ui, server)
-
-```
-
-You should notice that the other variables are helpful in improving the fit of the model. However, some are more useful than others and none are close to the importance of size/carats.
-
-A discussion on including the 'right' variables is a very lengthy topic. We'll summarize it by only saying the obvious - if the variable has no ability to make better *predictions*, it should not be included. However, even this statement has a nuance, we said *predictions* since even completely unrelated variables can make a *training* dataset fit better (we haven't even mentioned training test splitting yet!!!). The other thing to mention is that a variable can be not useful *enough* to warrant the additional model complexity of including it...
-
-#### Mathematical Form
-
-The multi-variate regression equation has this generic mathematical form:
-
-$$
+</code></pre>
+<p>You should notice that the other variables are helpful in improving the fit of the model. However, some are more useful than others and none are close to the importance of size/carats.</p>
+<p>A discussion on including the ‘right’ variables is a very lengthy topic. We’ll summarize it by only saying the obvious - if the variable has no ability to make better <em>predictions</em>, it should not be included. However, even this statement has a nuance, we said <em>predictions</em> since even completely unrelated variables can make a <em>training</em> dataset fit better (we haven’t even mentioned training test splitting yet!!!). The other thing to mention is that a variable can be not useful <em>enough</em> to warrant the additional model complexity of including it…</p>
+<section id="mathematical-form-1" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-form-1">Mathematical Form</h4>
+<p>The multi-variate regression equation has this generic mathematical form:</p>
+<p><span class="math display">\[
 y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \dots + \beta_n x_n + \epsilon
-$$
-
-Note that this is the traditional form of multi-variate regression where the $\epsilon$ term is constant. Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.
-
-#### Non-Numeric Inputs
-
-##### Categorical
-
-Generalized Linear Models have the ability to consume non-numeric data, although you may consider it to be not particularly elegant. Effectively we need a parameter for every possible non-numeric data value, such as when cut = Ideal, cut = Premium, or cut = Good. As you can imagine this can lead to a lot of extra parameters, each of which you may call an indicator variable coefficient. Each parameter adjusts the output accordingly if the non-numeric data value is present in the input, otherwise it does nothing.
-
-##### Ordinal Data
-
-There's actually another option for non-numeric data, and that's if the data is *ordinal*. Ordinal data is non-numeric, but it has a natural progression, such as Bad, OK, Good. If we expect that the impact of each step in our ordinal data is approximately the same (the impact of Bad to OK is about the same as OK to Good), we can significantly reduce the number of parameters needed to just one per category. The data becomes a set of integers that map to the qualitative value in the correct order, and the parameter is then predicting the impact of a *step* in the ordinal value.
-
-##### An Aside on Overfitting
-
-More parameters significantly increases the risk of *overfitting*, which is fitting to noise instead of signal. It is dangerous because a model can fit existing data extremely well but then do a terrible job when it matters most, at predicting future data.
-
-Because of the many different combinations of diamond characteristics and the inherent variability in the sales price, a perculiarity of a particular dataset may create an indicator variable parameter where OK is better than Good. However, if we use ordinal values, this will not happen. This is an important case where a human with a causal understanding of the data generating process knows better than the unthinking 'golem' of a statistical procedure.
-
-### Generalized Linear Models
-
-We name this chapter Generalized Linear Models, even though admittedly we have and will focus mostly on linear regression. The point however, is that what's learned with linear regression can be extended to many datasets that are not linear, but can be easily transformed to *look* linear. Typically the transformation will also assume that the variability $\epsilon$ follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial or Poisson distributions.
-
-```{shinylive-python}
+\]</span></p>
+<p>Note that this is the traditional form of multi-variate regression where the <span class="math inline">\(\epsilon\)</span> term is constant. Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.</p>
+</section>
+<section id="non-numeric-inputs" class="level4">
+<h4 class="anchored" data-anchor-id="non-numeric-inputs">Non-Numeric Inputs</h4>
+<section id="categorical" class="level5">
+<h5 class="anchored" data-anchor-id="categorical">Categorical</h5>
+<p>Generalized Linear Models have the ability to consume non-numeric data, although you may consider it to be not particularly elegant. Effectively we need a parameter for every possible non-numeric data value, such as when cut = Ideal, cut = Premium, or cut = Good. As you can imagine this can lead to a lot of extra parameters, each of which you may call an indicator variable coefficient. Each parameter adjusts the output accordingly if the non-numeric data value is present in the input, otherwise it does nothing.</p>
+</section>
+<section id="ordinal-data" class="level5">
+<h5 class="anchored" data-anchor-id="ordinal-data">Ordinal Data</h5>
+<p>There’s actually another option for non-numeric data, and that’s if the data is <em>ordinal</em>. Ordinal data is non-numeric, but it has a natural progression, such as Bad, OK, Good. If we expect that the impact of each step in our ordinal data is approximately the same (the impact of Bad to OK is about the same as OK to Good), we can significantly reduce the number of parameters needed to just one per category. The data becomes a set of integers that map to the qualitative value in the correct order, and the parameter is then predicting the impact of a <em>step</em> in the ordinal value.</p>
+</section>
+<section id="an-aside-on-overfitting" class="level5">
+<h5 class="anchored" data-anchor-id="an-aside-on-overfitting">An Aside on Overfitting</h5>
+<p>More parameters significantly increases the risk of <em>overfitting</em>, which is fitting to noise instead of signal. It is dangerous because a model can fit existing data extremely well but then do a terrible job when it matters most, at predicting future data.</p>
+<p>Because of the many different combinations of diamond characteristics and the inherent variability in the sales price, a perculiarity of a particular dataset may create an indicator variable parameter where OK is better than Good. However, if we use ordinal values, this will not happen. This is an important case where a human with a causal understanding of the data generating process knows better than the unthinking ‘golem’ of a statistical procedure.</p>
+</section>
+</section>
+</section>
+<section id="generalized-linear-models" class="level3">
+<h3 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h3>
+<p>We name this chapter Generalized Linear Models, even though admittedly we have and will focus mostly on linear regression. The point however, is that what’s learned with linear regression can be extended to many datasets that are not linear, but can be easily transformed to <em>look</em> linear. Typically the transformation will also assume that the variability <span class="math inline">\(\epsilon\)</span> follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial or Poisson distributions.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 800
 
@@ -2296,18 +2638,17 @@ def server(input, output, session):
         r2 = r2_score(y, y_pr_pred)
         return f"R² Score: {r2:.3f}"
 
-app = App(app_ui, server)
-```
-
-Poisson Regression has a nice property in that it does not assume that the error term is constant, but that it increases with the rate...
-
-(it'd be really nice to have a plot that shows how, in a vertical sense, the errors are normally distributed or non-normally distributed)
-
-## Probability of the Data
-
-As usual, we started by focusing on the data generated from our models to improve our intution... And now...
-
-```{shinylive-python}
+app = App(app_ui, server)</code></pre>
+<p>Poisson Regression has a nice property in that it does not assume that the error term is constant, but that it increases with the rate…</p>
+<p>(it’d be really nice to have a plot that shows how, in a vertical sense, the errors are normally distributed or non-normally distributed)</p>
+</section>
+</section>
+<section id="probability-of-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="probability-of-the-data">Probability of the Data</h2>
+<p>As usual, we started by focusing on the data generated from our models to improve our intution… And now…</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
 #| viewerHeight: 700
 
@@ -2452,7 +2793,7 @@ def server(input, output, session):
         var = input.varInput()
         n = len(Y)
 
-        if var <= 0:
+        if var &lt;= 0:
             return float("nan")
 
         # Compute sum of squared residuals
@@ -2499,17 +2840,446 @@ def server(input, output, session):
 
         return fig
 
-app = App(app_ui, server)
-```
+app = App(app_ui, server)</code></pre>
+<section id="probability-of-data-with-initial-single-variable-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="probability-of-data-with-initial-single-variable-linear-regression">Probability of Data with Initial Single Variable Linear Regression</h3>
+</section>
+<section id="probability-of-the-data-with-revised-single-varibale-linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="probability-of-the-data-with-revised-single-varibale-linear-regression">Probability of the Data with Revised Single Varibale Linear Regression</h3>
+</section>
+</section>
+<section id="overfitting" class="level2">
+<h2 class="anchored" data-anchor-id="overfitting">Overfitting</h2>
+<p>… It’s easy to see how you can ‘overfit’ a multi-variate linear regression model, you just include too many parameters, e.g.&nbsp;parameters that are just noise that look good when training the model but actually hurt performance on a real ‘test’ dataset. It’s also possible to overfit a linear regression model with one ‘X’ variable. If you don’t know already I suggest you think about for a second… Alright, it’s assuming there is a relationship to X, i.e.&nbsp;a slope, when in reality the model just varies around a constant mean value.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>We finally started using data in our models, and we showed a model in which linear regression could do quite a good job in predicting the outcome. However, it could not make a prediction that a human could observe easily, the bump that price gets from being just above important thresholds, like from 0.99 to 1.01 carats. We will address this deficiency when we get to bespoke/bayesian models, which allows us to modify the model based on our knowledge of the causal structure of the data generating process.</p>
 
-### Probability of Data with Initial Single Variable Linear Regression
 
-### Probability of the Data with Revised Single Varibale Linear Regression
+</section>
 
-## Overfitting
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
 
-... It's easy to see how you can 'overfit' a multi-variate linear regression model, you just include too many parameters, e.g. parameters that are just noise that look good when training the model but actually hurt performance on a real 'test' dataset. It's also possible to overfit a linear regression model with one 'X' variable. If you don't know already I suggest you think about for a second... Alright, it's assuming there is a relationship to X, i.e. a slope, when in reality the model just varies around a constant mean value.
 
-## Summary
 
-We finally started using data in our models, and we showed a model in which linear regression could do quite a good job in predicting the outcome. However, it could not make a prediction that a human could observe easily, the bump that price gets from being just above important thresholds, like from 0.99 to 1.01 carats. We will address this deficiency when we get to bespoke/bayesian models, which allows us to modify the model based on our knowledge of the causal structure of the data generating process.
+
+</body></html>

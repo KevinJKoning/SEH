@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>wrapping_up_and_moving_forward – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Machine Learning – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -107,7 +136,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.4-machine_learning.html">Machine Learning</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -162,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./2.4-machine_learning.html" class="sidebar-item-text sidebar-link">
+  <a href="./2.4-machine_learning.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Machine Learning</span></a>
   </div>
 </li>
@@ -196,17 +225,110 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#loss-function" id="toc-loss-function" class="nav-link active" data-scroll-target="#loss-function">Loss Function</a></li>
+  <li><a href="#likelihood-function" id="toc-likelihood-function" class="nav-link" data-scroll-target="#likelihood-function">Likelihood Function</a></li>
+  <li><a href="#machine-learning-models" id="toc-machine-learning-models" class="nav-link" data-scroll-target="#machine-learning-models">Machine Learning Models</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./2-data_generation.html">Probability of Data</a></li><li class="breadcrumb-item"><a href="./2.4-machine_learning.html">Machine Learning</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Machine Learning</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<p>I assume most engineers think of <em>machine learning</em> as a sexier discipline than statistics. In reality there is a <em>lot</em> of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it’s best to include a little perspective on it, even if we will generally avoid the topic otherwise.</p>
+<p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but I define an important difference this way:</p>
+<ul>
+<li>Statistical models are built around probability theory</li>
+<li>Machine learning models are built around minimizing a loss function</li>
+</ul>
+<p>The confusing thing is that a lot of methods known as being machine learning have loss functions that are purely probabilistic - but the key is they <em>do not have to be</em>.</p>
+<section id="loss-function" class="level2">
+<h2 class="anchored" data-anchor-id="loss-function">Loss Function</h2>
+<p>A loss function, denoted as <span class="math inline">\(L\)</span>, is typically computed as the difference between the true target values <span class="math inline">\(y\)</span> and the predicted values <span class="math inline">\(\hat{y}\)</span> The generic form of a loss function can be expressed as:</p>
+<p><span class="math display">\[
+L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+\]</span></p>
+<section id="variables" class="level4">
+<h4 class="anchored" data-anchor-id="variables">Variables:</h4>
+<ul>
+<li><span class="math inline">\(y_i\)</span>: The true value for the (i)-th data point.</li>
+<li><span class="math inline">\(\hat{y}_i\)</span>: The predicted value for the (i)-th data point.</li>
+<li><span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span>: The individual error for the (i)-th data point, defined by a specific loss function (e.g., squared error, cross-entropy).</li>
+<li><span class="math inline">\(N\)</span>: The total number of data points.</li>
+</ul>
+</section>
+<section id="explanation" class="level4">
+<h4 class="anchored" data-anchor-id="explanation">Explanation:</h4>
+<ul>
+<li>The function <span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span> depends on the task (regression or classification).
+<ul>
+<li>Example for regression: <span class="math inline">\(\ell(y_i, \hat{y}_i) = (y_i - \hat{y}_i)^2\)</span> (Mean Squared Error).</li>
+<li>Example for classification: <span class="math inline">\(\ell(y_i, \hat{y}_i) = -[y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]\)</span> (Binary Cross-Entropy).</li>
+</ul></li>
+<li>The summation aggregates the error across all data points.</li>
+<li>Dividing by <span class="math inline">\(N\)</span> ensures the loss represents the average error.</li>
+</ul>
+</section>
+</section>
+<section id="likelihood-function" class="level2">
+<h2 class="anchored" data-anchor-id="likelihood-function">Likelihood Function</h2>
+<p>The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).</p>
+<p>It’s a bit awkward to mention Likelihood here, because we have been trying to wait until the second half of the primer in order to tackle it head on. However, you probably have an expectation that Machine Learning will be covered, at least to some degree, and it makes sense to do that while introducing all the other types of models. I’ll continue to make it awkward and just state that yes this is the difference, but to understand Likelihood we’ll have to wait to the second half…</p>
+</section>
+<section id="machine-learning-models" class="level2">
+<h2 class="anchored" data-anchor-id="machine-learning-models">Machine Learning Models</h2>
+<p>The following are some of the most common machine learning models. <em>Supervised learning</em> means that there is a result or ‘y’ variable to learn from. <em>Unsupervised learning</em> does not have the result or ‘y’ variable, which is a little confusing - instead of trying to predict they are generally attempting some kind of categorization/clustering or simplification.</p>
+<p>You may note that the first two on the list below, linear regression and logistic regression, would also firmly sit on most lists of common statistical models.</p>
+<section id="supervised-learning" class="level4">
+<h4 class="anchored" data-anchor-id="supervised-learning">Supervised Learning</h4>
+<ol type="1">
+<li><strong>Linear Regression</strong>: Predicts continuous values.</li>
+<li><strong>Logistic Regression</strong>: For binary or multi-class classification.</li>
+<li><strong>Decision Trees</strong>: Simple, interpretable models for classification and regression.</li>
+<li><strong>Random Forest</strong>: Ensemble of decision trees for better accuracy.</li>
+<li><strong>Gradient Boosting (e.g., XGBoost, LightGBM)</strong>: Powerful ensemble method for structured data.</li>
+<li><strong>Support Vector Machines (SVM)</strong>: For classification and regression.</li>
+<li><strong>Neural Networks</strong>: Flexible models, basis of deep learning.</li>
+</ol>
+</section>
+<section id="unsupervised-learning" class="level4">
+<h4 class="anchored" data-anchor-id="unsupervised-learning">Unsupervised Learning</h4>
+<ol type="1">
+<li><strong>k-Means Clustering</strong>: Groups similar data points.</li>
+<li><strong>Principal Component Analysis (PCA)</strong>: Reduces dimensionality while preserving variance.</li>
+</ol>
+</section>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>There are plently of resources for this topic… My suggestion is to start with ‘Statistical Learning’….</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
