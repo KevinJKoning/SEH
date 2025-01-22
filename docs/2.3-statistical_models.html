@@ -277,8 +277,9 @@ window.Quarto = {
 
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
-<p>Previously our models only had parameters/settings, but now we use models that can also ingest data. We start with the most common generalized linear model, linear regression. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumptions that we would have been likely to miss otherwise.</p>
-<p>As usual, after we understand our models, we’ll use them to find the probability of data. Finally, we round out the chapter by observing how simple transformations can allow us to apply the linear model methodology to data that otherwise appears non-linear.</p>
+<p>Previously our models only had parameters/settings, but now we use models that can also ingest data. Just like in previous chapters, we focus on generating data to understand our models. This will allow us to quickly see the result of the underlying model assumptions that we would have been likely to miss otherwise.</p>
+<p>We focus on errors and understanding how probable an error is. This is what makes our models fundamentally statistical. Different models of data generating processes will have errors with different distributions, and it’s important we get the probability of our errors correct if we want accurate models. We build this on the foundation we laid in the previous two chapters on probability distributions.</p>
+<p>This is in contrast to machine learning models, which we’ll tackle in the next chapter, which rely on loss functions, which may or may not be probabilistic.</p>
 </section>
 <section id="parameters-vs-data" class="level2">
 <h2 class="anchored" data-anchor-id="parameters-vs-data">Parameters vs Data</h2>
@@ -288,6 +289,7 @@ window.Quarto = {
 </section>
 <section id="linear-regression" class="level2">
 <h2 class="anchored" data-anchor-id="linear-regression">Linear Regression</h2>
+<p><strong>WE DON’T FOCUS ON LINEAR REGRESSION PER SE TO START, WE FOCUS ON THE ERRORS FROM LINEAR REGRESSION FIRST</strong></p>
 <p>At some point you have probably been exposed to linear regression, and we expect you may roll your eyes for being exposed to a topic so ‘remedial’. But linear regression, and it’s generalized cousins, are an incredibly useful set of techniques in themselves, and <em>truly</em> understanding them is an enormous boon for understanding the entire suite of statistical and machine learning methods.</p>
 <p>We’re also going to approach this in a way that is likely backwards from your previous introduction. Typically you’ll be presented with some data and the task will be to find a best fit line through the data. Here we will think about it in the other direction, if we already have a linear regression model, what data does it generate? And how likely were we to see that data once generated?</p>
 <section id="single-variable-linear-regression" class="level3">
@@ -795,34 +797,25 @@ app = App(app_ui, server)</code></pre>
 </ul>
 <p>The change in variability from small carat values to large values is called <em>Heteroscedasticity</em>, a fine word for a dinner party, and actually quite common. However, when a model underpredicts variation at extreme values, points in those areas will have far too much ‘leverage’ on the model fit. Practically all linear models assume constant variance, which is frequently an erroneous assumption. We’ll correct that in our model soon. (It will also help with the the prediction of negative values, but the break points will need to wait until a later chapter).</p>
 </section>
-<section id="mathematical-form" class="level4">
-<h4 class="anchored" data-anchor-id="mathematical-form">Mathematical Form</h4>
-<p>The single variable linear regression model has this mathematical form:</p>
-<p><span class="math display">\[
-y_i = \beta_0 + \beta_1 x + \epsilon
-\]</span></p>
-<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. In the diamond model the <span class="math inline">\(x\)</span> variable is the diamond size/carat and <span class="math inline">\(y\)</span> is the price.</p>
-</section>
-<section id="testing-inverse-link-with-gamma-distribution" class="level4">
-<h4 class="anchored" data-anchor-id="testing-inverse-link-with-gamma-distribution">Testing Inverse Link with Gamma Distribution</h4>
-<p>A long running theme is to just use computation instead of complex analytical solutions… But since those can be elegant, we’ll use them when appropriate… Here:</p>
+<section id="revised-test-app" class="level4">
+<h4 class="anchored" data-anchor-id="revised-test-app">Revised Test App</h4>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 650
+#| viewerHeight: 900
 
 from shiny import App, ui, render, reactive
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import io
-from scipy.stats import gamma
 
 # Set the matplotlib backend explicitly
 plt.switch_backend('agg')
 
 # Just including the data in the code for simplicity
+# It is a stratified sample based on carats
 data_str = """
 ID,carat,cut,color,clarity,depth,table,price,x,y,z
 51657,0.3,Ideal,G,VS2,62.3,58.0,545,4.26,4.28,2.66
@@ -1226,27 +1219,27 @@ ID,carat,cut,color,clarity,depth,table,price,x,y,z
 26079,2.04,Ideal,I,SI1,60.0,60.0,15308,8.3,8.26,4.97
 24966,2.02,Premium,H,SI1,63.0,60.0,13453,7.85,7.79,4.93
 """
-
 # Read the data using pandas
 diamonds = pd.read_csv(io.StringIO(data_str))
 
 app_ui = ui.page_fluid(
-    ui.h2("Gamma GLM Diamond Price Modeling"),
+    ui.h2("Linear Regression Diamond Price Modeling"),
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_slider("num_points", "Number of Simulated Points", 
                            min=100, max=1000, value=200, step=100),
-            ui.input_slider("shape", "Gamma Shape Parameter", 
-                           min=0.01, max=20, value=10, step=1),
+            ui.input_slider("noise_level", "Noise Level", 
+                           min=500, max=3000, value=1503, step=100),
             ui.input_slider("slope", "Slope", 
-                           min=-0.001, max=0.001, value=0.0005, step=0.0001),
+                           min=1000, max=10000, value=5000, step=500),
             ui.input_slider("intercept", "Intercept", 
-                           min=0.000001, max=0.001, value=0.0005, step=0.0001),
+                           min=-2000, max=2000, value=0, step=100),
             ui.input_checkbox("show_original", "Show Original Data", True),
             ui.input_checkbox("show_simulated", "Show Simulated Data", True),
             width=250
         ),
-        ui.output_plot("diamondPlot", height="500px"),
+        ui.output_plot("diamondPlot", height="400px"),
+        ui.output_plot("residualPlot", height="250px"),
     ),
 )
 
@@ -1254,26 +1247,20 @@ def server(input, output, session):
     
     @reactive.Calc
     def generate_simulated_data():
-        # Generate X values
+        # Use the user-defined slope and intercept
         X_new = np.linspace(diamonds['carat'].min(), diamonds['carat'].max(), input.num_points())
+        slope = input.slope()
+        intercept = input.intercept()
         
-        # Calculate mean using inverse link function
-        # μ = 1/(β₀ + β₁x)
-        mean = 1 / (input.intercept() + input.slope() * X_new)
-        
-        # Generate gamma distributed random variables
-        shape = input.shape()
-        scale = mean / shape  # Scale parameter to achieve desired mean
-        
-        Y_new = gamma.rvs(shape, scale=scale)
-        
+        random_noise = np.random.normal(0, input.noise_level(), len(X_new))
+        Y_new = intercept + slope * X_new + random_noise
         return pd.DataFrame({'carat': X_new, 'price': Y_new})
 
     @output
     @render.plot
     def diamondPlot():
         plt.clf()
-        fig = plt.figure(figsize=(10, 6))
+        fig = plt.figure(figsize=(10, 5))
         ax = fig.add_subplot(111)
         
         if input.show_original():
@@ -1285,24 +1272,84 @@ def server(input, output, session):
             ax.scatter(simulated_data['carat'], simulated_data['price'], 
                       alpha=0.6, color='orange', label='Simulated Data')
             
-            # Add the mean curve
-            X_line = np.linspace(diamonds['carat'].min(), diamonds['carat'].max(), 100)
-            Y_line = 1 / (input.intercept() + input.slope() * X_line)
+            # Add the regression line
+            X_line = np.array([diamonds['carat'].min(), diamonds['carat'].max()])
+            Y_line = input.slope() * X_line + input.intercept()
             ax.plot(X_line, Y_line, 'r--', 
-                   label=f'μ = 1/({input.intercept():.4f} + {input.slope():.4f}x)')
+                   label=f'y = {input.slope()}x + {input.intercept()}')
         
-        ax.set_title('Diamond Carat vs Price: Gamma GLM with Inverse Link')
+        ax.set_title('Diamond Carat vs Price: Original and Simulated Data')
         ax.set_xlabel('Carat')
         ax.set_ylabel('Price')
         ax.grid(True)
         ax.legend()
         
-        fig.canvas.draw_idle()
-        plt.close()
+        return fig
+
+    @output
+    @render.plot
+    def residualPlot():
+        if not input.show_simulated():
+            return None
+            
+        # Calculate residuals for actual data
+        predicted_prices = input.slope() * diamonds['carat'] + input.intercept()
+        residuals = diamonds['price'] - predicted_prices
         
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 2.5))
+        fig.suptitle('Residual Distribution by Carat Range (Original Data)')
+        
+        # Define carat ranges
+        small_mask = diamonds['carat'] &lt;= 1.0
+        large_mask = diamonds['carat'] &gt; 1.0
+        
+        # Calculate common x-axis limits
+        x_min = min(residuals)
+        x_max = max(residuals)
+        x_range = x_max - x_min
+        x_min -= x_range * 0.05  # Add 5% padding
+        x_max += x_range * 0.05
+        
+        # Plot for diamonds &lt;= 1 carat
+        small_residuals = residuals[small_mask]
+        if len(small_residuals) &gt; 0:
+            ax1.hist(small_residuals, bins=12, edgecolor='black')
+            ax1.set_title('Residuals for ≤ 1 carat')
+            ax1.set_xlabel('Residual')
+            ax1.set_ylabel('Count')
+            ax1.set_xlim(x_min, x_max)
+        else:
+            ax1.text(0.5, 0.5, 'No data in this range', 
+                    horizontalalignment='center',
+                    verticalalignment='center',
+                    transform=ax1.transAxes)
+        
+        # Plot for diamonds &gt; 1 carat
+        large_residuals = residuals[large_mask]
+        if len(large_residuals) &gt; 0:
+            ax2.hist(large_residuals, bins=12, edgecolor='black')
+            ax2.set_title('Residuals for &gt; 1 carat')
+            ax2.set_xlabel('Residual')
+            ax2.set_ylabel('Count')
+            ax2.set_xlim(x_min, x_max)
+        else:
+            ax2.text(0.5, 0.5, 'No data in this range', 
+                    horizontalalignment='center',
+                    verticalalignment='center',
+                    transform=ax2.transAxes)
+        
+        plt.tight_layout()
         return fig
 
 app = App(app_ui, server)</code></pre>
+</section>
+<section id="mathematical-form" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-form">Mathematical Form</h4>
+<p>The single variable linear regression model has this mathematical form:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 x + \epsilon
+\]</span></p>
+<p>Where <span class="math inline">\(\beta_0\)</span> is the y-intercept, <span class="math inline">\(\beta_1\)</span> is the the slope, and <span class="math inline">\(\epsilon\)</span> is the error. In the diamond model the <span class="math inline">\(x\)</span> variable is the diamond size/carat and <span class="math inline">\(y\)</span> is the price.</p>
 </section>
 <section id="accounting-for-heteroscadicity-in-a-linear-model" class="level4">
 <h4 class="anchored" data-anchor-id="accounting-for-heteroscadicity-in-a-linear-model">Accounting for Heteroscadicity in a Linear Model</h4>
