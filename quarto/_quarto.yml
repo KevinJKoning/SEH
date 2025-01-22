@@ -22,15 +22,11 @@ website:
           - 2.2-continuous-probability-distributions.qmd
           - 2.3-linear_data_generation.qmd
           - 2.4-a_word_on_machine_learning.qmd  
-          - 2.5-bespoke_models.qmd
       - text: "Likelihood of Model"
         href: 3-parameter_estimation.qmd
         contents:
           - 3.1-without_priors.qmd
           - 3.2-with_priors.qmd
-          - 3.3-linear-regression.qmd
-          - 3.4-Naive_Monte_Carlo.qmd
-          - 3.x-reverse_it.qmd
 
 format:
   html:
