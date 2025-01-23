@@ -239,7 +239,6 @@ window.Quarto = {
   <li><a href="#models-of-continuous-data-generating-processes" id="toc-models-of-continuous-data-generating-processes" class="nav-link" data-scroll-target="#models-of-continuous-data-generating-processes">Models of Continuous Data Generating Processes</a>
   <ul class="collapse">
   <li><a href="#the-random-walk-rocket" id="toc-the-random-walk-rocket" class="nav-link" data-scroll-target="#the-random-walk-rocket">The Random <del>Walk</del> Rocket</a></li>
-  <li><a href="#a-more-formal-definition-of-probability-distributions" id="toc-a-more-formal-definition-of-probability-distributions" class="nav-link" data-scroll-target="#a-more-formal-definition-of-probability-distributions">A More Formal Definition of Probability Distributions</a></li>
   <li><a href="#continuous-probability-distributions-as-models-of-data-generating-processes" id="toc-continuous-probability-distributions-as-models-of-data-generating-processes" class="nav-link" data-scroll-target="#continuous-probability-distributions-as-models-of-data-generating-processes">Continuous Probability Distributions as Models of Data Generating Processes</a></li>
   </ul></li>
   <li><a href="#probability-of-data" id="toc-probability-of-data" class="nav-link" data-scroll-target="#probability-of-data">Probability of Data</a>
@@ -247,6 +246,7 @@ window.Quarto = {
   <li><a href="#probability-density-function" id="toc-probability-density-function" class="nav-link" data-scroll-target="#probability-density-function">Probability <em>Density</em> Function</a></li>
   <li><a href="#single-data-point-example" id="toc-single-data-point-example" class="nav-link" data-scroll-target="#single-data-point-example">Single Data Point Example</a></li>
   <li><a href="#multiple-data-points-example" id="toc-multiple-data-points-example" class="nav-link" data-scroll-target="#multiple-data-points-example">Multiple Data Points Example</a></li>
+  <li><a href="#a-more-formal-definition-of-probability-distributions" id="toc-a-more-formal-definition-of-probability-distributions" class="nav-link" data-scroll-target="#a-more-formal-definition-of-probability-distributions">A More Formal Definition of Probability Distributions</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -380,22 +380,6 @@ Note
 <p>The percentile plot is a foreshadowing of another way to compute continuous probability distributions, called the cumulative distribution function. This approach can remove some confusing properties of continuous probability distributions, however, it tends to make the shape of the distribution harder to interpret as many distributions tend to look similar.</p>
 </div>
 </div>
-</section>
-<section id="a-more-formal-definition-of-probability-distributions" class="level3">
-<h3 class="anchored" data-anchor-id="a-more-formal-definition-of-probability-distributions">A More Formal Definition of Probability Distributions</h3>
-<p>We have, and will, use intuitive language like ‘data generating process’ that creates a ‘relative distribution of outcomes’. For the sake of giving you an interface to ‘real’ statistical language, we take a moment to elaborate on <em>slightly</em> more formal language (we still will not go to the mathematical depths a true statistical reference would).</p>
-<section id="sample-space" class="level4">
-<h4 class="anchored" data-anchor-id="sample-space">Sample Space</h4>
-<p>Processes have a limit to what they can generate. Formally this is the ‘sample space’. Dice only have so many faces. Processes that generate positive numbers do not generate negative ones.</p>
-</section>
-<section id="random-variable" class="level4">
-<h4 class="anchored" data-anchor-id="random-variable">Random Variable</h4>
-<p>A random variable, which is typically referred to as capital <span class="math inline">\(X\)</span>, is a map of how the sample space will be translated to data. For example, we can have one sample space, which is a dice with six faces, but we can have different mappings. One mapping can be simply the value on the face, but another mapping could be the number of rolls until there is a six.</p>
-</section>
-<section id="probability-distribution" class="level4">
-<h4 class="anchored" data-anchor-id="probability-distribution">Probability Distribution</h4>
-<p>The probability distribution is then the <span class="math inline">\(P(X=x)\)</span>, which represents the probability the random variable, capital <span class="math inline">\(X\)</span>, takes on one of the possible mappings, lower case <span class="math inline">\(x\)</span>.</p>
-</section>
 </section>
 <section id="continuous-probability-distributions-as-models-of-data-generating-processes" class="level3">
 <h3 class="anchored" data-anchor-id="continuous-probability-distributions-as-models-of-data-generating-processes">Continuous Probability Distributions as Models of Data Generating Processes</h3>
@@ -1187,6 +1171,22 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+</section>
+</section>
+<section id="a-more-formal-definition-of-probability-distributions" class="level3">
+<h3 class="anchored" data-anchor-id="a-more-formal-definition-of-probability-distributions">A More Formal Definition of Probability Distributions</h3>
+<p>We have, and will, use intuitive language like ‘data generating process’ that creates a ‘relative distribution of outcomes’. For the sake of giving you an interface to ‘real’ statistical language, we take a moment to elaborate on <em>slightly</em> more formal language (we still will not go to the mathematical depths a true statistical reference would).</p>
+<section id="sample-space" class="level4">
+<h4 class="anchored" data-anchor-id="sample-space">Sample Space</h4>
+<p>Processes have a limit to what they can generate. Formally this is the ‘sample space’. Dice only have so many faces. Processes that generate positive numbers do not generate negative ones.</p>
+</section>
+<section id="random-variable" class="level4">
+<h4 class="anchored" data-anchor-id="random-variable">Random Variable</h4>
+<p>A random variable, which is typically referred to as capital <span class="math inline">\(X\)</span>, is a map of how the sample space will be translated to data. For example, we can have one sample space, which is a dice with six faces, but we can have different mappings. One mapping can be simply the value on the face, but another mapping could be the number of rolls until there is a six.</p>
+</section>
+<section id="probability-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="probability-distribution">Probability Distribution</h4>
+<p>The probability distribution is then the <span class="math inline">\(P(X=x)\)</span>, which represents the probability the random variable, capital <span class="math inline">\(X\)</span>, takes on one of the possible mappings, lower case <span class="math inline">\(x\)</span>.</p>
 
 
 </section>
