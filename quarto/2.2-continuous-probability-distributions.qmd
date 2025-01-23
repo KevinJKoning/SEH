@@ -106,7 +106,23 @@ Even though this is similar to some other outputs we've seen, we need to stress 
 The percentile plot is a foreshadowing of another way to compute continuous probability distributions, called the cumulative distribution function. This approach can remove some confusing properties of continuous probability distributions, however, it tends to make the shape of the distribution harder to interpret as many distributions tend to look similar.
 :::
 
-### Continuous Distributions as Models of Data Generating Processes
+### A More Formal Definition of Probability Distributions
+
+We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. For the sake of giving you an interface to 'real' statistical language, we take a moment to elaborate on *slightly* more formal language (we still will not go to the mathematical depths a true statistical reference would).
+
+#### Sample Space
+
+Processes have a limit to what they can generate. Formally this is the 'sample space'. Dice only have so many faces. Processes that generate positive numbers do not generate negative ones.
+
+#### Random Variable
+
+A random variable, which is typically referred to as capital $X$, is a map of how the sample space will be translated to data. For example, we can have one sample space, which is a dice with six faces, but we can have different mappings. One mapping can be simply the value on the face, but another mapping could be the number of rolls until there is a six.
+
+#### Probability Distribution
+
+The probability distribution is then the $P(X=x)$, which represents the probability the random variable, capital $X$, takes on one of the possible mappings, lower case $x$.
+
+### Continuous Probability Distributions as Models of Data Generating Processes
 
 The real world is full of data generating processes, each of which has a probability distribution, and very few, if any, would match the named probability distributions used constantly in statistics. That doesn't mean the named distributions aren't useful - they are extremely useful approximations due to their ability to model common processes and calculate $P(D|M)$ easily.
 

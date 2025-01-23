@@ -44,3 +44,36 @@ PROBABILITY DISTRIBUTIONS ARE A SPECIAL SUBSET OF MODELS IN WHICH IT'S SIMPLE TO
 ## Note to self
 
 Models of wave heights could be a cool one.
+
+
+## More academic way to talk about probability distribution
+
+More abstractly, a probability distribution emerges whenever:
+	•	There is uncertainty in an outcome.
+	•	There is a set of possible outcomes (sample space).
+	•	A rule or process assigns probabilities to those outcomes.
+
+
+
+How Do Probability Distributions Emerge?
+
+Probability distributions don’t exist in isolation—they arise from the structure of real-world processes. The shape of a distribution is governed by the mechanisms generating the data.
+
+Here are a few fundamental principles that give rise to different distributions:
+
+A. Repeated Independent Events → Binomial & Normal Distributions
+	•	If an event occurs with some probability  p  and is repeated  n  times (e.g., flipping a coin), the Binomial Distribution models the number of successes.
+	•	If the number of events grows large, the sum/average of many independent variables tends to a Normal (Gaussian) Distribution, thanks to the Central Limit Theorem (CLT).
+
+
+
+Are Probability Distributions Real or Just Models?
+
+Distributions don’t exist in nature; they are models of uncertainty. Reality is messy, but distributions help us:
+	•	Make predictions based on limited data.
+	•	Quantify uncertainty in decision-making.
+	•	Optimize processes (finance, physics, AI, etc.).
+
+Example: Why is the Normal Distribution So Common?
+
+Because many real-world variables are the sum of many tiny independent effects. This follows from the Central Limit Theorem, which says that sums or averages of many small, independent variations tend toward a Normal distribution.

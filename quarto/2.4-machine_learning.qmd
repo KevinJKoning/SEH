@@ -5,7 +5,7 @@ filters:
   - shinylive
 ---
 
-I assume most engineers think of *machine learning* as a sexier discipline than statistics. In reality there is a *lot* of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it's best to include a little perspective on it, even if we will generally avoid the topic otherwise.
+I assume most engineers think of *machine learning* as a sexier discipline than statistics. In reality there is a *lot* of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it's best to include it, at the very least so we can understand the similarities and differences to the statistical models that are the focus of the primer.
 
 Due to the amount of blur/overlap, this may not be a universally agreed distinction, but I define an important difference this way:
 
@@ -13,6 +13,16 @@ Due to the amount of blur/overlap, this may not be a universally agreed distinct
 * Machine learning models are built around minimizing a loss function
 
 The confusing thing is that a lot of methods known as being machine learning have loss functions that are purely probabilistic - but the key is they *do not have to be*.
+
+There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model...
+
+There is a real danger and opportunity in including machine learning... The danger is that the themes of the primer are just muddied and confused. The opportunity is that there is a comparison point to make the themese even clearer, and the reader will appreciate the inclusion of the topic.
+
+**It's a little weird including machine learning in P(D|M) consider the point is that you can't do that with many machine learning models**
+
+Include primarily Bayesian neural networks and decision trees. Show how only one has the statistical interpretation.
+
+**Statistical models are always probabilistic and generative, machine learning models, if they are probabilistic and generative also work for P(D|M) but not all are**
 
 ## Loss Function
 

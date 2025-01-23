@@ -7,7 +7,7 @@ filters:
 
 ## Preview
 
-In the first half of the primer we focus on $P(D|M)$, the probability of the [data]{style="text-decoration: underline;"} given a [model]{style="text-decoration: underline;"} of a data generating process. This first chapter considers only models with discrete (in contrast with continuous) outputs. We use dice as our first example as it is hopefully an intuitive subject. We then introduce more *discrete probability distributions* as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
+In the first half of the primer we focus on $P(D|M)$, the probability of the [data]{style="text-decoration: underline;"} given a [model]{style="text-decoration: underline;"} of a data generating process. This first chapter considers only processes with discrete (in contrast with continuous) outputs. We use a model of dice as our first example as it is hopefully an intuitive subject. We then introduce more *discrete probability distributions* as models of other idealized processes. For the first half of the primer we will not question our models, we will consider them as set/frozen and just allow them to generate data for us, assuming that they represent the data generating process of interest.
 
 Once we have have some discussion of models under our belt, we will change our focus to the probability of data. For any model we can use the relative frequency of an event to approximate the events probability. We will show how the accuracy of this probability estimate increases with the number of samples. Where an analytical solution of $P(D|M)$ is available, we will also compare exact probabilities to those estimated from relative frequency.
 
@@ -494,7 +494,7 @@ A few readers may already know an essay called the 'The Bitter Lesson' by Rich S
 
 ### Exact Probabilities from a Discrete Probability Distribution
 
-Here we provide an example of the more 'typical' use of a discrete probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. 
+Here we provide an example of the more 'typical' use of a named discrete probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products. 
 
 We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999\^1,000. Also, if you're unfamiliar with the n over k in parenthesis, look up 'n choose k'.
 
