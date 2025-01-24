@@ -889,9 +889,9 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-### A More Formal Definition of Probability Distributions
+### A Mini Appendix for a more Formal Definition of Probability Distributions
 
-We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. For the sake of giving you an interface to 'real' statistical language, we take a moment to elaborate on *slightly* more formal language (we still will not go to the mathematical depths a true statistical reference would).
+We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. While these phrases are 'real' in the statistical lexicon, for the sake of giving you an interface to more formal statistical language, we take a moment to elaborate *slightly*  (we still will not go to the mathematical depths a true statistical reference would).
 
 #### Sample Space
 
