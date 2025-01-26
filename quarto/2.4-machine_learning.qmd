@@ -5,14 +5,14 @@ filters:
   - shinylive
 ---
 
-I assume most engineers think of *machine learning* as a sexier discipline than statistics. In reality there is a *lot* of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it's best to include it, at the very least so we can understand the similarities and differences to the statistical models that are the focus of the primer.
+I assume most engineers, a priori, consider *machine learning* models as somehow 'better' than statistical models. In reality there is a *lot* of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it's best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.
 
-Due to the amount of blur/overlap, this may not be a universally agreed distinction, but I define an important difference this way:
+Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:
 
 * Statistical models are built around probability theory
-* Machine learning models are built around minimizing a loss function
+* Machine learning models are built around an objective/loss function
 
-The confusing thing is that a lot of methods known as being machine learning have loss functions that are purely probabilistic - but the key is they *do not have to be*.
+The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they *do not have to be*.
 
 There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model...
 
@@ -69,6 +69,48 @@ You may note that the first two on the list below, linear regression and logisti
 #### Unsupervised Learning
 1. **k-Means Clustering**: Groups similar data points.
 2. **Principal Component Analysis (PCA)**: Reduces dimensionality while preserving variance.
+
+
+## Bayesian Neural Net
+
+```{mermaid}
+graph LR
+  subgraph Input Layer
+    A1(["In 1"]) 
+    A2(["In 2"]) 
+    A3(["In 3"]) 
+  end
+
+  subgraph Hidden Layer 1
+    B1(["H1 1"])
+    B2(["H1 2"])
+    B3(["H1 3"])
+  end
+
+  subgraph Hidden Layer 2
+    C1(["H2 1"])
+    C2(["H2 2"])
+  end
+
+  subgraph Output Layer
+    D1(["Out"])
+  end
+
+  A1 -->|~Prob. Conn.~| B1
+  A1 -->|~Prob. Conn.~| B2
+  A2 -->|~Prob. Conn.~| B2
+  A2 -->|~Prob. Conn.~| B3
+  A3 -->|~Prob. Conn.~| B1
+  A3 -->|~Prob. Conn.~| B3
+  
+  B1 -->|~Prob. Conn.~| C1
+  B1 -->|~Prob. Conn.~| C2
+  B2 -->|~Prob. Conn.~| C1
+  B3 -->|~Prob. Conn.~| C2
+  
+  C1 -->|~Prob. Conn.~| D1
+  C2 -->|~Prob. Conn.~| D1
+```
 
 ## Summary
 There are plently of resources for this topic... My suggestion is to start with 'Statistical Learning'....

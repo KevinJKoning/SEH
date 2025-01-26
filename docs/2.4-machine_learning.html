@@ -66,6 +66,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -233,6 +236,7 @@ window.Quarto = {
   <li><a href="#loss-function" id="toc-loss-function" class="nav-link active" data-scroll-target="#loss-function">Loss Function</a></li>
   <li><a href="#likelihood-function" id="toc-likelihood-function" class="nav-link" data-scroll-target="#likelihood-function">Likelihood Function</a></li>
   <li><a href="#machine-learning-models" id="toc-machine-learning-models" class="nav-link" data-scroll-target="#machine-learning-models">Machine Learning Models</a></li>
+  <li><a href="#bayesian-neural-net" id="toc-bayesian-neural-net" class="nav-link" data-scroll-target="#bayesian-neural-net">Bayesian Neural Net</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
@@ -259,13 +263,13 @@ window.Quarto = {
 </header>
 
 
-<p>I assume most engineers think of <em>machine learning</em> as a sexier discipline than statistics. In reality there is a <em>lot</em> of blur/overlap from one to the other. Since the reader of this primer will inevitably be interested in machine learning, I think it’s best to include it, at the very least so we can understand the similarities and differences to the statistical models that are the focus of the primer.</p>
-<p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but I define an important difference this way:</p>
+<p>I assume most engineers, a priori, consider <em>machine learning</em> models as somehow ‘better’ than statistical models. In reality there is a <em>lot</em> of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it’s best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.</p>
+<p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:</p>
 <ul>
 <li>Statistical models are built around probability theory</li>
-<li>Machine learning models are built around minimizing a loss function</li>
+<li>Machine learning models are built around an objective/loss function</li>
 </ul>
-<p>The confusing thing is that a lot of methods known as being machine learning have loss functions that are purely probabilistic - but the key is they <em>do not have to be</em>.</p>
+<p>The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they <em>do not have to be</em>.</p>
 <p>There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e.&nbsp;more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model…</p>
 <p>There is a real danger and opportunity in including machine learning… The danger is that the themes of the primer are just muddied and confused. The opportunity is that there is a comparison point to make the themese even clearer, and the reader will appreciate the inclusion of the topic.</p>
 <p><strong>It’s a little weird including machine learning in P(D|M) consider the point is that you can’t do that with many machine learning models</strong></p>
@@ -327,6 +331,56 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 <li><strong>Principal Component Analysis (PCA)</strong>: Reduces dimensionality while preserving variance.</li>
 </ol>
 </section>
+</section>
+<section id="bayesian-neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="bayesian-neural-net">Bayesian Neural Net</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">graph LR
+  subgraph Input Layer
+    A1(["In 1"]) 
+    A2(["In 2"]) 
+    A3(["In 3"]) 
+  end
+
+  subgraph Hidden Layer 1
+    B1(["H1 1"])
+    B2(["H1 2"])
+    B3(["H1 3"])
+  end
+
+  subgraph Hidden Layer 2
+    C1(["H2 1"])
+    C2(["H2 2"])
+  end
+
+  subgraph Output Layer
+    D1(["Out"])
+  end
+
+  A1 --&gt;|~Prob. Conn.~| B1
+  A1 --&gt;|~Prob. Conn.~| B2
+  A2 --&gt;|~Prob. Conn.~| B2
+  A2 --&gt;|~Prob. Conn.~| B3
+  A3 --&gt;|~Prob. Conn.~| B1
+  A3 --&gt;|~Prob. Conn.~| B3
+  
+  B1 --&gt;|~Prob. Conn.~| C1
+  B1 --&gt;|~Prob. Conn.~| C2
+  B2 --&gt;|~Prob. Conn.~| C1
+  B3 --&gt;|~Prob. Conn.~| C2
+  
+  C1 --&gt;|~Prob. Conn.~| D1
+  C2 --&gt;|~Prob. Conn.~| D1
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
