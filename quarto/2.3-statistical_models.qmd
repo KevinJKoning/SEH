@@ -1712,9 +1712,28 @@ Including known structural constraints in the model and limiting the model param
 
 ### Generalized Linear Models
 
-What's learned with linear regression can be extended to many datasets that are not linear, but can be easily transformed to *look* linear. Typically the transformation will also assume that the variability $\epsilon$/$\sigma$ follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Logistic distributions.
+What's learned with linear regression can be extended to many datasets that are not linear, but can be transformed to *look* linear. Typically the transformation will also assume that the variability $\epsilon$/$\sigma$ follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Logistic distributions.
 
-TODO: Definitely logistic regression instead.
+Logistic regression is useful for taking a set of predictor variables and using them to make a binary, e.g. yes or no, decision. If the impact of each predictor variable is consistently proportional to its value, i.e. the impact is linear, then the model form is a good fit.
+
+Here's logistic regression in the log-odds form, which makes the linearity of the inputs obvious:
+
+TODO: x_i notation instead of X notation.
+
+$$
+\ln \left( \frac{P(Y = 1 \mid X)}{1 - P(Y = 1 \mid X)} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n
+$$
+
+Here's the more natural form for evaluating the function:
+
+$$
+P(Y = 1 \mid X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n)}}
+$$
+
+where:
+
+- $P(Y = 1 \mid X)$ is the probability that the dependent variable $Y$ equals 1 given the input features $X$.
+- $\beta_0$ is the intercept term and $\beta_1, \beta_2, ..., \beta_n$ are the coefficients for the independent variables $X_1, X_2, ..., X_n$.
 
 ```{shinylive-python}
 #| standalone: true
@@ -1723,30 +1742,212 @@ TODO: Definitely logistic regression instead.
 from shiny import App, ui, render, reactive
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression, PoissonRegressor
-from sklearn.metrics import r2_score
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 import pandas as pd
 
 app_ui = ui.page_fluid(
-    ui.h2("Linear vs Poisson Regression Comparison"),
+    ui.h2("Linear vs Logistic Regression Comparison"),
     ui.layout_sidebar(
         ui.sidebar(
-            ui.input_slider("sample_size", "Sample Size", 
-                           min=50, max=500, value=100),
-            ui.input_slider("slope", "True Slope", 
-                           min=0.1, max=1.0, value=0.3, step=0.1),
-            ui.output_text("equation"),
+            ui.input_slider("separation", "Class Separation", 
+                           min=0.5, max=5.0, value=2.0, step=0.5),
+            ui.input_slider("class_balance", "Class Balance (% of Class 1)", 
+                           min=10, max=90, value=50),
+            ui.input_slider("threshold", "Decision Threshold", 
+                           min=0.0, max=1.0, value=0.5, step=0.05),
+            ui.input_slider("noise", "Noise Level", 
+                           min=0.1, max=2.0, value=0.5, step=0.1),
+            ui.output_text("description"),
         ),
         ui.navset_tab(
             ui.nav_panel("Linear Regression",
                 ui.output_plot("linearPlot", height="400px"),
                 ui.br(),
-                ui.output_text("linear_r2"),
+                ui.output_text("linear_metrics"),
             ),
-            ui.nav_panel("Poisson Regression",
-                ui.output_plot("poissonPlot", height="400px"),
+            ui.nav_panel("Logistic Regression",
+                ui.output_plot("logisticPlot", height="400px"),
                 ui.br(),
-                ui.output_text("poisson_r2"),
+                ui.output_text("logistic_metrics"),
+            ),
+        ),
+    ),
+)
+
+def server(input, output, session):
+    @reactive.Calc
+    def generate_data():
+        n = 40  # Fixed sample size
+        separation = input.separation()
+        class_1_prop = input.class_balance() / 100
+        noise_level = input.noise()
+        
+        # Generate balanced X values for each class
+        n1 = int(n * class_1_prop)
+        n0 = n - n1
+        
+        X0 = np.random.normal(-separation/2, 1, n0).reshape(-1, 1)
+        X1 = np.random.normal(separation/2, 1, n1).reshape(-1, 1)
+        X = np.vstack([X0, X1])
+        
+        # Generate labels
+        y = np.hstack([np.zeros(n0), np.ones(n1)])
+        
+        # Add noise to X
+        X = X + np.random.normal(0, noise_level, X.shape)
+        
+        return X, y
+
+    @output
+    @render.text
+    def description():
+        return (
+            f"Model Settings:\n"
+            f"• Fixed sample size: 40\n"
+            f"• Separation between classes: {input.separation():.1f}\n"
+            f"• Noise level: {input.noise():.1f}\n"
+            f"• Decision threshold: {input.threshold():.2f}"
+        )
+
+    @output
+    @render.plot
+    def linearPlot():
+        X, y = generate_data()
+        threshold = input.threshold()
+        
+        # Fit linear model
+        lr = LinearRegression()
+        lr.fit(X, y)
+        
+        # Generate predictions
+        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
+        y_lr_pred = lr.predict(X_pred)
+        
+        # Create plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
+        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
+        ax.plot(X_pred, y_lr_pred, 'g-', label='Linear Regression')
+        ax.axhline(y=threshold, color='purple', linestyle='--', 
+                  label=f'Threshold ({threshold:.2f})')
+        
+        ax.set_title("Linear Regression for Classification")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Probability")
+        ax.legend()
+        ax.set_ylim(-0.2, 1.2)
+        
+        return fig
+
+    @output
+    @render.plot
+    def logisticPlot():
+        X, y = generate_data()
+        threshold = input.threshold()
+        
+        # Fit logistic model
+        log_reg = LogisticRegression()
+        log_reg.fit(X, y)
+        
+        # Generate predictions
+        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
+        y_log_pred_prob = log_reg.predict_proba(X_pred)[:, 1]
+        
+        # Create plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
+        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
+        ax.plot(X_pred, y_log_pred_prob, 'g-', label='Logistic Regression')
+        ax.axhline(y=threshold, color='purple', linestyle='--', 
+                  label=f'Threshold ({threshold:.2f})')
+        
+        ax.set_title("Logistic Regression")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Probability")
+        ax.legend()
+        ax.set_ylim(-0.2, 1.2)
+        
+        return fig
+
+    @output
+    @render.text
+    def linear_metrics():
+        X, y = generate_data()
+        threshold = input.threshold()
+        
+        lr = LinearRegression()
+        lr.fit(X, y)
+        y_lr_pred_prob = lr.predict(X)
+        y_lr_pred = (y_lr_pred_prob > threshold).astype(int)
+        
+        acc = accuracy_score(y, y_lr_pred)
+        prec = precision_score(y, y_lr_pred, zero_division=0)
+        rec = recall_score(y, y_lr_pred, zero_division=0)
+        
+        return (f"Metrics:\n"
+                f"• Accuracy: {acc:.3f}\n"
+                f"• Precision: {prec:.3f}\n"
+                f"• Recall: {rec:.3f}")
+
+    @output
+    @render.text
+    def logistic_metrics():
+        X, y = generate_data()
+        threshold = input.threshold()
+        
+        log_reg = LogisticRegression()
+        log_reg.fit(X, y)
+        y_log_pred_prob = log_reg.predict_proba(X)[:, 1]
+        y_log_pred = (y_log_pred_prob > threshold).astype(int)
+        
+        acc = accuracy_score(y, y_log_pred)
+        prec = precision_score(y, y_log_pred, zero_division=0)
+        rec = recall_score(y, y_log_pred, zero_division=0)
+        
+        return (f"Metrics:\n"
+                f"• Accuracy: {acc:.3f}\n"
+                f"• Precision: {prec:.3f}\n"
+                f"• Recall: {rec:.3f}")
+
+app = App(app_ui, server)
+```
+
+
+
+Older
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 700
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression, LinearRegression
+from sklearn.metrics import accuracy_score
+import pandas as pd
+
+app_ui = ui.page_fluid(
+    ui.h2("Linear vs Logistic Regression Comparison"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider("sample_size", "Sample Size", 
+                           min=50, max=500, value=100),
+            ui.input_slider("separation", "Class Separation", 
+                           min=0.5, max=5.0, value=2.0, step=0.5),
+            ui.output_text("description"),
+        ),
+        ui.navset_tab(
+            ui.nav_panel("Linear Regression",
+                ui.output_plot("linearPlot", height="400px"),
+                ui.br(),
+                ui.output_text("linear_accuracy"),
+            ),
+            ui.nav_panel("Logistic Regression",
+                ui.output_plot("logisticPlot", height="400px"),
+                ui.br(),
+                ui.output_text("logistic_accuracy"),
             ),
         ),
     ),
@@ -1756,95 +1957,102 @@ def server(input, output, session):
     @reactive.Calc
     def generate_data():
         n = input.sample_size()
-        X = np.linspace(0, 10, n).reshape(-1, 1)
+        separation = input.separation()
         
-        # Generate mean response using exponential function
-        intercept = 1.0  # Fixed intercept
-        lambda_true = np.exp(intercept + input.slope() * X.ravel())
+        # Generate X values
+        X = np.random.normal(0, 1, n).reshape(-1, 1)
         
-        # Generate Poisson distributed response with fixed noise level
-        y = np.random.poisson(lambda_true * 1.5)  # Higher fixed noise level
+        # Generate probabilities using logistic function
+        z = separation * X.ravel() + np.random.normal(0, 0.5, n)
+        prob = 1 / (1 + np.exp(-z))
         
-        return X, y
+        # Generate binary outcomes
+        y = (prob > 0.5).astype(int)
+        
+        return X, y, prob
 
     @output
     @render.text
-    def equation():
+    def description():
         return (
-            f"True Data Generation Model:\n\n"
-            f"y ~ Poisson(λ)\n"
-            f"λ = exp(1.0 + {input.slope():.1f}x)"
+            f"Data Generation Model:\n\n"
+            f"P(y=1) = 1 / (1 + exp(-({input.separation():.1f}x + ε)))\n"
+            f"where ε ~ N(0, 0.5)"
         )
 
     @output
     @render.plot
     def linearPlot():
-        X, y = generate_data()
+        X, y, _ = generate_data()
         
         # Fit linear model
         lr = LinearRegression()
         lr.fit(X, y)
         
         # Generate predictions
-        X_pred = np.linspace(0, 10, 100).reshape(-1, 1)
+        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
         y_lr_pred = lr.predict(X_pred)
         
         # Create plot
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X, y, color='black', alpha=0.5, label='Data')
-        ax.plot(X_pred, y_lr_pred, 'r-', label='Linear Regression')
+        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
+        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
+        ax.plot(X_pred, y_lr_pred, 'g-', label='Linear Regression')
         
-        ax.set_title("Linear Regression Fit")
+        ax.set_title("Linear Regression for Classification")
         ax.set_xlabel("X")
-        ax.set_ylabel("Y (Count)")
+        ax.set_ylabel("Probability")
         ax.legend()
+        ax.set_ylim(-0.2, 1.2)
         
         return fig
 
     @output
     @render.plot
-    def poissonPlot():
-        X, y = generate_data()
+    def logisticPlot():
+        X, y, _ = generate_data()
         
-        # Fit Poisson model
-        pr = PoissonRegressor()
-        pr.fit(X, y)
+        # Fit logistic model
+        log_reg = LogisticRegression()
+        log_reg.fit(X, y)
         
         # Generate predictions
-        X_pred = np.linspace(0, 10, 100).reshape(-1, 1)
-        y_pr_pred = pr.predict(X_pred)
+        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
+        y_log_pred_prob = log_reg.predict_proba(X_pred)[:, 1]
         
         # Create plot
         fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X, y, color='black', alpha=0.5, label='Data')
-        ax.plot(X_pred, y_pr_pred, 'b-', label='Poisson Regression')
+        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
+        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
+        ax.plot(X_pred, y_log_pred_prob, 'g-', label='Logistic Regression')
         
-        ax.set_title("Poisson Regression Fit")
+        ax.set_title("Logistic Regression")
         ax.set_xlabel("X")
-        ax.set_ylabel("Y (Count)")
+        ax.set_ylabel("Probability")
         ax.legend()
+        ax.set_ylim(-0.2, 1.2)
         
         return fig
 
     @output
     @render.text
-    def linear_r2():
-        X, y = generate_data()
+    def linear_accuracy():
+        X, y, _ = generate_data()
         lr = LinearRegression()
         lr.fit(X, y)
-        y_lr_pred = lr.predict(X)
-        r2 = r2_score(y, y_lr_pred)
-        return f"R² Score: {r2:.3f}"
+        y_lr_pred = (lr.predict(X) > 0.5).astype(int)
+        acc = accuracy_score(y, y_lr_pred)
+        return f"Accuracy Score: {acc:.3f}"
 
     @output
     @render.text
-    def poisson_r2():
-        X, y = generate_data()
-        pr = PoissonRegressor()
-        pr.fit(X, y)
-        y_pr_pred = pr.predict(X)
-        r2 = r2_score(y, y_pr_pred)
-        return f"R² Score: {r2:.3f}"
+    def logistic_accuracy():
+        X, y, _ = generate_data()
+        log_reg = LogisticRegression()
+        log_reg.fit(X, y)
+        y_log_pred = log_reg.predict(X)
+        acc = accuracy_score(y, y_log_pred)
+        return f"Accuracy Score: {acc:.3f}"
 
 app = App(app_ui, server)
 ```
