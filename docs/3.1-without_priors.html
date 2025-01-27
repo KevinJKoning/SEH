@@ -244,6 +244,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
+  <li><a href="#traditional-linear-regression" id="toc-traditional-linear-regression" class="nav-link" data-scroll-target="#traditional-linear-regression">Traditional Linear Regression</a></li>
   </ul>
 </nav>
     </div>
@@ -272,7 +273,8 @@ window.Quarto = {
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>We finally flip to <span class="math inline">\(P(D|M)\)</span> the probability of a <span style="text-decoration: underline;">model</span> given the <span style="text-decoration: underline;">data</span>.</p>
-<p>Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then consider a continuous example before moving on to generalized linear models. We will save bespoke models for the next chapter that includes prior knowledge for estimating models.</p>
+<p>Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.</p>
+<p>We then switch to the likelihood of models that can ingest data. We start with standard linear regression and show that it has a very efficient analytical solution. We also consider how we updated our linear regression model to better model heteroscedasticity (a word I cannot spell or pronounce), and how that breaks the analytical solution. We start to explore non-analytical solutions, but that will end when we begin to find priors very useful. That will be the subject of the next and last chapter.</p>
 </section>
 <section id="data-generation-reversed" class="level2">
 <h2 class="anchored" data-anchor-id="data-generation-reversed">Data Generation Reversed</h2>
@@ -372,10 +374,10 @@ app = App(app_ui, server)</code></pre>
 \]</span></p>
 <ol type="1">
 <li><p><span class="math inline">\(\mathcal{L}(\theta \mid \mathbf{y})\)</span>: This represents the overall likelihood function, which measures the likelihood of the model parameters <span class="math inline">\(\theta\)</span> given the observed data <span class="math inline">\(\mathbf{y}\)</span>. It aggregates the individual probability densities for continuous functions and probabilities for discrete functions across all data points, reflecting how well the parameters <span class="math inline">\(\theta\)</span> explain the entire dataset.</p></li>
-<li><p><span class="math inline">\(P(y_i \mid \theta)\)</span>: This is the individual probability density for continuous functions or probability for discrete functions for a single data point <span class="math inline">\(i\)</span>. It represents the probability of observing the specific outcome <span class="math inline">\(y_i\)</span> under the model parameterized by <span class="math inline">\(\theta\)</span>. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, Gaussian for continuous data).</p></li>
+<li><p><span class="math inline">\(P(y_i \mid \theta)\)</span>: This is the individual probability density for continuous functions or probability for discrete functions for a single data point <span class="math inline">\(i\)</span>. It represents the probability of observing the specific outcome <span class="math inline">\(y_i\)</span> under the model parameterized by <span class="math inline">\(\theta\)</span>. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, or Normal/Gaussian for some continuous data).</p></li>
 <li><p><span class="math inline">\(\prod_{i=1}^{N}\)</span>: This is the product operation, which multiplies the individual probabilities <span class="math inline">\(P(y_i \mid \theta)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.</p></li>
 </ol>
-<p>The specific form of the likelihood function is important and can change meaningfully depending on the problem… (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed…</p>
+<p>In practice, calculating <span class="math inline">\(P(y_i \mid \theta)\)</span> generally requires making an informed assumption about which named probability distribution best represents your data. We’ve tried to make the point that reality does not consist of only the <em>named</em> probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as any other distribution we can imagine.</p>
 </section>
 <section id="continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="continuous-data">Continuous Data</h2>
@@ -573,6 +575,9 @@ Loss Functions
 </section>
 <section id="note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="level2">
 <h2 class="anchored" data-anchor-id="note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</h2>
+</section>
+<section id="traditional-linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="traditional-linear-regression">Traditional Linear Regression</h2>
 
 
 </section>

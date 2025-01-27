@@ -23,7 +23,7 @@ Next the narrative thread:
 - With all the discussion of P(D|M), it is now easier to understand P(M|D).
 - That we either fit models with or without priors.
 
-
+To contributors, one of the most challenging aspects of creating the primer is balancing intuitive wordings with 'statistical correctness'. If you see area for improvement that work with the themes and narrative thread - please contribute!!
 
 
 Personal note:

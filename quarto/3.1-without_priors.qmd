@@ -9,7 +9,9 @@ filters:
 
 We finally flip to $P(D|M)$ the probability of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}.
 
-Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then consider a continuous example before moving on to generalized linear models. We will save bespoke models for the next chapter that includes prior knowledge for estimating models.
+Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.
+
+We then switch to the likelihood of models that can ingest data. We start with standard linear regression and show that it has a very efficient analytical solution. We also consider how we updated our linear regression model to better model heteroscedasticity (a word I cannot spell or pronounce), and how that breaks the analytical solution. We start to explore non-analytical solutions, but that will end when we begin to find priors very useful. That will be the subject of the next and last chapter.
 
 ## Data Generation Reversed
 
@@ -113,14 +115,13 @@ $$
 
 1. $\mathcal{L}(\theta \mid \mathbf{y})$: This represents the overall likelihood function, which measures the likelihood of the model parameters $\theta$ given the observed data $\mathbf{y}$. It aggregates the individual probability densities for continuous functions and probabilities for discrete functions across all data points, reflecting how well the parameters $\theta$ explain the entire dataset.
 
-2. $P(y_i \mid \theta)$: This is the individual probability density for continuous functions or probability for discrete functions for a single data point $i$. It represents the probability of observing the specific outcome $y_i$ under the model parameterized by $\theta$. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, Gaussian for continuous data). 
+2. $P(y_i \mid \theta)$: This is the individual probability density for continuous functions or probability for discrete functions for a single data point $i$. It represents the probability of observing the specific outcome $y_i$ under the model parameterized by $\theta$. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, or Normal/Gaussian for some continuous data). 
 
 3. $\prod_{i=1}^{N}$: This is the product operation, which multiplies the individual probabilities $P(y_i \mid \theta)$ across all $N$ data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.
 
-The specific form of the likelihood function is important and can change meaningfully depending on the problem... (MAYBE SAY LATER) If you have fit a regression line to data you probably used a loss function without knowing it, and it was almost certainly base don least squares, which happens to be appropriate when the errors in your data are normally distributed...
+In practice, calculating $P(y_i \mid \theta)$ generally requires making an informed assumption about which named probability distribution best represents your data. We've tried to make the point that reality does not consist of only the *named* probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as any other distribution we can imagine.
 
 ## Continuous Data
-
 
 ### Normal Distribution with MLE Estimate
 
@@ -289,8 +290,6 @@ app = App(app_ui, server)
 
 
 
-
-
 ::: callout-note
 ## Loss Functions
 
@@ -307,7 +306,6 @@ $$
 3.  $\frac{1}{N} \sum_{i=1}^{N}$: This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
 :::
 
-
 We introduce loss functions here but will apply them next chapter??
 
 ## Methods
@@ -317,3 +315,60 @@ Before we dive too deep into the details, we are going to take a moment to refle
 When we were just generating data, it was obvious what variables went into the model, and what data came out of the model. However, we should do a better job of defining that now. Part of the issue here is that many names are used for many applications. We will call inputs predictor/feature variables, and we will call the outputs the outcome/target variables...
 
 ## Note in 3.2 we will go into the likelihood calculation itself
+
+
+## Traditional Linear Regression
+
+Single-variable linear regression aims to model the relationship between a single independent variable \( x \) and a dependent variable \( y \) using a linear equation:
+
+\[
+y = mx + b
+\]
+
+where:
+- \( m \) (slope) represents the rate of change of \( y \) with respect to \( x \),
+- \( b \) (intercept) is the value of \( y \) when \( x = 0 \).
+
+## Least Squares Method
+
+The goal is to minimize the sum of squared residuals:
+
+\[
+J(m, b) = \sum_{i=1}^{n} (y_i - (mx_i + b))^2
+\]
+
+where \( (x_i, y_i) \) are the given data points.
+
+### Solving for \( m \) and \( b \)
+
+To find \( m \) and \( b \) analytically, we take the partial derivatives of \( J(m, b) \) and set them to zero:
+
+#### Step 1: Compute the slope \( m \)
+
+\[
+m = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}
+\]
+
+where \( \bar{x} \) and \( \bar{y} \) are the means of \( x \) and \( y \):
+
+\[
+\bar{x} = \frac{1}{n} \sum x_i, \quad \bar{y} = \frac{1}{n} \sum y_i
+\]
+
+#### Step 2: Compute the intercept \( b \)
+
+\[
+b = \bar{y} - m \bar{x}
+\]
+
+### Final Model
+
+Thus, the best-fitting line is:
+
+\[
+y = mx + b
+\]
+
+where \( m \) and \( b \) are computed using the formulas above.
+
+This method provides an exact solution without requiring iterative optimization, making it efficient for small datasets.
