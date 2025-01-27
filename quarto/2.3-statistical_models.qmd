@@ -1690,7 +1690,7 @@ $$
 P(y_i \mid x_{1,i}, x_{2,i} \dots x_{3,i} ) \sim \mathcal{N}(\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i}, \sigma^2)
 $$
 
-Note that we have gone back to the traditional form of multi-variate regression where the $\epsilon$/$\sigma$ term is constant. Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.
+Note that we have gone back to the traditional form of multi-variate regression where the $\epsilon$/$\sigma$ term is constant. Also, note that regarding the subscripts on the $x$ variables, the first position refers to which predictor variable (like carats or clarity), and the second refers the i'th observation (like which row in a table). Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.
 
 #### Non-Numeric Inputs
 
@@ -1712,28 +1712,29 @@ Including known structural constraints in the model and limiting the model param
 
 ### Generalized Linear Models
 
-What's learned with linear regression can be extended to many datasets that are not linear, but can be transformed to *look* linear. Typically the transformation will also assume that the variability $\epsilon$/$\sigma$ follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Logistic distributions.
+What's learned with linear regression can be extended to many datasets that are not linear, but can be transformed to *look* linear. Typically the transformation will also assume that the variability, $\epsilon$ or $\sigma$, follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Bernoulli distributions.
 
 Logistic regression is useful for taking a set of predictor variables and using them to make a binary, e.g. yes or no, decision. If the impact of each predictor variable is consistently proportional to its value, i.e. the impact is linear, then the model form is a good fit.
 
 Here's logistic regression in the log-odds form, which makes the linearity of the inputs obvious:
 
-TODO: x_i notation instead of X notation.
-
 $$
-\ln \left( \frac{P(Y = 1 \mid X)}{1 - P(Y = 1 \mid X)} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n
+\ln \left( \frac{P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})}{1 - P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})} \right) = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i}
 $$
 
 Here's the more natural form for evaluating the function:
 
 $$
-P(Y = 1 \mid X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n)}}
+P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i})}}
 $$
 
 where:
 
-- $P(Y = 1 \mid X)$ is the probability that the dependent variable $Y$ equals 1 given the input features $X$.
-- $\beta_0$ is the intercept term and $\beta_1, \beta_2, ..., \beta_n$ are the coefficients for the independent variables $X_1, X_2, ..., X_n$.
+- $P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})$ is the probability that $y_i$ equals 1 given the predictor variables $x_{1,i}, x_{2,i} \dots x_{3,i}$.
+- $\beta_0$ is the intercept term and $\beta_1, \beta_2, ..., \beta_n$ are the coefficients for the predictor variables.
+- The outputs vary from 0 to 1 and can be interpreted as probabilities from a Bernoulli distribution. There is no error term since the output is already intpreted as probabilistic.
+
+In the app below, we have a predictor variable X, and we have some data that shows that *typically* when X is larger, we should predict 1, and when X is smaller, we should predict 0. There is some overlap in the middle but the signal is quite clear at large or small values of X. The app lets you choose a standard linear model or a logistic model, which is a generalized linear model. 
 
 ```{shinylive-python}
 #| standalone: true
@@ -1913,151 +1914,9 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+What we should notice is that the linear interpretaion does not make much sense, as it will eventually predict negative probabilities for small X and probabilities over 1 for large X. Logistic regression is a much more natural fit for the data and the domain of the problem.
 
-
-Older
-
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 700
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.metrics import accuracy_score
-import pandas as pd
-
-app_ui = ui.page_fluid(
-    ui.h2("Linear vs Logistic Regression Comparison"),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_slider("sample_size", "Sample Size", 
-                           min=50, max=500, value=100),
-            ui.input_slider("separation", "Class Separation", 
-                           min=0.5, max=5.0, value=2.0, step=0.5),
-            ui.output_text("description"),
-        ),
-        ui.navset_tab(
-            ui.nav_panel("Linear Regression",
-                ui.output_plot("linearPlot", height="400px"),
-                ui.br(),
-                ui.output_text("linear_accuracy"),
-            ),
-            ui.nav_panel("Logistic Regression",
-                ui.output_plot("logisticPlot", height="400px"),
-                ui.br(),
-                ui.output_text("logistic_accuracy"),
-            ),
-        ),
-    ),
-)
-
-def server(input, output, session):
-    @reactive.Calc
-    def generate_data():
-        n = input.sample_size()
-        separation = input.separation()
-        
-        # Generate X values
-        X = np.random.normal(0, 1, n).reshape(-1, 1)
-        
-        # Generate probabilities using logistic function
-        z = separation * X.ravel() + np.random.normal(0, 0.5, n)
-        prob = 1 / (1 + np.exp(-z))
-        
-        # Generate binary outcomes
-        y = (prob > 0.5).astype(int)
-        
-        return X, y, prob
-
-    @output
-    @render.text
-    def description():
-        return (
-            f"Data Generation Model:\n\n"
-            f"P(y=1) = 1 / (1 + exp(-({input.separation():.1f}x + ε)))\n"
-            f"where ε ~ N(0, 0.5)"
-        )
-
-    @output
-    @render.plot
-    def linearPlot():
-        X, y, _ = generate_data()
-        
-        # Fit linear model
-        lr = LinearRegression()
-        lr.fit(X, y)
-        
-        # Generate predictions
-        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
-        y_lr_pred = lr.predict(X_pred)
-        
-        # Create plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
-        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
-        ax.plot(X_pred, y_lr_pred, 'g-', label='Linear Regression')
-        
-        ax.set_title("Linear Regression for Classification")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Probability")
-        ax.legend()
-        ax.set_ylim(-0.2, 1.2)
-        
-        return fig
-
-    @output
-    @render.plot
-    def logisticPlot():
-        X, y, _ = generate_data()
-        
-        # Fit logistic model
-        log_reg = LogisticRegression()
-        log_reg.fit(X, y)
-        
-        # Generate predictions
-        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
-        y_log_pred_prob = log_reg.predict_proba(X_pred)[:, 1]
-        
-        # Create plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
-        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
-        ax.plot(X_pred, y_log_pred_prob, 'g-', label='Logistic Regression')
-        
-        ax.set_title("Logistic Regression")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Probability")
-        ax.legend()
-        ax.set_ylim(-0.2, 1.2)
-        
-        return fig
-
-    @output
-    @render.text
-    def linear_accuracy():
-        X, y, _ = generate_data()
-        lr = LinearRegression()
-        lr.fit(X, y)
-        y_lr_pred = (lr.predict(X) > 0.5).astype(int)
-        acc = accuracy_score(y, y_lr_pred)
-        return f"Accuracy Score: {acc:.3f}"
-
-    @output
-    @render.text
-    def logistic_accuracy():
-        X, y, _ = generate_data()
-        log_reg = LogisticRegression()
-        log_reg.fit(X, y)
-        y_log_pred = log_reg.predict(X)
-        acc = accuracy_score(y, y_log_pred)
-        return f"Accuracy Score: {acc:.3f}"
-
-app = App(app_ui, server)
-```
-
-We chose to include logistic regression as it is a preview to a piece of the Bayesian Neural Networks we tackle in the next chapter.
+A quick aside you may find interesting - we choose to include logistic regression as it is a preview to a piece of the Bayesian Neural Networks we tackle in the next chapter. You may be surprised to find out how many key pieces you've already been introduced to.
 
 ### Bespoke/Bayesian Models
 
@@ -2070,7 +1929,7 @@ When we added the non-constant error term to our linear regression model, we hea
 
 #### Causal Diagrams
 
-As mentioned, a causal diagram is a multi-use tools, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking...
+As mentioned, a causal diagram is a multi-use tool, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking...
 
 Here's what we want in a diamond model:
 ```{mermaid}
@@ -2086,9 +1945,7 @@ graph LR
     variance --> price
 ```
 
-This clearly shows that we intend cut, color, clarity, and size to be used in a linear regression model for price, that size will also be used for a carat threshold model for price, and finally that size will also be used to model the variance for price.
-
-The structure of the diagram, i.e. the presence of *colliders*, *forks*, *backdoor paths* etc. can give clarity on dependence, independence, spurious correleations , and such, but are a much more advanced topic.
+This clearly shows that we intend cut, color, clarity, and size to be used in a linear regression model for price, that size will also be used for a carat threshold model for price, and finally that size will also be used to model the variance for price. The structure of the diagram, i.e. the presence of *colliders*, *forks*, *backdoor paths* etc. can give clarity on dependence, independence, and spurious correleations, but for more information you should seek out other references.
 
 ### Model
 
@@ -2656,7 +2513,7 @@ Here are some probabilities for selling a 1.55 carat diamond at the given price 
 * $10,000: 21%
 * $12,000: 1%
 
-Again, if we look back at the sale prices, in a fairly small number of sales at that price, several are above $12,000, so these estimates again seem terrible. Here, the estimate of the averagesale price was somewhat low, but also now due to an *underestimate* of the standard deviation at 1.55 carats.
+Again, if we look back at the sale prices, in a fairly small number of sales at that price, several are above $12,000, so these estimates again seem terrible. Here, the estimate of the average sale price was somewhat low, but also now due to an *underestimate* of the standard deviation at 1.55 carats.
 
 #### Summary
 
@@ -2667,17 +2524,10 @@ Due to some poor model assumptions, the probabilities we calculated here do not 
 TODO: Probability of data for small and large carats, show how it seems more reasonable.
 Worth the space???
 
-## MORE on Overfitting??
-
-Probably delete:
-
-... It's easy to see how you can 'overfit' a multi-variate linear regression model, you just include too many parameters, e.g. parameters that are just noise that look good when training the model but actually hurt performance on a real 'test' dataset. It's also possible to overfit a linear regression model with one 'X' variable. If you don't know already I suggest you think about for a second... Alright, it's assuming there is a relationship to X, i.e. a slope, when in reality the model just varies around a constant mean value.
-
 ## Summary
 
-Revise:
+TODO: Revise this once finished with the chapter. Or discard altogether.
 
-We finally started using data in our models, and we showed a model in which linear regression could do quite a good job in predicting the outcome. However, it could not make a prediction that a human could observe easily, the bump that price gets from being just above important thresholds, like from 0.99 to 1.01 carats. We will address this deficiency when we get to bespoke/bayesian models, which allows us to modify the model based on our knowledge of the causal structure of the data generating process.
 
 ## Graveyard
 

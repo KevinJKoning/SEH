@@ -254,7 +254,6 @@ window.Quarto = {
   <li><a href="#probability-of-data-with-initial-single-variable-linear-regression" id="toc-probability-of-data-with-initial-single-variable-linear-regression" class="nav-link" data-scroll-target="#probability-of-data-with-initial-single-variable-linear-regression">Probability of Data with Initial Single Variable Linear Regression</a></li>
   <li><a href="#probability-of-the-data-with-revised-single-variable-linear-regression" id="toc-probability-of-the-data-with-revised-single-variable-linear-regression" class="nav-link" data-scroll-target="#probability-of-the-data-with-revised-single-variable-linear-regression">Probability of the Data with Revised Single Variable Linear Regression</a></li>
   </ul></li>
-  <li><a href="#more-on-overfitting" id="toc-more-on-overfitting" class="nav-link" data-scroll-target="#more-on-overfitting">MORE on Overfitting??</a></li>
   <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
   <li><a href="#graveyard" id="toc-graveyard" class="nav-link" data-scroll-target="#graveyard">Graveyard</a></li>
   </ul>
@@ -2061,7 +2060,7 @@ y_i = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i} + \e
 <p><span class="math display">\[
 P(y_i \mid x_{1,i}, x_{2,i} \dots x_{3,i} ) \sim \mathcal{N}(\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i}, \sigma^2)
 \]</span></p>
-<p>Note that we have gone back to the traditional form of multi-variate regression where the <span class="math inline">\(\epsilon\)</span>/<span class="math inline">\(\sigma\)</span> term is constant. Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.</p>
+<p>Note that we have gone back to the traditional form of multi-variate regression where the <span class="math inline">\(\epsilon\)</span>/<span class="math inline">\(\sigma\)</span> term is constant. Also, note that regarding the subscripts on the <span class="math inline">\(x\)</span> variables, the first position refers to which predictor variable (like carats or clarity), and the second refers the i’th observation (like which row in a table). Now having seen the data and the equation above, you may be scratching your head as to how the non-numeric values in the data were incorporated into the model.</p>
 </section>
 <section id="non-numeric-inputs" class="level4">
 <h4 class="anchored" data-anchor-id="non-numeric-inputs">Non-Numeric Inputs</h4>
@@ -2083,22 +2082,23 @@ P(y_i \mid x_{1,i}, x_{2,i} \dots x_{3,i} ) \sim \mathcal{N}(\beta_0 + \beta_1 x
 </section>
 <section id="generalized-linear-models" class="level3">
 <h3 class="anchored" data-anchor-id="generalized-linear-models">Generalized Linear Models</h3>
-<p>What’s learned with linear regression can be extended to many datasets that are not linear, but can be transformed to <em>look</em> linear. Typically the transformation will also assume that the variability <span class="math inline">\(\epsilon\)</span>/<span class="math inline">\(\sigma\)</span> follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Logistic distributions.</p>
+<p>What’s learned with linear regression can be extended to many datasets that are not linear, but can be transformed to <em>look</em> linear. Typically the transformation will also assume that the variability, <span class="math inline">\(\epsilon\)</span> or <span class="math inline">\(\sigma\)</span>, follows another distribution. In linear regression the assumption is a normal distribution, but transformations can assume, for example Binomial, Poisson, or Bernoulli distributions.</p>
 <p>Logistic regression is useful for taking a set of predictor variables and using them to make a binary, e.g.&nbsp;yes or no, decision. If the impact of each predictor variable is consistently proportional to its value, i.e.&nbsp;the impact is linear, then the model form is a good fit.</p>
 <p>Here’s logistic regression in the log-odds form, which makes the linearity of the inputs obvious:</p>
-<p>TODO: x_i notation instead of X notation.</p>
 <p><span class="math display">\[
-\ln \left( \frac{P(Y = 1 \mid X)}{1 - P(Y = 1 \mid X)} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n
+\ln \left( \frac{P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})}{1 - P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})} \right) = \beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i}
 \]</span></p>
 <p>Here’s the more natural form for evaluating the function:</p>
 <p><span class="math display">\[
-P(Y = 1 \mid X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \dots + \beta_n X_n)}}
+P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i}) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_{1,i} + \beta_2 x_{2,i} + \dots + \beta_n x_{n,i})}}
 \]</span></p>
 <p>where:</p>
 <ul>
-<li><span class="math inline">\(P(Y = 1 \mid X)\)</span> is the probability that the dependent variable <span class="math inline">\(Y\)</span> equals 1 given the input features <span class="math inline">\(X\)</span>.</li>
-<li><span class="math inline">\(\beta_0\)</span> is the intercept term and <span class="math inline">\(\beta_1, \beta_2, ..., \beta_n\)</span> are the coefficients for the independent variables <span class="math inline">\(X_1, X_2, ..., X_n\)</span>.</li>
+<li><span class="math inline">\(P(y_i = 1 \mid x_{1,i}, x_{2,i} \dots x_{3,i})\)</span> is the probability that <span class="math inline">\(y_i\)</span> equals 1 given the predictor variables <span class="math inline">\(x_{1,i}, x_{2,i} \dots x_{3,i}\)</span>.</li>
+<li><span class="math inline">\(\beta_0\)</span> is the intercept term and <span class="math inline">\(\beta_1, \beta_2, ..., \beta_n\)</span> are the coefficients for the predictor variables.</li>
+<li>The outputs vary from 0 to 1 and can be interpreted as probabilities from a Bernoulli distribution. There is no error term since the output is already intpreted as probabilistic.</li>
 </ul>
+<p>In the app below, we have a predictor variable X, and we have some data that shows that <em>typically</em> when X is larger, we should predict 1, and when X is smaller, we should predict 0. There is some overlap in the middle but the signal is quite clear at large or small values of X. The app lets you choose a standard linear model or a logistic model, which is a generalized linear model.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -2277,148 +2277,8 @@ def server(input, output, session):
                 f"• Recall: {rec:.3f}")
 
 app = App(app_ui, server)</code></pre>
-<p>Older</p>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 700
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.metrics import accuracy_score
-import pandas as pd
-
-app_ui = ui.page_fluid(
-    ui.h2("Linear vs Logistic Regression Comparison"),
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_slider("sample_size", "Sample Size", 
-                           min=50, max=500, value=100),
-            ui.input_slider("separation", "Class Separation", 
-                           min=0.5, max=5.0, value=2.0, step=0.5),
-            ui.output_text("description"),
-        ),
-        ui.navset_tab(
-            ui.nav_panel("Linear Regression",
-                ui.output_plot("linearPlot", height="400px"),
-                ui.br(),
-                ui.output_text("linear_accuracy"),
-            ),
-            ui.nav_panel("Logistic Regression",
-                ui.output_plot("logisticPlot", height="400px"),
-                ui.br(),
-                ui.output_text("logistic_accuracy"),
-            ),
-        ),
-    ),
-)
-
-def server(input, output, session):
-    @reactive.Calc
-    def generate_data():
-        n = input.sample_size()
-        separation = input.separation()
-        
-        # Generate X values
-        X = np.random.normal(0, 1, n).reshape(-1, 1)
-        
-        # Generate probabilities using logistic function
-        z = separation * X.ravel() + np.random.normal(0, 0.5, n)
-        prob = 1 / (1 + np.exp(-z))
-        
-        # Generate binary outcomes
-        y = (prob &gt; 0.5).astype(int)
-        
-        return X, y, prob
-
-    @output
-    @render.text
-    def description():
-        return (
-            f"Data Generation Model:\n\n"
-            f"P(y=1) = 1 / (1 + exp(-({input.separation():.1f}x + ε)))\n"
-            f"where ε ~ N(0, 0.5)"
-        )
-
-    @output
-    @render.plot
-    def linearPlot():
-        X, y, _ = generate_data()
-        
-        # Fit linear model
-        lr = LinearRegression()
-        lr.fit(X, y)
-        
-        # Generate predictions
-        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
-        y_lr_pred = lr.predict(X_pred)
-        
-        # Create plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
-        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
-        ax.plot(X_pred, y_lr_pred, 'g-', label='Linear Regression')
-        
-        ax.set_title("Linear Regression for Classification")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Probability")
-        ax.legend()
-        ax.set_ylim(-0.2, 1.2)
-        
-        return fig
-
-    @output
-    @render.plot
-    def logisticPlot():
-        X, y, _ = generate_data()
-        
-        # Fit logistic model
-        log_reg = LogisticRegression()
-        log_reg.fit(X, y)
-        
-        # Generate predictions
-        X_pred = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
-        y_log_pred_prob = log_reg.predict_proba(X_pred)[:, 1]
-        
-        # Create plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.scatter(X[y==0], y[y==0], color='blue', alpha=0.5, label='Class 0')
-        ax.scatter(X[y==1], y[y==1], color='red', alpha=0.5, label='Class 1')
-        ax.plot(X_pred, y_log_pred_prob, 'g-', label='Logistic Regression')
-        
-        ax.set_title("Logistic Regression")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Probability")
-        ax.legend()
-        ax.set_ylim(-0.2, 1.2)
-        
-        return fig
-
-    @output
-    @render.text
-    def linear_accuracy():
-        X, y, _ = generate_data()
-        lr = LinearRegression()
-        lr.fit(X, y)
-        y_lr_pred = (lr.predict(X) &gt; 0.5).astype(int)
-        acc = accuracy_score(y, y_lr_pred)
-        return f"Accuracy Score: {acc:.3f}"
-
-    @output
-    @render.text
-    def logistic_accuracy():
-        X, y, _ = generate_data()
-        log_reg = LogisticRegression()
-        log_reg.fit(X, y)
-        y_log_pred = log_reg.predict(X)
-        acc = accuracy_score(y, y_log_pred)
-        return f"Accuracy Score: {acc:.3f}"
-
-app = App(app_ui, server)</code></pre>
-<p>We chose to include logistic regression as it is a preview to a piece of the Bayesian Neural Networks we tackle in the next chapter.</p>
+<p>What we should notice is that the linear interpretaion does not make much sense, as it will eventually predict negative probabilities for small X and probabilities over 1 for large X. Logistic regression is a much more natural fit for the data and the domain of the problem.</p>
+<p>A quick aside you may find interesting - we choose to include logistic regression as it is a preview to a piece of the Bayesian Neural Networks we tackle in the next chapter. You may be surprised to find out how many key pieces you’ve already been introduced to.</p>
 </section>
 <section id="bespokebayesian-models" class="level3">
 <h3 class="anchored" data-anchor-id="bespokebayesian-models">Bespoke/Bayesian Models</h3>
@@ -2430,7 +2290,7 @@ app = App(app_ui, server)</code></pre>
 </ul>
 <section id="causal-diagrams" class="level4">
 <h4 class="anchored" data-anchor-id="causal-diagrams">Causal Diagrams</h4>
-<p>As mentioned, a causal diagram is a multi-use tools, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking…</p>
+<p>As mentioned, a causal diagram is a multi-use tool, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking…</p>
 <p>Here’s what we want in a diamond model:</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -2453,8 +2313,7 @@ app = App(app_ui, server)</code></pre>
 </div>
 </div>
 </div>
-<p>This clearly shows that we intend cut, color, clarity, and size to be used in a linear regression model for price, that size will also be used for a carat threshold model for price, and finally that size will also be used to model the variance for price.</p>
-<p>The structure of the diagram, i.e.&nbsp;the presence of <em>colliders</em>, <em>forks</em>, <em>backdoor paths</em> etc. can give clarity on dependence, independence, spurious correleations , and such, but are a much more advanced topic.</p>
+<p>This clearly shows that we intend cut, color, clarity, and size to be used in a linear regression model for price, that size will also be used for a carat threshold model for price, and finally that size will also be used to model the variance for price. The structure of the diagram, i.e.&nbsp;the presence of <em>colliders</em>, <em>forks</em>, <em>backdoor paths</em> etc. can give clarity on dependence, independence, and spurious correleations, but for more information you should seek out other references.</p>
 </section>
 </section>
 <section id="model" class="level3">
@@ -3012,7 +2871,7 @@ P(y_i \mid x_i=1.55) \sim \mathcal{N}(-1200 + 6500 \cdot 1.55, 1400^2) = \sim \m
 <li>$10,000: 21%</li>
 <li>$12,000: 1%</li>
 </ul>
-<p>Again, if we look back at the sale prices, in a fairly small number of sales at that price, several are above $12,000, so these estimates again seem terrible. Here, the estimate of the averagesale price was somewhat low, but also now due to an <em>underestimate</em> of the standard deviation at 1.55 carats.</p>
+<p>Again, if we look back at the sale prices, in a fairly small number of sales at that price, several are above $12,000, so these estimates again seem terrible. Here, the estimate of the average sale price was somewhat low, but also now due to an <em>underestimate</em> of the standard deviation at 1.55 carats.</p>
 </section>
 <section id="summary" class="level4">
 <h4 class="anchored" data-anchor-id="summary">Summary</h4>
@@ -3024,15 +2883,9 @@ P(y_i \mid x_i=1.55) \sim \mathcal{N}(-1200 + 6500 \cdot 1.55, 1400^2) = \sim \m
 <p>TODO: Probability of data for small and large carats, show how it seems more reasonable. Worth the space???</p>
 </section>
 </section>
-<section id="more-on-overfitting" class="level2">
-<h2 class="anchored" data-anchor-id="more-on-overfitting">MORE on Overfitting??</h2>
-<p>Probably delete:</p>
-<p>… It’s easy to see how you can ‘overfit’ a multi-variate linear regression model, you just include too many parameters, e.g.&nbsp;parameters that are just noise that look good when training the model but actually hurt performance on a real ‘test’ dataset. It’s also possible to overfit a linear regression model with one ‘X’ variable. If you don’t know already I suggest you think about for a second… Alright, it’s assuming there is a relationship to X, i.e.&nbsp;a slope, when in reality the model just varies around a constant mean value.</p>
-</section>
 <section id="summary-1" class="level2">
 <h2 class="anchored" data-anchor-id="summary-1">Summary</h2>
-<p>Revise:</p>
-<p>We finally started using data in our models, and we showed a model in which linear regression could do quite a good job in predicting the outcome. However, it could not make a prediction that a human could observe easily, the bump that price gets from being just above important thresholds, like from 0.99 to 1.01 carats. We will address this deficiency when we get to bespoke/bayesian models, which allows us to modify the model based on our knowledge of the causal structure of the data generating process.</p>
+<p>TODO: Revise this once finished with the chapter. Or discard altogether.</p>
 </section>
 <section id="graveyard" class="level2">
 <h2 class="anchored" data-anchor-id="graveyard">Graveyard</h2>
