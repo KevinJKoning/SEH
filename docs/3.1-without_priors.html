@@ -245,6 +245,11 @@ window.Quarto = {
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
   <li><a href="#traditional-linear-regression" id="toc-traditional-linear-regression" class="nav-link" data-scroll-target="#traditional-linear-regression">Traditional Linear Regression</a></li>
+  <li><a href="#least-squares-method" id="toc-least-squares-method" class="nav-link" data-scroll-target="#least-squares-method">Least Squares Method</a>
+  <ul class="collapse">
+  <li><a href="#solving-for-m-and-b" id="toc-solving-for-m-and-b" class="nav-link" data-scroll-target="#solving-for-m-and-b">Solving for ( m ) and ( b )</a></li>
+  <li><a href="#final-model" id="toc-final-model" class="nav-link" data-scroll-target="#final-model">Final Model</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -578,8 +583,38 @@ Loss Functions
 </section>
 <section id="traditional-linear-regression" class="level2">
 <h2 class="anchored" data-anchor-id="traditional-linear-regression">Traditional Linear Regression</h2>
+<p>Single-variable linear regression aims to model the relationship between a single independent variable ( x ) and a dependent variable ( y ) using a linear equation:</p>
+<p>[ y = mx + b ]</p>
+<p>where: - ( m ) (slope) represents the rate of change of ( y ) with respect to ( x ), - ( b ) (intercept) is the value of ( y ) when ( x = 0 ).</p>
+</section>
+<section id="least-squares-method" class="level2">
+<h2 class="anchored" data-anchor-id="least-squares-method">Least Squares Method</h2>
+<p>The goal is to minimize the sum of squared residuals:</p>
+<p>[ J(m, b) = _{i=1}^{n} (y_i - (mx_i + b))^2 ]</p>
+<p>where ( (x_i, y_i) ) are the given data points.</p>
+<section id="solving-for-m-and-b" class="level3">
+<h3 class="anchored" data-anchor-id="solving-for-m-and-b">Solving for ( m ) and ( b )</h3>
+<p>To find ( m ) and ( b ) analytically, we take the partial derivatives of ( J(m, b) ) and set them to zero:</p>
+<section id="step-1-compute-the-slope-m" class="level4">
+<h4 class="anchored" data-anchor-id="step-1-compute-the-slope-m">Step 1: Compute the slope ( m )</h4>
+<p>[ m = ]</p>
+<p>where ( {x} ) and ( {y} ) are the means of ( x ) and ( y ):</p>
+<p>[ {x} = x_i, {y} = y_i ]</p>
+</section>
+<section id="step-2-compute-the-intercept-b" class="level4">
+<h4 class="anchored" data-anchor-id="step-2-compute-the-intercept-b">Step 2: Compute the intercept ( b )</h4>
+<p>[ b = {y} - m {x} ]</p>
+</section>
+</section>
+<section id="final-model" class="level3">
+<h3 class="anchored" data-anchor-id="final-model">Final Model</h3>
+<p>Thus, the best-fitting line is:</p>
+<p>[ y = mx + b ]</p>
+<p>where ( m ) and ( b ) are computed using the formulas above.</p>
+<p>This method provides an exact solution without requiring iterative optimization, making it efficient for small datasets.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
