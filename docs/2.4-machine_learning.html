@@ -233,7 +233,9 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loss-function" id="toc-loss-function" class="nav-link active" data-scroll-target="#loss-function">Loss Function</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#random-notes-maybe-delete" id="toc-random-notes-maybe-delete" class="nav-link" data-scroll-target="#random-notes-maybe-delete">Random Notes, Maybe Delete</a></li>
+  <li><a href="#loss-function" id="toc-loss-function" class="nav-link" data-scroll-target="#loss-function">Loss Function</a></li>
   <li><a href="#likelihood-function" id="toc-likelihood-function" class="nav-link" data-scroll-target="#likelihood-function">Likelihood Function</a></li>
   <li><a href="#machine-learning-models" id="toc-machine-learning-models" class="nav-link" data-scroll-target="#machine-learning-models">Machine Learning Models</a></li>
   <li><a href="#bayesian-neural-net" id="toc-bayesian-neural-net" class="nav-link" data-scroll-target="#bayesian-neural-net">Bayesian Neural Net</a></li>
@@ -263,6 +265,14 @@ window.Quarto = {
 </header>
 
 
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>Due to popular demand, we move on from traditional statistical models to those considered <em>machine learning</em>. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e.&nbsp;probabilistic) interpretation.</p>
+<p>The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. Each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
+<p>We will also need to revisit the topic of overfitting due to the extreme flexibility of neural networks.</p>
+</section>
+<section id="random-notes-maybe-delete" class="level2">
+<h2 class="anchored" data-anchor-id="random-notes-maybe-delete">Random Notes, Maybe Delete</h2>
 <p>I assume most engineers, a priori, consider <em>machine learning</em> models as somehow ‘better’ than statistical models. In reality there is a <em>lot</em> of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it’s best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.</p>
 <p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:</p>
 <ul>
@@ -275,6 +285,7 @@ window.Quarto = {
 <p><strong>It’s a little weird including machine learning in P(D|M) consider the point is that you can’t do that with many machine learning models</strong></p>
 <p>Include primarily Bayesian neural networks and decision trees. Show how only one has the statistical interpretation.</p>
 <p><strong>Statistical models are always probabilistic and generative, machine learning models, if they are probabilistic and generative also work for P(D|M) but not all are</strong></p>
+</section>
 <section id="loss-function" class="level2">
 <h2 class="anchored" data-anchor-id="loss-function">Loss Function</h2>
 <p>A loss function, denoted as <span class="math inline">\(L\)</span>, is typically computed as the difference between the true target values <span class="math inline">\(y\)</span> and the predicted values <span class="math inline">\(\hat{y}\)</span> The generic form of a loss function can be expressed as:</p>

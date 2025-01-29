@@ -5,6 +5,16 @@ filters:
   - shinylive
 ---
 
+## Preview
+
+Due to popular demand, we move on from traditional statistical models to those considered *machine learning*. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e. probabilistic) interpretation.
+
+The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. Each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).
+
+We will also need to revisit the topic of overfitting due to the extreme flexibility of neural networks.
+
+## Random Notes, Maybe Delete
+
 I assume most engineers, a priori, consider *machine learning* models as somehow 'better' than statistical models. In reality there is a *lot* of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it's best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.
 
 Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:

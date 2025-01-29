@@ -238,6 +238,7 @@ window.Quarto = {
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
   <li><a href="#data-generation-reversed" id="toc-data-generation-reversed" class="nav-link" data-scroll-target="#data-generation-reversed">Data Generation Reversed</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a></li>
+  <li><a href="#discrete-data" id="toc-discrete-data" class="nav-link" data-scroll-target="#discrete-data">Discrete Data</a></li>
   <li><a href="#continuous-data" id="toc-continuous-data" class="nav-link" data-scroll-target="#continuous-data">Continuous Data</a>
   <ul class="collapse">
   <li><a href="#normal-distribution-with-mle-estimate" id="toc-normal-distribution-with-mle-estimate" class="nav-link" data-scroll-target="#normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</a></li>
@@ -383,6 +384,166 @@ app = App(app_ui, server)</code></pre>
 <li><p><span class="math inline">\(\prod_{i=1}^{N}\)</span>: This is the product operation, which multiplies the individual probabilities <span class="math inline">\(P(y_i \mid \theta)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.</p></li>
 </ol>
 <p>In practice, calculating <span class="math inline">\(P(y_i \mid \theta)\)</span> generally requires making an informed assumption about which named probability distribution best represents your data. We’ve tried to make the point that reality does not consist of only the <em>named</em> probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as any other distribution we can imagine.</p>
+</section>
+<section id="discrete-data" class="level2">
+<h2 class="anchored" data-anchor-id="discrete-data">Discrete Data</h2>
+<p>It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.</p>
+<p>We briefly introduced the binomial distribution in our chapter on discrete probability distributions…</p>
+<p>NEW APP</p>
+<p>In the app below we will again try to choose the best parameter…</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+from scipy.stats import binom
+
+app_ui = ui.page_fluid(
+    ui.h3("In four batches of 1,000 products, we have 992, 995, 989, and 998 pass, what is the most likely pass probability?"),
+    
+    # Input row
+    ui.row(
+        ui.column(
+            4,
+            ui.input_numeric(
+                "pInput", "Enter probability (p):",
+                value=0.993, min=0, max=1, step=0.001
+            ),
+        ),
+        ui.column(
+            4,
+            ui.br(),
+            ui.br(),
+            ui.input_action_button("addBtn", "Add to Plot"),
+            ui.input_action_button("resetBtn", "Reset", class_="btn-danger ms-2"),
+        ),
+        ui.column(
+            4,
+            ui.h4("MLE Estimate of p:"),
+            ui.output_text("mleOutput"),
+        ),
+    ),
+    
+    ui.br(),
+    
+    # Plots
+    ui.row(
+        ui.column(
+            6,
+            ui.output_plot("batchPlot"),
+        ),
+        ui.column(
+            6,
+            ui.output_plot("probPlot"),
+        ),
+    ),
+)
+
+def server(input, output, session):
+    # Data for the four batches
+    batch_data = [(992, 1000), (995, 1000), (989, 1000), (998, 1000)]  # (successes, trials)
+    
+    # Store the user-selected probabilities and their log-likelihoods
+    stored_probs = reactive.Value([])
+    stored_lls = reactive.Value([])
+    
+    # Calculate MLE estimate
+    total_success = sum(x[0] for x in batch_data)
+    total_trials = sum(x[1] for x in batch_data)
+    mle_p = total_success / total_trials
+    
+    @output
+    @render.text
+    def mleOutput():
+        return f"p = {mle_p:.6f}"
+    
+    # Reset function
+    @reactive.Effect
+    @reactive.event(input.resetBtn)
+    def _():
+        stored_probs.set([])
+        stored_lls.set([])
+    
+    # Add new probability when button is clicked
+    @reactive.Effect
+    @reactive.event(input.addBtn)
+    def _():
+        p = input.pInput()
+        if p not in stored_probs.get():
+            probs = list(stored_probs.get())
+            probs.append(p)
+            stored_probs.set(probs)
+            
+            # Calculate cumulative log likelihood for this p
+            total_ll = 0
+            batch_lls = []
+            for success, trials in batch_data:
+                ll = binom.logpmf(success, trials, p)
+                total_ll += ll
+                batch_lls.append(total_ll)
+            
+            lls = list(stored_lls.get())
+            lls.append((p, batch_lls))
+            stored_lls.set(lls)
+    
+    @output
+    @render.plot
+    def batchPlot():
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        for p, batch_lls in stored_lls.get():
+            ax.plot(range(1, 5), batch_lls, 'o-', label=f'p={p:.3f}')
+        
+        ax.set_xlabel('Batch Number')
+        ax.set_ylabel('Cumulative Log Probability')
+        ax.set_title('Cumulative Log Probability by Batch')
+        ax.grid(True)
+        
+        # Set x-axis ticks to integers
+        ax.set_xticks(range(1, 5))
+        
+        if stored_lls.get():
+            ax.legend()
+        
+        return fig
+   
+    @output
+    @render.plot
+    def probPlot():
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        if stored_lls.get():
+            # Sort the data by probability before plotting
+            sorted_data = sorted(stored_lls.get(), key=lambda x: x[0])
+            probs = [x[0] for x in sorted_data]
+            final_lls = [x[1][-1] for x in sorted_data]
+            
+            ax.plot(probs, final_lls, 'o-')
+            ax.axvline(mle_p, color='red', linestyle='--', 
+                      label=f'MLE (p={mle_p:.3f})')
+        
+        ax.set_xlabel('Probability (p)')
+        ax.set_ylabel('Total Log Probability')
+        ax.set_title('Total Log Probability vs. p')
+        ax.grid(True)
+        if stored_lls.get():
+            ax.legend()
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<section id="a-subtly-good-strategy" class="level4">
+<h4 class="anchored" data-anchor-id="a-subtly-good-strategy">A Subtly Good Strategy</h4>
+<p>Playing around with the app you should be able to see that the chart on the right, the ‘Total Log Probability vs p.’ has an obvious peak. What we want are parameter values that are the most probable, i.e.&nbsp;the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of p.&nbsp;That strategy to find the most probable model is actually not a bad one - a state of the art method is effectively a very sophisticated version of that same strategy.</p>
+</section>
+<section id="analytical-solution" class="level4">
+<h4 class="anchored" data-anchor-id="analytical-solution">Analytical Solution</h4>
+<p>For the Binomial distribution there’s actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you’d expect… The basic idea is that the derivative of the ‘Total Log Probability vs p.’ chart will equal zero at the maximum probability. If you work it to the end, the analytical solution is… just the successes divided by the total n, i.e.&nbsp;(992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).</p>
+</section>
 </section>
 <section id="continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="continuous-data">Continuous Data</h2>
