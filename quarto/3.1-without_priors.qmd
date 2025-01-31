@@ -113,25 +113,23 @@ $$
 \mathcal{L}(\theta \mid \mathbf{y}) = \prod_{i=1}^{N} P(y_i \mid \theta)
 $$ 
 
-1. $\mathcal{L}(\theta \mid \mathbf{y})$: This represents the overall likelihood function, which measures the likelihood of the model parameters $\theta$ given the observed data $\mathbf{y}$. It aggregates the individual probability densities for continuous functions and probabilities for discrete functions across all data points, reflecting how well the parameters $\theta$ explain the entire dataset.
+1. $\mathcal{L}(\theta \mid \mathbf{y})$: The likelihood of the model parameter[s] ($\theta$) given the observed data ($\mathbf{y}$).
 
-2. $P(y_i \mid \theta)$: This is the individual probability density for continuous functions or probability for discrete functions for a single data point $i$. It represents the probability of observing the specific outcome $y_i$ under the model parameterized by $\theta$. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, or Normal/Gaussian for some continuous data). 
+2. $P(y_i \mid \theta)$: The probability of a data point ($y_i$) given the model parameter[s] ($\theta$). This is the individual probability density for continuous functions or probability for discrete functions. 
 
-3. $\prod_{i=1}^{N}$: This is the product operation, which multiplies the individual probabilities $P(y_i \mid \theta)$ across all $N$ data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.
+3. $\prod_{i=1}^{N}$: This is the product operation, which multiplies the individual probabilities $P(y_i \mid \theta)$ across all $N$ data points in the dataset. This assumes that the data points are independent. In practice this is typically replaced by the addition of log probabilities, as previously described.
 
-In practice, calculating $P(y_i \mid \theta)$ generally requires making an informed assumption about which named probability distribution best represents your data. We've tried to make the point that reality does not consist of only the *named* probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as any other distribution we can imagine.
+In practice, calculating $P(y_i \mid \theta)$ generally requires making an informed assumption about which named probability distribution best represents your data. We've tried to make the point that reality does not consist of only the *named* probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as practically needed.
 
-## Discrete Data
+In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero ($\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0$). In the next section we'll make the calculations more precisely.
+
+## Maximum Likelihood Estimation with Discrete Data
 
 It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.
 
-We briefly introduced the binomial distribution in our chapter on discrete probability distributions...
+We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the p parameter. However, we now want to work in the other direction, P(M|D), in which we find the value of the p parameter with the maximum likelihood.
 
-
-NEW APP
-
-In the app below we will again try to choose the best parameter...
-
+Although the app below does not automatically give you the maximum likelihood estimate, it will hopefully make it easy for you to approximate the value. Pick several p values you think are reasonable and for each select 'Add to plot'.
 
 ```{shinylive-python}
 #| standalone: true
@@ -284,16 +282,208 @@ Playing around with the app you should be able to see that the chart on the righ
 
 #### Analytical Solution
 
-For the Binomial distribution there's actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you'd expect... The basic idea is that the derivative of the 'Total Log Probability vs p.' chart will equal zero at the maximum probability. If you work it to the end, the analytical solution is... just the successes divided by the total n, i.e. (992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).
+For the Binomial distribution there's actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you'd expect... The basic idea is that the derivative of the 'Total Log Probability vs p.' chart will equal zero at the maximum probability. After a brief drum roll we can reveal that the most likely estimate of p is ....... just the average success rate. More precisely, the successes divided by the total n, e.g. (992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).
 
+Although we mostly avoid them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.
 
+## Maximum Likelihood Estimate with Continuous Data
 
-
-## Continuous Data
+We move onto continuous data and continuous probability distributions, but with the same goal of finding the model parameters that maximize the likelihood of the observed data. The methods remain the same. The only difference we should keep in mind is that when we calculate $P(y_i \mid \theta)$, with a continuous probability distribution, it is a probability density, and not a true probability. However, since probability densities can still be used to compare relative probability, and we are only trying to find the model parameter values that are the most likely relative to all other possibilities, this nuance has little practical impact.
 
 ### Normal Distribution with MLE Estimate
 
 The following is a very similar app to what we saw earlier that just calculated with likelihood of the data. However, this time we also have ability to find the most likely model to explain the data, i.e the Maximimum Likelihood Estimate *MLE* ...
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Likelihood Calculation"),
+
+    # Row 1: Sliders
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=1, max=100, value=10, step=1
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Buttons, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("mleBtn", "MLE"),
+        ),
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plots
+    ui.row(
+        ui.column(6, ui.output_plot("normalPlot", height="400px")),
+        ui.column(6, ui.output_plot("cumLogProbPlot", height="400px"))
+    ),
+)
+
+def server(input, output, session):
+    # Initialize data with 10 random points
+    data_vals = reactive.Value(
+        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+    )
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        data_vals.set(
+            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+        )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        y = data_vals()
+        n = len(y)
+        mle_mean = np.mean(y)
+        mle_var = np.sum((y - mle_mean)**2) / n
+        session.send_input_message("muInput", {"value": mle_mean})
+        session.send_input_message("varInput", {"value": mle_var})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+        if var <= 0:
+            return float("nan")
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF and data points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
+            -0.5 * ((x_vals - mu) / sigma)**2
+        )
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(
+            x_vals, pdf_vals,
+            color="blue",
+            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
+        )
+
+        # Scatter the data at y=0 with some jitter
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        ax.axvline(mu, color="gray", linestyle="--")
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)
+
+        return fig
+
+    # Plot the cumulative log probability
+    @output
+    @render.plot
+    def cumLogProbPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        # Sort data points for plotting
+        sorted_indices = np.argsort(y)
+        sorted_y = y[sorted_indices]
+        
+        # Calculate log probabilities
+        log_probs = -0.5 * np.log(2 * math.pi * var) - 0.5 * ((sorted_y - mu) / sigma)**2
+        cum_log_probs = np.cumsum(log_probs)
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(sorted_y, cum_log_probs, 'b-', marker='o')
+        ax.set_title("Cumulative Log Probability")
+        ax.set_xlabel("Data Points")
+        ax.set_ylabel("Cumulative Log Probability")
+        ax.grid(True)
+
+        return fig
+
+app = App(app_ui, server)
+```
+
+
+Older version:
 
 ```{shinylive-python}
 #| standalone: true
@@ -458,6 +648,12 @@ app = App(app_ui, server)
 
 
 
+## Segway
+
+The following is a nice segway to the machine learning section, but should be at the very end of the chapter.
+
+Maximum Likelihood Estimation is not the only method to find optimal model parameters, although it is the standard for statistical models.
+
 ::: callout-note
 ## Loss Functions
 
@@ -540,3 +736,8 @@ y = mx + b
 where \( m \) and \( b \) are computed using the formulas above.
 
 This method provides an exact solution without requiring iterative optimization, making it efficient for small datasets.
+
+
+### Notes
+
+TODO: We should maintain approximately the same rate of callouts?

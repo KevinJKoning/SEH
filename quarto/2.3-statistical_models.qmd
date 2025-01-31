@@ -23,7 +23,9 @@ We focus on model 'errors' and understanding how probable an error is (we will a
 
 This is in contrast to machine learning models, which we'll tackle in the next chapter, which rely on loss functions, which may or may not be probabilistic.
 
-## Probability Distributions Conditioned on Data
+## Selecting a Probability Distribution by Conditioning on Data
+
+TODO: Is this really a probability distribution? State in a way so it's not confused with a prob dist.
 
 Let's say we drive a car and each trip record the fuel use at different speeds. After many trips we have the following data:
 

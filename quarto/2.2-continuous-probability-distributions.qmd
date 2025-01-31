@@ -889,18 +889,21 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-### A Mini Appendix for a more Formal Definition of Probability Distributions
+## A Mini Appendix for a more Formal Definition of Probability Distributions
+
+TODO: We can probabily make this a little more 'mathy'
+TODO: Refer to John K. Kruschke, Doing Bayesian Analysis, Page 72
 
 We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. While these phrases are 'real' in the statistical lexicon, for the sake of giving you an interface to more formal statistical language, we take a moment to elaborate *slightly*  (we still will not go to the mathematical depths a true statistical reference would).
 
-#### Sample Space
+### Sample Space
 
 Processes have a limit to what they can generate. Formally this is the 'sample space'. Dice only have so many faces. Processes that generate positive numbers do not generate negative ones.
 
-#### Random Variable
+### Random Variable
 
 A random variable, which is typically referred to as capital $X$, is a map of how the sample space will be translated to data. For example, we can have one sample space, which is a dice with six faces, but we can have different mappings. One mapping can be simply the value on the face, but another mapping could be the number of rolls until there is a six.
 
-#### Probability Distribution
+### Probability Distribution
 
 The probability distribution is then the $P(X=x)$, which represents the probability the random variable, capital $X$, takes on one of the possible mappings, lower case $x$.

@@ -764,6 +764,10 @@ Traditional hypothesis testing starts with a *null* model which we can think of 
 
 ## Mini Appendix on Probability Distributions
 
+John K. Kruschke said it well:
+
+> A probability distribution is simply a list of all possible outcomes and their corresponding probabilities.
+
 We think probability distributions in statistics is a confused topic - not confusing - confused. The main concern is that a special case (the *named* probability distributions) is made so prominent a newcomer is easily confused it is the *only* case. Here let's build up some intuition for discrete probability distributions, in the general sense, with appropriate reference to the special case of the *named* probability distributions.
 
 ### Joint Discrete Probability Distributions
@@ -817,7 +821,7 @@ A conditional probability distribution is one in which we are given the state of
 | BrandB | No        | Yes          | 0.20        |
 | BrandB | No        | No           | 0.40        |
 
-Because BrandA is a constant, we could just write it this way:
+Because BrandB is a constant, we could just write it this way:
 
 | Breakdown | Extreme Heat | Probability |
 |-----------|--------------|-------------|
@@ -828,7 +832,7 @@ Because BrandA is a constant, we could just write it this way:
 
 Note how this is not the same probability distribution as P(Breakdown, Extreme_Heat).
 
-When we work with a *named* probability distribution, like the binomial, we give the state of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2)
+When we work with a *named* probability distribution, like the binomial, we give the state of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2).
 
 | Successes (k) | n   | k   | Probability |
 |---------------|-----|-----|-------------|

@@ -238,11 +238,12 @@ window.Quarto = {
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
   <li><a href="#data-generation-reversed" id="toc-data-generation-reversed" class="nav-link" data-scroll-target="#data-generation-reversed">Data Generation Reversed</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a></li>
-  <li><a href="#discrete-data" id="toc-discrete-data" class="nav-link" data-scroll-target="#discrete-data">Discrete Data</a></li>
-  <li><a href="#continuous-data" id="toc-continuous-data" class="nav-link" data-scroll-target="#continuous-data">Continuous Data</a>
+  <li><a href="#maximum-likelihood-estimation-with-discrete-data" id="toc-maximum-likelihood-estimation-with-discrete-data" class="nav-link" data-scroll-target="#maximum-likelihood-estimation-with-discrete-data">Maximum Likelihood Estimation with Discrete Data</a></li>
+  <li><a href="#maximum-likelihood-estimate-with-continuous-data" id="toc-maximum-likelihood-estimate-with-continuous-data" class="nav-link" data-scroll-target="#maximum-likelihood-estimate-with-continuous-data">Maximum Likelihood Estimate with Continuous Data</a>
   <ul class="collapse">
   <li><a href="#normal-distribution-with-mle-estimate" id="toc-normal-distribution-with-mle-estimate" class="nav-link" data-scroll-target="#normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</a></li>
   </ul></li>
+  <li><a href="#segway" id="toc-segway" class="nav-link" data-scroll-target="#segway">Segway</a></li>
   <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
   <li><a href="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" id="toc-note-in-3.2-we-will-go-into-the-likelihood-calculation-itself" class="nav-link" data-scroll-target="#note-in-3.2-we-will-go-into-the-likelihood-calculation-itself">Note in 3.2 we will go into the likelihood calculation itself</a></li>
   <li><a href="#traditional-linear-regression" id="toc-traditional-linear-regression" class="nav-link" data-scroll-target="#traditional-linear-regression">Traditional Linear Regression</a></li>
@@ -250,6 +251,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#solving-for-m-and-b" id="toc-solving-for-m-and-b" class="nav-link" data-scroll-target="#solving-for-m-and-b">Solving for ( m ) and ( b )</a></li>
   <li><a href="#final-model" id="toc-final-model" class="nav-link" data-scroll-target="#final-model">Final Model</a></li>
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -379,18 +381,18 @@ app = App(app_ui, server)</code></pre>
 \mathcal{L}(\theta \mid \mathbf{y}) = \prod_{i=1}^{N} P(y_i \mid \theta)
 \]</span></p>
 <ol type="1">
-<li><p><span class="math inline">\(\mathcal{L}(\theta \mid \mathbf{y})\)</span>: This represents the overall likelihood function, which measures the likelihood of the model parameters <span class="math inline">\(\theta\)</span> given the observed data <span class="math inline">\(\mathbf{y}\)</span>. It aggregates the individual probability densities for continuous functions and probabilities for discrete functions across all data points, reflecting how well the parameters <span class="math inline">\(\theta\)</span> explain the entire dataset.</p></li>
-<li><p><span class="math inline">\(P(y_i \mid \theta)\)</span>: This is the individual probability density for continuous functions or probability for discrete functions for a single data point <span class="math inline">\(i\)</span>. It represents the probability of observing the specific outcome <span class="math inline">\(y_i\)</span> under the model parameterized by <span class="math inline">\(\theta\)</span>. The form of this probability depends on the assumed probability distribution of the data (e.g., binomial for dice rolls, or Normal/Gaussian for some continuous data).</p></li>
-<li><p><span class="math inline">\(\prod_{i=1}^{N}\)</span>: This is the product operation, which multiplies the individual probabilities <span class="math inline">\(P(y_i \mid \theta)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset. This multiplication reflects the assumption that the data points are independent and identically distributed (i.i.d.), meaning the probability of the entire dataset is the product of the probabilities of each individual data point.</p></li>
+<li><p><span class="math inline">\(\mathcal{L}(\theta \mid \mathbf{y})\)</span>: The likelihood of the model parameter[s] (<span class="math inline">\(\theta\)</span>) given the observed data (<span class="math inline">\(\mathbf{y}\)</span>).</p></li>
+<li><p><span class="math inline">\(P(y_i \mid \theta)\)</span>: The probability of a data point (<span class="math inline">\(y_i\)</span>) given the model parameter[s] (<span class="math inline">\(\theta\)</span>). This is the individual probability density for continuous functions or probability for discrete functions.</p></li>
+<li><p><span class="math inline">\(\prod_{i=1}^{N}\)</span>: This is the product operation, which multiplies the individual probabilities <span class="math inline">\(P(y_i \mid \theta)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset. This assumes that the data points are independent. In practice this is typically replaced by the addition of log probabilities, as previously described.</p></li>
 </ol>
-<p>In practice, calculating <span class="math inline">\(P(y_i \mid \theta)\)</span> generally requires making an informed assumption about which named probability distribution best represents your data. We’ve tried to make the point that reality does not consist of only the <em>named</em> probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as any other distribution we can imagine.</p>
+<p>In practice, calculating <span class="math inline">\(P(y_i \mid \theta)\)</span> generally requires making an informed assumption about which named probability distribution best represents your data. We’ve tried to make the point that reality does not consist of only the <em>named</em> probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as practically needed.</p>
+<p>In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero (<span class="math inline">\(\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0\)</span>). In the next section we’ll make the calculations more precisely.</p>
 </section>
-<section id="discrete-data" class="level2">
-<h2 class="anchored" data-anchor-id="discrete-data">Discrete Data</h2>
+<section id="maximum-likelihood-estimation-with-discrete-data" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likelihood-estimation-with-discrete-data">Maximum Likelihood Estimation with Discrete Data</h2>
 <p>It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.</p>
-<p>We briefly introduced the binomial distribution in our chapter on discrete probability distributions…</p>
-<p>NEW APP</p>
-<p>In the app below we will again try to choose the best parameter…</p>
+<p>We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the p parameter. However, we now want to work in the other direction, P(M|D), in which we find the value of the p parameter with the maximum likelihood.</p>
+<p>Although the app below does not automatically give you the maximum likelihood estimate, it will hopefully make it easy for you to approximate the value. Pick several p values you think are reasonable and for each select ‘Add to plot’.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -542,14 +544,205 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="analytical-solution" class="level4">
 <h4 class="anchored" data-anchor-id="analytical-solution">Analytical Solution</h4>
-<p>For the Binomial distribution there’s actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you’d expect… The basic idea is that the derivative of the ‘Total Log Probability vs p.’ chart will equal zero at the maximum probability. If you work it to the end, the analytical solution is… just the successes divided by the total n, i.e.&nbsp;(992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).</p>
+<p>For the Binomial distribution there’s actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you’d expect… The basic idea is that the derivative of the ‘Total Log Probability vs p.’ chart will equal zero at the maximum probability. After a brief drum roll we can reveal that the most likely estimate of p is ……. just the average success rate. More precisely, the successes divided by the total n, e.g.&nbsp;(992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).</p>
+<p>Although we mostly avoid them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.</p>
 </section>
 </section>
-<section id="continuous-data" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-data">Continuous Data</h2>
+<section id="maximum-likelihood-estimate-with-continuous-data" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likelihood-estimate-with-continuous-data">Maximum Likelihood Estimate with Continuous Data</h2>
+<p>We move onto continuous data and continuous probability distributions, but with the same goal of finding the model parameters that maximize the likelihood of the observed data. The methods remain the same. The only difference we should keep in mind is that when we calculate <span class="math inline">\(P(y_i \mid \theta)\)</span>, with a continuous probability distribution, it is a probability density, and not a true probability. However, since probability densities can still be used to compare relative probability, and we are only trying to find the model parameter values that are the most likely relative to all other possibilities, this nuance has little practical impact.</p>
 <section id="normal-distribution-with-mle-estimate" class="level3">
 <h3 class="anchored" data-anchor-id="normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</h3>
 <p>The following is a very similar app to what we saw earlier that just calculated with likelihood of the data. However, this time we also have ability to find the most likely model to explain the data, i.e the Maximimum Likelihood Estimate <em>MLE</em> …</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 700
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Likelihood Calculation"),
+
+    # Row 1: Sliders
+    ui.row(
+        ui.column(
+            4,
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=50, max=150, value=100, step=0.1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=1, max=200, value=10, step=1
+            ),
+        ),
+        ui.column(
+            4,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=1, max=100, value=10, step=1
+            ),
+        ),
+    ),
+
+    ui.br(),
+
+    # Row 2: Buttons, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("mleBtn", "MLE"),
+        ),
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Current Data (Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plots
+    ui.row(
+        ui.column(6, ui.output_plot("normalPlot", height="400px")),
+        ui.column(6, ui.output_plot("cumLogProbPlot", height="400px"))
+    ),
+)
+
+def server(input, output, session):
+    # Initialize data with 10 random points
+    data_vals = reactive.Value(
+        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
+    )
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        data_vals.set(
+            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
+        )
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        y = data_vals()
+        return ", ".join(str(round(val, 1)) for val in y)
+
+    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        y = data_vals()
+        n = len(y)
+        mle_mean = np.mean(y)
+        mle_var = np.sum((y - mle_mean)**2) / n
+        session.send_input_message("muInput", {"value": mle_mean})
+        session.send_input_message("varInput", {"value": mle_var})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        n = len(y)
+        if var &lt;= 0:
+            return float("nan")
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * np.sum((y - mu)**2) / var
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the normal PDF and data points
+    @output
+    @render.plot
+    def normalPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        x_min = min(y) - 3 * sigma
+        x_max = max(y) + 3 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
+            -0.5 * ((x_vals - mu) / sigma)**2
+        )
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(
+            x_vals, pdf_vals,
+            color="blue",
+            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
+        )
+
+        # Scatter the data at y=0 with some jitter
+        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
+        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
+
+        ax.axvline(mu, color="gray", linestyle="--")
+        ax.set_title("Normal PDF vs. Observed Data")
+        ax.set_xlabel("Y")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.set_ylim(bottom=0)
+
+        return fig
+
+    # Plot the cumulative log probability
+    @output
+    @render.plot
+    def cumLogProbPlot():
+        y = data_vals()
+        mu = input.muInput()
+        var = input.varInput()
+        sigma = math.sqrt(var)
+
+        # Sort data points for plotting
+        sorted_indices = np.argsort(y)
+        sorted_y = y[sorted_indices]
+        
+        # Calculate log probabilities
+        log_probs = -0.5 * np.log(2 * math.pi * var) - 0.5 * ((sorted_y - mu) / sigma)**2
+        cum_log_probs = np.cumsum(log_probs)
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(sorted_y, cum_log_probs, 'b-', marker='o')
+        ax.set_title("Cumulative Log Probability")
+        ax.set_xlabel("Data Points")
+        ax.set_ylabel("Cumulative Log Probability")
+        ax.grid(True)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>Older version:</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -710,6 +903,12 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+</section>
+</section>
+<section id="segway" class="level2">
+<h2 class="anchored" data-anchor-id="segway">Segway</h2>
+<p>The following is a nice segway to the machine learning section, but should be at the very end of the chapter.</p>
+<p>Maximum Likelihood Estimation is not the only method to find optimal model parameters, although it is the standard for statistical models.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -732,7 +931,6 @@ Loss Functions
 </div>
 </div>
 <p>We introduce loss functions here but will apply them next chapter??</p>
-</section>
 </section>
 <section id="methods" class="level2">
 <h2 class="anchored" data-anchor-id="methods">Methods</h2>
@@ -773,6 +971,10 @@ Loss Functions
 <p>[ y = mx + b ]</p>
 <p>where ( m ) and ( b ) are computed using the formulas above.</p>
 <p>This method provides an exact solution without requiring iterative optimization, making it efficient for small datasets.</p>
+</section>
+<section id="notes" class="level3">
+<h3 class="anchored" data-anchor-id="notes">Notes</h3>
+<p>TODO: We should maintain approximately the same rate of callouts?</p>
 
 
 </section>
