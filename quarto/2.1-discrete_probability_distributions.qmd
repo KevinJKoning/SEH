@@ -72,7 +72,7 @@ Hopefully you've noted how a larger number of rolls seems to give us smoother an
 
 ### Discrete Probability Distributions as Models of Data Generating Processes
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency (distribution) of the outcomes change. There are a number of discrete processes that are important to statisticians, and they have been formalized into mathematical models called *discrete probability distributions*.
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency (distribution) of the outcomes change. There are a number of important discrete processes that can be described with [mostly] analytical mathematical models, and subsequently as statisticians have discovered/created them, they have **named** these special *discrete probability distributions*.
 
 ::: callout-note
 If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this feature, but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we'd prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.
@@ -808,7 +808,7 @@ We could imagine all sorts of variables that may impact Breakdown. Please also n
 
 ### Conditional Discrete Probability Distributions
 
-A conditional probability distribution is one in which we are given the state of one or more variables. For example, let's examine P(Breakdown, Extreme_Heat \| Brand = BrandB), which in words is the joint probability distribution of Breakdown and Extreme_Heat given that Brand = BrandA.
+A conditional probability distribution is one in which we are given the state of one or more variables. For example, let's examine P(Breakdown, Extreme_Heat \| Brand = BrandB), which in words is the joint probability distribution of Breakdown and Extreme_Heat given that Brand = BrandB.
 
 | Brand  | Breakdown | Extreme Heat | Probability |
 |--------|-----------|--------------|-------------|
