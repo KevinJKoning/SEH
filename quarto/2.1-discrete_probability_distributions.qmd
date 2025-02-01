@@ -858,9 +858,7 @@ $$
 P(k, \quad n \in \{3, 4\}, \quad p \in \{0.2, 0.3\})
 $$
 
-We should also explicity define how each combination in the set contributes to the total probability, but for this simple example we will assume they contribute equally.
-
-This is like the 'Breakdown' table where:
+We should also explicity define how each combination in the set contributes to the total probability, but for this simple example we will assume they contribute equally. This is like the 'Breakdown' table which was limited to the following set of data:
 
 $$
 P(Breakdown, \quad ExtremeHeat \in \{Yes, No\}, \quad Brand \in \{BrandA, BrandB\})

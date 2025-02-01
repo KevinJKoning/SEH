@@ -7,15 +7,15 @@ filters:
 
 ## Preview
 
-We finally flip to $P(D|M)$ the probability of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}.
+We finally flip to $P(D|M)$ the probability of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}. In practice, we find $P(D|M)$ so that we can find the *best* parameter values for our chosen model. We will describe what *best* is soon.
 
 Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.
 
-We then switch to the likelihood of models that can ingest data. We start with standard linear regression and show that it has a very efficient analytical solution. We also consider how we updated our linear regression model to better model heteroscedasticity (a word I cannot spell or pronounce), and how that breaks the analytical solution. We start to explore non-analytical solutions, but that will end when we begin to find priors very useful. That will be the subject of the next and last chapter.
+Throughout the chapter assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values.
 
-## Data Generation Reversed
+## Guessing the Best Model Parameter 
 
-In part one we wanted to understand the probability of the data based on a fixed model of a data generating process. In part two we want to take the data and find the most likely model of the data generating process. It's reasonable to think of this as the 'reverse' of our previous approach in part one.
+In part one we wanted to understand the probability of the data based on a fixed model of a data generating process. In part two we use the data to find the most likely model of the data generating process, which requires use to calculate $P(D|M)$. Intuitively, this is just a model that generates or predicts data that is similar to our observed data. Subsequently we start with an intuitive excercise before diving further into the technical details. 
 
 The simple app below lets you select a model parameter, the number of dice to roll, such that you can see if your selection makes it match the data better or worse. See if you can find a parameter value that does a particularly good job of matching the data.
 
@@ -276,6 +276,37 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+Let's breakdown how the likelihood was calculated for one of the datapoints. First, we needed to determine a probability distribution that represents our data. Because we have a fixed number of trials and probability of success for each trial, the Binomial probability distribution was a good choice.
+
+#### Reminder of Binomial Probabilities
+
+Next, let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
+
+$$
+P(X = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
+$$
+
+where:
+
+* $k$ is the observed number of successes in $n$  trials.
+* $p$ is the probability of success in each trial.
+
+Our first data point is 992 successes, which equals k, out of 1,000 trials, which equals n. The best value of p is what we are unsure about, and our current strategy is to strategically try some values to try to understand the problem. Let's assume we tried p = 0.995 as a reasonable guess. The calculation is:
+
+$$
+P(X = 992 | n = 1000, p = 0.995) =
+\binom{1000}{992} (0.995)^{992} (0.005)^8 = 0.0652
+$$
+
+The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point, which corresponds to k=992, has a value of about -2.73.
+
+#### Difference between P(M|D) and P(D|M)
+
+Now you should be asking yourself - what is the difference between what we are doing here and what we did in the first half when we calculated P(D|M)? And the answer is that up until this step - nothing. So where does the difference come in?
+
+The difference is that we use the probability of the data to determine the likelihood of the model in comparison to other possible models. We then optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best P(M|D).
+
+
 #### A Subtly Good Strategy
 
 Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of p. That strategy to find the most probable model is actually not a bad one - a state of the art method is effectively a very sophisticated version of that same strategy.
@@ -483,167 +514,20 @@ app = App(app_ui, server)
 ```
 
 
-Older version:
+### Log Normal
 
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 700
 
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from shiny import App, ui, reactive, render
 
-app_ui = ui.page_fluid(
-    ui.h2("Likelihood Calculation"),
+### Linear Regression
 
-    # Row 1: Sliders
-    ui.row(
-        ui.column(
-            4,
-            ui.input_slider(
-                "muInput", "Mean (μ):",
-                min=50, max=150, value=100, step=0.1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=1, max=200, value=10, step=1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_slider(
-                "nInput", "Number of samples:",
-                min=1, max=100, value=10, step=1
-            ),
-        ),
-    ),
 
-    ui.br(),
+## Summary
 
-    # Row 2: Buttons, current data, and log-likelihood
-    ui.row(
-        ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
-        ui.column(
-            2,
-            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Current Data (Y):"),
-            ui.output_text_verbatim("dataText"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
-            ui.output_text("llOutput"),
-        ),
-    ),
+To find the most likely model 
+Finding the most likely model, i.e. using Maximum Likelihood Estimation, to explain 
 
-    ui.br(),
 
-    # Plot
-    ui.output_plot("normalPlot", height="400px"),
-)
 
-def server(input, output, session):
-    # Initialize data with 10 random points
-    data_vals = reactive.Value(
-        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
-    )
-
-    # Generate a new sample when 'NEW SAMPLE' is pressed
-    @reactive.Effect
-    @reactive.event(input.newSampleBtn)
-    def _():
-        n = input.nInput()
-        data_vals.set(
-            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
-        )
-
-    # Display the current data
-    @output
-    @render.text
-    def dataText():
-        y = data_vals()
-        return ", ".join(str(round(val, 1)) for val in y)
-
-    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
-    @reactive.Effect
-    @reactive.event(input.mleBtn)
-    def _():
-        y = data_vals()
-        n = len(y)
-        mle_mean = np.mean(y)
-        # MLE for variance uses 1/n factor
-        mle_var = np.sum((y - mle_mean)**2) / n
-        session.send_input_message("muInput", {"value": mle_mean})
-        session.send_input_message("varInput", {"value": mle_var})
-
-    # Reactive expression for log-likelihood
-    @reactive.Calc
-    def log_likelihood():
-        y = data_vals()
-        mu = input.muInput()
-        var = input.varInput()
-        n = len(y)
-        if var <= 0:
-            return float("nan")
-        term1 = -0.5 * n * math.log(2 * math.pi * var)
-        term2 = -0.5 * np.sum((y - mu)**2) / var
-        return term1 + term2
-
-    # Show the log-likelihood
-    @output
-    @render.text
-    def llOutput():
-        ll = log_likelihood()
-        return str(round(ll, 2))
-
-    # Plot the normal PDF and data points
-    @output
-    @render.plot
-    def normalPlot():
-        y = data_vals()
-        mu = input.muInput()
-        var = input.varInput()
-        sigma = math.sqrt(var)
-
-        x_min = min(y) - 3 * sigma
-        x_max = max(y) + 3 * sigma
-        x_vals = np.linspace(x_min, x_max, 200)
-        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
-            -0.5 * ((x_vals - mu) / sigma)**2
-        )
-
-        fig, ax = plt.subplots(figsize=(6, 4))
-        ax.plot(
-            x_vals, pdf_vals,
-            color="blue",
-            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
-        )
-
-        # Scatter the data at y=0 with some jitter
-        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
-        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
-
-        ax.axvline(mu, color="gray", linestyle="--")
-        ax.set_title("Normal PDF vs. Observed Data")
-        ax.set_xlabel("Y")
-        ax.set_ylabel("Density")
-        ax.legend()
-        ax.set_ylim(bottom=0)
-
-        return fig
-
-app = App(app_ui, server)
-```
 
 
 

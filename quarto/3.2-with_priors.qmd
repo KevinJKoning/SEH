@@ -5,6 +5,16 @@ filters:
   - shinylive
 ---
 
+## Preview
+
+We finally come to the last chapter, which is focused on P(M|D)...
+
+Statistics used to be a bit of a flame way between those who used priors and Bayesian statistics, and the 'standard' which was frequentism... I think it's safe to say however, if you're working on a subject in which you have a significant amount of expert knowledge with relatively complex models, you should use a Bayesian approach for two reasons:
+
+1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
+2) If you *do* have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.
+
+
 
 ## Text
 
