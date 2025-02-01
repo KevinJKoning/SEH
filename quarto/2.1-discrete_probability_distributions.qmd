@@ -860,7 +860,7 @@ $$
 
 We should also explicity define how each combination in the set contributes to the total probability, but for this simple example we will assume they contribute equally.
 
-This is like the 'Breakdown' table where 
+This is like the 'Breakdown' table where:
 
 $$
 P(Breakdown, \quad ExtremeHeat \in \{Yes, No\}, \quad Brand \in \{BrandA, BrandB\})
