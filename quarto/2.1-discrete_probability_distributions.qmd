@@ -832,7 +832,7 @@ Because BrandB is a constant, we could just write it this way:
 
 Note how this is not the same probability distribution as P(Breakdown, Extreme_Heat).
 
-When we work with a *named* probability distribution, like the binomial, we give the state of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2).
+When we work with a *named* probability distribution, like the binomial, we give the value of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2).
 
 | Successes (k) | n   | k   | Probability |
 |---------------|-----|-----|-------------|
@@ -852,7 +852,19 @@ Because n and k are constant, we may prefer a table without them, although they 
 
 We can't examine the joint probability distribution of the Binomial distribution without giving a value for n and p because the number of possibilities for n and p are infinite, and subsequently the joint probability distribution is infinite. Note we can effectively do the same thing with the 'Breakdown' joint probability distribution if we just changed extreme_heat to temperature, and tried to observe breakdowns for every temperature. The *named* probability distributions are special in that we have a complete mathematical description of the process, so we can simply calculate the results of any combination, while in the empirical distribution of Breakdown, we would have to observe the results.
 
-It is also possible to have a probability distribution from one of the *named* probability distributions in which we have a set of values for the parameters, instead of one value. For example, we can have a Binomial distribution where $P(k, \quad n \in {(3, 4),} \quad p \in {(0.2, 0.3)})$. This is like the 'Breakdown' table where $P(Breakdown, \quad ExtremeHeat \in {(Yes, No),} \quad Brand \in {(BrandA, BrandB)})$
+It is also possible to have a probability distribution from one of the *named* probability distributions in which we have a set of values for the parameters, instead of one value. For example, we can have a Binomial distribution using the set notation $\in$ which states that $n$ must be either 3 or 4 and $p$ must be either 0.2 or 0.3.
+
+$$
+P(k, \quad n \in \{3, 4\}, \quad p \in \{0.2, 0.3\})
+$$
+
+We should also explicity define how each combination in the set contributes to the total probability, but for this simple example we will assume they contribute equally.
+
+This is like the 'Breakdown' table where 
+
+$$
+P(Breakdown, \quad ExtremeHeat \in \{Yes, No\}, \quad Brand \in \{BrandA, BrandB\})
+$$
 
 At this point hopefully the empirical and named probability distributions 'feel' the same, except we know the mathematical models behind the named probability distributions, so we do not have to guess their distributions through observation.
 
