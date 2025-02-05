@@ -53,15 +53,41 @@ def server(input, output, session):
     @render.plot
     def dicePlot():
         current_sums = dice_sums()
-        fig, ax = plt.subplots()
+        fig, ax1 = plt.subplots()
 
+        # Calculate frequencies and relative frequencies
         unique_sums, counts = np.unique(current_sums, return_counts=True)
-        ax.bar([str(s) for s in unique_sums], counts, color="steelblue")
+        relative_freq = counts / len(current_sums)
 
-        ax.set_title("Frequency of Dice Totals")
-        ax.set_xlabel("Dice Total")
-        ax.set_ylabel("Frequency")
-        plt.xticks(rotation=90)
+        # Create the frequency bars with darker blue
+        bars = ax1.bar([str(s) for s in unique_sums], counts, color="steelblue")  
+        ax1.set_xlabel("Dice Total")
+        ax1.set_ylabel("Frequency", color="steelblue")
+        ax1.tick_params(axis='y', labelcolor="steelblue")
+
+        # Create secondary y-axis for relative frequency
+        ax2 = ax1.twinx()
+        markers = ax2.plot([str(s) for s in unique_sums], relative_freq, 
+                          color="r", marker='_', linestyle='None', label="Relative Frequency")
+        ax2.set_ylabel("Relative Frequency", color="red")
+        ax2.tick_params(axis='y', labelcolor="red")
+        
+        # Set y-axis limits to start at 0 for relative frequency
+        ax2.set_ylim(bottom=0)
+
+        # Set title
+        plt.title("Frequency and Relative Frequency of Dice Totals", fontsize=14)
+        
+        # Add legend
+        lines = [bars.patches[0], markers[0]]
+        labels = ["Frequency", "Relative Frequency"]
+        ax1.legend(lines, labels, loc='upper left')
+
+        # Adjust layout to prevent label cutoff
+        plt.tight_layout()
+        
+        # Rotate x-axis labels after tight_layout
+        ax1.tick_params(axis='x', rotation=90)
 
         return fig
 
@@ -113,18 +139,14 @@ app_ui = ui.page_fluid(
                 value=0.5, 
                 step=0.001
             ),
-            # Removed the "Number of Simulations" slider
-            # Fixed number of simulations to 10,000
         ),
         ui.output_plot("binomPlot", height="400px"),
     ),
 )
 
 def server(input, output, session):
-    # Fixed number of simulations
     FIXED_NUM_SIMULATIONS = 10000
 
-    # Reactive expression to generate binomial samples
     @reactive.Calc
     def binomial_samples():
         n = input.numTrials()
@@ -132,53 +154,67 @@ def server(input, output, session):
         size = FIXED_NUM_SIMULATIONS
         return np.random.binomial(n, p, size)
     
-    # Function to determine optimal integer bin width
     def determine_bin_width(data, max_bins=30):
         data_min = data.min()
         data_max = data.max()
-        data_range = data_max - data_min + 1  # +1 to include both endpoints
-        # Start with bin_width = 1 and increase until the number of bins <= max_bins
+        data_range = data_max - data_min + 1
         for bin_width in range(1, data_range + 1):
             num_bins = math.ceil(data_range / bin_width)
             if num_bins <= max_bins:
                 return bin_width
-        return 1  # Fallback to bin_width=1 if all else fails
+        return 1
     
-    # Render the binomial distribution plot with limited bins
     @output
     @render.plot
     def binomPlot():
         samples = binomial_samples()
         bin_width = determine_bin_width(samples, max_bins=30)
         
-        # Define bin edges based on bin_width
         data_min = samples.min()
         data_max = samples.max()
         bins = np.arange(data_min, data_max + bin_width, bin_width)
         
-        # Compute histogram
         counts, bin_edges = np.histogram(samples, bins=bins)
         bin_centers = bin_edges[:-1] + bin_width / 2
         
-        fig, ax = plt.subplots(figsize=(10, 6))
+        # Calculate relative frequencies
+        relative_freq = counts / len(samples)
         
-        ax.bar(bin_centers, counts, width=bin_width*0.9, color="steelblue", edgecolor="black", align='center')
+        fig, ax1 = plt.subplots(figsize=(10, 6))
         
-        ax.set_title("Frequency of Successes in Binomial Simulations", fontsize=16)
-        ax.set_xlabel("Number of Successes", fontsize=14)
-        ax.set_ylabel("Frequency", fontsize=14)
-        #ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        # Plot absolute frequencies
+        bars = ax1.bar(bin_centers, counts, width=bin_width*0.9, 
+                      color="steelblue", alpha=0.6, edgecolor="black", align='center')
         
-        # Set x-axis ticks to be at bin centers
-        ax.set_xticks(bin_centers)
+        ax1.set_xlabel("Number of Successes")
+        ax1.set_ylabel("Frequency", color="steelblue")
+        ax1.tick_params(axis='y', labelcolor="steelblue")
         
-        # To avoid overcrowding, set a maximum number of x-ticks
+        # Create secondary y-axis for relative frequency
+        ax2 = ax1.twinx()
+        markers = ax2.plot(bin_centers, relative_freq, 
+                          color="red", marker='_', linestyle='None', 
+                          markersize=10, markeredgewidth=2, label="Relative Frequency")
+        ax2.set_ylabel("Relative Frequency", color="red")
+        ax2.tick_params(axis='y', labelcolor="red")
+        ax2.set_ylim(bottom=0)
+        
+        # Set title
+        plt.title("Frequency and Relative Frequency of Successes", fontsize=14)
+        
+        # Add legend
+        lines = [bars.patches[0], markers[0]]
+        labels = ["Frequency", "Relative Frequency"]
+        ax1.legend(lines, labels, loc='upper left')
+        
+        # Set x-axis ticks
         if len(bin_centers) > 20:
             step = math.ceil(len(bin_centers) / 20)
-            ax.set_xticks(bin_centers[::step])
-            ax.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
+            ax1.set_xticks(bin_centers[::step])
+            ax1.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
         else:
-            ax.set_xticklabels([int(x) for x in bin_centers], rotation=90)
+            ax1.set_xticks(bin_centers)
+            ax1.set_xticklabels([int(x) for x in bin_centers], rotation=90)
         
         plt.tight_layout()
         
@@ -186,6 +222,7 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
+
 
 #### Poisson Distribution
 
@@ -201,7 +238,6 @@ import matplotlib.pyplot as plt
 from scipy.stats import poisson
 import math
 
-# Define the User Interface
 app_ui = ui.page_fluid(
     ui.h2("Poisson Distribution Simulation"),
     ui.layout_sidebar(
@@ -227,34 +263,27 @@ app_ui = ui.page_fluid(
     )
 )
 
-# Define the Server Logic
 def server(input, output, session):
-
-    # Reactive expression to get the number of simulations
     @reactive.Calc
     def num_simulations():
         return input.num_trials()
 
-    # Reactive expression to generate Poisson samples
     @reactive.Calc
     def poisson_samples():
         lam = input.rate_param()
         n_trials = num_simulations()
         return np.random.poisson(lam, n_trials)
     
-    # Function to determine optimal integer bin width with a maximum number of bins
     def determine_bin_width(data, max_bins=30):
         data_min = data.min()
         data_max = data.max()
-        data_range = data_max - data_min + 1  # +1 to include both endpoints
-        # Start with bin_width = 1 and increase until the number of bins <= max_bins
+        data_range = data_max - data_min + 1
         for bin_width in range(1, data_range + 1):
             num_bins = math.ceil(data_range / bin_width)
             if num_bins <= max_bins:
                 return bin_width
-        return 1  # Fallback to bin_width=1 if all else fails
+        return 1
 
-    # Render the Poisson distribution plot
     @output
     @render.plot
     def poissonPlot():
@@ -263,43 +292,60 @@ def server(input, output, session):
         
         bin_width = determine_bin_width(samples, max_bins=30)
         
-        # Define bin edges based on bin_width
         data_min = samples.min()
         data_max = samples.max()
         bins = np.arange(data_min, data_max + bin_width, bin_width)
         
-        # Compute histogram
         counts, bin_edges = np.histogram(samples, bins=bins)
         bin_centers = bin_edges[:-1] + bin_width / 2
         
-        fig, ax = plt.subplots(figsize=(10, 6))
+        # Calculate relative frequencies
+        relative_freq = counts / len(samples)
         
-        # Plot the histogram
-        ax.bar(bin_centers, counts, width=bin_width*0.9, color="steelblue", edgecolor="black", align='center')
+        fig, ax1 = plt.subplots(figsize=(10, 6))
         
-        ax.set_title(f"Poisson Distribution Simulation (λ = {lam})", fontsize=16)
-        ax.set_xlabel("Number of Events", fontsize=14)
-        ax.set_ylabel("Frequency", fontsize=14)
-        #ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+        # Plot absolute frequencies
+        bars = ax1.bar(bin_centers, counts, width=bin_width*0.9, 
+                      color="steelblue", alpha=0.6, edgecolor="black", align='center')
         
-        # Set x-axis ticks to be at bin centers
-        ax.set_xticks(bin_centers)
+        ax1.set_xlabel("Number of Events")
+        ax1.set_ylabel("Frequency", color="steelblue")
+        ax1.tick_params(axis='y', labelcolor="steelblue")
         
-        # To avoid overcrowding, set a maximum number of x-ticks
+        # Create secondary y-axis for relative frequency
+        ax2 = ax1.twinx()
+        markers = ax2.plot(bin_centers, relative_freq, 
+                          color="red", marker='_', linestyle='None', 
+                          markersize=10, markeredgewidth=2, label="Relative Frequency")
+        ax2.set_ylabel("Relative Frequency", color="red")
+        ax2.tick_params(axis='y', labelcolor="red")
+        ax2.set_ylim(bottom=0)
+        
+        # Set title
+        plt.title(f"Frequency and Relative Frequency of Poisson Events", 
+                 fontsize=14)
+        
+        # Add legend
+        lines = [bars.patches[0], markers[0]]
+        labels = ["Frequency", "Relative Frequency"]
+        ax1.legend(lines, labels, loc='upper right')
+        
+        # Set x-axis ticks
         if len(bin_centers) > 20:
             step = math.ceil(len(bin_centers) / 20)
-            ax.set_xticks(bin_centers[::step])
-            ax.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
+            ax1.set_xticks(bin_centers[::step])
+            ax1.set_xticklabels([int(x) for x in bin_centers[::step]], rotation=90)
         else:
-            ax.set_xticklabels([int(x) for x in bin_centers], rotation=90)
+            ax1.set_xticks(bin_centers)
+            ax1.set_xticklabels([int(x) for x in bin_centers], rotation=90)
         
         plt.tight_layout()
         
         return fig
 
-# Create the Shiny App
 app = App(app_ui, server)
 ```
+
 
 #### Summary
 
@@ -885,3 +931,356 @@ We simply add up all the possible values of Extreme_Heat within a given Breakdow
 | No        | 0.70        |
 
 The name 'marginal' comes from the fact that, in the times of paper tables, a statistician could do this addition and write the result in the margin.
+
+
+## Dashboard App
+
+TESTING OF DASHBOARD APP:
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import pandas as pd
+
+app_ui = ui.page_fluid(
+    ui.h2("Simulated Breakdown Data"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "numEvents",
+                "Number of Simulated Outcomes",
+                min=1,
+                max=100000,
+                value=10000,
+                step=1000,
+            ),
+            ui.input_checkbox_group(
+                "covariates",
+                "Select Covariates to Group By",
+                choices=["Mileage", "Brand"],
+                inline=True,
+                selected=["Mileage", "Brand"],
+            ),
+            ui.input_select(
+                "filter_covariate",
+                "Conditional Filter: Choose Covariate",
+                choices=["None", "Mileage", "Brand"],
+                selected="None",
+            ),
+            # Dynamic UI element for filter value input:
+            ui.output_ui("filter_value_ui"),
+        ),
+        ui.output_table("results_table")
+    ),
+)
+
+def server(input, output, session):
+    # Set the seed for reproducibility.
+    np.random.seed(42)
+    
+    @reactive.Calc
+    def simulated_data():
+        n = input.numEvents()
+        miles_driven = np.random.lognormal(mean=np.log(10000), sigma=0.5, size=n)
+        brands = np.random.choice(
+            ["Brand_A", "Brand_B", "Brand_C"],
+            size=n,
+            p=[0.4, 0.4, 0.2],
+        )
+        beta_miles = 0.0000000001
+        brand_effects = {"Brand_A": 0.001, "Brand_B": 0.0005, "Brand_C": -0.0002}
+        lambda_vals = np.exp(beta_miles * miles_driven + np.vectorize(brand_effects.get)(brands))
+        breakdowns = np.random.poisson(lambda_vals)
+        data = pd.DataFrame({
+            "Miles_Driven": miles_driven,
+            "Brand": brands,
+            "Breakdowns": breakdowns,
+        })
+        data["Miles_Binned"] = (data["Miles_Driven"] // 10000) * 10000
+        return data
+
+    @reactive.Calc
+    def grouped_table():
+        data = simulated_data()
+        covariates = input.covariates()
+        group_cols = []
+        if "Mileage" in covariates:
+            group_cols.append("Miles_Binned")
+        if "Brand" in covariates:
+            group_cols.append("Brand")
+        group_cols.append("Breakdowns")
+        
+        grouped = data.groupby(group_cols).size().reset_index(name="Frequency")
+        
+        filter_cov = input.filter_covariate()
+        if filter_cov != "None":
+            if filter_cov == "Mileage":
+                filter_val = input.filter_value()
+                if filter_val is not None:
+                    grouped = grouped[grouped["Miles_Binned"] == float(filter_val)]
+            elif filter_cov == "Brand":
+                filter_val = input.filter_value()
+                if filter_val is not None:
+                    grouped = grouped[grouped["Brand"] == filter_val]
+        
+        total_freq = grouped["Frequency"].sum()
+        if total_freq > 0:
+            grouped["Probability"] = grouped["Frequency"] / total_freq
+        else:
+            grouped["Probability"] = 0
+        return grouped
+
+    @output
+    @render.table
+    def results_table():
+        return grouped_table()
+
+    @output
+    @render.ui
+    def filter_value_ui():
+        filter_cov = input.filter_covariate()
+        if filter_cov == "Mileage":
+            data = simulated_data()
+            unique_bins = sorted(data["Miles_Binned"].unique())
+            return ui.input_select(
+                "filter_value",
+                "Select Mileage Bin",
+                choices=[str(int(x)) for x in unique_bins],
+            )
+        elif filter_cov == "Brand":
+            return ui.input_select(
+                "filter_value",
+                "Select Brand",
+                choices=["Brand_A", "Brand_B", "Brand_C"],
+            )
+        else:
+            return ui.div()
+
+app = App(app_ui, server)
+
+```
+
+<!-- ```{shinylive-python}
+from shiny import App, ui, render, reactive
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.navset_tab(
+        ui.nav("Table",
+            ui.layout_sidebar(
+                ui.sidebar(
+                    ui.input_slider(
+                        "numEvents",
+                        "Number of Simulated Outcomes",
+                        min=1,
+                        max=100000,
+                        value=10000,
+                        step=1000,
+                    ),
+                    ui.input_checkbox_group(
+                        "covariates",
+                        "Select Covariates to Group By",
+                        choices=["Mileage", "Brand"],
+                        inline=True,
+                        selected=["Mileage", "Brand"],
+                    ),
+                    ui.input_select(
+                        "filter_covariate",
+                        "Conditional Filter: Choose Covariate",
+                        choices=["None", "Mileage", "Brand"],
+                        selected="None",
+                    ),
+                    ui.output_ui("filter_value_ui"),
+                ),
+                ui.output_table("results_table")
+            )
+        ),
+        ui.nav("Histogram",
+            ui.layout_sidebar(
+                ui.sidebar(
+                    ui.input_select(
+                        "hist_var",
+                        "Select Variable for Histogram",
+                        choices=["Miles_Driven", "Miles_Binned", "Breakdowns", "Brand"],
+                        selected="Miles_Driven"
+                    )
+                ),
+                ui.output_plot("hist_plot")
+            )
+        ),
+        ui.nav("XY Plot",
+            ui.layout_sidebar(
+                ui.sidebar(
+                    ui.input_select(
+                        "xy_var",
+                        "Select Variable for X-Axis",
+                        choices=["Miles_Driven", "Miles_Binned", "Brand"],
+                        selected="Miles_Binned"
+                    )
+                ),
+                ui.output_plot("xy_plot")
+            )
+        )
+    ),
+    title="Simulated Breakdown Data"
+)
+
+def server(input, output, session):
+    # Set seed for reproducibility.
+    np.random.seed(42)
+    
+    @reactive.Calc
+    def simulated_data():
+        n = input.numEvents()
+        miles_driven = np.random.lognormal(mean=np.log(10000), sigma=0.5, size=n)
+        brands = np.random.choice(
+            ["Brand_A", "Brand_B", "Brand_C"],
+            size=n,
+            p=[0.4, 0.4, 0.2],
+        )
+        beta_miles = 0.000001
+        brand_effects = {"Brand_A": 0.1, "Brand_B": 0.05, "Brand_C": -0.02}
+        lambda_vals = np.exp(beta_miles * miles_driven + np.vectorize(brand_effects.get)(brands))
+        breakdowns = np.random.poisson(lambda_vals)
+        data = pd.DataFrame({
+            "Miles_Driven": miles_driven,
+            "Brand": brands,
+            "Breakdowns": breakdowns,
+        })
+        # Bin miles into intervals of 10,000.
+        data["Miles_Binned"] = (data["Miles_Driven"] // 10000) * 10000
+        return data
+
+    @reactive.Calc
+    def grouped_table():
+        data = simulated_data()
+        covariates = input.covariates()
+        group_cols = []
+        if "Mileage" in covariates:
+            group_cols.append("Miles_Binned")
+        if "Brand" in covariates:
+            group_cols.append("Brand")
+        # Always include Breakdowns.
+        group_cols.append("Breakdowns")
+        
+        grouped = data.groupby(group_cols).size().reset_index(name="Frequency")
+        
+        # Apply filtering if requested.
+        filter_cov = input.filter_covariate()
+        if filter_cov != "None":
+            if filter_cov == "Mileage":
+                filter_val = input.filter_value()
+                if filter_val is not None:
+                    grouped = grouped[grouped["Miles_Binned"] == float(filter_val)]
+            elif filter_cov == "Brand":
+                filter_val = input.filter_value()
+                if filter_val is not None:
+                    grouped = grouped[grouped["Brand"] == filter_val]
+        
+        total_freq = grouped["Frequency"].sum()
+        if total_freq > 0:
+            grouped["Probability"] = grouped["Frequency"] / total_freq
+        else:
+            grouped["Probability"] = 0
+        return grouped
+
+    @reactive.Calc
+    def aggregated_for_xy():
+        data = simulated_data()
+        selected_var = input.xy_var()
+        if selected_var == "Miles_Driven":
+            # Use binned values for Miles_Driven.
+            data = data.copy()
+            data["Miles_Driven_Binned"] = data["Miles_Binned"]
+            agg = data.groupby("Miles_Driven_Binned").agg(
+                Total_Breakdowns=("Breakdowns", "sum"),
+                Count=("Breakdowns", "count")
+            ).reset_index().rename(columns={"Miles_Driven_Binned": selected_var})
+        elif selected_var == "Miles_Binned":
+            agg = data.groupby("Miles_Binned").agg(
+                Total_Breakdowns=("Breakdowns", "sum"),
+                Count=("Breakdowns", "count")
+            ).reset_index().rename(columns={"Miles_Binned": selected_var})
+        elif selected_var == "Brand":
+            agg = data.groupby("Brand").agg(
+                Total_Breakdowns=("Breakdowns", "sum"),
+                Count=("Breakdowns", "count")
+            ).reset_index().rename(columns={"Brand": selected_var})
+        else:
+            agg = data.groupby(selected_var).agg(
+                Total_Breakdowns=("Breakdowns", "sum"),
+                Count=("Breakdowns", "count")
+            ).reset_index()
+        return agg
+
+    @output
+    @render.table
+    def results_table():
+        return grouped_table()
+
+    @output
+    @render.ui
+    def filter_value_ui():
+        filter_cov = input.filter_covariate()
+        if filter_cov == "Mileage":
+            data = simulated_data()
+            unique_bins = sorted(data["Miles_Binned"].unique())
+            return ui.input_select(
+                "filter_value",
+                "Select Mileage Bin",
+                choices=[str(int(x)) for x in unique_bins],
+            )
+        elif filter_cov == "Brand":
+            return ui.input_select(
+                "filter_value",
+                "Select Brand",
+                choices=["Brand_A", "Brand_B", "Brand_C"],
+            )
+        else:
+            return ui.div()
+
+    @output
+    @render.plot
+    def hist_plot():
+        var = input.hist_var()
+        data = simulated_data()
+        fig, ax = plt.subplots()
+        if var in ["Miles_Driven", "Miles_Binned", "Breakdowns"]:
+            ax.hist(data[var], bins=20, color="skyblue", edgecolor="black")
+            ax.set_xlabel(var)
+            ax.set_ylabel("Frequency")
+            ax.set_title(f"Histogram of {var}", fontsize=14)
+        elif var == "Brand":
+            counts = data[var].value_counts()
+            ax.bar(counts.index, counts.values, color="skyblue", edgecolor="black")
+            ax.set_xlabel(var)
+            ax.set_ylabel("Count")
+            ax.set_title(f"Bar Chart of {var}")
+        return fig
+
+    @output
+    @render.plot
+    def xy_plot():
+        agg = aggregated_for_xy()
+        var = input.xy_var()
+        fig, ax = plt.subplots()
+        if var == "Brand":
+            ax.bar(agg[var], agg["Total_Breakdowns"], color="steelblue")
+            ax.set_xlabel(var)
+            ax.set_ylabel("Total Breakdowns")
+            ax.set_title(f"{var} vs Total Breakdowns")
+        else:
+            ax.scatter(agg[var], agg["Total_Breakdowns"], color="steelblue")
+            ax.set_xlabel(var)
+            ax.set_ylabel("Total Breakdowns")
+            ax.set_title(f"{var} vs Total Breakdowns")
+        return fig
+
+app = App(app_ui, server)
+``` -->
+
