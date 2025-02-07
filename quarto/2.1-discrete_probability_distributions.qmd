@@ -98,7 +98,7 @@ Hopefully you've noted how a larger number of rolls seems to give us smoother an
 
 ### Discrete Probability Distributions as Models of Data Generating Processes
 
-In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency (distribution) of the outcomes change. There are a number of important discrete processes that can be described with [mostly] analytical mathematical models, and subsequently as statisticians have discovered/created them, they have **named** these special *discrete probability distributions*.
+In the last section, we used dice rolling as our data generating process, however there are other discrete processes we may be interested in, such as testing 1,000 products that have a 0.999 probability of success each. As you can imagine, when you change the data generating process, the relative frequency (distribution) of the outcomes change. There are many important discrete processes that can be described with [mostly] analytical mathematical models involving a small set of parameters. These have been given names and we will refer to them as *parametric discrete probability distributions*. We include *parametric* to contrast with *non-parametric* distributions that cannot be described with a small set of parameters, and include *discrete* to constrast with *continuous* distributions that can take any real **ℝ** number value.
 
 ::: callout-note
 If you are familiar with discrete probability distributions, you may have expected them to be introduced as a way to find the exact probability of an event, instead of using them to generate data. We will eventually use this feature, but our goal is to more generally introduce models of data generating processes and their associated probability distributions. Only a small number have properties that allow for nice analytical solutions to the probabilities of their data, and we'd prefer not to constrain ourselves to thinking in only an analytical (as opposed to computational) framework.
@@ -540,7 +540,7 @@ A few readers may already know an essay called the 'The Bitter Lesson' by Rich S
 
 ### Exact Probabilities from a Discrete Probability Distribution
 
-Here we provide an example of the more 'typical' use of a named discrete probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.
+Here we provide an example of the more 'typical' use of a parametric discrete probability distribution, to compute the probability of an event. Let's use the properties of the binomial probability distribution to determine the probability of having less than 999 products pass a quality test when we have a true 0.999 pass rate and we inspect 1,000 products.
 
 We'll solve this problem by computing the probability of having 999 or 1,000 products pass, and then just inverting the probability. Note that $P(X = 1000)$ is simplified below based on the *multiplication rule of independent events* to equal 0.999\^1,000. Also, if you're unfamiliar with the n over k in parenthesis, look up 'n choose k'.
 
@@ -814,7 +814,7 @@ John K. Kruschke said it well:
 
 > A probability distribution is simply a list of all possible outcomes and their corresponding probabilities.
 
-We think probability distributions in statistics is a confused topic - not confusing - confused. The main concern is that a special case (the *named* probability distributions) is made so prominent a newcomer is easily confused it is the *only* case. Here let's build up some intuition for discrete probability distributions, in the general sense, with appropriate reference to the special case of the *named* probability distributions.
+We think probability distributions in statistics is confusing because of the extreme emphasis on the named parametric probability distributions. Here we build up intuition for  probability distributions in the general sense, with some reference to the named parametric probability distributions when appropriate.
 
 ### Joint Discrete Probability Distributions
 
@@ -878,7 +878,7 @@ Because BrandB is a constant, we could just write it this way:
 
 Note how this is not the same probability distribution as P(Breakdown, Extreme_Heat).
 
-When we work with a *named* probability distribution, like the binomial, we give the value of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2).
+When we work with a parametric probability distribution, like the binomial, we give the value of the distributions parameters so they can be plugged into the mathematical model of the data generating process - which is what distinguishes it from an empirical distribution. Here is a discrete probability distribution for a Binomial process with n=3 and p=0.2, i.e. P( k \| n=3, p=0.2).
 
 | Successes (k) | n   | k   | Probability |
 |---------------|-----|-----|-------------|
@@ -898,7 +898,7 @@ Because n and k are constant, we may prefer a table without them, although they 
 
 We can't examine the joint probability distribution of the Binomial distribution without giving a value for n and p because the number of possibilities for n and p are infinite, and subsequently the joint probability distribution is infinite. Note we can effectively do the same thing with the 'Breakdown' joint probability distribution if we just changed extreme_heat to temperature, and tried to observe breakdowns for every temperature. The *named* probability distributions are special in that we have a complete mathematical description of the process, so we can simply calculate the results of any combination, while in the empirical distribution of Breakdown, we would have to observe the results.
 
-It is also possible to have a probability distribution from one of the *named* probability distributions in which we have a set of values for the parameters, instead of one value. For example, we can have a Binomial distribution using the set notation $\in$ which states that $n$ must be either 3 or 4 and $p$ must be either 0.2 or 0.3.
+It is also possible to have a probability distribution from one of the parametric probability distributions in which we have a set of values for the parameters, instead of one value. For example, we can have a Binomial distribution using the set notation $\in$ which states that $n$ must be either 3 or 4 and $p$ must be either 0.2 or 0.3.
 
 $$
 P(k, \quad n \in \{3, 4\}, \quad p \in \{0.2, 0.3\})
@@ -910,7 +910,7 @@ $$
 P(Breakdown, \quad ExtremeHeat \in \{Yes, No\}, \quad Brand \in \{BrandA, BrandB\})
 $$
 
-At this point hopefully the empirical and named probability distributions 'feel' the same, except we know the mathematical models behind the named probability distributions, so we do not have to guess their distributions through observation.
+At this point hopefully the empirical and parametric probability distributions 'feel' the same, except we know the mathematical models behind the parametric probability distributions, so we do not have to guess their distributions through observation.
 
 ### Marginal Discrete Probability Distributions
 
