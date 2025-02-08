@@ -7,9 +7,9 @@ filters:
 
 ## Reflections
 
-To learn about probability distributions, we first thought about the data generating process that made them, and then simulated data from models of those processes. This reflects the reality of an infinite number of possible probability distributions. We then focused on some *named* probability distributions, which have names due to having several nice properties, which include the ability to calculate P(D\|M) with \[mostly\] analytic solutions, and to simulate common processes, including some that nature tends to 'converge to', like the normal distribution.
+To learn about probability distributions, we first thought about the data generating process that made them, and then simulated data from models of those processes. This reflects the reality of an infinite number of possible probability distributions. We then focused on some named parametric probability distributions, which have names due to having several nice properties, which include the ability to calculate P(D\|M) with \[mostly\] analytic solutions, and to simulate common processes, including some that nature tends to 'converge to', like the normal distribution.
 
-As we proceed, we will mostly work with the *named* probability distributions - but let's not make the mistake of believing reality is only composed of the *named* probability distributions.
+As we proceed, we will mostly work with parametric probability distributions - but let's not make the mistake of believing reality is only composed of these named parametric probability distributions.
 
 Let's also remember that the variability we describe with statistics has two sources, Aleatoric Uncertainty (Randomness) and Epistemic Uncertainty (Lack of Knowledge). When we simulate data from 'real life' with a probability distribution, we almost always lump Aleatoric and Epistemic Uncertainty together. However, we now start to use models that incorporate data to reduce the Epistemic Uncertainty.
 
