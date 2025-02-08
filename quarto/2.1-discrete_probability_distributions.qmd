@@ -13,7 +13,13 @@ Once we have have some discussion of models under our belt, we will change our f
 
 We then shift to the probability of multiple events based on the laws of probability for independent events. We show how we can use computation to calculate the relative probability of a specific series of events by comparing it to a multitude of randomly generated series of events. We use the example of finding the probability that a die is weighted (unfair) after an observed series of rolls. This is our more intuitive approach to hypothesis testing.
 
-[^1]: [For clarity in the mathematical notation for the more advanced reader refer to](#Probability of Data)
+[^1]: 
+    One of the common problems with the brevity of mathematical notation is its ambiguity. The statement P(D|M), the probability of the data given a model, can have what statisticians would call a Frequentist or a Bayesian interpretation. This primer assumes the Frequentist interpretation (as implied when we said we use 'static' models to generate data) until we get to more advanced topics, in which we will make the switch explicit. The Frequentist interpretation assumes point estimates of the parameters within our model, i.e. a single model that always generates data with the same parameters. We should note that this 'static' model can still generate data in a non-deterministic, i.e. probabilistic, way.
+
+    The other interpretation is the Bayesian one. In the Bayesian interpretation a model is not defined with point estimates of its parameters. The parameters themselves are given probability distributions reflecting the fact that they, in general, cannot be known with certainty. Thus when writing P(D|M) in a Bayesian framework it implies a model with a range of parameter values. There is also additional areas of ambiguity in this notation in the Bayesian approach due to the way P(M|D) is calculated and the way in which it ultimately relies on P(D|M)... We leave much of this for much more advanced textbooks, but will try to balance a reduction in ambiguity for the more advanced reader with simplicity for the more general reader.
+
+    Suffice it to say unless otherwise indicated, P(D|M) is to be interpreted in the most literal way, the probability of data given **a** model (note the emphasis on **a**, as in singular).
+
 
 ## Models of Discrete Data Generating Processes
 
@@ -357,14 +363,6 @@ We keep this section brief as there are plenty of easily accessible references f
 
 Having given some background on models, we can now focus on the probability of the data given the model, $P(D|M)$.
 
-::: callout-warning
-One of the common problems with the brevity of mathematical notation is its ambiguity. The statement P(D|M), the probability of the data given a model, can have what statisticians would call a Frequentist or a Bayesian interpretation. This primer assumes the Frequentist interpretation (as implied when we said we use 'static' models to generate data) until we get to more advanced topics, in which we will make the switch explicit. The Frequentist interpretation assumes point estimates of the parameters within our model, i.e. a single model that always generates data with the same parameters. We should note that this 'static' model can still generate data in a non-deterministic, i.e. probabilistic, way.
-
-The other interpretation is the Bayesian one. In the Bayesian interpretation a model is not defined with point estimates of its parameters. The parameters themselves are given probability distributions reflecting the fact that they, in general, cannot be known with certainty. Thus when writing P(D|M) in a Bayesian framework it implies a model with a range of parameter values. There is also additional areas of ambiguity in this notation in the Bayesian approach due to the way P(M|D) is calculated and the way in which it ultimately relies on P(D|M)... We leave much of this for much more advanced textbooks, but will try to balance a reduction in ambiguity for the more advanced reader with simplicity for the more general reader.
-
-Suffice it to say unless otherwise indicated, P(D|M) is to be interpreted in the most literal way, the probability of data given **a** model (note the emphasis on **a**, as in singular).
-:::
-
 ### Dice Totals Probability of Data
 
 #### Relative Frequency
@@ -543,10 +541,6 @@ app = App(app_ui, server)
 ```
 
 Hopefully you can demonstrate to yourself that with enough samples, the approximate probability calculation is awfully close to the exact probability. However, there is an exception. The tails (the slim far ends) are not as accurate. Properly calculating probability in these tail sections happens to be trivial for dice where an exact solution is available, but for a real problem, accurate tail probabilities are incredibly difficult.
-
-::: callout-note
-A few readers may already know an essay called the 'The Bitter Lesson' by Rich Sutton. If you haven't read it, it is worth a read, and easily found on the internet. I believe it has a strong engineering corollary, in that our education is too obsessed with analytical solutions instead of computational ones. To temper that statement slightly, I can also assure you that solving problems through raw computation has its limits as there's no way to compute through a bad algorithm. But we're professionals in a hurry, we choose computation whenever it's plausible.
-:::
 
 ### Exact Probabilities from a Discrete Probability Distribution
 
