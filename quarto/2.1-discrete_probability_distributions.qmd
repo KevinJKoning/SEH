@@ -566,6 +566,14 @@ Much of statistics is dedicated to hypothesis testing. There's no reason for thi
 
 So far we have only considered $P(D|M)$ where the data is a single event. However, it is more common to have multiple events (i.e. multiple data points), and we'd like to know the probability of a specific dataset vs other datasets we may have sampled. To calculate probabilities we'll use the *multiplication rule of independent events*. In practice it may be very difficult to prove perfectly independent events - however be sure there is not a reason for strong correlation, such as almost all *time series*.
 
+To calculate the probability of $n$ independent events $E_1, E_2, \ldots, E_n$, we simply multiply them together:
+
+$$
+P\left( \bigcap_{i=1}^{n} E_i \right) = \prod_{i=1}^{n} P(E_i)
+$$
+
+Where the left side of the equation refers to the probability of multiple independent events, and the right side describes multiplying the probability of each event in a continuous chain.
+
 #### Numerical Stability
 
 We should also mention for many small probabilities, multiplication risks numerical instability. However there is one very simple and clever workaround to this, which is to add log probabilities instead:
