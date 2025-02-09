@@ -108,7 +108,7 @@ The percentile plot is a foreshadowing of another way to compute continuous prob
 
 ### Continuous Probability Distributions as Models of Data Generating Processes
 
-The real world is full of data generating processes, each of which has a probability distribution, and very few, if any, would match the named probability distributions used constantly in statistics. That doesn't mean the named distributions aren't useful - they are extremely useful approximations due to their ability to model common processes and calculate $P(D|M)$ easily.
+The real world is full of data generating processes, each of which has a probability distribution. We do not expect, however, that many would match a named parametric probability distribution from statistics. That doesn't mean the named parametric probability distributions aren't useful - they are extremely useful approximations due to their ability to model/approximate common processes and calculate $P(D|M)$ easily.
 
 #### The Normal Distribution
 
@@ -891,19 +891,35 @@ app = App(app_ui, server)
 
 ## A Mini Appendix for a more Formal Definition of Probability Distributions
 
-TODO: We can probabily make this a little more 'mathy'
-TODO: Refer to John K. Kruschke, Doing Bayesian Analysis, Page 72
-
-We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. While these phrases are 'real' in the statistical lexicon, for the sake of giving you an interface to more formal statistical language, we take a moment to elaborate *slightly*  (we still will not go to the mathematical depths a true statistical reference would).
+We have, and will, use intuitive language like 'data generating process' that creates a 'relative distribution of outcomes'. While these phrases are 'real' in the statistical lexicon, for the sake of giving you an interface to more formal statistical language, we give a more 'standard' development of the probability distribution.
 
 ### Sample Space
 
-Processes have a limit to what they can generate. Formally this is the 'sample space'. Dice only have so many faces. Processes that generate positive numbers do not generate negative ones.
+The **sample space**, often denoted as $\Omega$, is the complete set of all possible outcomes of a data generating process. Think of it as the "limits" of what the process can produce. For example:
+
+- For a standard six-sided die, the sample space is $\Omega = \{1, 2, 3, 4, 5, 6\}$, since those are the only outcomes that can occur.
+- For a process that only produces positive numbers, the sample space might be something like $\Omega = \{x \in \mathbb{R} \mid x > 0\}$, which excludes any negative outcomes.
 
 ### Random Variable
 
-A random variable, which is typically referred to as capital $X$, is a map of how the sample space will be translated to data. For example, we can have one sample space, which is a dice with six faces, but we can have different mappings. One mapping can be simply the value on the face, but another mapping could be the number of rolls until there is a six.
+A **random variable** is a function that assigns a numerical value to each outcome in the sample space. We usually denote a random variable by a capital letter (e.g., $X$). It “translates” or maps the abstract outcomes into numerical data that we can analyze.
+
+For example, consider a six-sided die:
+
+- One random variable might simply be the value on the face: $X(\omega) = \omega, \quad \text{for } \omega \in \{1, 2, 3, 4, 5, 6\}.$
+- Alternatively, you may be interested in the number of rolls needed until a six appears. In this case, you would define another random variable, say $Y$, which maps the sequence of rolls to a count (e.g., $Y = 3$ if it takes three rolls to get a six).
+
+Even though these random variables come from the same underlying process (rolling a die), they capture different information about the process.
 
 ### Probability Distribution
 
-The probability distribution is then the $P(X=x)$, which represents the probability the random variable, capital $X$, takes on one of the possible mappings, lower case $x$.
+The **probability distribution** describes how the probabilities are assigned to the values that a random variable can take. It answers the question: "How likely is it that the random variable equals a certain value?" This is typically expressed as $P(X = x)$.
+
+For a fair six-sided die (where $X$ represents the outcome of a single roll), the probability distribution is given by:
+$$
+P(X = x) = \frac{1}{6} \quad \text{for } x \in \{1, 2, 3, 4, 5, 6\}.
+$$
+
+This distribution tells you that each face (or outcome) is equally likely. In general, the probability distribution provides a complete picture of how the process behaves by assigning probabilities to every possible outcome mapped by the random variable.
+
+In summary, think of the **sample space** as the set of all possible outcomes, the **random variable** as the rule that translates these outcomes into meaningful numbers, and the **probability distribution** as the description of how likely each of those numbers is to occur.
