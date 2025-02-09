@@ -620,7 +620,7 @@ def logistic_deriv(x):
     return sig * (1 - sig)
 
 # --- Neural Network Class ---
-# Now accepts an 'activation' parameter ("relu" or "logistic") to choose the activation.
+# Now accepts an 'activation' parameter ("relu" or "logistic") and hidden layer size.
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size1, hidden_size2, output_size, activation="relu"):
         self.activation = activation  # "relu" or "logistic"
@@ -697,7 +697,8 @@ app_ui = ui.page_fluid(
     ui.layout_sidebar(
         ui.sidebar(
             ui.input_slider("epochs", "Number of Training Epochs", min=100, max=5000, value=1000, step=100),
-            ui.input_select("activation", "Activation Function", choices=["ReLu", "Logistic"], selected="Logistic")
+            ui.input_select("activation", "Activation Function", choices=["ReLu", "Logistic"], selected="Logistic"),
+            ui.input_slider("hidden_neurons", "Number of Neurons in Hidden Layers", min=1, max=20, value=4, step=1)
         ),
         ui.navset_tab(
             ui.nav_panel("Training Loss",
@@ -728,11 +729,14 @@ def server(input, output, session):
         y_norm = (y - y_mean) / y_std
         
         # Choose the activation function.
-        # Convert the selected string to lowercase ("ReLu" becomes "relu", "Logistic" becomes "logistic").
         activation = input.activation().lower()
         
+        # Get the number of neurons for the hidden layers.
+        hidden_neurons = input.hidden_neurons()
+        
         # Create and train the neural network.
-        nn = NeuralNetwork(input_size=1, hidden_size1=4, hidden_size2=4, output_size=1, activation=activation)
+        nn = NeuralNetwork(input_size=1, hidden_size1=hidden_neurons, hidden_size2=hidden_neurons, 
+                           output_size=1, activation=activation)
         epochs = input.epochs()
         learning_rate = 0.01
         losses = nn.train(X_norm, y_norm, epochs, learning_rate)
