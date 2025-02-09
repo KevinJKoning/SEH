@@ -187,7 +187,7 @@ TODO CHANGE THE NEURAL NET CODE TO OUR PROBLEM
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 700
+#| viewerHeight: 600
 
 from shiny import App, ui, render, reactive
 import numpy as np
@@ -598,7 +598,19 @@ data_str = """ID,carat,cut,color,clarity,depth,table,price,x,y,z
 26079,2.04,Ideal,I,SI1,60.0,60.0,15308,8.3,8.26,4.97
 24966,2.02,Premium,H,SI1,63.0,60.0,13453,7.85,7.79,4.93
 """
-# --- Neural network with logistic activation ---
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from io import StringIO
+
+# --- Activation Functions ---
+def relu(x):
+    return np.maximum(0, x)
+
+def relu_deriv(x):
+    return (x > 0).astype(float)
 
 def logistic(x):
     return 1 / (1 + np.exp(-x))
@@ -607,9 +619,11 @@ def logistic_deriv(x):
     sig = logistic(x)
     return sig * (1 - sig)
 
+# --- Neural Network Class ---
+# Now accepts an 'activation' parameter ("relu" or "logistic") to choose the activation.
 class NeuralNetwork:
-    def __init__(self, input_size, hidden_size1, hidden_size2, output_size):
-        # Initialize weights and biases.
+    def __init__(self, input_size, hidden_size1, hidden_size2, output_size, activation="relu"):
+        self.activation = activation  # "relu" or "logistic"
         self.W1 = np.random.randn(input_size, hidden_size1) * np.sqrt(2.0 / input_size)
         self.b1 = np.zeros((1, hidden_size1))
         
@@ -620,41 +634,47 @@ class NeuralNetwork:
         self.b3 = np.zeros((1, output_size))
     
     def forward(self, X):
-        # First hidden layer with logistic activation.
         self.Z1 = np.dot(X, self.W1) + self.b1
-        self.A1 = logistic(self.Z1)
+        if self.activation == "relu":
+            self.A1 = relu(self.Z1)
+        else:
+            self.A1 = logistic(self.Z1)
         
-        # Second hidden layer with logistic activation.
         self.Z2 = np.dot(self.A1, self.W2) + self.b2
-        self.A2 = logistic(self.Z2)
+        if self.activation == "relu":
+            self.A2 = relu(self.Z2)
+        else:
+            self.A2 = logistic(self.Z2)
         
-        # Output layer (linear for regression).
         self.Z3 = np.dot(self.A2, self.W3) + self.b3
         return self.Z3
     
     def compute_loss(self, y_pred, y_true):
-        return np.mean((y_pred - y_true) ** 2)
+        return np.mean((y_pred - y_true)**2)
     
     def backward(self, X, y_true, y_pred, learning_rate):
         m = y_true.shape[0]
-        # Output layer gradients.
         dZ3 = (2.0 / m) * (y_pred - y_true)
         dW3 = np.dot(self.A2.T, dZ3)
         db3 = np.sum(dZ3, axis=0, keepdims=True)
         
-        # Gradients for second hidden layer.
         dA2 = np.dot(dZ3, self.W3.T)
-        dZ2 = dA2 * logistic_deriv(self.Z2)
+        if self.activation == "relu":
+            dZ2 = dA2 * relu_deriv(self.Z2)
+        else:
+            dZ2 = dA2 * logistic_deriv(self.Z2)
         dW2 = np.dot(self.A1.T, dZ2)
         db2 = np.sum(dZ2, axis=0, keepdims=True)
         
-        # Gradients for first hidden layer.
         dA1 = np.dot(dZ2, self.W2.T)
-        dZ1 = dA1 * logistic_deriv(self.Z1)
+        if self.activation == "relu":
+            dZ1 = dA1 * relu_deriv(self.Z1)
+        else:
+            dZ1 = dA1 * logistic_deriv(self.Z1)
         dW1 = np.dot(X.T, dZ1)
         db1 = np.sum(dZ1, axis=0, keepdims=True)
         
-        # Update weights and biases.
+        # Update parameters.
         self.W3 -= learning_rate * dW3
         self.b3 -= learning_rate * db3
         self.W2 -= learning_rate * dW2
@@ -673,10 +693,11 @@ class NeuralNetwork:
 
 # --- Shiny UI ---
 app_ui = ui.page_fluid(
-    ui.h2("Neural Network Training with Logistic Activation"),
+    ui.h2("Neural Network Training"),
     ui.layout_sidebar(
         ui.sidebar(
-            ui.input_slider("epochs", "Number of Training Epochs", min=100, max=5000, value=1000, step=100)
+            ui.input_slider("epochs", "Number of Training Epochs", min=100, max=5000, value=1000, step=100),
+            ui.input_select("activation", "Activation Function", choices=["ReLu", "Logistic"], selected="Logistic")
         ),
         ui.navset_tab(
             ui.nav_panel("Training Loss",
@@ -694,7 +715,7 @@ def server(input, output, session):
     
     @reactive.Calc
     def train_model():
-        # Load the diamond dataset.
+        # Read the diamond dataset.
         df = pd.read_csv(StringIO(data_str))
         X = df["carat"].values.reshape(-1, 1)
         y = df["price"].values.reshape(-1, 1)
@@ -706,8 +727,12 @@ def server(input, output, session):
         y_mean, y_std = y.mean(), y.std()
         y_norm = (y - y_mean) / y_std
         
+        # Choose the activation function.
+        # Convert the selected string to lowercase ("ReLu" becomes "relu", "Logistic" becomes "logistic").
+        activation = input.activation().lower()
+        
         # Create and train the neural network.
-        nn = NeuralNetwork(input_size=1, hidden_size1=4, hidden_size2=4, output_size=1)
+        nn = NeuralNetwork(input_size=1, hidden_size1=4, hidden_size2=4, output_size=1, activation=activation)
         epochs = input.epochs()
         learning_rate = 0.01
         losses = nn.train(X_norm, y_norm, epochs, learning_rate)
@@ -737,7 +762,6 @@ def server(input, output, session):
         X = result["X"]
         y = result["y"]
         y_pred = result["y_pred"]
-        
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.scatter(X, y, color="blue", label="Actual Price")
         ax.scatter(X, y_pred, color="red", label="Predicted Price")
