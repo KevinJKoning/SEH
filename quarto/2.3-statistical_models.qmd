@@ -25,8 +25,6 @@ This is in contrast to machine learning models, which we'll tackle in the next c
 
 ## Selecting a Probability Distribution by Conditioning on Data
 
-TODO: Is this really a probability distribution? State in a way so it's not confused with a prob dist.
-
 Let's say we drive a car and each trip record the fuel use at different speeds. After many trips we have the following data:
 
 | Miles Per Hour | Measured Miles Per Gallon (Sorry Metric System) | Standard Deviation ($\sigma$) |
@@ -1676,7 +1674,7 @@ app = App(app_ui, server)
 
 You should notice that the other variables are helpful in improving the fit of the model, including reducing the heteroscedasticity. However, some are more useful than others and none are close to the importance of size/carats.
 
-A discussion on including the 'right' variables is a very lengthy topic. We'll summarize it by only saying the obvious - if the variable has no ability to make better *predictions*, it should not be included. However, even this statement has a nuance, we said *predictions* since even completely unrelated variables can make a *training* dataset fit better (we haven't even mentioned training test splitting yet!!!). The other thing to mention is that a variable can be not useful *enough* to warrant the additional model complexity of including it...
+A discussion on including the 'right' variables is a very lengthy topic. We'll summarize it by only saying the obvious - if the variable has no ability to make better *predictions*, it should not be included. However, even this statement has a nuance - we said *predictions* since even completely unrelated variables can make the model appear to fit the existing data better, but ultimately predict new data worse. A variable can also be not useful *enough* to warrant the additional model complexity of including it.
 
 #### Mathematical Form
 
@@ -1922,18 +1920,17 @@ A quick aside you may find interesting - we choose to include logistic regressio
 
 ### Bespoke/Bayesian Models
 
-TODO.
+When we added the non-constant error term to our linear regression model, we headed off the well-trod path of standard statistical models with analytical solutions. Heading off that well-trod path often leads to Bayesian statistics and causal modeling. We have intentionally avoided a discussion of Bayesian and Frequentist statistics (a discussion of which is easily found elsewhere), but suffice it to say that the primer up until this point has effectively taken a Frequentist viewpoint. To oversimplify, since our discussion of parametric probability distributions considered no uncertainty in the parameters themselves, it was inherently a Frequentist introduction. Furthermore, we have not incorporated any prior knowledge when estimating the parameter values, although we will in the second half of the primer.
 
-When we added the non-constant error term to our linear regression model, we headed off the well-trod path of statistical models with analytical solutions. Heading off that well-trod path often leads to another reasonably well-formed path in Bayesian statistics and causal modeling. We intentionally avoid framing our work as Frequentist or Bayesian, but here are a couple key elements we want to include as we move toward models without analytical solutions:
+Here are a couple key elements we want to include as we move toward models without analytical solutions:
 
 * Causal diagrams. These can have more technical uses, but at the very least they communicate our model intent.
-* Bayesian solutions to P(M|D). Without analytical solutions, we need another way. This will wait until the second half of the primer.
+* A way to find likely parameter values for our models without analytical solutions. This will wait until the second half of the primer.
 
 #### Causal Diagrams
 
-As mentioned, a causal diagram is a multi-use tool, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking...
+As mentioned, a causal diagram is a multi-use tool, but at the very least they will communicate our intent, and that often tends to also hone/refine thinking at the same time. Here's what we want in a diamond model:
 
-Here's what we want in a diamond model:
 ```{mermaid}
 graph LR
     cut --> linear_regression

@@ -13,7 +13,7 @@ Due to popular demand, we move on from traditional statistical models to those c
 
 The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. Each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).
 
-We will also need to revisit the topic of overfitting due to the extreme flexibility of neural networks.
+We will also need to visit the topic of overfitting due to the extreme flexibility of neural networks.
 
 ## Random Notes, Maybe Delete
 
