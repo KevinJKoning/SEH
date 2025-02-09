@@ -855,7 +855,7 @@ Now, we could be interested in the combination of the two things, which would be
 | No        | Yes          | 0.30        |
 | No        | No           | 0.40        |
 
-Now it's worth pointing out that while many of us may be interested in the breakdown outcome, one could also be interested in the extreme heat outcome - what we consider the $y$ can be a matter of perspective. Now it's obvious that more variables could be part of this joint probability distribution, although their usefulness ultimately depends on how correlated they are to the outcome of interest. Lets assume we want to predict breakdowns, so we add another variable that is probably useful. Now we have P(Brand, Breakdown, Extreme_Heat).
+Now it's worth pointing out that while many of us may be interested in the breakdown outcome, one could also be interested in the extreme heat outcome - what we consider the $y$ can be a matter of perspective. Now it's obvious that more variables could be part of this joint probability distribution, although their usefulness ultimately depends on how correlated they are to the outcome of interest. Lets assume we want to predict breakdowns, so we add another variable that is probably useful. Now we have P(Brand, Breakdown, Extreme_Heat) in a joint probability distribution:
 
 | Brand  | Breakdown | Extreme Heat | Probability |
 |--------|-----------|--------------|-------------|
