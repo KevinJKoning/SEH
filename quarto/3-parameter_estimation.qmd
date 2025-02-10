@@ -1,18 +1,6 @@
 ---
-title: "Untitled"
+title: "Likelihood of Model"
 format: html
 ---
 
-## Parameter Estimation from Data TEMPORARY OUTLINE
-
-### Bayes without Saying It
-- We know *something* about the process, i.e. a reasonable place to start
-- It may be as simple as we know the values will not be negative
-
-### Low Dimensional Search (Grid)
-
-### High Dimensional Search (MCMC)
-
-
-## Conclusion
-- If it's not obvious, this is a loop, and you move to each part of the loop
+Please select a chapter in the left hand menu.

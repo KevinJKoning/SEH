@@ -15,6 +15,10 @@ Statistics used to be a bit of a flame way between those who used priors and Bay
 2) If you *do* have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.
 
 
+### Low Dimensional Search (Grid)
+
+### High Dimensional Search (MCMC)
+
 
 ## Text
 
