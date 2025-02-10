@@ -7,11 +7,11 @@ filters:
 
 ## Preview
 
-We finally flip to $P(D|M)$ the probability of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}. In practice, we find $P(D|M)$ so that we can find the *best* parameter values for our chosen model. We will describe what *best* is soon.
+We finally flip to $P(M|D)$ the probability of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}. In practice, we find $P(M|D)$ so that we can find the *best* parameter values for our chosen model. We will describe what *best* is soon.
 
 Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.
 
-Throughout the chapter assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values.
+Throughout the chapter assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a Frequentist perspective and the next a Bayesian perspective.
 
 ## Guessing the Best Model Parameter 
 
