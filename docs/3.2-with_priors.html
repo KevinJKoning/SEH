@@ -209,7 +209,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#text" id="toc-text" class="nav-link active" data-scroll-target="#text">Text</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a>
+  <ul class="collapse">
+  <li><a href="#low-dimensional-search-grid" id="toc-low-dimensional-search-grid" class="nav-link" data-scroll-target="#low-dimensional-search-grid">Low Dimensional Search (Grid)</a></li>
+  <li><a href="#high-dimensional-search-mcmc" id="toc-high-dimensional-search-mcmc" class="nav-link" data-scroll-target="#high-dimensional-search-mcmc">High Dimensional Search (MCMC)</a></li>
+  </ul></li>
+  <li><a href="#text" id="toc-text" class="nav-link" data-scroll-target="#text">Text</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a></li>
   <li><a href="#probability-distribution-or-uncertainty" id="toc-probability-distribution-or-uncertainty" class="nav-link" data-scroll-target="#probability-distribution-or-uncertainty">Probability Distribution or Uncertainty?</a></li>
   </ul>
@@ -237,6 +242,21 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview">Preview</h2>
+<p>We finally come to the last chapter, which is focused on P(M|D)…</p>
+<p>Statistics used to be a bit of a flame way between those who used priors and Bayesian statistics, and the ‘standard’ which was frequentism… I think it’s safe to say however, if you’re working on a subject in which you have a significant amount of expert knowledge with relatively complex models, you should use a Bayesian approach for two reasons:</p>
+<ol type="1">
+<li>If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.</li>
+<li>If you <em>do</em> have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.</li>
+</ol>
+<section id="low-dimensional-search-grid" class="level3">
+<h3 class="anchored" data-anchor-id="low-dimensional-search-grid">Low Dimensional Search (Grid)</h3>
+</section>
+<section id="high-dimensional-search-mcmc" class="level3">
+<h3 class="anchored" data-anchor-id="high-dimensional-search-mcmc">High Dimensional Search (MCMC)</h3>
+</section>
+</section>
 <section id="text" class="level2">
 <h2 class="anchored" data-anchor-id="text">Text</h2>
 <p>Text.</p>

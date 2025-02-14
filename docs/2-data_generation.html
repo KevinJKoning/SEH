@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Untitled – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
+<title>Probability of Data – Statistics for Engineers in a Hurry (an Illustrated Primer)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,9 +66,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
-<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
-<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="styles.css">
@@ -199,24 +196,15 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#notes-to-self" id="toc-notes-to-self" class="nav-link active" data-scroll-target="#notes-to-self">Notes to self</a></li>
-  <li><a href="#data-generation-processes-temporary-outline" id="toc-data-generation-processes-temporary-outline" class="nav-link" data-scroll-target="#data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</a></li>
-  <li><a href="#note-to-self" id="toc-note-to-self" class="nav-link" data-scroll-target="#note-to-self">Note to self</a></li>
-  <li><a href="#more-academic-way-to-talk-about-probability-distribution" id="toc-more-academic-way-to-talk-about-probability-distribution" class="nav-link" data-scroll-target="#more-academic-way-to-talk-about-probability-distribution">More academic way to talk about probability distribution</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Untitled</h1>
+<h1 class="title">Probability of Data</h1>
 </div>
 
 
@@ -233,63 +221,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>In the first half of the book,</p>
-<p>Select a subchapter from the left hand menu…</p>
-<p>There are two recommended ways to work your way through this primer. A) Just go in top down order, this will introduce you first to the probability of data given a model of a data generating process, and it will work into models of greater and greater complexity. B) Do the first chapter in <em>probability of data</em>, then do the first chapter of <em>probability of model</em>, then the second chapter in both, etc. This bounces between the probability of the data and the likelihood of the model.</p>
-<section id="notes-to-self" class="level2">
-<h2 class="anchored" data-anchor-id="notes-to-self">Notes to self</h2>
-<p>NEED TO BETTER USE REFERENCE TO PROBABILITY DISTRIBUTIONS AND NAMED PROBABILITY DISTRIBUTIONS</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">graph TD
-  subgraph ModelSystem[ ]
-    Parameters --&gt;|Used by| Model
-  end
-  Data --&gt;|Feeds into| Model
-  Model --&gt;|Produces| Output
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</section>
-<section id="data-generation-processes-temporary-outline" class="level2">
-<h2 class="anchored" data-anchor-id="data-generation-processes-temporary-outline">Data Generation Processes TEMPORARY OUTLINE</h2>
-<p>THEMES:</p>
-<ul>
-<li>Obviously the loop of P(D|M) and P(M|D)</li>
-<li>Computation instead of analysis</li>
-</ul>
-<p>DIFFICULTIES:</p>
-<ul>
-<li>It’s elegant to introduce probability distributions, linear models, etc… as all models of data generating processes.</li>
-<li>We emphasis data generation and models over analytical probability distributions because nothing in real life actually follows the probability distributions</li>
-<li>However, where po</li>
-</ul>
-<p>PROBABILITY DISTRIBUTIONS ARE A SPECIAL SUBSET OF MODELS IN WHICH IT’S SIMPLE TO COMPUTE THE PROBABILITY GIVEN ONLY THE PARAMETERS. OTHERWISE YOU HAVE TO GENERATE AN ENTIER DATA SET.</p>
-</section>
-<section id="note-to-self" class="level2">
-<h2 class="anchored" data-anchor-id="note-to-self">Note to self</h2>
-<p>Models of wave heights could be a cool one.</p>
-</section>
-<section id="more-academic-way-to-talk-about-probability-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="more-academic-way-to-talk-about-probability-distribution">More academic way to talk about probability distribution</h2>
-<p>More abstractly, a probability distribution emerges whenever: • There is uncertainty in an outcome. • There is a set of possible outcomes (sample space). • A rule or process assigns probabilities to those outcomes.</p>
-<p>How Do Probability Distributions Emerge?</p>
-<p>Probability distributions don’t exist in isolation—they arise from the structure of real-world processes. The shape of a distribution is governed by the mechanisms generating the data.</p>
-<p>Here are a few fundamental principles that give rise to different distributions:</p>
-<p>A. Repeated Independent Events → Binomial &amp; Normal Distributions • If an event occurs with some probability p and is repeated n times (e.g., flipping a coin), the Binomial Distribution models the number of successes. • If the number of events grows large, the sum/average of many independent variables tends to a Normal (Gaussian) Distribution, thanks to the Central Limit Theorem (CLT).</p>
-<p>Are Probability Distributions Real or Just Models?</p>
-<p>Distributions don’t exist in nature; they are models of uncertainty. Reality is messy, but distributions help us: • Make predictions based on limited data. • Quantify uncertainty in decision-making. • Optimize processes (finance, physics, AI, etc.).</p>
-<p>Example: Why is the Normal Distribution So Common?</p>
-<p>Because many real-world variables are the sum of many tiny independent effects. This follows from the Central Limit Theorem, which says that sums or averages of many small, independent variations tend toward a Normal distribution.</p>
+<p>Please select a chapter in the left hand menu.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
