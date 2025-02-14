@@ -1,40 +1,9 @@
 # SEH
-Statistics for Engineers in a Hurry
+**Statistics for Engineers in a Hurry (An Illustrated Primer)**
 
-# Temporary Outline
-
-## Data Generation Processes
-
-### Dice Rolls
-- Create the data generating process
-- It's easy to find the likelihood/probability of the outcomes
-- Note how large number of dice is looking a lot like a normal/gaussian distribution
-
-### Normal and Other Distributions
-
-- Each distribution has assumptions about the data generating process
-    - Normal assumes many additive processes
-    - Lognormal assumes many multiplicative processes
-- Are idealized real process, but the tradeoff is simplicity of description with only a few parameters
-
-### Histograms and Likelihood
-
-- Histogams can help us approximate likelihood of continuous data
-    - Or we can understand probability density and cumulative distributions
-- Include log likelihood and the need for indepedence (not a time series)
-- Importance of statistical assumptions
-
-
-## Parameter Estimation from Data
-
-### Bayes without Saying It
-- We know *something* about the process, i.e. a reasonable place to start
-- It may be as simple as we know the values will not be negative
-
-### Low Dimensional Search (Grid)
-
-### High Dimensional Search (MCMC)
-
+For with priors, consider:
+- Low Dimensional Search (Grid)
+- High Dimensional Search (MCMC)
 
 ## Conclusion
 - If it's not obvious, this is a loop, and you move to each part of the loop
