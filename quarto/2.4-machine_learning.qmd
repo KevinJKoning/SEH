@@ -11,11 +11,11 @@ execute:
 
 Due to popular demand, we move on from traditional statistical models to those considered *machine learning*. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e. probabilistic) interpretation.
 
-The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. Each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).
+The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).
 
-We will also need to visit the topic of overfitting due to the extreme flexibility of neural networks.
+Although more details will emerge in $\mathscr{L}(M|D)$, we need give some warning on the topic of overfitting due to the extreme flexibility of neural networks. (NOT TO SELF DO WE NEED TO DISCUSS OVERFITTING FOR BAYESIAN NETWORKS?).
 
-## Random Notes, Maybe Delete
+## Statistical Models vs. Machine Learning
 
 I assume most engineers, a priori, consider *machine learning* models as somehow 'better' than statistical models. In reality there is a *lot* of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it's best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.
 
@@ -26,15 +26,7 @@ Due to the amount of blur/overlap, this may not be a universally agreed distinct
 
 The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they *do not have to be*.
 
-There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model...
-
-There is a real danger and opportunity in including machine learning... The danger is that the themes of the primer are just muddied and confused. The opportunity is that there is a comparison point to make the themese even clearer, and the reader will appreciate the inclusion of the topic.
-
-**It's a little weird including machine learning in P(D|M) consider the point is that you can't do that with many machine learning models**
-
-Include primarily Bayesian neural networks and decision trees. Show how only one has the statistical interpretation.
-
-**Statistical models are always probabilistic and generative, machine learning models, if they are probabilistic and generative also work for P(D|M) but not all are**
+There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.
 
 ## Loss Function
 
