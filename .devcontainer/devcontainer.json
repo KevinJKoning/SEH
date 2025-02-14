@@ -1,11 +1,11 @@
 {
 	"image": "mcr.microsoft.com/devcontainers/universal:2",
 	"hostRequirements": {
-	  "cpus": 4
+	  "cpus": 2
 	},
 	"waitFor": "onCreateCommand",
 	"updateContentCommand": "python3 -m pip install -r requirements.txt",
-	"postCreateCommand": "",
+	"postCreateCommand": "sudo wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.40/quarto-1.6.40-linux-amd64.deb && sudo dpkg -i quarto-1.6.40-linux-amd64.deb && sudo rm quarto-1.6.40-linux-amd64.deb",
 	"customizations": {
 	  "codespaces": {
 		"openFiles": []
