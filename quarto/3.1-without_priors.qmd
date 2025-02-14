@@ -7,7 +7,7 @@ filters:
 
 ## Preview
 
-We finally flip to $\mathcal{L}(M|D)$ the likelihood of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}. In practice, we find $\mathcal{L}(M|D)$ so that we can find the *best* parameter values for our chosen model. We will describe what *best* is soon.
+We finally flip to $\mathcal{L}(M|D)$ the likelihood of a [model]{style="text-decoration: underline;"} given the [data]{style="text-decoration: underline;"}. In practice, we typically find $\mathcal{L}(M|D)$ so that we can find the *best* parameter values for our chosen model type, although it could also be used to select between model types. We will describe what *best* is soon.
 
 Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.
 
@@ -119,7 +119,7 @@ $$
 
 3. $\prod_{i=1}^{N}$: This is the product operation, which multiplies the individual probabilities $P(y_i \mid \theta)$ across all $N$ data points in the dataset. This assumes that the data points are independent. In practice this is typically replaced by the addition of log probabilities, as previously described.
 
-In practice, calculating $P(y_i \mid \theta)$ generally requires making an informed assumption about which named probability distribution best represents your data. We've tried to make the point that reality does not consist of only the *named* probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as practically needed.
+In practice, calculating $P(y_i \mid \theta)$ generally requires making an informed assumption about which named parametric probability distribution best represents your data. We've tried to make the point that reality does not consist of only the *named* probability distributions, however, we use them because they allow for efficient probability calculations, and we can generally choose a named probability distribution that fits the problem as well as practically needed.
 
 In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero ($\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0$). In the next section we'll make the calculations more precisely.
 
