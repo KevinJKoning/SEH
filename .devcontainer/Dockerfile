@@ -10,7 +10,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 # Install common libraries for the Jupyter ecosystem in the Python environment using uv
 RUN uv install jupyterlab notebook pandas numpy matplotlib seaborn
 
-# Install Quarto
+# Install Quarto from Posit
 RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.40/quarto-1.6.40-linux-amd64.deb \
     && dpkg -i quarto-1.6.40-linux-amd64.deb \
     && rm quarto-1.6.40-linux-amd64.deb
