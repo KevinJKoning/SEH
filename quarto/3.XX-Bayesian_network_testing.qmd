@@ -551,5 +551,107 @@ from sklearn.metrics import mean_squared_error
 mse = mean_squared_error(y_test, y_pred_mean)
 print("Mean Squared Error (Test Set):", mse)
 
+```
+
+
+
+## Training Other Neural Nets
+
+```{python}
+def create_and_train_bnn(n_hidden, X_train, y_train, draws=2000, tune=1000):
+    with pm.Model() as bnn_model:
+        # Data container
+        X_data = pm.Data("X_data", X_train, dims=("obs", "features"))
+        y_data = pm.Data("y_data", y_train, dims="obs")
+        
+        # First hidden layer: weights and biases
+        weights_in = pm.Normal("weights_in", mu=0, sigma=10, 
+                             shape=(X_train.shape[1], n_hidden))
+        bias_in = pm.Normal("bias_in", mu=0, sigma=10, shape=(n_hidden,))
+        
+        hidden_1 = pm.math.sigmoid(pm.math.dot(X_data, weights_in) + bias_in)
+        
+        # Second hidden layer: weights and biases
+        weights_hidden = pm.Normal("weights_hidden", mu=0, sigma=10, 
+                                 shape=(n_hidden, n_hidden))
+        bias_hidden = pm.Normal("bias_hidden", mu=0, sigma=10, shape=(n_hidden,))
+        
+        hidden_2 = pm.math.sigmoid(pm.math.dot(hidden_1, weights_hidden) + bias_hidden)
+        
+        # Output layer
+        weights_out = pm.Normal("weights_out", mu=1000, sigma=200, 
+                              shape=(n_hidden, 1))
+        bias_out = pm.Normal("bias_out", mu=1000, sigma=200, shape=(1,))
+        
+        output = pm.math.dot(hidden_2, weights_out) + bias_out
+        
+        # Likelihood noise standard deviation
+        sigma = pm.HalfNormal("sigma", sigma=1)
+        
+        # Likelihood
+        y_obs = pm.Normal("y_obs", mu=output.flatten(), sigma=sigma, 
+                         observed=y_data)
+        
+        # Sample from posterior
+        trace = pm.sample(draws=draws, tune=tune)
+    
+    return bnn_model, trace
+
+# Train models with different numbers of neurons
+neurons_configs = [6, 8]
+models_and_traces = []
+
+for n_neurons in neurons_configs:
+    print(f"\nTraining model with {n_neurons} neurons per hidden layer...")
+    model, trace = create_and_train_bnn(n_neurons, X_train, y_train)
+    models_and_traces.append((model, trace, n_neurons))
+
+# Evaluate and compare models
+plt.figure(figsize=(15, 5))
+
+for idx, (model, trace, n_neurons) in enumerate(models_and_traces):
+    # Update model with test data and get predictions
+    with model:
+        pm.set_data({"X_data": X_test, "y_data": y_test})
+        posterior_predictive = pm.sample_posterior_predictive(trace, 
+                                                           var_names=["y_obs"])
+    
+    # Extract predictions
+    y_pred_samples = posterior_predictive.posterior_predictive["y_obs"].values
+    y_pred_mean = y_pred_samples.mean(axis=(0, 1))
+    y_pred_hdi = az.hdi(y_pred_samples, hdi_prob=0.94)
+    
+    # Calculate MSE
+    mse = mean_squared_error(y_test, y_pred_mean)
+    
+    # Plot
+    plt.subplot(1, 2, idx + 1)
+    plt.errorbar(
+        X_test.flatten(), y_pred_mean,
+        yerr=[y_pred_mean - y_pred_hdi[:, 0], y_pred_hdi[:, 1] - y_pred_mean],
+        fmt='o', capsize=4, alpha=0.5, label='Predicted Price (94% HDI)'
+    )
+    plt.scatter(X_test.flatten(), y_test, color='red', alpha=0.7, 
+               label='Actual Price')
+    plt.xlabel("Carat")
+    plt.ylabel("Price")
+    plt.title(f"BNN with {n_neurons} neurons\nMSE: {mse:.2f}")
+    plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+# Print comparative MSE scores
+print("\nModel Performance Comparison:")
+for model, trace, n_neurons in models_and_traces:
+    with model:
+        pm.set_data({"X_data": X_test, "y_data": y_test})
+        posterior_predictive = pm.sample_posterior_predictive(trace, 
+                                                           var_names=["y_obs"])
+    y_pred_samples = posterior_predictive.posterior_predictive["y_obs"].values
+    y_pred_mean = y_pred_samples.mean(axis=(0, 1))
+    mse = mean_squared_error(y_test, y_pred_mean)
+    print(f"MSE for {n_neurons} neurons per layer: {mse:.2f}")
 
 ```
+
