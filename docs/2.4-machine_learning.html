@@ -239,7 +239,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
-  <li><a href="#random-notes-maybe-delete" id="toc-random-notes-maybe-delete" class="nav-link" data-scroll-target="#random-notes-maybe-delete">Random Notes, Maybe Delete</a></li>
+  <li><a href="#statistical-models-vs.-machine-learning" id="toc-statistical-models-vs.-machine-learning" class="nav-link" data-scroll-target="#statistical-models-vs.-machine-learning">Statistical Models vs.&nbsp;Machine Learning</a></li>
   <li><a href="#loss-function" id="toc-loss-function" class="nav-link" data-scroll-target="#loss-function">Loss Function</a></li>
   <li><a href="#likelihood-function" id="toc-likelihood-function" class="nav-link" data-scroll-target="#likelihood-function">Likelihood Function</a></li>
   <li><a href="#machine-learning-models" id="toc-machine-learning-models" class="nav-link" data-scroll-target="#machine-learning-models">Machine Learning Models</a></li>
@@ -286,23 +286,18 @@ window.Quarto = {
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>Due to popular demand, we move on from traditional statistical models to those considered <em>machine learning</em>. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e.&nbsp;probabilistic) interpretation.</p>
-<p>The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. Each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
-<p>We will also need to visit the topic of overfitting due to the extreme flexibility of neural networks.</p>
+<p>The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
 </section>
-<section id="random-notes-maybe-delete" class="level2">
-<h2 class="anchored" data-anchor-id="random-notes-maybe-delete">Random Notes, Maybe Delete</h2>
+<section id="statistical-models-vs.-machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-models-vs.-machine-learning">Statistical Models vs.&nbsp;Machine Learning</h2>
 <p>I assume most engineers, a priori, consider <em>machine learning</em> models as somehow ‘better’ than statistical models. In reality there is a <em>lot</em> of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it’s best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.</p>
 <p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:</p>
 <ul>
 <li>Statistical models are built around probability theory</li>
-<li>Machine learning models are built around an objective/loss function</li>
+<li>Machine learning models are built around an objective/<strong>loss function</strong></li>
 </ul>
 <p>The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they <em>do not have to be</em>.</p>
-<p>There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e.&nbsp;more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model…</p>
-<p>There is a real danger and opportunity in including machine learning… The danger is that the themes of the primer are just muddied and confused. The opportunity is that there is a comparison point to make the themese even clearer, and the reader will appreciate the inclusion of the topic.</p>
-<p><strong>It’s a little weird including machine learning in P(D|M) consider the point is that you can’t do that with many machine learning models</strong></p>
-<p>Include primarily Bayesian neural networks and decision trees. Show how only one has the statistical interpretation.</p>
-<p><strong>Statistical models are always probabilistic and generative, machine learning models, if they are probabilistic and generative also work for P(D|M) but not all are</strong></p>
+<p>There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e.&nbsp;more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.</p>
 </section>
 <section id="loss-function" class="level2">
 <h2 class="anchored" data-anchor-id="loss-function">Loss Function</h2>
@@ -334,8 +329,7 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 </section>
 <section id="likelihood-function" class="level2">
 <h2 class="anchored" data-anchor-id="likelihood-function">Likelihood Function</h2>
-<p>The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).</p>
-<p>It’s a bit awkward to mention Likelihood here, because we have been trying to wait until the second half of the primer in order to tackle it head on. However, you probably have an expectation that Machine Learning will be covered, at least to some degree, and it makes sense to do that while introducing all the other types of models. I’ll continue to make it awkward and just state that yes this is the difference, but to understand Likelihood we’ll have to wait to the second half…</p>
+<p>The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, <span class="math inline">\(\mathscr{L}(M|D)\)</span>.</p>
 </section>
 <section id="machine-learning-models" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning-models">Machine Learning Models</h2>
@@ -1728,7 +1722,7 @@ app = App(app_ui, server)
 </section>
 <section id="with-diamond-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="with-diamond-dataset">With Diamond Dataset</h2>
-<div id="0ae8e29f" class="cell" data-execution_count="1">
+<div id="6610618c" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

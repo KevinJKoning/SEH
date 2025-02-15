@@ -11,9 +11,7 @@ execute:
 
 Due to popular demand, we move on from traditional statistical models to those considered *machine learning*. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e. probabilistic) interpretation.
 
-The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. We will build a network and then allow it to generate data. Because this type of machine learning is probabilistic, we can calculate P(D|M).
-
-Although more details will emerge in $\mathscr{L}(M|D)$, we need give some warning on the topic of overfitting due to the extreme flexibility of neural networks. (NOT TO SELF DO WE NEED TO DISCUSS OVERFITTING FOR BAYESIAN NETWORKS?).
+The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).
 
 ## Statistical Models vs. Machine Learning
 
@@ -22,7 +20,7 @@ I assume most engineers, a priori, consider *machine learning* models as somehow
 Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:
 
 * Statistical models are built around probability theory
-* Machine learning models are built around an objective/loss function
+* Machine learning models are built around an objective/**loss function**
 
 The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they *do not have to be*.
 
@@ -51,9 +49,7 @@ $$
 
 ## Likelihood Function
 
-The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).
-
-It's a bit awkward to mention Likelihood here, because we have been trying to wait until the second half of the primer in order to tackle it head on. However, you probably have an expectation that Machine Learning will be covered, at least to some degree, and it makes sense to do that while introducing all the other types of models. I'll continue to make it awkward and just state that yes this is the difference, but to understand Likelihood we'll have to wait to the second half...
+The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
 
 ## Machine Learning Models
 
