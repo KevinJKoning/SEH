@@ -127,7 +127,7 @@ In the dice app above, the likelihood of the number of dice parameter being a va
 
 It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.
 
-We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the p parameter. However, we now want to work in the other direction, P(M|D), in which we find the value of the p parameter with the maximum likelihood.
+We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the p parameter. However, we now want to work in the other direction, $\mathcal{L}(M|D)$, in which we find the value of the p parameter with the maximum likelihood.
 
 Although the app below does not automatically give you the maximum likelihood estimate, it will hopefully make it easy for you to approximate the value. Pick several p values you think are reasonable and for each select 'Add to plot'.
 
@@ -278,7 +278,7 @@ app = App(app_ui, server)
 
 Let's breakdown how the likelihood was calculated for one of the datapoints. First, we needed to determine a probability distribution that represents our data. Because we have a fixed number of trials and probability of success for each trial, the Binomial probability distribution was a good choice.
 
-#### Reminder of Binomial Probabilities
+### Reminder of Binomial Probabilities
 
 Next, let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
 
@@ -300,22 +300,59 @@ $$
 
 The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point, which corresponds to k=992, has a value of about -2.73.
 
-#### Difference between P(M|D) and P(D|M)
+### Difference between $\mathcal{L}(M|D)$ and P(D|M)
 
 Now you should be asking yourself - what is the difference between what we are doing here and what we did in the first half when we calculated P(D|M)? And the answer is that up until this step - nothing. So where does the difference come in?
 
-The difference is that we use the probability of the data to determine the likelihood of the model in comparison to other possible models. We then optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best P(M|D).
+The difference is that we use the probability of the data to determine the likelihood of the model in comparison to other possible models. We then optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best $\mathcal{L}(M|D)$.
 
-
-#### A Subtly Good Strategy
+### A Subtly Good Strategy
 
 Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of p. That strategy to find the most probable model is actually not a bad one - a state of the art method is effectively a very sophisticated version of that same strategy.
 
-#### Analytical Solution
+### Analytical Solution
 
 For the Binomial distribution there's actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you'd expect... The basic idea is that the derivative of the 'Total Log Probability vs p.' chart will equal zero at the maximum probability. After a brief drum roll we can reveal that the most likely estimate of p is ....... just the average success rate. More precisely, the successes divided by the total n, e.g. (992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).
 
 Although we mostly avoid them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.
+
+## Computational Strategies for finding the Maximum Likelihood Estimate
+
+Analytical solutions are not common for real-world problems, so we consider some computational strategies for finding the Maximum Likelihood Estimate.
+
+### Grid Search
+
+Grid search simply divides up the parameter space (i.e. the possible parameter values) into a discrete number of values to check. For example, if we are trying to estimate $p$ in a simple model based on the binomial distribution, it can range from 0 to 1, so we could try the values 0.01, 0.02 ... 0.98, and 0.99. Of the 99 likelihood estimates we calculate, we simply pick the p value associated with the largest likelihood. 
+
+The grid search estimate for the binomial example would be denoted as $\hat{p}_{\text{grid}}$, which is the value of $p$ from the grid $G$ that maximizes the likelihood (or log-likelihood):
+
+$$
+\hat{p}_{\text{grid}} = \arg\max_{p_i \in G} l(p_i \mid n, k)
+$$
+
+This notation means: "$\hat{p}_{\text{grid}}$ is the value of $p_i$, chosen from the set $G$, that maximizes the function $l(p_i \mid n, k)$."
+
+Grid search is attractive due to its simplicity. However, it doesn't scale well if you need to estimate multiple parameters (high dimensionality) because the plausible number of combinations increases exponentially (also known the curse of dimensionality). For example, if may believe we can reasonably estimate a parameter by picking a minimum and a maximum value, dividing the space between into 100 values to check, and finding the parameter value with the maximum likelihood. With two parameters, this is quite feasible, 100^2, or 10,000. Three parameters is still quite feasible, at 100^3 or 1,000,000 combinations, with modern computers - but we can see where this is going. Any large number of parameters will be intractable. 
+
+### Gradient Ascent (or Descent on the Negative Log-Likelihood)
+
+In our manual estimation of the Maximum Likelihood with discrete data, we created a chart that had an obvious peak at the Maximum Likelihood Estimate. If we want to find that peak we simply need to 'walk' up the hill. If the slope decreases near the top it may be a hint we should slow down to not overshoot the peak. This is the idea of using gradients/derivatives to make our calculation more efficient.
+
+We aim to minimize $min_{\theta} f(\theta)$ by computing the gradient of $f(\theta)$ with respect to $\theta$:
+
+$$
+\nabla f(\theta) = \left[ \frac{\partial f}{\partial \theta_1}, \frac{\partial f}{\partial \theta_2}, \dots, \frac{\partial f}{\partial \theta_n} \right]
+$$
+
+This gradient points in the direction of the steepest ascent. We update our previous estimate by taking a step with a step size with learning rate $\eta$:
+
+$$
+\theta^{(t+1)} = \theta^{(t)} - \eta \nabla f(\theta^{(t)})
+$$
+
+where $t$ is the iteration index.
+
+The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many 'autograd' libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation.
 
 ## Maximum Likelihood Estimate with Continuous Data
 
