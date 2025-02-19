@@ -332,6 +332,160 @@ app = App(app_ui, server)
 
 ```
 
+## Stan Sim v2
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# --- Helper Functions ---
+
+def inv_logit(z):
+    """Sigmoid function."""
+    return 1 / (1 + np.exp(-z))
+
+def generate_parameters():
+    """
+    Draw a single set of neural network parameters using the Stan summary's means and sds.
+    """
+    params = {}
+    # Input -> first hidden layer (1 x 4)
+    params["weights_in"] = np.array([
+         np.random.normal(-0.84,  0.01),
+         np.random.normal(2.71, 0.01),
+         np.random.normal(-0.82, 0.01),
+         np.random.normal(-9.16, 0.01)
+    ])
+    params["bias_in"] = np.array([
+         np.random.normal(1.03, 0.01),
+         np.random.normal(-3.78, 0.01),
+         np.random.normal(0.92, 0.01),
+         np.random.normal(13.41, 0.014)
+    ])
+    
+    # First hidden layer -> second hidden layer (4 x 4)
+    params["weights_hidden"] = np.array([
+        [np.random.normal(3.16, 0.01), np.random.normal(-4.52, 0.01),
+         np.random.normal(-0.40, 0.01), np.random.normal(0.07, 0.01)],
+        [np.random.normal(-8.63, 0.01), np.random.normal(7.35, 0.01),
+         np.random.normal(2.56, 0.01), np.random.normal(-1.52, 0.01)],
+        [np.random.normal(0.05, 0.01), np.random.normal(-1.25, 0.01),
+         np.random.normal(-0.73, 0.01), np.random.normal(-2.39, 0.01)],
+        [np.random.normal(-7.14, 0.01), np.random.normal(-1.35, 0.01),
+         np.random.normal(-7.77, 0.01), np.random.normal(4.00, 0.01)]
+    ])
+    params["bias_hidden"] = np.array([
+         np.random.normal(3.71, 0.01),
+         np.random.normal(-3.22, 0.01),
+         np.random.normal(2.19, 0.01),
+         np.random.normal(-1.57, 0.01)
+    ])
+    
+    # Second hidden layer -> output layer (vector of length 4)
+    params["weights_out"] = np.array([
+         np.random.normal(3856.76, 495.69),
+         np.random.normal(3715.54, 513.76),
+         np.random.normal(3879.81, 467.75),
+         np.random.normal(3916.50, 487.24)
+    ])
+    params["bias_out"] = np.random.normal(528.46, 120.71)
+    
+    # Noise standard deviation (sigma)
+    params["sigma"] = np.random.normal(470.55, 5.22)
+    return params
+
+def simulate_network(x, params):
+    """
+    Given input array x (carat values) and a set of parameters,
+    compute the network output and add noise (sigma scales with x).
+    """
+    # First hidden layer: apply sigmoid( x * weights_in + bias_in )
+    h1 = inv_logit( x[:, None] * params["weights_in"][None, :] + params["bias_in"][None, :] )
+    # Second hidden layer: apply sigmoid( h1 dot weights_hidden + bias_hidden )
+    h2 = inv_logit( np.dot(h1, params["weights_hidden"]) + params["bias_hidden"] )
+    # Output: linear combination (no activation)
+    mu = np.dot(h2, params["weights_out"]) + params["bias_out"]
+    # Add noise with standard deviation proportional to carat
+    # noise = np.random.normal(0, params["sigma"] * x)
+    # return mu + noise
+    return mu
+
+# --- Define the UI ---
+
+app_ui = ui.page_fluid(
+    ui.h2("Bayesian Neural Network Data Generator"),
+    ui.p("Generate simulated diamond prices from a Bayesian neural network."),
+    ui.input_slider("n_points", "Total number of points:",
+                    min=100, max=1000, value=100, step=100),
+    ui.input_action_button("add", "Add to Plot"),
+    ui.input_action_button("reset", "Reset"),
+    ui.output_plot("plot")
+)
+
+# --- Define the Server ---
+
+def server(input, output, session):
+    # Reactive value to store accumulated data across "Add to Plot" clicks.
+    accumulated_data = reactive.Value(pd.DataFrame(columns=["carat", "price", "block"]))
+    # A counter to number each block uniquely.
+    block_counter = reactive.Value(1)
+    
+    @reactive.Effect
+    @reactive.event(input.add)
+    def add_points():
+        n_points = input.n_points()
+        blocks = n_points // 100  # Each block is 100 points.
+        current_df = accumulated_data.get()
+        counter = block_counter.get()
+        new_blocks = []
+        for _ in range(blocks):
+            # Generate 100 carat values between 0.5 and 2.5.
+            x = np.linspace(0.5, 2.5, 100)
+            params = generate_parameters()  # Draw new parameters for each block.
+            y = simulate_network(x, params)
+            block_label = f"Block {counter}"
+            counter += 1
+            df = pd.DataFrame({"carat": x, "price": y, "block": block_label})
+            new_blocks.append(df)
+        # Append the new blocks to the accumulated data.
+        new_data = pd.concat(new_blocks, ignore_index=True)
+        accumulated_data.set(pd.concat([current_df, new_data], ignore_index=True))
+        block_counter.set(counter)
+    
+    @reactive.Effect
+    @reactive.event(input.reset)
+    def reset_data():
+        # Clear the accumulated data and reset the block counter.
+        accumulated_data.set(pd.DataFrame(columns=["carat", "price", "block"]))
+        block_counter.set(1)
+    
+    @output
+    @render.plot
+    def plot():
+        df = accumulated_data.get()
+        fig, ax = plt.subplots(figsize=(6,4))
+        if not df.empty:
+            # Plot each block's points as scatter (no connecting lines)
+            for block, group in df.groupby("block"):
+                ax.scatter(group["carat"], group["price"], label=block)
+        ax.set_xlabel("Carat")
+        ax.set_ylabel("Price")
+        ax.set_title("Simulated Data from Bayesian Neural Network")
+        if not df.empty:
+            ax.legend()
+        return fig
+
+# --- Create the App ---
+
+app = App(app_ui, server)
+
+```
+
 
 ## Point-Estimate Neural Network
 
