@@ -1,6 +1,9 @@
 ---
 title: Machine Learning
-format: html
+format: 
+    html:
+        mermaid:
+            theme: neutral
 filters:
   - shinylive
 execute:
@@ -88,7 +91,6 @@ Before we layer in the Bayesian piece, we start with 'standard' neural nets. Alt
 To explain that further it helps immensely to have a diagram that points out the layers, the neurons, and what information is being fed into each neuron.
 
 ```{mermaid}
-%%{init: {'themeVariables': {'spacing': 5}}}%%
 graph LR
   %% Define classes with desired styles
   classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
@@ -105,54 +107,40 @@ graph LR
     N2(["N2"])
     N3(["N3"])
     N4(["N4"])
-    N5(["N5"])
-    class N2,N3,N4,N5 hiddenLayer1;
+    class N2,N3,N4 hiddenLayer1;
   end
 
   subgraph Hidden Layer 2
+    N5(["N5"])
     N6(["N6"])
     N7(["N7"])
-    N8(["N8"])
-    N9(["N9"])
-    class N6,N7,N8,N9 hiddenLayer2;
+    class N5,N6,N7 hiddenLayer2;
   end
 
   subgraph Output Layer
-    N10(["N10"])
-    class N10 outputLayer;
+    N8(["N8"])
+    class N8 outputLayer;
   end
 
   N1 -->|C1| N2
   N1 -->|C2| N3
   N1 -->|C3| N4
-  N1 -->|C4| N5
   
+  N2 -->|C4| N5
   N2 -->|C5| N6
   N2 -->|C6| N7
-  N2 -->|C7| N8
-  N2 -->|C8| N9
   
-  N3 -->|C9| N6
-  N3 -->|C10| N7
-  N3 -->|C11| N8
-  N3 -->|C12| N9
+  N3 -->|C7| N5
+  N3 -->|C8| N6
+  N3 -->|C9| N7
   
-  N4 -->|C13| N6
-  N4 -->|C14| N7
-  N4 -->|C15| N8
-  N4 -->|C16| N9
+  N4 -->|C10| N5
+  N4 -->|C11| N6
+  N4 -->|C12| N7
   
-  N5 -->|C17| N6
-  N5 -->|C18| N7
-  N5 -->|C19| N8
-  N5 -->|C20| N9
-  
-  N6 -->|C21| N10
-  N7 -->|C22| N10
-  N8 -->|C23| N10
-  N9 -->|C24| N10
-
-
+  N5 -->|C13| N8
+  N6 -->|C14| N8
+  N7 -->|C15| N8
 ```
 
 As shown in the diagram above, there are the following pieces with the following purpose:
