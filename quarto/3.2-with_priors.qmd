@@ -14,6 +14,29 @@ Statistics used to be a bit of a flame way between those who used priors and Bay
 1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
 2) If you *do* have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.
 
+## Maximum Likelihood Estimation (MLE) vs. Maximum A Posteriori (MAP)
+
+In machine learning, MAP (Maximum A Posteriori) estimation is a Bayesian approach to parameter estimation. It finds the most probable parameter values given the observed data and a prior distribution.
+
+Mathematically, it maximizes the posterior probability:
+
+$$
+\theta_{MAP} = \arg\max_{\theta} P(\theta | X)
+$$
+
+Using Bayes’ theorem:
+
+$$
+P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}
+$$
+
+Since  P(X)  is constant for optimization, MAP simplifies to:
+
+$$
+\theta_{MAP} = \arg\max_{\theta} P(X | \theta) P(\theta)
+$$
+
+This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only  P(X | \theta)  (ignoring the prior  P(\theta) ). MAP is useful when incorporating prior knowledge into the learning process.
 
 ### Low Dimensional Search (Grid)
 
