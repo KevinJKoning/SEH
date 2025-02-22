@@ -40,55 +40,44 @@ $$
 #### Variables:
 - $y_i$: The true value for the \(i\)-th data point.
 - $\hat{y}_i$: The predicted value for the \(i\)-th data point.
-- $\ell(y_i, \hat{y}_i)$: The individual error for the \(i\)-th data point, defined by a specific loss function (e.g., squared error, cross-entropy).
+- $\ell(y_i, \hat{y}_i)$: The individual error for the \(i\)-th data point defined by the loss function.
 - $N$: The total number of data points.
 
-#### Explanation:
-- The function $\ell(y_i, \hat{y}_i)$ depends on the task (regression or classification). 
-  - Example for regression: $\ell(y_i, \hat{y}_i) = (y_i - \hat{y}_i)^2$ (Mean Squared Error).
-  - Example for classification: $\ell(y_i, \hat{y}_i) = -[y_i \log(\hat{y}_i) + (1 - y_i) \log(1 - \hat{y}_i)]$ (Binary Cross-Entropy).
-- The summation aggregates the error across all data points.
-- Dividing by $N$ ensures the loss represents the average error.
+The function $\ell(y_i, \hat{y}_i)$ depends on the task.
 
 ## Likelihood Function
 
-The loss function is in contrast to using likelihood functions, which are based in probability theory. We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
+Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
 
 ## Machine Learning Models
 
-The following are some of the most common machine learning models. *Supervised learning* means that there is a result or 'y' variable to learn from. *Unsupervised learning* does not have the result or 'y' variable, which is a little confusing - instead of trying to predict they are generally attempting some kind of categorization/clustering or simplification.
-
-You may note that the first two on the list below, linear regression and logistic regression, would also firmly sit on most lists of common statistical models.
-
-#### Supervised Learning
-1. **Linear Regression**: Predicts continuous values.
-2. **Logistic Regression**: For binary or multi-class classification.
-3. **Decision Trees**: Simple, interpretable models for classification and regression.
-4. **Random Forest**: Ensemble of decision trees for better accuracy.
-5. **Gradient Boosting (e.g., XGBoost, LightGBM)**: Powerful ensemble method for structured data.
-6. **Support Vector Machines (SVM)**: For classification and regression.
-7. **Neural Networks**: Flexible models, basis of deep learning.
-
-#### Unsupervised Learning
-1. **k-Means Clustering**: Groups similar data points.
-2. **Principal Component Analysis (PCA)**: Reduces dimensionality while preserving variance.
-
+Although the chapter is titled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.
 
 ## Bayesian Neural Net
 
 There are many machine learning models we could focus on, however, we'll choose Bayesian Neural Nets for a few reasons:
 
-1) They make probabilistic predictions just like our statistical models
-2) We have already learned most of the basic building blocks
-3) [Standard] Neural nets are the basis of modern AI
+A) They make probabilistic predictions just like our statistical models
+B) We have already learned most of the basic building blocks (of the model, but not the model 'training')
+C) [Standard] Neural nets are the basis of modern AI
 
-### 'Standard' Neural Net
+Comprehending Bayesian Neural Nets from scratch is a loftly goal, we will tackle it by building up our understanding gradually:
 
-Before we layer in the Bayesian piece, we start with 'standard' neural nets. Although there are many variations, we can think of a neural net as layers of artificial neurons that simply perform logistic regression on the previous layer of neurons to determine their activation state.
+1) We develop a 'standard' neural net structure
+2) We revisit how each hidden neuron determines its activation via logistic regression
+3) Use the 'standard' neural net but add an output to let it determine the variance in the data
+4) Use ensembles of the neural nets that can estimate variance
+5) Use a Bayesian Neural Net that has a full posterior distribution of the weights
+
+We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer. Before we layer in the Bayesian piece, we start with 'standard' neural nets.
+
+### Standard Neural Net
+
+ Although there are many variations, we can think of a neural net as layers of artificial neurons that perform a regression-like calculation on the outputs of the previous layer of neurons. An example will make this much more obvious.
 
 #### Structure
 
-To explain that further it helps immensely to have a diagram that points out the layers, the neurons, and what information is being fed into each neuron.
+To explain that further it helps immensely to have a diagram that points out the layers, the neurons, and what connections are being used to feed information into the next neuron.
 
 ```{mermaid}
 graph LR
@@ -143,16 +132,243 @@ graph LR
   N7 -->|C15| N8
 ```
 
-As shown in the diagram above, there are the following pieces with the following purpose:
+The number of input neurons match the number of variables (or dimensions) of the data we want to input. We are going to input one variable (the size/carats of a diamond) so we only need one input neuron. 
 
-1) **The Input Layer**, which takes in data. The number of neurons match the number of variables (or dimensions) of the data we want to input. We are going to input one variable (the size/carats of a diamond) so we only need one input neuron.
-2) That input goes to **Hidden Layer 1**. Each neuron will take the input and be activated according to the input value and a weight/coefficient associated with the neuron.
-3) At **Hidden Layer 2** things get interesting. Each of these neurons take the values from the first layer of neurons and performs another logistic regression to determine their activation. From the diagram you can see there are lots of connections here. N6 will take the activation value from N2 and apply it's own weight/coefficient, same with N3, N4, and N5, and use logistic regression to get it's own activation. That same process repeats with N7, N8, and N9, each with their own weights/coefficients.
-4) The **Output Layer** which is a final regression using the activation of N6, N7, N8, and N9 to get the output value of the neural net.
+We want the input and output functions to match the scale of our data (which can be greater than one), while we want the hidden layers to mimic the activation of a neuron (0% to 100%, or 0 to 1). Thus the inputs and outputs of our neural network will be based on linear regression, while the neurons in the hidden layers will be based on logistic regression. 
+
+#### The Input Layer
+
+The first neuron performs the following calculation, where $w_n$ is a weight/coefficient, $x$ is the input value (i.e. carats), and $b_n$ is a bias/intercept:
+
+$$
+\begin{aligned}
+C_1 &= w_1 \cdot x \;+\; b_1, \\
+C_2 &= w_2 \cdot x \;+\; b_2, \\
+C_3 &= w_3 \cdot x \;+\; b_3.
+\end{aligned}
+$$
+
+```{mermaid}
+graph LR
+  %% Define classes with desired styles
+  classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
+  classDef hiddenLayer1 fill:#c2ebf9,stroke:#0096d6;
+
+  subgraph Input Layer
+    N1(["N1"])
+    class N1 inputLayer;
+  end
+
+  subgraph Hidden Layer 1
+    N2(["N2"])
+    N3(["N3"])
+    N4(["N4"])
+    class N2,N3,N4 hiddenLayer1;
+  end
+
+  N1 -->|$$C_1 = w_1 \cdot x \;+\; b_1$$| N2
+  N1 -->|$$C_2 = w_2 \cdot x \;+\; b_2$$| N3
+  N1 -->|$$C_3 = w_3 \cdot x \;+\; b_3$$| N4
+```
+
+#### Hidden Layer 1
+
+At Hidden Layer 1, each neuron is only receiving one input, but is creating 3 outputs. and be activated according to the input value and a weight/coefficient associated with the neuron.
+
+$$
+\begin{aligned}
+C_4 &= \frac{1}{1 + e^{-(w_4 \cdot x + b_4)}}, \\
+C_7 &= \frac{1}{1 + e^{-(w_7 \cdot x + b_7)}}, \\
+C_{10} &= \frac{1}{1 + e^{-(w_{10} \cdot x + b_{10})}}.
+\end{aligned}
+$$
+
+
+```{mermaid}
+graph LR
+  %% Define classes with desired styles
+  classDef hiddenLayer fill:#c2ebf9,stroke:#0096d6;   %% Blue
+  classDef outputLayer fill:#d8c2f9,stroke:#6a00d6;   %% Purple
+
+  subgraph Hidden Layer 1
+    N1(["N1"])
+    class N1 hiddenLayer;
+  end
+
+  subgraph Hidden Layer 2
+    O1(["N5"])
+    O2(["N6"])
+    O3(["N7"])
+    class O1,O2,O3 outputLayer;
+  end
+
+  N1 -->|"$$C_4 = \frac{1}{1 + e^{-(w_4x + b_4)}}$$"| O1
+  N1 -->|"$$C_7 =\frac{1}{1 + e^{-(w_7x + b_7)}}$$"| O2
+  N1 -->|"$$C_{10} =\frac{1}{1 + e^{-(w_{10}x + b_{10})}}$$"| O3
+```
+
+#### Hidden Layer 2
+
+At Hidden Layer 2 Each of these neurons take the values from the first layer of neurons and performs another logistic regression to determine their activation. From the diagram you can see there are lots of connections here. N6 will take the activation value from N2 and apply it's own weight/coefficient, same with N3, N4, and N5, and use logistic regression to get it's own activation. That same process repeats with N7, N8, and N9, each with their own weights/coefficients.
+
+Let's show the calcuation that is happening at neuron N5:
+
+
+```{mermaid}
+graph LR
+  %% Define classes with desired styles
+  classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
+  classDef hiddenLayer fill:#d8c2f9,stroke:#6a00d6;
+  classDef outputLayer fill:#c2f9c9,stroke:#00d640;
+
+  subgraph Inputs
+    I1(["Input 1"])
+    I2(["Input 2"])
+    I3(["Input 3"])
+    class I1,I2,I3 inputLayer;
+  end
+
+  subgraph Hidden Layer 2 Neuron
+    N5(["N5"])
+    class N5 hiddenLayer;
+  end
+
+  subgraph Outputs
+    O1(["Output"])
+    class O1 outputLayer;
+  end
+
+  I1 --> N5
+  I2 --> N5
+  I3 --> N5
+  N5 --> O1
+```
+
+Here's how
+
+```{python}
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+def sigmoid(z):
+    """Logistic (sigmoid) activation function."""
+    return 1 / (1 + math.exp(-z))
+
+# Arbitrary weights and bias
+w1, w2, w3 = 2.0, 1.0, -1.0
+bias = -0.5
+
+def neuron_output(x1, x2, x3):
+    """Compute the neuron's output with a logistic activation."""
+    z = w1*x1 + w2*x2 + w3*x3 + bias
+    return sigmoid(z)
+
+# High and low activation examples
+x1_high, x2_high, x3_high = 2, 2, 2
+x1_low, x2_low, x3_low = -1, -1, -1
+
+# Print numeric results for the two examples
+print("High activation example:")
+print(f"  Inputs: ({x1_high}, {x2_high}, {x3_high})")
+print(f"  Output: {neuron_output(x1_high, x2_high, x3_high)}\n")
+
+print("Low activation example:")
+print(f"  Inputs: ({x1_low}, {x2_low}, {x3_low})")
+print(f"  Output: {neuron_output(x1_low, x2_low, x3_low)}\n")
+
+# Plot the activation across a range of x1 values
+# We'll fix x2, x3 to the high-activation set for one curve, 
+# and fix x2, x3 to the low-activation set for another curve.
+x_values = np.linspace(-3, 3, 100)
+y_high_curve = [neuron_output(x, x2_high, x3_high) for x in x_values]
+y_low_curve  = [neuron_output(x, x2_low,  x3_low)  for x in x_values]
+
+plt.figure(figsize=(8, 5))
+
+# Plot lines for the two fixed-input scenarios
+plt.plot(x_values, y_high_curve, label='x2=2, x3=2 (High Activation Curve)')
+plt.plot(x_values, y_low_curve,  label='x2=-1, x3=-1 (Low Activation Curve)')
+
+# Mark the specific high- and low-activation points
+plt.scatter(x1_high, neuron_output(x1_high, x2_high, x3_high),
+            color='red', zorder=5, label='High Activation Point')
+plt.scatter(x1_low, neuron_output(x1_low, x2_low, x3_low),
+            color='blue', zorder=5, label='Low Activation Point')
+
+plt.title("Neuron Output with Logistic Activation")
+plt.xlabel("x1")
+plt.ylabel("Activation")
+plt.ylim(-0.1, 1.1)
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+
+#### The Output Layer
+
+which is a final regression using the activation of N6, N7, N8, and N9 to get the output value of the neural net.
 
 #### Weights/Coefficients
 
 While the structure of a neural net influences the types of problems it is most appropriate for, the knowledge of the neural net is held in the weights. Determining the weights of a neural network is generally accomplished by training on data via backpropogation, for which numerous resources are available elsewhere. Here, we will jump past that the details of that step so that we can proceed with a reasonably trained neural net.
+
+## Activating Mermaid NN
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+from shiny import App, ui, render
+
+app_ui = ui.page_fluid(
+    # Include Mermaid JS in the head
+    ui.tags.head(
+        ui.tags.script(src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js")
+    ),
+    ui.h1("Simple Mermaid Diagram Example"),
+    # Add ui.output to connect with server
+    ui.output_ui("mermaid_diagram"),
+    # Initialize Mermaid
+    ui.tags.script("""
+        mermaid.initialize({ startOnLoad: true });
+        // Re-run mermaid rendering after dynamic content loads
+        $(document).on('shiny:value', function(event) {
+            if(event.name === 'mermaid_diagram') {
+                setTimeout(function() {
+                    mermaid.init();
+                }, 100);
+            }
+        });
+    """)
+)
+
+def server(input, output, session):
+    @output
+    @render.ui
+    def mermaid_diagram():
+        return ui.div(
+            ui.tags.pre(
+                ui.tags.code(
+                    """
+                    graph TD
+                        A[Start] --> B{Decision}
+                        B -->|Yes| C[Action 1]
+                        B -->|No| D[Action 2]
+                        C --> E[End]
+                        D --> E
+                    """,
+                    {"class": "mermaid"}
+                )
+            )
+        )
+
+app = App(app_ui, server)
+```
+
+
+
 
 ## Stan Neural Network Sim
 
