@@ -256,6 +256,8 @@ a^{(1)}_{1,3} &= \frac{1}{1 + e^{-(w^{(1)}_{1,3} \cdot a^{(0)}_{1,1} + b^{(1)}_{
 \end{aligned}
 $$
 
+Shown on a subset of the graph:
+
 ```{mermaid}
 graph LR
   %% Define classes with desired styles
@@ -263,29 +265,31 @@ graph LR
   classDef outputLayer fill:#d8c2f9,stroke:#6a00d6;   %% Purple
 
   subgraph Hidden Layer 1
-    N2(["N2"])
+    N2(["$$N^{(1)}_{1}$$"])
     class N2 hiddenLayer;
   end
 
   subgraph Hidden Layer 2
-    O1(["N5"])
-    O2(["N6"])
-    O3(["N7"])
+    O1(["$$N^{(2)}_{1}$$"])
+    O2(["$$N^{(2)}_{2}$$"])
+    O3(["$$N^{(2)}_{3}$$"])
     class O1,O2,O3 outputLayer;
   end
 
   N2 -->|"$$a^{(1)}_{1,1} = \frac{1}{1 + e^{-(w^{(1)}_{1,1} \cdot a^{(0)}_{1,1}  + b^{(1)}_{1,1})}}$$"| O1
-  N2 -->|"$$a^{(1)}_{1,2} =\frac{1}{1 + e^{-(w^{(1)}_{1,2} \cdot a^{(0)}_{1,2}  + b^{(1)}_{1,2}}}$$"| O2
-  N2 -->|"$$a^{(1)}_{1,3} =\frac{1}{1 + e^{-(w^{(1)}_{1,3} \cdot a^{(0)}_{1,3}  + b^{(1)}_{1,3})}}$$"| O3
+  N2 -->|"$$a^{(1)}_{1,2} =\frac{1}{1 + e^{-(w^{(1)}_{1,2} \cdot a^{(0)}_{1,1}  + b^{(1)}_{1,2}}}$$"| O2
+  N2 -->|"$$a^{(1)}_{1,3} =\frac{1}{1 + e^{-(w^{(1)}_{1,3} \cdot a^{(0)}_{1,1}  + b^{(1)}_{1,3})}}$$"| O3
 ```
 
 #### Hidden Layer 2
 
-At Hidden Layer 2 each neuron takes the values from the first hidden layer of neurons and performs another logistic regression to determine their activation. From the diagram you can see there are lots of connections here. If we examine neuron N5, it is taking in data from connection C4, C7, and C10, and then creating a single output, C13.
+At Hidden Layer 2 each neuron takes the values from the first hidden layer of neurons and performs another logistic regression to determine their activation. If we examine neuron $N^{(2)}_{1}$, it is taking in data from activation $a^{(1)}_{1,1}$, $a^{(1)}_{2,1}$, and $a^{(1)}_{3,1}$, and then creating a single output, $a^{(2)}_{1,1}$.
 
 $$
-C_{13} = \frac{1}{1 + e^{-(w_{13} \cdot x_4 + w_{14} \cdot x_7 + w_{15} \cdot x_10 + b_{13})}}
+a^{(2)}_{1,1} = \frac{1}{1 + e^{-(w^{(2)}_{1,1} \cdot a^{(1)}_{1,1} + w^{(2)}_{1,2} \cdot a^{(1)}_{2,1} + w^{(2)}_{1,3} \cdot a^{(1)}_{3,1} + b^{(2)}_{1,1})}}
 $$
+
+Shown on a subset of the graph:
 
 ```{mermaid}
 graph LR
@@ -294,27 +298,29 @@ graph LR
   classDef outputLayer fill:#c2f9c9,stroke:#00d640;
 
   subgraph Hidden Layer 2 Neuron
-    N5(["N5"])
+    N5(["$$N^{(2)}_{1}$$"])
     class N5 hiddenLayer;
   end
 
   subgraph Output
-    O1(["Output"])
+    O1(["$$N^{(3)}_{1}$$"])
     class O1 outputLayer;
   end
 
-  N5 --> O1
+  N5 -->|"$$\frac{1}{1 + e^{-(w^{(2)}_{1,1} \cdot a^{(1)}_{1,1} + w^{(2)}_{1,2} \cdot a^{(1)}_{2,1} + w^{(2)}_{1,3} \cdot a^{(1)}_{3,1} + b^{(2)}_{1,1})}}$$"| O1
 ```
-
-Here's how
 
 #### The Output Layer
 
-which is a final regression using the activation of N6, N7, N8, and N9 to get the output value of the neural net.
+The output neuron $N^{(3)}_{1,1}$ receives the activations $a^{(2)}_{1,1}$, $a^{(2)}_{2,1}$, and $a^{(2)}_{3,1}$ and uses linear regression to obtain the output value of the neural net.
 
-#### Weights/Coefficients
+$$
+y = w^{(3)}_{1,1} \cdot a^{(2)}_{1,1} + w^{(3)}_{1,2} \cdot a^{(2)}_{2,1} + w^{(3)}_{1,3} \cdot a^{(2)}_{3,1} + b^{(3)}_{1,1}
+$$
 
-While the structure of a neural net influences the types of problems it is most appropriate for, the knowledge of the neural net is held in the weights. Determining the weights of a neural network is generally accomplished by training on data via backpropogation, for which numerous resources are available elsewhere. Here, we will jump past that the details of that step so that we can proceed with a reasonably trained neural net.
+#### Values of Weights and Biases
+
+While the structure of a neural net influences the types of problems it is most appropriate for, the knowledge of the neural net is held in the weights and biases. Determining the weights of a neural network is generally accomplished by training on data via backpropogation, for which numerous resources are available elsewhere. Here, we will jump past the details of that step so that we can proceed with a reasonably trained neural net.
 
 ## Activating Mermaid NN
 
