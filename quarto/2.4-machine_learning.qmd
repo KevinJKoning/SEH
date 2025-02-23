@@ -66,7 +66,7 @@ $$
 z = \beta_1x_1 + \beta_2x_2 + … + \beta_nx_n + \beta_0
 $$
 
-However, the neural net folks prefer the following **standard notation**:
+However, the neural net folks prefer something more akin to the following **neural network notation**:
 
 $$
 z = w_1a_1 + w_2a_2 + … + w_na_n + b
@@ -84,7 +84,13 @@ $$
 
 Where $f(z)$ is some activation function, which could be the sigmoid function we've already seen, among other options. Although not preferred in most large neural networks, the 0 to 1 range of the sigmoid function has a nice interpretation as the physical activation of the neuron.
 
-#### Neural Net Structure
+As a reminder here is what the sigmoid activation looks like:
+
+$$
+\sigma(z) = \frac{1}{1 + e^{-z}}
+$$
+
+## Neural Net Structure
 
 Although there are many variations, a basic neural net consists of layers of artificial neurons that are activated based the outputs of the previous layer of neurons. An example will make this much more obvious.
 
@@ -122,9 +128,9 @@ graph LR
     class N8 outputLayer;
   end
 
-  N1 -->|"$$a^{(0)}_{1}$$"| N2
-  N1 -->|"$$a^{(0)}_{2}$$"| N3
-  N1 -->|"$$a^{(0)}_{3}$$"| N4
+  N1 -->|"$$a^{(0)}_{1,1}$$"| N2
+  N1 -->|"$$a^{(0)}_{1,2}$$"| N3
+  N1 -->|"$$a^{(0)}_{1,3}$$"| N4
   
   N2 -->|"$$a^{(1)}_{1,1}$$"| N5
   N2 -->|"$$a^{(1)}_{1,2}$$"| N6
@@ -138,16 +144,16 @@ graph LR
   N4 -->|"$$a^{(1)}_{3,2}$$"| N6
   N4 -->|"$$a^{(1)}_{3,3}$$"| N7
   
-  N5 -->|"$$a^{(2)}_{1}$$"| N8
-  N6 -->|"$$a^{(2)}_{2}$$"| N8
-  N7 -->|"$$a^{(2)}_{3}$$"| N8
+  N5 -->|"$$a^{(2)}_{1,1}$$"| N8
+  N6 -->|"$$a^{(2)}_{2,1}$$"| N8
+  N7 -->|"$$a^{(2)}_{3,1}$$"| N8
 ```
 
 The number of input neurons match the number of variables (or dimensions) of the data we want to input. We are going to input one variable (the size/carats of a diamond) so we only need one input neuron.
 
 We want the input and output functions to match the scale of our data (which can be greater than one), while we want the hidden layers to mimic the activation of a neuron (0% to 100%, or 0 to 1). Thus the inputs and outputs of our neural network will be based on linear regression, while the neurons in the hidden layers will be based on logistic regression.
 
-#### Notation
+### Notation
 
 The building blocks of a neural net are nothing scary, however there are a lot of pieces, and therefore a lot to keep track of. This demands some notation to keep everything straight, which is probably the scariest bit. (We should mention training a neural net is another tough part, but we will not worry about that here).
 
@@ -159,6 +165,7 @@ We have the following natural heirarchy of information:
     -   Neurons
         -   Weights
         -   Bias
+        -   Activations
 
 #### Neurons
 
@@ -169,40 +176,50 @@ $N^{(l)}_{i}$
 -   $l$ (superscript), the layer index/number
 -   $i$ (subscript),the neuron index/number within layer $l$
 
-##### Weights
+#### Weights
 
 We can use the following notation to refer to a specific weight $w$:
 
-$$
-w^{(l)}_{i,j}
-$$
+$w^{(l)}_{i,j}$
 
 -   $l$ (superscript), the layer index/number
 -   $i$ (subscript), the neuron index/number within layer $l$
 -   $j$ (subscript), the weight index/number within neuron $i$
 
-##### Biases
+#### Biases
 
 We can use the following notation to refer to a specific bias $b$:
 
-$$
-b^{(l)}_{i}
-$$
+$b^{(l)}_{i,j}$
 
--   l (superscript), the layer index/number
--   i (subscript),the neuron index/number within layer $l$
+-   $l$ (superscript), the layer index/number
+-   $i$ (subscript), the neuron index/number within layer $l$
+-   $j$ (subscript), the bias index/number within neuron $i$
 
-#### The Input Layer
+#### Activations
 
-The first neuron, N1, performs the following calculation, where $w_n$ is a weight/coefficient, $x$ is the input value (i.e. carats), and $b_n$ is a bias/intercept:
+We can use the following notation to refer to a specific activation $a$:
+
+$a^{(l)}_{i,j}$
+
+-   $l$ (superscript), the layer index/number
+-   $i$ (subscript), the neuron index/number within layer $l$
+-   $j$ (subscript), the activation index/number within neuron $i$
+
+
+### The Input Layer
+
+The first neuron, $N^{(0)}_{1}$, takes one input and creates three unique outputs based on the following calculation, where $w$ is a weight/coefficient, $x$ is the input value (i.e. carats), and $b$ is a bias/intercept:
 
 $$
 \begin{aligned}
-C_1 &= w_{1.1} \cdot x \;+\; b_{1.1}, \\
-C_2 &= w_{1.2} \cdot x \;+\; b_{1.2}, \\
-C_3 &= w_{1.3} \cdot x \;+\; b_{1.3}.
+a^{(0)}_{1,1} &= w^{(0)}_{1,1} \cdot x \;+\; b^{(0)}_{1,1}, \\
+a^{(0)}_{1,2} &= w^{(0)}_{1,2} \cdot x \;+\; b^{(0)}_{1,2}, \\
+a^{(0)}_{1,3} &= w^{(0)}_{1,3} \cdot x \;+\; b^{(0)}_{1,3}.
 \end{aligned}
 $$
+
+Shown on a subset of the graph:
 
 ```{mermaid}
 graph LR
@@ -211,31 +228,31 @@ graph LR
   classDef hiddenLayer1 fill:#c2ebf9,stroke:#0096d6;
 
   subgraph Input Layer
-    N1(["N1"])
+    N1(["$$N^{(0)}_{1}$$"])
     class N1 inputLayer;
   end
 
   subgraph Hidden Layer 1
-    N2(["N2"])
-    N3(["N3"])
-    N4(["N4"])
+    N2(["$$N^{(1)}_{1}$$"])
+    N3(["$$N^{(1)}_{2}$$"])
+    N4(["$$N^{(1)}_{3}$$"])
     class N2,N3,N4 hiddenLayer1;
   end
 
-  N1 -->|$$C_1 = w_1 \cdot x \;+\; b_1.1$$| N2
-  N1 -->|$$C_2 = w_2 \cdot x \;+\; b_1.2$$| N3
-  N1 -->|$$C_3 = w_3 \cdot x \;+\; b_1.3$$| N4
+  N1 -->|"$$a^{(0)}_{1,1} = w^{(0)}_{1,1} \cdot x \;+\; b^{(0)}_{1,1}$$"| N2
+  N1 -->|"$$a^{(0)}_{1,2} = w^{(0)}_{1,2} \cdot x \;+\; b^{(0)}_{1,2}$$"| N3
+  N1 -->|"$$a^{(0)}_{1,3} = w^{(0)}_{1,3} \cdot x \;+\; b^{(0)}_{1,3}$$"| N4
 ```
 
 #### Hidden Layer 1
 
-At Hidden Layer 1, each neuron is only receiving one input, but is creating 3 outputs. Since we are now within the hidden layers, the math is logistic regression instead of linear regression. We examine the calculation occuring at neuron N2. Here $x_1$ is the value received from connection C1.
+At Hidden Layer 1, each neuron is again receiving one input (an activation this time), and again creating three unique outputs. Since we are now within the hidden layers, the math is logistic regression instead of linear regression. We examine the calculation occuring at neuron $N^{(1)}_{1}$. Here $a^{(0)}_{1,1}$ is the activation value received from neuron $N^{(0)}_{1}$.
 
 $$
 \begin{aligned}
-C_4 &= \frac{1}{1 + e^{-(w_4 \cdot x_1 + b_4)}}, \\
-C_5 &= \frac{1}{1 + e^{-(w_5 \cdot x_1 + b_5)}}, \\
-C_6 &= \frac{1}{1 + e^{-(w_6 \cdot x_1 + b_6)}}.
+a^{(1)}_{1,1} &= \frac{1}{1 + e^{-(w^{(1)}_{1,1} \cdot a^{(0)}_{1,1} + b^{(1)}_{1,1})}}, \\
+a^{(1)}_{1,2} &= \frac{1}{1 + e^{-(w^{(1)}_{1,2} \cdot a^{(0)}_{1,1} + b^{(1)}_{1,2})}}, \\
+a^{(1)}_{1,3} &= \frac{1}{1 + e^{-(w^{(1)}_{1,3} \cdot a^{(0)}_{1,1} + b^{(1)}_{1,3})}}.
 \end{aligned}
 $$
 
@@ -257,9 +274,9 @@ graph LR
     class O1,O2,O3 outputLayer;
   end
 
-  N2 -->|"$$C_4 = \frac{1}{1 + e^{-(w_4x_1 + b_4)}}$$"| O1
-  N2 -->|"$$C_5 =\frac{1}{1 + e^{-(w_5x_1 + b_5)}}$$"| O2
-  N2 -->|"$$C_6 =\frac{1}{1 + e^{-(w_6x_1 + b_6)}}$$"| O3
+  N2 -->|"$$a^{(1)}_{1,1} = \frac{1}{1 + e^{-(w^{(1)}_{1,1} \cdot a^{(0)}_{1,1}  + b^{(1)}_{1,1})}}$$"| O1
+  N2 -->|"$$a^{(1)}_{1,2} =\frac{1}{1 + e^{-(w^{(1)}_{1,2} \cdot a^{(0)}_{1,2}  + b^{(1)}_{1,2}}}$$"| O2
+  N2 -->|"$$a^{(1)}_{1,3} =\frac{1}{1 + e^{-(w^{(1)}_{1,3} \cdot a^{(0)}_{1,3}  + b^{(1)}_{1,3})}}$$"| O3
 ```
 
 #### Hidden Layer 2
