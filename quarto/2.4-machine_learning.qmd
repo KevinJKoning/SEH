@@ -14,68 +14,79 @@ execute:
 
 Due to popular demand, we move on from traditional statistical models to those considered *machine learning*. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e. probabilistic) interpretation.
 
-The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).
+The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D\|M).
 
-## Statistical Models vs. Machine Learning
+## Statistical Models vs. Machine Learning Models
 
 I assume most engineers, a priori, consider *machine learning* models as somehow 'better' than statistical models. In reality there is a *lot* of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it's best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.
 
+### Likelihood vs Loss Function
+
 Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:
 
-* Statistical models are built around probability theory
-* Machine learning models are built around an objective/**loss function**
+-   Statistical models are built around probability theory and likelihood
+-   Machine learning models are built around an objective/**loss function**
 
 The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they *do not have to be*.
 
-There are other common differences that are also blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.
+### Other Differences
 
-## Loss Function
+There are other common differences that are even more blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.
 
-A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ and the predicted values $\hat{y}$ The generic form of a loss function can be expressed as:
+## Machine Learning Hand Waving
+
+Although the chapter is entitled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.
+
+## \[Bayesian\] Neural Nets
+
+There are many machine learning models we could focus on, however, we'll choose Neural Nets, culminating in Bayesian Neural Nets for a few reasons:
+
+A)  They can make probabilistic predictions just like our statistical models
+B)  We have already learned the basic building blocks
+C)  \[Standard\] Neural nets are the basis of modern AI, a fundamental technology
+
+Comprehending Bayesian Neural Nets from scratch is a loftly goal, so we will tackle it by building up our understanding gradually:
+
+1)  We develop the activation of a single neuron and it's relation to logistic regression
+2)  We develop a basic neural net structure
+2)  We develop how the neuron activations propogate through the network
+3)  Use the 'standard' neural net but add an output to let it determine the variance in the data
+4)  Use ensembles of the neural nets that can estimate variance
+5)  Use a Bayesian Neural Net that has a full posterior distribution of the weights
+
+We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer.
+
+## Single Neuron
+
+It's helpful to focus on a single neuron before buildings up the rest of a neural net. First it will show an artificial neuron is not complicated. And second, discussing a single neuron allows for simple notation. When we need to keep track of many neurons, the notation required is a bit more complicated.
+
+A neuron has a number of connections feeding into it, this is very much like the different inputs into a linear regression equation that we would label as $x_1$, $x_2$ etc. Using familiar **regression notation** it would look like this:
 
 $$
-L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+z = \beta_1x_1 + \beta_2x_2 + … + \beta_nx_n + \beta_0
 $$
 
-#### Variables:
-- $y_i$: The true value for the \(i\)-th data point.
-- $\hat{y}_i$: The predicted value for the \(i\)-th data point.
-- $\ell(y_i, \hat{y}_i)$: The individual error for the \(i\)-th data point defined by the loss function.
-- $N$: The total number of data points.
+However, the neural net folks prefer the following **standard notation**:
 
-The function $\ell(y_i, \hat{y}_i)$ depends on the task.
+$$
+z = w_1a_1 + w_2a_2 + … + w_na_n + b
+$$
 
-## Likelihood Function
+Where we call $w$ a weight, $a$ an activation (since it's usually from the previous neuron), and $b$ the bias.
 
-Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
+### Activation Function
 
-## Machine Learning Models
+There's one more step in that some **activation function** is applied to $z$, which is quite similar in form to generalized linear regression, although the purpose is only to introduce a convenient form of non-linearity. 
 
-Although the chapter is titled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.
+$$
+a = f(z)
+$$
 
-## Bayesian Neural Net
+Where $f(z)$ is some activation function, which could be the sigmoid function we've already seen, among other options. Although not preferred in most large neural networks, the 0 to 1 range of the sigmoid function has a nice interpretation as the physical activation of the neuron.
 
-There are many machine learning models we could focus on, however, we'll choose Bayesian Neural Nets for a few reasons:
+#### Neural Net Structure
 
-A) They make probabilistic predictions just like our statistical models
-B) We have already learned most of the basic building blocks (of the model, but not the model 'training')
-C) [Standard] Neural nets are the basis of modern AI
-
-Comprehending Bayesian Neural Nets from scratch is a loftly goal, we will tackle it by building up our understanding gradually:
-
-1) We develop a 'standard' neural net structure
-2) We revisit how each hidden neuron determines its activation via logistic regression
-3) Use the 'standard' neural net but add an output to let it determine the variance in the data
-4) Use ensembles of the neural nets that can estimate variance
-5) Use a Bayesian Neural Net that has a full posterior distribution of the weights
-
-We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer. Before we layer in the Bayesian piece, we start with 'standard' neural nets.
-
-### Standard Neural Net
-
- Although there are many variations, we can think of a neural net as layers of artificial neurons that perform a regression-like calculation on the outputs of the previous layer of neurons. An example will make this much more obvious.
-
-#### Structure
+Although there are many variations, a basic neural net consists of layers of artificial neurons that are activated based the outputs of the previous layer of neurons. An example will make this much more obvious.
 
 To explain that further it helps immensely to have a diagram that points out the layers, the neurons, and what connections are being used to feed information into the next neuron.
 
@@ -88,63 +99,108 @@ graph LR
   classDef outputLayer fill:#c2f9c9,stroke:#00d640;
 
   subgraph Input Layer
-    N1(["N1"])
+    N1(["$$N^{(0)}_{1}$$"])
     class N1 inputLayer;
   end
 
   subgraph Hidden Layer 1
-    N2(["N2"])
-    N3(["N3"])
-    N4(["N4"])
+    N2(["$$N^{(1)}_{1}$$"])
+    N3(["$$N^{(1)}_{2}$$"])
+    N4(["$$N^{(1)}_{3}$$"])
     class N2,N3,N4 hiddenLayer1;
   end
 
   subgraph Hidden Layer 2
-    N5(["N5"])
-    N6(["N6"])
-    N7(["N7"])
+    N5(["$$N^{(2)}_{1}$$"])
+    N6(["$$N^{(2)}_{2}$$"])
+    N7(["$$N^{(2)}_{3}$$"])
     class N5,N6,N7 hiddenLayer2;
   end
 
   subgraph Output Layer
-    N8(["N8"])
+    N8(["$$N^{(3)}_{1}$$"])
     class N8 outputLayer;
   end
 
-  N1 -->|C1| N2
-  N1 -->|C2| N3
-  N1 -->|C3| N4
+  N1 -->|"$$a^{(0)}_{1}$$"| N2
+  N1 -->|"$$a^{(0)}_{2}$$"| N3
+  N1 -->|"$$a^{(0)}_{3}$$"| N4
   
-  N2 -->|C4| N5
-  N2 -->|C5| N6
-  N2 -->|C6| N7
+  N2 -->|"$$a^{(1)}_{1,1}$$"| N5
+  N2 -->|"$$a^{(1)}_{1,2}$$"| N6
+  N2 -->|"$$a^{(1)}_{1,3}$$"| N7
   
-  N3 -->|C7| N5
-  N3 -->|C8| N6
-  N3 -->|C9| N7
+  N3 -->|"$$a^{(1)}_{2,1}$$"| N5
+  N3 -->|"$$a^{(1)}_{2,2}$$"| N6
+  N3 -->|"$$a^{(1)}_{2,3}$$"| N7
   
-  N4 -->|C10| N5
-  N4 -->|C11| N6
-  N4 -->|C12| N7
+  N4 -->|"$$a^{(1)}_{3,1}$$"| N5
+  N4 -->|"$$a^{(1)}_{3,2}$$"| N6
+  N4 -->|"$$a^{(1)}_{3,3}$$"| N7
   
-  N5 -->|C13| N8
-  N6 -->|C14| N8
-  N7 -->|C15| N8
+  N5 -->|"$$a^{(2)}_{1}$$"| N8
+  N6 -->|"$$a^{(2)}_{2}$$"| N8
+  N7 -->|"$$a^{(2)}_{3}$$"| N8
 ```
 
-The number of input neurons match the number of variables (or dimensions) of the data we want to input. We are going to input one variable (the size/carats of a diamond) so we only need one input neuron. 
+The number of input neurons match the number of variables (or dimensions) of the data we want to input. We are going to input one variable (the size/carats of a diamond) so we only need one input neuron.
 
-We want the input and output functions to match the scale of our data (which can be greater than one), while we want the hidden layers to mimic the activation of a neuron (0% to 100%, or 0 to 1). Thus the inputs and outputs of our neural network will be based on linear regression, while the neurons in the hidden layers will be based on logistic regression. 
+We want the input and output functions to match the scale of our data (which can be greater than one), while we want the hidden layers to mimic the activation of a neuron (0% to 100%, or 0 to 1). Thus the inputs and outputs of our neural network will be based on linear regression, while the neurons in the hidden layers will be based on logistic regression.
+
+#### Notation
+
+The building blocks of a neural net are nothing scary, however there are a lot of pieces, and therefore a lot to keep track of. This demands some notation to keep everything straight, which is probably the scariest bit. (We should mention training a neural net is another tough part, but we will not worry about that here).
+
+Since the working of modern large neural nets is intricately tied to matrix multiplication, the standard descriptions involve matrix notation. We are not interested in large neural nets so we will alter the standard notation to remove the matrix notation for the rest of us mere mortals.
+
+We have the following natural heirarchy of information:
+
+-   Layers
+    -   Neurons
+        -   Weights
+        -   Bias
+
+#### Neurons
+
+We can use the following notation to refer to a specific neuron $N$:
+
+$N^{(l)}_{i}$
+
+-   $l$ (superscript), the layer index/number
+-   $i$ (subscript),the neuron index/number within layer $l$
+
+##### Weights
+
+We can use the following notation to refer to a specific weight $w$:
+
+$$
+w^{(l)}_{i,j}
+$$
+
+-   $l$ (superscript), the layer index/number
+-   $i$ (subscript), the neuron index/number within layer $l$
+-   $j$ (subscript), the weight index/number within neuron $i$
+
+##### Biases
+
+We can use the following notation to refer to a specific bias $b$:
+
+$$
+b^{(l)}_{i}
+$$
+
+-   l (superscript), the layer index/number
+-   i (subscript),the neuron index/number within layer $l$
 
 #### The Input Layer
 
-The first neuron performs the following calculation, where $w_n$ is a weight/coefficient, $x$ is the input value (i.e. carats), and $b_n$ is a bias/intercept:
+The first neuron, N1, performs the following calculation, where $w_n$ is a weight/coefficient, $x$ is the input value (i.e. carats), and $b_n$ is a bias/intercept:
 
 $$
 \begin{aligned}
-C_1 &= w_1 \cdot x \;+\; b_1, \\
-C_2 &= w_2 \cdot x \;+\; b_2, \\
-C_3 &= w_3 \cdot x \;+\; b_3.
+C_1 &= w_{1.1} \cdot x \;+\; b_{1.1}, \\
+C_2 &= w_{1.2} \cdot x \;+\; b_{1.2}, \\
+C_3 &= w_{1.3} \cdot x \;+\; b_{1.3}.
 \end{aligned}
 $$
 
@@ -166,23 +222,22 @@ graph LR
     class N2,N3,N4 hiddenLayer1;
   end
 
-  N1 -->|$$C_1 = w_1 \cdot x \;+\; b_1$$| N2
-  N1 -->|$$C_2 = w_2 \cdot x \;+\; b_2$$| N3
-  N1 -->|$$C_3 = w_3 \cdot x \;+\; b_3$$| N4
+  N1 -->|$$C_1 = w_1 \cdot x \;+\; b_1.1$$| N2
+  N1 -->|$$C_2 = w_2 \cdot x \;+\; b_1.2$$| N3
+  N1 -->|$$C_3 = w_3 \cdot x \;+\; b_1.3$$| N4
 ```
 
 #### Hidden Layer 1
 
-At Hidden Layer 1, each neuron is only receiving one input, but is creating 3 outputs. and be activated according to the input value and a weight/coefficient associated with the neuron.
+At Hidden Layer 1, each neuron is only receiving one input, but is creating 3 outputs. Since we are now within the hidden layers, the math is logistic regression instead of linear regression. We examine the calculation occuring at neuron N2. Here $x_1$ is the value received from connection C1.
 
 $$
 \begin{aligned}
-C_4 &= \frac{1}{1 + e^{-(w_4 \cdot x + b_4)}}, \\
-C_7 &= \frac{1}{1 + e^{-(w_7 \cdot x + b_7)}}, \\
-C_{10} &= \frac{1}{1 + e^{-(w_{10} \cdot x + b_{10})}}.
+C_4 &= \frac{1}{1 + e^{-(w_4 \cdot x_1 + b_4)}}, \\
+C_5 &= \frac{1}{1 + e^{-(w_5 \cdot x_1 + b_5)}}, \\
+C_6 &= \frac{1}{1 + e^{-(w_6 \cdot x_1 + b_6)}}.
 \end{aligned}
 $$
-
 
 ```{mermaid}
 graph LR
@@ -191,8 +246,8 @@ graph LR
   classDef outputLayer fill:#d8c2f9,stroke:#6a00d6;   %% Purple
 
   subgraph Hidden Layer 1
-    N1(["N1"])
-    class N1 hiddenLayer;
+    N2(["N2"])
+    class N2 hiddenLayer;
   end
 
   subgraph Hidden Layer 2
@@ -202,109 +257,39 @@ graph LR
     class O1,O2,O3 outputLayer;
   end
 
-  N1 -->|"$$C_4 = \frac{1}{1 + e^{-(w_4x + b_4)}}$$"| O1
-  N1 -->|"$$C_7 =\frac{1}{1 + e^{-(w_7x + b_7)}}$$"| O2
-  N1 -->|"$$C_{10} =\frac{1}{1 + e^{-(w_{10}x + b_{10})}}$$"| O3
+  N2 -->|"$$C_4 = \frac{1}{1 + e^{-(w_4x_1 + b_4)}}$$"| O1
+  N2 -->|"$$C_5 =\frac{1}{1 + e^{-(w_5x_1 + b_5)}}$$"| O2
+  N2 -->|"$$C_6 =\frac{1}{1 + e^{-(w_6x_1 + b_6)}}$$"| O3
 ```
 
 #### Hidden Layer 2
 
-At Hidden Layer 2 Each of these neurons take the values from the first layer of neurons and performs another logistic regression to determine their activation. From the diagram you can see there are lots of connections here. N6 will take the activation value from N2 and apply it's own weight/coefficient, same with N3, N4, and N5, and use logistic regression to get it's own activation. That same process repeats with N7, N8, and N9, each with their own weights/coefficients.
+At Hidden Layer 2 each neuron takes the values from the first hidden layer of neurons and performs another logistic regression to determine their activation. From the diagram you can see there are lots of connections here. If we examine neuron N5, it is taking in data from connection C4, C7, and C10, and then creating a single output, C13.
 
-Let's show the calcuation that is happening at neuron N5:
-
+$$
+C_{13} = \frac{1}{1 + e^{-(w_{13} \cdot x_4 + w_{14} \cdot x_7 + w_{15} \cdot x_10 + b_{13})}}
+$$
 
 ```{mermaid}
 graph LR
   %% Define classes with desired styles
-  classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
   classDef hiddenLayer fill:#d8c2f9,stroke:#6a00d6;
   classDef outputLayer fill:#c2f9c9,stroke:#00d640;
-
-  subgraph Inputs
-    I1(["Input 1"])
-    I2(["Input 2"])
-    I3(["Input 3"])
-    class I1,I2,I3 inputLayer;
-  end
 
   subgraph Hidden Layer 2 Neuron
     N5(["N5"])
     class N5 hiddenLayer;
   end
 
-  subgraph Outputs
+  subgraph Output
     O1(["Output"])
     class O1 outputLayer;
   end
 
-  I1 --> N5
-  I2 --> N5
-  I3 --> N5
   N5 --> O1
 ```
 
 Here's how
-
-```{python}
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-
-def sigmoid(z):
-    """Logistic (sigmoid) activation function."""
-    return 1 / (1 + math.exp(-z))
-
-# Arbitrary weights and bias
-w1, w2, w3 = 2.0, 1.0, -1.0
-bias = -0.5
-
-def neuron_output(x1, x2, x3):
-    """Compute the neuron's output with a logistic activation."""
-    z = w1*x1 + w2*x2 + w3*x3 + bias
-    return sigmoid(z)
-
-# High and low activation examples
-x1_high, x2_high, x3_high = 2, 2, 2
-x1_low, x2_low, x3_low = -1, -1, -1
-
-# Print numeric results for the two examples
-print("High activation example:")
-print(f"  Inputs: ({x1_high}, {x2_high}, {x3_high})")
-print(f"  Output: {neuron_output(x1_high, x2_high, x3_high)}\n")
-
-print("Low activation example:")
-print(f"  Inputs: ({x1_low}, {x2_low}, {x3_low})")
-print(f"  Output: {neuron_output(x1_low, x2_low, x3_low)}\n")
-
-# Plot the activation across a range of x1 values
-# We'll fix x2, x3 to the high-activation set for one curve, 
-# and fix x2, x3 to the low-activation set for another curve.
-x_values = np.linspace(-3, 3, 100)
-y_high_curve = [neuron_output(x, x2_high, x3_high) for x in x_values]
-y_low_curve  = [neuron_output(x, x2_low,  x3_low)  for x in x_values]
-
-plt.figure(figsize=(8, 5))
-
-# Plot lines for the two fixed-input scenarios
-plt.plot(x_values, y_high_curve, label='x2=2, x3=2 (High Activation Curve)')
-plt.plot(x_values, y_low_curve,  label='x2=-1, x3=-1 (Low Activation Curve)')
-
-# Mark the specific high- and low-activation points
-plt.scatter(x1_high, neuron_output(x1_high, x2_high, x3_high),
-            color='red', zorder=5, label='High Activation Point')
-plt.scatter(x1_low, neuron_output(x1_low, x2_low, x3_low),
-            color='blue', zorder=5, label='Low Activation Point')
-
-plt.title("Neuron Output with Logistic Activation")
-plt.xlabel("x1")
-plt.ylabel("Activation")
-plt.ylim(-0.1, 1.1)
-plt.legend()
-plt.grid(True)
-plt.show()
-```
-
 
 #### The Output Layer
 
@@ -366,9 +351,6 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
-
-
-
 
 ## Stan Neural Network Sim
 
@@ -690,11 +672,9 @@ app = App(app_ui, server)
 
 ```
 
-
 ## Point-Estimate Neural Network
 
 ### Training a Simple Neural Network
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -1292,13 +1272,9 @@ app = App(app_ui, server)
 
 In training a 'standard' neural network, we hope to obtain a point estimate of the parameter values that will have the most accuracy in predicting data.
 
-
-
 ## Bayesian Neural Network (Simplified Implementation)
 
 The difference between a 'standard' neural network and a Bayesian one is that the Bayesian neural network will have uncertainty associated with the parameter values. (It could also have meaningful prior values for the parameters, but this is generally not relevant when training a new model). Here we will assume this uncertainty follows a normal/gaussian distribution. This uncertainty is key to making this method statistical/probabilistic - otherwise an input will always produce the same output. If the structure of the neural net is appropriate for the model and it has been well trained, a Bayesian neural network should mimic the variation/uncertainty in the outputs.
-
-
 
 ### More control on noise
 
@@ -1942,31 +1918,22 @@ app = App(app_ui, server)
 
 Training a Bayesian neural network occurs in effectively two steps:
 
-1) The 'burn-in' phase, this is similar in some sense to the point estimate of the parameters in a 'standard' neural network. Here we want to ensure we have found the parameter space that is somewhat close to the optimal parameter values. This is contrast to being in some random combination of parameters that have practically zero chance of being correct.
-2) The inference phase should explore the parameter values from their near-optimum to where they start to become totally unlikely. If done well we can be confident we know not just the most likely value of the parameter, but how uncertain we are in that parameter value.
+1)  The 'burn-in' phase, this is similar in some sense to the point estimate of the parameters in a 'standard' neural network. Here we want to ensure we have found the parameter space that is somewhat close to the optimal parameter values. This is contrast to being in some random combination of parameters that have practically zero chance of being correct.
+2)  The inference phase should explore the parameter values from their near-optimum to where they start to become totally unlikely. If done well we can be confident we know not just the most likely value of the parameter, but how uncertain we are in that parameter value.
 
 We can expect that parameters with impactful values to the results and small uncertainty are very important to the model. The opposite is true as well, if a parameter has a large range of uncertainty, and is not impactful, which typically means the estimated range of the parameter includes zero, then we can conclude the parameter is not improtant to the model.
-
 
 ## Discussion
 
 This second section is only a rough approximation of Bayesian updating. A more formal approach involves a well-defined posterior, which typically requires advanced methods. However, this snippet shows how the concept of a prior on weights can be approximated by combining a prior-based penalty with noise around the final solution to visualize uncertainty.
 
-**Key takeaways and caveats:**
-- Implementing a neural network from scratch with NumPy requires manual forward/backprop calculations.
-- True Bayesian neural networks often rely on MCMC or variational inference.
-- Weight decay alone is not fully Bayesian, but it is consistent with a Gaussian prior if used carefully.
-- Adding noise around learned weights is only a heuristic approach to capturing model uncertainty, not a rigorous posterior sampling method.
+**Key takeaways and caveats:** - Implementing a neural network from scratch with NumPy requires manual forward/backprop calculations. - True Bayesian neural networks often rely on MCMC or variational inference. - Weight decay alone is not fully Bayesian, but it is consistent with a Gaussian prior if used carefully. - Adding noise around learned weights is only a heuristic approach to capturing model uncertainty, not a rigorous posterior sampling method.
 
 ## Conclusion
 
 We have demonstrated how to implement (1) a basic neural network using only NumPy and manual gradient-based learning and (2) a very simplified approximation of Bayesian neural networks by imposing a Gaussian prior on the weights. While this example is primarily for educational purposes and lacks the efficiency, stability, and full correctness of modern Bayesian frameworks, it should help illustrate the main ideas in a more “bare-metal” approach.
 
-
-
-
 ## With Diamond Dataset
-
 
 ```{python}
 import numpy as np

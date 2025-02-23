@@ -558,6 +558,29 @@ app = App(app_ui, server)
 ### Linear Regression
 
 
+## Machine Learning
+
+### Loss Function
+
+A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ and the predicted values $\hat{y}$ The generic form of a loss function can be expressed as:
+
+$$
+L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+$$
+
+#### Variables:
+
+-   $y_i$: The true value for the (i)-th data point.
+-   $\hat{y}_i$: The predicted value for the (i)-th data point.
+-   $\ell(y_i, \hat{y}_i)$: The individual error for the (i)-th data point defined by the loss function.
+-   $N$: The total number of data points.
+
+The function $\ell(y_i, \hat{y}_i)$ depends on the task.
+
+### Comparison to Likelihood Function
+
+Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
+
 ## Summary
 
 To find the most likely model 
