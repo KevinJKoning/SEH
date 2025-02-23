@@ -283,7 +283,7 @@ graph LR
 
 #### Hidden Layer 2
 
-At Hidden Layer 2 each neuron takes the values from the first hidden layer of neurons and performs another logistic regression to determine their activation. If we examine neuron $N^{(2)}_{1}$, it is taking in data from activation $a^{(1)}_{1,1}$, $a^{(1)}_{2,1}$, and $a^{(1)}_{3,1}$, and then creating a single output, $a^{(2)}_{1,1}$.
+At Hidden Layer 2 each neuron takes the values from the first hidden layer of neurons and performs another logistic regression to determine its activation. If we examine neuron $N^{(2)}_{1}$, it is taking in data from activation $a^{(1)}_{1,1}$, $a^{(1)}_{2,1}$, and $a^{(1)}_{3,1}$, and then creating a single output, $a^{(2)}_{1,1}$.
 
 $$
 a^{(2)}_{1,1} = \frac{1}{1 + e^{-(w^{(2)}_{1,1} \cdot a^{(1)}_{1,1} + w^{(2)}_{1,2} \cdot a^{(1)}_{2,1} + w^{(2)}_{1,3} \cdot a^{(1)}_{3,1} + b^{(2)}_{1,1})}}
@@ -374,6 +374,205 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
+
+## O3 Mini Try
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 900
+
+from shiny import App, ui, render
+
+app_ui = ui.page_fluid(
+    # Include Mermaid JS in the head
+    ui.tags.head(
+        ui.tags.script(src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js")
+    ),
+    ui.h1("Neural Network Diagram with Neutral Theme and Zoomed Out View"),
+    # UI output for the Mermaid diagram
+    ui.output_ui("mermaid_diagram"),
+    # Initialize Mermaid with the 'neutral' theme and re-run rendering after dynamic content loads
+    ui.tags.script("""
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+        $(document).on('shiny:value', function(event) {
+            if(event.name === 'mermaid_diagram') {
+                setTimeout(function() {
+                    mermaid.init();
+                }, 100);
+            }
+        });
+    """)
+)
+
+def server(input, output, session):
+    @output
+    @render.ui
+    def mermaid_diagram():
+        neural_network_mermaid = '''
+graph LR
+  %% Define classes with desired styles
+  classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
+  classDef hiddenLayer1 fill:#c2ebf9,stroke:#0096d6;
+  classDef hiddenLayer2 fill:#d8c2f9,stroke:#6a00d6;
+  classDef outputLayer fill:#c2f9c9,stroke:#00d640;
+
+  subgraph Input Layer
+    N1(["$$N^{(0)}_{1}$$"])
+    class N1 inputLayer;
+  end
+
+  subgraph Hidden Layer 1
+    N2(["$$N^{(1)}_{1}$$"])
+    N3(["$$N^{(1)}_{2}$$"])
+    N4(["$$N^{(1)}_{3}$$"])
+    class N2,N3,N4 hiddenLayer1;
+  end
+
+  subgraph Hidden Layer 2
+    N5(["$$N^{(2)}_{1}$$"])
+    N6(["$$N^{(2)}_{2}$$"])
+    N7(["$$N^{(2)}_{3}$$"])
+    class N5,N6,N7 hiddenLayer2;
+  end
+
+  subgraph Output Layer
+    N8(["$$N^{(3)}_{1}$$"])
+    class N8 outputLayer;
+  end
+
+  N1 -->|"$$a^{(0)}_{1,1}$$"| N2
+  N1 -->|"$$a^{(0)}_{1,2}$$"| N3
+  N1 -->|"$$a^{(0)}_{1,3}$$"| N4
+  
+  N2 -->|"$$a^{(1)}_{1,1}$$"| N5
+  N2 -->|"$$a^{(1)}_{1,2}$$"| N6
+  N2 -->|"$$a^{(1)}_{1,3}$$"| N7
+  
+  N3 -->|"$$a^{(1)}_{2,1}$$"| N5
+  N3 -->|"$$a^{(1)}_{2,2}$$"| N6
+  N3 -->|"$$a^{(1)}_{2,3}$$"| N7
+  
+  N4 -->|"$$a^{(1)}_{3,1}$$"| N5
+  N4 -->|"$$a^{(1)}_{3,2}$$"| N6
+  N4 -->|"$$a^{(1)}_{3,3}$$"| N7
+  
+  N5 -->|"$$a^{(2)}_{1,1}$$"| N8
+  N6 -->|"$$a^{(2)}_{2,1}$$"| N8
+  N7 -->|"$$a^{(2)}_{3,1}$$"| N8
+        '''
+        # Wrap the Mermaid diagram in a div with a CSS scale transform
+        return ui.div(
+            ui.tags.div(
+                ui.tags.pre(
+                    ui.tags.code(neural_network_mermaid, {"class": "mermaid"})
+                ),
+                style="transform: scale(1.0); transform-origin: top left;"
+            )
+        )
+
+app = App(app_ui, server)
+
+
+```
+
+
+## O3 v2
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 900
+
+from shiny import App, ui, render
+
+app_ui = ui.page_sidebar(
+    sidebar=ui.input_text("node_value", "Set Node Value", value="1"),
+    ui.tags.head(
+        ui.tags.script(src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js")
+    ),
+    ui.tags.script("""
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+        $(document).on('shiny:value', function(event) {
+            if(event.name === 'mermaid_diagram') {
+                setTimeout(function() {
+                    mermaid.init();
+                }, 100);
+            }
+        });
+    """),
+    ui.h1("Neural Network Diagram with Neutral Theme and Zoomed Out View"),
+    ui.output_ui("mermaid_diagram")
+)
+
+def server(input, output, session):
+    @output
+    @render.ui
+    def mermaid_diagram():
+        node_val = input.node_value() or "?"
+        node_display = f"= {node_val}"
+        neural_network_mermaid = f'''
+graph LR
+  %% Define classes with desired styles
+  classDef inputLayer fill:#f9ebc2,stroke:#d6a000;
+  classDef hiddenLayer1 fill:#c2ebf9,stroke:#0096d6;
+  classDef hiddenLayer2 fill:#d8c2f9,stroke:#6a00d6;
+  classDef outputLayer fill:#c2f9c9,stroke:#00d640;
+
+  subgraph Input Layer
+    N1(["{node_display}"])
+    class N1 inputLayer;
+  end
+
+  subgraph Hidden Layer 1
+    N2(["{node_display}"])
+    N3(["{node_display}"])
+    N4(["{node_display}"])
+    class N2,N3,N4 hiddenLayer1;
+  end
+
+  subgraph Hidden Layer 2
+    N5(["{node_display}"])
+    N6(["{node_display}"])
+    N7(["{node_display}"])
+    class N5,N6,N7 hiddenLayer2;
+  end
+
+  subgraph Output Layer
+    N8(["{node_display}"])
+    class N8 outputLayer;
+  end
+
+  N1 -->|"a_{1,1}"| N2
+  N1 -->|"a_{1,2}"| N3
+  N1 -->|"a_{1,3}"| N4
+  
+  N2 -->|"a_{1,1}"| N5
+  N2 -->|"a_{1,2}"| N6
+  N2 -->|"a_{1,3}"| N7
+  
+  N3 -->|"a_{2,1}"| N5
+  N3 -->|"a_{2,2}"| N6
+  N3 -->|"a_{2,3}"| N7
+  
+  N4 -->|"a_{3,1}"| N5
+  N4 -->|"a_{3,2}"| N6
+  N4 -->|"a_{3,3}"| N7
+  
+  N5 -->|"a_{1,1}"| N8
+  N6 -->|"a_{2,1}"| N8
+  N7 -->|"a_{3,1}"| N8
+        '''
+        return ui.div(
+            ui.tags.div(
+                ui.tags.pre(
+                    ui.tags.code(neural_network_mermaid, {"class": "mermaid"})
+                ),
+                style="transform: scaleY(0.8); transform-origin: top left;"
+            )
+        )
+
+app = App(app_ui, server)
+```
+
 
 ## Stan Neural Network Sim
 
