@@ -75,6 +75,35 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-diagram/mermaid-init.js"></script>
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -209,7 +238,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" id="toc-maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" class="nav-link" data-scroll-target="#maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map">Maximum Likelihood Estimation (MLE) vs.&nbsp;Maximum A Posteriori (MAP)</a>
   <ul class="collapse">
   <li><a href="#low-dimensional-search-grid" id="toc-low-dimensional-search-grid" class="nav-link" data-scroll-target="#low-dimensional-search-grid">Low Dimensional Search (Grid)</a></li>
   <li><a href="#high-dimensional-search-mcmc" id="toc-high-dimensional-search-mcmc" class="nav-link" data-scroll-target="#high-dimensional-search-mcmc">High Dimensional Search (MCMC)</a></li>
@@ -250,6 +280,23 @@ ul.task-list li input[type="checkbox"] {
 <li>If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.</li>
 <li>If you <em>do</em> have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.</li>
 </ol>
+</section>
+<section id="maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map">Maximum Likelihood Estimation (MLE) vs.&nbsp;Maximum A Posteriori (MAP)</h2>
+<p>In machine learning, MAP (Maximum A Posteriori) estimation is a Bayesian approach to parameter estimation. It finds the most probable parameter values given the observed data and a prior distribution.</p>
+<p>Mathematically, it maximizes the posterior probability:</p>
+<p><span class="math display">\[
+\theta_{MAP} = \arg\max_{\theta} P(\theta | X)
+\]</span></p>
+<p>Using Bayes’ theorem:</p>
+<p><span class="math display">\[
+P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}
+\]</span></p>
+<p>Since P(X) is constant for optimization, MAP simplifies to:</p>
+<p><span class="math display">\[
+\theta_{MAP} = \arg\max_{\theta} P(X | \theta) P(\theta)
+\]</span></p>
+<p>This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only P(X | ) (ignoring the prior P() ). MAP is useful when incorporating prior knowledge into the learning process.</p>
 <section id="low-dimensional-search-grid" class="level3">
 <h3 class="anchored" data-anchor-id="low-dimensional-search-grid">Low Dimensional Search (Grid)</h3>
 </section>
