@@ -131,7 +131,7 @@ We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$. Us
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 600
+#| viewerHeight: 550
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -205,10 +205,10 @@ def server(input, output, session):
                 bars[i].set_alpha(0.7)
         
         # Add text with probability
-        prob = calculate_probability()
-        ax.text(0.95, 0.95, f'P(X = {x_val}) = {prob:.4f}', 
-                transform=ax.transAxes, ha='right', va='top',
-                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        # prob = calculate_probability()
+        # ax.text(0.95, 0.95, f'P(X = {x_val}) = {prob:.4f}', 
+        #         transform=ax.transAxes, ha='right', va='top',
+        #         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
         
         # Set integer ticks on x-axis
         if len(x_vals) > 15:
