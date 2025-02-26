@@ -125,9 +125,9 @@ $$
 
 Performing the likelihood calculation described above hinges on being able to calculate $P(y_i \mid \theta)$. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let's assume we are measuring the reliability of a similar manufacturing line across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.
 
-First, we pick candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year. Subsequently, that will be our assumed parameter value ($\lambda = 5$) for a candidate model. To find $P(y_i \mid \lambda = 5)$ for a single data point, we can use the app below which is similar to apps we used in the first half of the primer.
+First, we pick candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year, so $\lambda = 5$ for our candidate model. To find $P(y_i \mid \lambda = 5)$ for a single data point, we can use the app below which is similar to apps we used in the first half of the primer.
 
-We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$. Using the app P = 0.1044. Once we can find $P(y_i \mid \theta)$ for one data point, we can do it for the rest and calculate $\mathcal{L}(\theta \mid \mathbf{y})$. Of course, we have not yet *maximized* that likelihood function. We will find strategies to do that later.
+We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$. Using the app $P$ = 0.1044. Once we can find $P(y_i \mid \theta)$ for one data point, we can do it for the rest and calculate $\mathcal{L}(\theta \mid \mathbf{y})$. Of course, we have not yet *maximized* that likelihood function. We will find strategies to do that later.
 
 ```{shinylive-python}
 #| standalone: true
@@ -145,11 +145,11 @@ app_ui = ui.page_fluid(
         ui.sidebar(
             ui.input_slider(
                 "lambdaInput", "Rate (λ):",
-                min=1, max=20, value=5, step=1
+                min=1, max=10, value=5, step=1
             ),
             ui.input_slider(
                 "xInput", "Value (y):",
-                min=0, max=30, value=5, step=1
+                min=0, max=15, value=5, step=1
             ),
             ui.br(),
             ui.h4("Probability:"),
@@ -238,185 +238,6 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-
-
-#### Alternative Example
-
-To have an example, let's assume we are measuring the same dimension over may parts manufactured on the same line, and we want to find the parameters of a normal/gaussian distribution that best describes the variation.
-
-After taking a brief look at the data we guess a candidate model with normal distribution parameters, $y_i \sim \mathcal{N}(\mu = 4, \sigma^2 = 0.00003)$. Now to find the probability of a single data point, we do the same thing we did in the chapter on Continuous Probability Distributions:
-
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 600
-
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
-from shiny import App, ui, reactive, render
-
-app_ui = ui.page_fluid(
-    ui.h2("Normal Distribution Probability Calculator"),
-    
-    ui.layout_sidebar(
-        ui.sidebar(
-            ui.input_slider(
-                "muInput", "Mean (μ):",
-                min=3, max=5, value=4, step=0.1
-            ),
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=0.00001, max=0.00005, value=0.00003, step=0.00001
-            ),
-            ui.input_numeric(
-                "xInput", "Value (x):",
-                value=4.005, min=3.9, max=4.1
-            ),
-            ui.br(),
-            ui.h4("Probability (P(X ≥ x)):"),
-            ui.output_text("probOutput"),
-            width=300
-        ),
-        
-        # Main panel with tabset
-        ui.navset_tab(
-            ui.nav_panel("PDF Plot",
-                ui.output_plot("normalPlot", height="400px"),
-            ),
-            ui.nav_panel("CDF Plot",
-                ui.output_plot("cdfPlot", height="400px"),
-            ),
-        ),
-    )
-)
-
-def server(input, output, session):
-    # Calculate probability
-    @reactive.Calc
-    def calculate_probability():
-        mu = input.muInput()
-        var = input.varInput()
-        x = input.xInput()
-        sigma = math.sqrt(var)
-        return 1 - stats.norm.cdf(x, mu, sigma)
-
-    # Show the probability
-    @output
-    @render.text
-    def probOutput():
-        prob = calculate_probability()
-        return f"{prob:.4f}"
-
-    # Plot the normal PDF with shaded area
-    @output
-    @render.plot
-    def normalPlot():
-        mu = input.muInput()
-        var = input.varInput()
-        x = input.xInput()
-        sigma = math.sqrt(var)
-
-        x_min = mu - 4 * sigma
-        x_max = mu + 4 * sigma
-        x_vals = np.linspace(x_min, x_max, 200)
-        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
-        
-        x_shade = x_vals[x_vals >= x]
-        y_shade = stats.norm.pdf(x_shade, mu, sigma)
-        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
-                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
-
-        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
-
-        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Density")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        return fig
-
-    # Plot the CDF
-    @output
-    @render.plot
-    def cdfPlot():
-        mu = input.muInput()
-        var = input.varInput()
-        x = input.xInput()
-        sigma = math.sqrt(var)
-
-        # Generate random data
-        data = np.random.normal(mu, sigma, 1000)
-        
-        # Calculate empirical CDF
-        sorted_data = np.sort(data)
-        empirical_cdf = np.arange(1, len(data) + 1) / len(data)
-        
-        # Calculate theoretical CDF
-        x_vals = np.linspace(mu - 4*sigma, mu + 4*sigma, 200)
-        theoretical_cdf = stats.norm.cdf(x_vals, mu, sigma)
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-        
-        # Plot empirical and theoretical CDFs
-        ax.plot(sorted_data, empirical_cdf, 'b-', label='Empirical CDF', alpha=0.7)
-        ax.plot(x_vals, theoretical_cdf, 'r--', label='Theoretical CDF')
-        
-        # Add vertical line at x
-        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
-        
-        ax.set_title(f"Cumulative Distribution Function (μ={mu:.1f}, σ²={var:.1f})")
-        ax.set_xlabel("X")
-        ax.set_ylabel("Cumulative Probability")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-
-        return fig
-
-app = App(app_ui, server)
-```
-
-
-
-
-When building a candidate model, we must assume a probability distribution for the data in order to calculate $P(y_i \mid \theta)$. For example, if we assume a normal (Gaussian) distribution, each data point is modeled as:
-
-$$
-y_i = \hat{y}_i + \epsilon_i,\quad \epsilon_i \sim \mathcal{N}(0, \sigma^2)
-$$
-
-Alternatively, you can express the error term as the difference between the actual and predicted values:
-
-$$
-\epsilon_i = y_i - \hat{y}_i,\quad \epsilon_i \sim \mathcal{N}(0, \sigma^2)
-$$
-
-Here:
-
-- $\hat{y}_i$ is the model’s prediction for $y_i$.
-- $\sigma^2$ represents the variance of the noise (i.e., the spread of $y_i$ around $\hat{y}_i$).
-- $\epsilon_i$ is a normally distributed error term.[^1]
-
-[^1]: An important distinction between the *frequentist* approach described in this chapter and the *Bayesian* one described in the next chapter ("With Priors"), is that in the frequentist approach the only variance/uncertainty from the model comes from the error term. This is in contrast to the Bayesian approach in which the model itself (i.e. the parameters of the model) is considered to be uncertain, in addition to the typical inclusion of an error term.
-
-Put simply, the larger the gaps between the predictions and the data, the smaller the likelihood will be.
-
-#### Calculating the Likelihood
-
-The discussion above may look fine, but how do we calculate an actual value for the likelihood? Regardless of the probability distribution assumed for the errors we first need to know or estimate the parameters.
-
-
-
-**Good place for a chart with the verticall/rotated probability distributions???**
-
-**What to do with this**
-
-In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero ($\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0$). In the next section we'll make the calculations more precisely.
 
 ## Maximum Likelihood Estimation with Discrete Data
 
