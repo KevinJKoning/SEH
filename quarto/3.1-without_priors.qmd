@@ -121,7 +121,268 @@ $$
 
 3. The product $\prod_{i=1}^{N}$ assumes that the data points are independent. In practice, we often work with the log-likelihood (i.e., sum of log probabilities) for numerical stability.
 
-### Modeling the Probability Distribution of the Data
+### Calculating $P(y_i \mid \theta)$
+
+Performing the likelihood calculation described above hinges on being able to calculate $P(y_i \mid \theta)$. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let's assume we are measuring the reliability of a similar manufacturing line across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.
+
+First, we pick candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year. Subsequently, that will be our assumed parameter value ($\lambda = 5$) for a candidate model. To find $P(y_i \mid \lambda = 5)$ for a single data point, we can use the app below which is similar to apps we used in the first half of the primer.
+
+We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$. Using the app P = 0.1044. Once we can find $P(y_i \mid \theta)$ for one data point, we can do it for the rest and calculate $\mathcal{L}(\theta \mid \mathbf{y})$. Of course, we have not yet *maximized* that likelihood function. We will find strategies to do that later.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Poisson Distribution Probability Calculator"),
+    
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "lambdaInput", "Rate (λ):",
+                min=1, max=20, value=5, step=1
+            ),
+            ui.input_slider(
+                "xInput", "Value (y):",
+                min=0, max=30, value=5, step=1
+            ),
+            ui.br(),
+            ui.h4("Probability:"),
+            ui.output_text("probOutput"),
+            width=300
+        ),
+        
+        # Main panel with plot
+        ui.output_plot("poissonPlot", height="400px"),
+    )
+)
+
+def server(input, output, session):
+    # Calculate probability P(X = x)
+    @reactive.Calc
+    def calculate_probability():
+        lam = input.lambdaInput()
+        x = input.xInput()
+        # Using PMF for P(X = x)
+        return stats.poisson.pmf(x, lam)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the Poisson PMF with highlighted bar
+    @output
+    @render.plot
+    def poissonPlot():
+        lam = input.lambdaInput()
+        x_val = input.xInput()
+        
+        # Generate range of x values for plotting
+        x_max = max(int(lam*3), x_val + 10)
+        x_vals = np.arange(0, x_max + 1)
+        
+        # Calculate PMF values
+        pmf_vals = stats.poisson.pmf(x_vals, lam)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot all bars
+        bars = ax.bar(x_vals, pmf_vals, width=0.8, alpha=0.7, color='lightblue', 
+                     edgecolor='blue')
+        
+        # Highlight the specific bar for P(X = x)
+        for i in range(len(x_vals)):
+            if x_vals[i] == x_val:
+                bars[i].set_color('red')
+                bars[i].set_alpha(0.7)
+        
+        # Add text with probability
+        prob = calculate_probability()
+        ax.text(0.95, 0.95, f'P(X = {x_val}) = {prob:.4f}', 
+                transform=ax.transAxes, ha='right', va='top',
+                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        
+        # Set integer ticks on x-axis
+        if len(x_vals) > 15:
+            # Display approximately 10-15 ticks at regular intervals
+            step = max(1, len(x_vals) // 10)
+            ax.set_xticks(x_vals[::step])
+        else:
+            ax.set_xticks(x_vals)
+            
+        # Ensure x-axis limits provide proper spacing
+        ax.set_xlim(-0.6, x_max + 0.6)
+        
+        ax.set_title(f"Poisson Distribution (λ={lam})")
+        ax.set_xlabel("X (number of events)")
+        ax.set_ylabel("Probability")
+        ax.grid(True, alpha=0.3)
+        
+        # Single legend with clear explanation
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor='red', edgecolor='blue', alpha=0.7, label=f'Selected value (y = {x_val})')
+        ]
+        ax.legend(handles=legend_elements, loc='upper right')
+        
+        return fig
+
+app = App(app_ui, server)
+```
+
+
+
+#### Alternative Example
+
+To have an example, let's assume we are measuring the same dimension over may parts manufactured on the same line, and we want to find the parameters of a normal/gaussian distribution that best describes the variation.
+
+After taking a brief look at the data we guess a candidate model with normal distribution parameters, $y_i \sim \mathcal{N}(\mu = 4, \sigma^2 = 0.00003)$. Now to find the probability of a single data point, we do the same thing we did in the chapter on Continuous Probability Distributions:
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 600
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Normal Distribution Probability Calculator"),
+    
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "muInput", "Mean (μ):",
+                min=3, max=5, value=4, step=0.1
+            ),
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=0.00001, max=0.00005, value=0.00003, step=0.00001
+            ),
+            ui.input_numeric(
+                "xInput", "Value (x):",
+                value=4.005, min=3.9, max=4.1
+            ),
+            ui.br(),
+            ui.h4("Probability (P(X ≥ x)):"),
+            ui.output_text("probOutput"),
+            width=300
+        ),
+        
+        # Main panel with tabset
+        ui.navset_tab(
+            ui.nav_panel("PDF Plot",
+                ui.output_plot("normalPlot", height="400px"),
+            ),
+            ui.nav_panel("CDF Plot",
+                ui.output_plot("cdfPlot", height="400px"),
+            ),
+        ),
+    )
+)
+
+def server(input, output, session):
+    # Calculate probability
+    @reactive.Calc
+    def calculate_probability():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+        return 1 - stats.norm.cdf(x, mu, sigma)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the normal PDF with shaded area
+    @output
+    @render.plot
+    def normalPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        x_min = mu - 4 * sigma
+        x_max = mu + 4 * sigma
+        x_vals = np.linspace(x_min, x_max, 200)
+        pdf_vals = stats.norm.pdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        ax.plot(x_vals, pdf_vals, 'b-', label='Normal PDF')
+        
+        x_shade = x_vals[x_vals >= x]
+        y_shade = stats.norm.pdf(x_shade, mu, sigma)
+        ax.fill_between(x_shade, y_shade, color='red', alpha=0.3, 
+                       label=f'P(X ≥ {x:.1f}) = {calculate_probability():.4f}')
+
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+
+        ax.set_title(f"Normal Distribution (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Density")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+    # Plot the CDF
+    @output
+    @render.plot
+    def cdfPlot():
+        mu = input.muInput()
+        var = input.varInput()
+        x = input.xInput()
+        sigma = math.sqrt(var)
+
+        # Generate random data
+        data = np.random.normal(mu, sigma, 1000)
+        
+        # Calculate empirical CDF
+        sorted_data = np.sort(data)
+        empirical_cdf = np.arange(1, len(data) + 1) / len(data)
+        
+        # Calculate theoretical CDF
+        x_vals = np.linspace(mu - 4*sigma, mu + 4*sigma, 200)
+        theoretical_cdf = stats.norm.cdf(x_vals, mu, sigma)
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot empirical and theoretical CDFs
+        ax.plot(sorted_data, empirical_cdf, 'b-', label='Empirical CDF', alpha=0.7)
+        ax.plot(x_vals, theoretical_cdf, 'r--', label='Theoretical CDF')
+        
+        # Add vertical line at x
+        ax.axvline(x, color='red', linestyle='--', alpha=0.5)
+        
+        ax.set_title(f"Cumulative Distribution Function (μ={mu:.1f}, σ²={var:.1f})")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Cumulative Probability")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+
+        return fig
+
+app = App(app_ui, server)
+```
+
+
+
 
 When building a candidate model, we must assume a probability distribution for the data in order to calculate $P(y_i \mid \theta)$. For example, if we assume a normal (Gaussian) distribution, each data point is modeled as:
 
@@ -144,6 +405,16 @@ Here:
 [^1]: An important distinction between the *frequentist* approach described in this chapter and the *Bayesian* one described in the next chapter ("With Priors"), is that in the frequentist approach the only variance/uncertainty from the model comes from the error term. This is in contrast to the Bayesian approach in which the model itself (i.e. the parameters of the model) is considered to be uncertain, in addition to the typical inclusion of an error term.
 
 Put simply, the larger the gaps between the predictions and the data, the smaller the likelihood will be.
+
+#### Calculating the Likelihood
+
+The discussion above may look fine, but how do we calculate an actual value for the likelihood? Regardless of the probability distribution assumed for the errors we first need to know or estimate the parameters.
+
+
+
+**Good place for a chart with the verticall/rotated probability distributions???**
+
+**What to do with this**
 
 In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero ($\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0$). In the next section we'll make the calculations more precisely.
 
@@ -604,9 +875,6 @@ $$
 
 Which should look familiar. We can now find the Maximum Likelihood Estimate of the model parameters ($\beta_0$, $\beta_1$... $\sigma$) based on the likelihood of our data under the given distribution of errors.
 
-**Reminder of the app at the end of 2.3 for linear regression**
-**Work on that but with the squares as residuals, and minimized the area of the squares**
-
 ### Maximum Likelihood with Constant Normal Variance
 
 The probability density function (PDF) of a normal distribution is:
@@ -627,90 +895,84 @@ $$
 \log L(\mu, \sigma^2) = -\frac{n}{2} \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2)$, is constant. So we simply need to minimize the second term, which is the sum of squared errors (SSE):
+If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2)$, is constant. So we simply need to minimize the second term, which is the **sum of squared errors (SSE)**:
 
 $$
 \sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-There are both analytical ($\hat{\beta} = (X^T X)^{-1} X^T Y$) as well as computational methods for minimizing the sum of squared errors.
+There are both analytical ($(X^T X)^{-1} X^T Y$) as well as computational methods for minimizing the sum of squared errors.
 
 ::: {.callout-important}
 It is very common to see optimizations that minimize the squared error. You should recognize that this is implicitly assuming that the errors are normally distributed.
 :::
 
+The app below allows you to visualize the sum of squares error. You can try minimizing the total squared error by altering the parameters of the regression. When you are ready you can see the parameter values that maximizes the likelihood by clicking on the MLE button.
+
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 700
+#| viewerHeight: 800
 
 import math
 import numpy as np
 import matplotlib.pyplot as plt
 from shiny import App, ui, reactive, render
 
-app_ui = ui.page_fluid(
-    ui.h2("Linear Regression Likelihood"),
-
-    # Row 1: Sliders for alpha, beta, sigma^2, and n
-    ui.row(
-        ui.column(
-            3,
-            ui.input_slider(
-                "alphaInput", "Intercept (α):",
-                min=-10, max=10, value=0, step=0.1
+app_ui = ui.page_sidebar(
+    # Sidebar with all user inputs
+    ui.sidebar(
+        ui.h3("Model Parameters"),
+        ui.input_slider(
+            "alphaInput", "Intercept (α):",
+            min=-10, max=10, value=0, step=0.1
+        ),
+        ui.input_slider(
+            "betaInput", "Slope (β):",
+            min=-5, max=5, value=1, step=0.1
+        ),
+        ui.input_slider(
+            "varInput", "Variance (σ²):",
+            min=0.1, max=10, value=1, step=0.1
+        ),
+        ui.input_slider(
+            "nInput", "Number of samples:",
+            min=5, max=20, value=10, step=1
+        ),
+        ui.input_checkbox("showResiduals", "Show residuals as squares", value=False),
+        ui.br(),
+        ui.row(
+            ui.column(
+                6,
+                ui.input_action_button("mleBtn", "MLE", class_="btn-primary"),
+            ),
+            ui.column(
+                6,
+                ui.input_action_button("newSampleBtn", "NEW SAMPLE", class_="btn-secondary"),
             ),
         ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "betaInput", "Slope (β):",
-                min=-5, max=5, value=1, step=0.1
-            ),
-        ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=0.1, max=10, value=1, step=0.1
-            ),
-        ),
-        ui.column(
-            3,
-            ui.input_slider(
-                "nInput", "Number of samples:",
-                min=5, max=100, value=10, step=1
-            ),
-        ),
+        width="300px"
     ),
-
-    ui.br(),
-
-    # Row 2: Buttons, current data, and log-likelihood
+    
+    # Main content
+    ui.h2("Linear Regression Likelihood"),
+    
     ui.row(
         ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
-        ui.column(
-            2,
-            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
-        ),
-        ui.column(
-            4,
+            6,
             ui.h4("Current Data (X, Y):"),
             ui.output_text_verbatim("dataText"),
         ),
         ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
-            ui.output_text("llOutput"),
+            6,
+            ui.h4("Model Statistics:"),
+            ui.output_text("statsOutput"),
         ),
     ),
 
     ui.br(),
 
     # Plot
-    ui.output_plot("regressionPlot", height="400px"),
+    ui.output_plot("regressionPlot", height="500px"),
 )
 
 def server(input, output, session):
@@ -796,12 +1058,23 @@ def server(input, output, session):
         term2 = -0.5 * (ssr / var)
         return term1 + term2
 
-    # Show the log-likelihood
+    # Calculate sum of squared errors
+    @reactive.Calc
+    def sum_squared_errors():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        
+        residuals = Y - (alpha + beta*X)
+        return np.sum(residuals**2)
+
+    # Show the log-likelihood and SSE
     @output
     @render.text
-    def llOutput():
+    def statsOutput():
         ll = log_likelihood()
-        return str(round(ll, 2))
+        sse = sum_squared_errors()
+        return f"Log-Likelihood: {round(ll, 2)}\nSum of Squared Errors: {round(sse, 2)}"
 
     # Plot the data and the regression line
     @output
@@ -811,8 +1084,9 @@ def server(input, output, session):
         alpha = input.alphaInput()
         beta = input.betaInput()
         var = input.varInput()
+        show_residuals = input.showResiduals()
 
-        fig, ax = plt.subplots(figsize=(6, 4))
+        fig, ax = plt.subplots(figsize=(10, 6))
 
         # Plot data points
         ax.scatter(X, Y, color="blue", alpha=0.7, label="Data")
@@ -822,6 +1096,23 @@ def server(input, output, session):
         x_vals = np.linspace(x_min, x_max, 100)
         y_vals = alpha + beta * x_vals
         ax.plot(x_vals, y_vals, color="red", label=f"Line (α={round(alpha,2)}, β={round(beta,2)})")
+
+        # Draw residual squares if enabled
+        if show_residuals:
+            y_pred = alpha + beta * X
+            residuals = Y - y_pred
+            
+            for x, y, res in zip(X, Y, residuals):
+                y_on_line = y - res  # Point on the regression line
+                
+                # Create square vertices
+                if res >= 0:  # Point above the line (positive residual)
+                    square = plt.Rectangle((x, y_on_line), abs(res), abs(res), 
+                                        fill=False, color='green', alpha=0.7)
+                else:  # Point below the line (negative residual)
+                    square = plt.Rectangle((x, y), abs(res), abs(res), 
+                                        fill=False, color='green', alpha=0.7)
+                ax.add_patch(square)
 
         ax.set_title("Linear Regression Fit")
         ax.set_xlabel("X")
@@ -836,8 +1127,19 @@ app = App(app_ui, server)
 
 ### Maximum Likelihood without Constant Normal Variance
 
-As we did before, we cast off the shackles of restrictive modeling assumptions. These restrictive assumptions allow for nice analytic solutions - which made sense when all the calculation was by hand - but is not nearly so relevant today.
+As we did before, we cast off the shackles of restrictive modeling assumptions. Because you are an engineer in a hurry, we skip the long derivation and get to the point. We will need to minimize the following function instead of the sum of squared errors (SSE), which is weighted least squares (WLS):
 
+$$
+\sum_{i=1}^{n} \frac{(x_i - \mu)^2}{\sigma_i^2}
+$$
+
+In general, however, you don't need to find a simpler function to minimize - as we've done here. Instead, once we assume a probability distribution, like the normal distribution, we can maximize it explicitly:
+
+
+**NEEDS WORK**
+$$
+\mathcal{L}(\theta \mid \mathbf{y}) = \prod_{i=1}^{N} \mathcal{N}(y_i - \hat{y}_i, \sigma^2).
+$$ 
 
 ## Motivation for Bayesian (With Prior) Methods
 
