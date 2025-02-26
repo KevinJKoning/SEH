@@ -588,121 +588,258 @@ $$
 P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 $$
 
-This notation makes it obvious that our estimate for $y_i$ is conditioned on data; our estimate is still a probability distribution; and that the parameters of our linear regression model are used only to estimate the mean of the probability distribution at the $x_i$ location.
+This notation makes it clear that our estimate for $y_i$ is a probability distribution centered around the linear predictor $\beta_0 + \beta_1 x_i$. This formulation also highlights that while our model provides a deterministic estimate for the mean response at $x_i$, individual observations vary due to randomness captured by the variance  $\sigma^2$.
 
-In the first half of the primer we made no attempt to find the 'best' values of the parameters, but now we have the tool, specifically Maximum Likelihood Estimation, to do this. We can find the Maximum Likelihood Estimate of the parameters ($\beta_0$, $\beta_1$... $\sigma$) of a traditional linear regression model (with constant variance) either through the computational techniques given earlier, or known analytic solutions.
+If we define the predicted value as $\hat{y}_i = \beta_0 + \beta_1 x_i$, then the error for each observation is
 
-**Reminder of the app at the end of 2.3 for linear regression**
-**Work on that but with the squares as residuals, and minimized the area of the squares**
-
-...While any method, computational or analytical, can lose sight of important details, analytical methods are often forced to make simplifying assumptions 'under the hood' in order find tractable solutions.
-
-We walk through the analytical derivation of linear regression specifically to highlight these simplifying assumptions.
-
-### Linear Regression Analytical Solution Derivations (REMOVE)
-
-Here we reproduce the 'standard' methodology for computing the parameters of a linear regression model. Single-variable linear regression aims to model the relationship between a single independent variable $x$ and a dependent variable $y$ using a linear equation:
-
-We begin with the classical formulation:
 $$
-y_i = \beta_0 + \beta_1 x_i + \epsilon_i,
+\epsilon_i = y_i - \hat{y}_i,
 $$
 
-where $\beta_0$ is the intercept, $\beta_1$ the slope, and $\epsilon_i$ the error term. The classical form implies a deterministic component $\beta_0+\beta_1 x_i$ with random deviations $\epsilon_i$, typically assumed to have"
+and by our model assumption, these errors follow a normal distribution:
 
 $$
 \epsilon_i \sim \mathcal{N}(0, \sigma^2).
 $$
 
-We've previosly stated we prefer the following notation where we condition on the input:
+Which should look familiar. We can now find the Maximum Likelihood Estimate of the model parameters ($\beta_0$, $\beta_1$... $\sigma$) based on the likelihood of our data under the given distribution of errors.
+
+**Reminder of the app at the end of 2.3 for linear regression**
+**Work on that but with the squares as residuals, and minimized the area of the squares**
+
+### Maximum Likelihood with Constant Normal Variance
+
+The probability density function (PDF) of a normal distribution is:
+
 $$
-P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2).
-$$
-
-This notation emphasizes that the distribution of $y_i$ is centered around $\beta_0 + \beta_1 x_i$ with constant variance $\sigma^2$, and that our predictions are explicitly conditioned on the observed $x_i$.
-
----
-
-### Derivation of the Analytical Solution
-
-The objective is to find $\beta_0$ and $\beta_1$ that minimize the sum of squared errors (SSE):
-$$
-S(\beta_0, \beta_1) = \sum_{i=1}^{n} \left(y_i - \beta_0 - \beta_1 x_i\right)^2.
+p(x_i | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right)
 $$
 
-#### Step 1. Compute the Partial Derivatives
+The likelihood function for the entire dataset is the product of individual probabilities:
 
-**With respect to $\beta_0$:**
 $$
-\frac{\partial S}{\partial \beta_0} = -2 \sum_{i=1}^{n} \left(y_i - \beta_0 - \beta_1 x_i\right) = 0.
-$$
-
-This simplifies to:
-$$
-\sum_{i=1}^{n} y_i = n \beta_0 + \beta_1 \sum_{i=1}^{n} x_i.
+L(\mu, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right)
 $$
 
-Dividing by $n$, we get:
-$$
-\bar{y} = \beta_0 + \beta_1 \bar{x} \quad \Longrightarrow \quad \beta_0 = \bar{y} - \beta_1 \bar{x},
-$$
+By taking the natural logarithm and rearraging we can arrive at:
 
-where $\bar{y}$ and $\bar{x}$ are the sample means of $y_i$ and $x_i$, respectively.
-
-**With respect to $\beta_1$:**
 $$
-\frac{\partial S}{\partial \beta_1} = -2 \sum_{i=1}^{n} x_i\left(y_i - \beta_0 - \beta_1 x_i\right) = 0.
+\log L(\mu, \sigma^2) = -\frac{n}{2} \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-Substitute $\beta_0 = \bar{y} - \beta_1 \bar{x}$ into the above:
-$$
-\sum_{i=1}^{n} x_i y_i = \beta_0 \sum_{i=1}^{n} x_i + \beta_1 \sum_{i=1}^{n} x_i^2.
-$$
+If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2)$, is constant. So we simply need to minimize the second term, which is the sum of squared errors (SSE):
 
-Replacing $\beta_0$ and rearranging, we eventually obtain:
 $$
-\beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}.
+\sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-#### Step 2. Final Estimates
+There are both analytical ($\hat{\beta} = (X^T X)^{-1} X^T Y$) as well as computational methods for minimizing the sum of squared errors.
 
-Substituting $\beta_1$ back into the equation for $\beta_0$:
-$$
-\beta_0 = \bar{y} - \beta_1 \bar{x}.
-$$
+::: {.callout-important}
+It is very common to see optimizations that minimize the squared error. You should recognize that this is implicitly assuming that the errors are normally distributed.
+:::
 
----
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 700
 
-### Impact of the Error Term
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
 
-The error term $\epsilon_i$ represents the random variation in the response not captured by the deterministic part of the model. Under the assumption:
-$$
-\epsilon_i \sim \mathcal{N}(0, \sigma^2),
-$$
+app_ui = ui.page_fluid(
+    ui.h2("Linear Regression Likelihood"),
 
-we have:
-- **Unbiasedness:** $\mathbb{E}[y_i] = \beta_0 + \beta_1 x_i$, meaning that on average our model correctly predicts $y_i$.
-- **Constant Variance:** The homoscedasticity assumption ($\sigma^2$ is constant) justifies minimizing the sum of squared errors, which is equivalent to maximizing the likelihood when $y_i \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)$.
+    # Row 1: Sliders for alpha, beta, sigma^2, and n
+    ui.row(
+        ui.column(
+            3,
+            ui.input_slider(
+                "alphaInput", "Intercept (α):",
+                min=-10, max=10, value=0, step=0.1
+            ),
+        ),
+        ui.column(
+            3,
+            ui.input_slider(
+                "betaInput", "Slope (β):",
+                min=-5, max=5, value=1, step=0.1
+            ),
+        ),
+        ui.column(
+            3,
+            ui.input_slider(
+                "varInput", "Variance (σ²):",
+                min=0.1, max=10, value=1, step=0.1
+            ),
+        ),
+        ui.column(
+            3,
+            ui.input_slider(
+                "nInput", "Number of samples:",
+                min=5, max=100, value=10, step=1
+            ),
+        ),
+    ),
 
-In a maximum likelihood framework, the log-likelihood for the observed data is:
-$$
-\log L(\beta_0, \beta_1, \sigma^2) = -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n \left(y_i - \beta_0 - \beta_1 x_i\right)^2.
-$$
+    ui.br(),
 
-Maximizing this log-likelihood with respect to $\beta_0$ and $\beta_1$ leads to the same normal equations as minimizing the SSE.
+    # Row 2: Buttons, current data, and log-likelihood
+    ui.row(
+        ui.column(
+            2,
+            ui.input_action_button("mleBtn", "MLE"),
+        ),
+        ui.column(
+            2,
+            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Current Data (X, Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            4,
+            ui.h4("Log-Likelihood:"),
+            ui.output_text("llOutput"),
+        ),
+    ),
 
----
+    ui.br(),
 
-### Summary
+    # Plot
+    ui.output_plot("regressionPlot", height="400px"),
+)
 
-The analytical solutions to the linear regression problem are:
-$$
-\beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2} \quad \text{and} \quad \beta_0 = \bar{y} - \beta_1 \bar{x}.
-$$
+def server(input, output, session):
+    # Reactive value to store X and Y
+    data_vals = reactive.Value(None)
 
-This derivation demonstrates how the inclusion of the error term $\epsilon_i$ in the model acknowledges the inherent variability in the data and justifies the least squares approach, which under normal error assumptions, is equivalent to the maximum likelihood estimation.
+    # Function to generate linear-regression data
+    def generate_data(n, alpha, beta, var):
+        # For simplicity, let X be a random uniform(0, 10)
+        X = np.random.uniform(0, 10, size=n)
+        # Y = alpha + beta*X + noise
+        Y = alpha + beta*X + np.random.normal(0, np.sqrt(var), size=n)
+        return X, Y
 
-### Motivation for Bayesian (With Prior) Methods
+    # Initialize data once
+    data_vals.set(generate_data(10, 0, 1, 1))
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        data_vals.set(generate_data(n, alpha, beta, var))
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        X, Y = data_vals()
+        # Show a few decimal places
+        pairs_str = [
+            f"({round(xi,1)}, {round(yi,1)})" for xi, yi in zip(X, Y)
+        ]
+        return ", ".join(pairs_str)
+
+    # When 'MLE' is clicked, compute OLS estimates and update alpha, beta, var
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        X, Y = data_vals()
+        n = len(Y)
+
+        # Compute MLE (which in classical linear regression is the OLS solution)
+        X_mean = np.mean(X)
+        Y_mean = np.mean(Y)
+
+        # beta_hat = Cov(X,Y)/Var(X)
+        beta_hat = np.sum((X - X_mean)*(Y - Y_mean)) / np.sum((X - X_mean)**2)
+
+        # alpha_hat = mean(Y) - beta_hat*mean(X)
+        alpha_hat = Y_mean - beta_hat*X_mean
+
+        # var_hat = (1/n) * sum((y_i - alpha_hat - beta_hat*x_i)^2)
+        residuals = Y - (alpha_hat + beta_hat*X)
+        var_hat = np.sum(residuals**2) / n
+
+        # Update the UI sliders
+        session.send_input_message("alphaInput", {"value": alpha_hat})
+        session.send_input_message("betaInput", {"value": beta_hat})
+        session.send_input_message("varInput", {"value": var_hat})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        n = len(Y)
+
+        if var <= 0:
+            return float("nan")
+
+        # Compute sum of squared residuals
+        residuals = Y - (alpha + beta*X)
+        ssr = np.sum(residuals**2)
+
+        # log-likelihood for linear regression
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * (ssr / var)
+        return term1 + term2
+
+    # Show the log-likelihood
+    @output
+    @render.text
+    def llOutput():
+        ll = log_likelihood()
+        return str(round(ll, 2))
+
+    # Plot the data and the regression line
+    @output
+    @render.plot
+    def regressionPlot():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+
+        # Plot data points
+        ax.scatter(X, Y, color="blue", alpha=0.7, label="Data")
+
+        # Plot regression line from min(X) to max(X)
+        x_min, x_max = np.min(X), np.max(X)
+        x_vals = np.linspace(x_min, x_max, 100)
+        y_vals = alpha + beta * x_vals
+        ax.plot(x_vals, y_vals, color="red", label=f"Line (α={round(alpha,2)}, β={round(beta,2)})")
+
+        ax.set_title("Linear Regression Fit")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.legend()
+        ax.grid(True)
+
+        return fig
+
+app = App(app_ui, server)
+```
+
+### Maximum Likelihood without Constant Normal Variance
+
+As we did before, we cast off the shackles of restrictive modeling assumptions. These restrictive assumptions allow for nice analytic solutions - which made sense when all the calculation was by hand - but is not nearly so relevant today.
+
+
+## Motivation for Bayesian (With Prior) Methods
 
 If you've followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a seperate chapter to this topic which is finding the likelihood of models 'With Priors'.
 
