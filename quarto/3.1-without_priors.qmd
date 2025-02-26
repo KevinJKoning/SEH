@@ -11,7 +11,9 @@ We finally flip to $\mathcal{L}(M|D)$ the likelihood of a [model]{style="text-de
 
 Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.
 
-Throughout the chapter we assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a Frequentist perspective and the next a Bayesian perspective.
+Throughout the chapter we assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a **Frequentist** perspective and the next a Bayesian perspective.
+
+*Need somewhere to tackle the creation of variance in Frequentist models vs Bayesian*
 
 ## Guessing the Best Model Parameter 
 
@@ -121,7 +123,7 @@ $$
 
 ### Modeling the Probability Distribution of the Data
 
-When building a candidate model, you must assume a probability distribution for the data in order to calculate $P(y_i \mid \theta)$. For example, if you assume a normal (Gaussian) distribution, each data point is modeled as:
+When building a candidate model, we must assume a probability distribution for the data in order to calculate $P(y_i \mid \theta)$. For example, if we assume a normal (Gaussian) distribution, each data point is modeled as:
 
 $$
 y_i = \hat{y}_i + \epsilon_i,\quad \epsilon_i \sim \mathcal{N}(0, \sigma^2)
@@ -137,6 +139,9 @@ Here:
 
 - $\hat{y}_i$ is the model’s prediction for $y_i$.
 - $\sigma^2$ represents the variance of the noise (i.e., the spread of $y_i$ around $\hat{y}_i$).
+- $\epsilon_i$ is a normally distributed error term.[^1]
+
+[^1]: An important distinction between the *frequentist* approach described in this chapter and the *Bayesian* one described in the next chapter ("With Priors"), is that in the frequentist approach the only variance/uncertainty from the model comes from the error term. This is in contrast to the Bayesian approach in which the model itself (i.e. the parameters of the model) is considered to be uncertain, in addition to the typical inclusion of an error term.
 
 Put simply, the larger the gaps between the predictions and the data, the smaller the likelihood will be.
 
@@ -148,7 +153,7 @@ It is common to consider the best model to be the one that maximizes the likelih
 
 ### Example with the Binomial Distribution
 
-We start with an example in which the Binominal Distribution is an obvious choice for a model of our data generating process. (Setting the model and focusing on the parameters allows us to ignore the more 'meta' problem of deciding on a model that fits the problem).
+We start with an example in which the Binominal Distribution is an obvious choice for a model of the data generating process. (Setting the model and focusing on the parameters allows us to ignore the more 'meta' problem of deciding on a model type that fits the problem).
 
 We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the $p$ parameter. However, we now want to work in the other direction, $\mathcal{L}(M|D)$, in which we find the value of the $p$ parameter with the maximum likelihood.
 
@@ -299,11 +304,11 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-Let's breakdown how the likelihood was calculated for one of the datapoints. First, we needed to determine a probability distribution that represents our data. Because we have a fixed number of trials and probability of success for each trial, the Binomial probability distribution was a good choice.
+Let's breakdown how the likelihood was calculated for *one* of the datapoints before we try to maximize the likelihood over all of the datapoints. 
 
 ### Reminder of Binomial Probabilities
 
-Next, let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
+Let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
 
 $$
 P(X = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
@@ -323,17 +328,19 @@ $$
 
 The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point, which corresponds to k=992, has a value of about -2.73.
 
-### Difference between $\mathcal{L}(M|D)$ and P(D|M)
+### A Subtly Good Strategy for Maximum Likelihood Estimates
 
-Yopu may be asking yourself - what is the difference between what we are doing here and what we did in the first half of the primer when we calculated P(D|M)?
+Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of $p$. That strategy, which combines some guessing with observing the slope, to find the most probable model is actually not a bad one - many state of the art methods are effectively very sophisticated versions of that same strategy.
 
-The difference is that we use the probability of the data to determine the likelihood of the model in comparison to other possible models. We then optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best $\mathcal{L}(M|D)$.
+### Other Things to Note
 
-### A Subtly Good Strategy
+#### Difference between $\mathcal{L}(M|D)$ and $P(D|M)$
 
-Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of $p$. That strategy to find the most probable model is actually not a bad one - many state of the art methods are effectively very sophisticated versions of that same strategy.
+You may be asking yourself - what is the difference between what we are doing here and what we did in the first half of the primer when we calculated P(D|M)?
 
-### Analytical Solution
+The difference is we have a goal. We use the probability of the data as a metric we can optimize to find the best model parameters. We optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best $\mathcal{L}(M|D)$.
+
+#### FYI on the Analytical Solution
 
 Although we've mostly avoided them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.
 
@@ -373,7 +380,7 @@ $$
 
 where $t$ is the iteration index.
 
-The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many 'autograd' libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation.
+The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many 'autograd' libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation (well, and GPU's that go brrrrrrr).
 
 ## Maximum Likelihood Estimate with Continuous Data
 
@@ -573,13 +580,26 @@ app = App(app_ui, server)
 
 While there are some good reasons to 'default' to using normal/gaussian distributions, it's somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling 'real-word' problems.
 
-## Assumptions in Analytical Solutions
+## Statistical Models/Linear Regression
 
-So far we've focused on using computational methods to find the Maximum Likelihood. For a subset of problems there are also analytical solutions. While any method, computational or analytical, can lose sight of important details, analytical methods are often forced to make simplifying assumptions 'under the hood' in order find tractable solutions.
+So far this chapter we've focused on models/data generating processes that could be adequately described with just parametric probability distributions. Here we move on to statistical models conditioned on data, e.g. $P(y_i | x_i)$, like we did in the first half of the primer. As a reminder, data allowed us to zoom in on a part of the sample space and make better estimates of the parameters of the probability distribution at that location. Again, as a reminder, here was our preferred notation for traditional (constant variance) linear regression:
+
+$$
+P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
+$$
+
+This notation makes it obvious that our estimate for $y_i$ is conditioned on data; our estimate is still a probability distribution; and that the parameters of our linear regression model are used only to estimate the mean of the probability distribution at the $x_i$ location.
+
+In the first half of the primer we made no attempt to find the 'best' values of the parameters, but now we have the tool, specifically Maximum Likelihood Estimation, to do this. We can find the Maximum Likelihood Estimate of the parameters ($\beta_0$, $\beta_1$... $\sigma$) of a traditional linear regression model (with constant variance) either through the computational techniques given earlier, or known analytic solutions.
+
+**Reminder of the app at the end of 2.3 for linear regression**
+**Work on that but with the squares as residuals, and minimized the area of the squares**
+
+...While any method, computational or analytical, can lose sight of important details, analytical methods are often forced to make simplifying assumptions 'under the hood' in order find tractable solutions.
 
 We walk through the analytical derivation of linear regression specifically to highlight these simplifying assumptions.
 
-### Linear Regression
+### Linear Regression Analytical Solution Derivations (REMOVE)
 
 Here we reproduce the 'standard' methodology for computing the parameters of a linear regression model. Single-variable linear regression aims to model the relationship between a single independent variable $x$ and a dependent variable $y$ using a linear equation:
 
@@ -695,6 +715,8 @@ Also, the methods used end up being *extremely general*. You can define all sort
 But again, we wait a chapter.
 
 ## Machine Learning
+
+We again visit machine learning, but will now have the needed background/terminology for distinguishing it from the statistical models we've otherwise discussed.
 
 ### Loss Function
 
