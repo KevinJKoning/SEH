@@ -9,26 +9,16 @@ filters:
 
 We finally come to the last chapter, which is focused on finding the $\mathcal{L}(M \mid D)$ with prior values for the parameters.
 
-In more statistical terms, this chapter utilizes a **Bayesian** perspective. We will introduce Bayes Theorem later... There are two key
+In more statistical terms, this chapter utilizes a **Bayesian** perspective. We will introduce Bayes Theorem later...
 
+## Why Use Priors?
 
-## The Argument For and Against Priors
+Let's say we are flipping a coin that, upon basic examination, appears to be fair (produces 50% heads). However, let's say the first three flips are: Heads, Heads, and Heads. Now what should we estimate the true propability of heads to be after the three flips?
 
-These are generally the 'Bayesian' arguments for priors:
+- In the Frequentist view, the probability of heads with the maximum likelihood is simply P=1, i.e. we expect to always get heads.
+- In the Bayesian view, the probability of heads is greater than 0.5 and less than 1, depending on how strongly you had a prior belief that the coin was fair.
 
-1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
-2) If you *do* have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.
-
-The simplest example of 1) is flipping a coin that, upon basic description or examination, appears likely to be fair (produces 50% heads). However, let's say the first three flips are: Heads, Heads, and Heads. Now what should we estimate the true propability of heads to be?
-
-- In the frequentist view, the probability with the maximum likelihood is simply P=1 for heads.
-- In the bayesian view, P of heads is now greater than 0.5 and less than 1, depending on how strongly you had a prior belief that the coin was fair.
-
-If you knew the coin had just come from the bank, you could give a strong prior, that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented P=1.
-
-The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, your statistical model included a uniform prior on human height with the lowest being the shortest human and the highest being the tallest human - but someone could still be born that is outside of those bounds.
-
-## Coin Flip App
+Here's an app that let's you set the real probability of the coin and the strength of your prior belief. The more narrowly you set the prior distribution around 0.5, the more strongly you believe 0.5 is the correct probability.
 
 ```{shinylive-python}
 #| standalone: true
@@ -235,6 +225,43 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 ```
+
+If you knew the coin had just come from the bank, you may give a strong prior for a fair coin such that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented P=1.
+
+## The Argument For and Against Priors
+
+These are generally the 'Bayesian' arguments for priors:
+
+1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
+2) If you *do* have an overwhelming amount of data, the priors you set will have little difference in the final statistical model.
+
+The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, your statistical model included a uniform prior on human height with the lowest being the shortest human and the highest being the tallest human - but someone could still be born that is outside of those bounds.
+
+## Basics of Bayesian Analysis
+
+Note to self - prevention of non-sensical parameter values.
+
+Bayesian statistical analysis is based on the principles of probability updating through Bayes’ Theorem. The key elements include:
+
+1.	Prior Distribution – Represents prior beliefs about the parameters before observing data. It can be informative or non-informative.
+2.	Likelihood Function – Describes the probability of the observed data given the parameters.
+3.	Posterior Distribution – Obtained by combining the prior distribution and the likelihood using Bayes’ Theorem. It represents updated beliefs after observing the data.
+4.	Bayes’ Theorem – The fundamental formula:
+
+$$
+P(\theta | \text{data}) = \frac{P(\text{data} | \theta) P(\theta)}{P(\text{data})}
+$$
+
+where:
+
+- $P(\theta | \text{data})$  is the posterior
+- $P(\text{data} | \theta)$  is the likelihood
+- $P(\theta)$  is the prior
+- $P(\text{data})$  is the marginal likelihood (normalizing constant)
+
+5.	Evidence (Marginal Likelihood) – The total probability of the observed data across all parameter values. It is used in model comparison.
+6.	Posterior Predictive Distribution – Used to make predictions by integrating over the posterior distribution.
+7.	Computation Methods – Due to complex posterior distributions, computational techniques like Markov Chain Monte Carlo (MCMC) or Variational Inference are often used for approximation.
 
 
 ## Other Arguments For and Against Baysian Analysis?
