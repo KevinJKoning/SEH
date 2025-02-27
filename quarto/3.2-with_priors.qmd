@@ -60,16 +60,10 @@ app_ui = ui.page_fluid(
 def server(input, output, session):
     flips_history = reactive.Value([])
     
+    # Track button clicks separately
     @reactive.effect
+    @reactive.event(input.flip)
     def handle_flip():
-        input.flip()  # Create dependency on button click
-        
-        # Reset history when parameters change
-        if len(flips_history.get()) > 0:
-            if input.true_prob() != flips_history.get()[-1]["true_prob"] or \
-               input.prior_sd() != flips_history.get()[-1]["prior_sd"]:
-                flips_history.set([])
-        
         # Generate new coin flips
         n = int(input.num_flips())
         true_prob = input.true_prob()
@@ -78,6 +72,12 @@ def server(input, output, session):
         
         # Store the results with cumulative counts
         current_history = flips_history.get()
+        
+        # Reset history when parameters change
+        if len(current_history) > 0:
+            if true_prob != current_history[-1]["true_prob"] or \
+               input.prior_sd() != current_history[-1]["prior_sd"]:
+                current_history = []
         
         # If this is the first flip sequence or parameters changed
         if len(current_history) == 0:
@@ -105,6 +105,9 @@ def server(input, output, session):
     @output
     @render.plot
     def posteriorPlot():
+        # Forces the plot to react to button clicks
+        input.flip()
+        
         # Get the current history
         history = flips_history.get()
         if not history:
@@ -125,13 +128,14 @@ def server(input, output, session):
             ax.set_ylabel('Density (normalized)', fontsize=12)
             ax.set_title('Bayesian Analysis of Coin Flips: Prior Distribution', fontsize=14)
             ax.axvline(x=input.true_prob(), color='red', linestyle='--', 
-                       label=f'True probability: {input.true_prob()}')
+                    label=f'True probability: {input.true_prob()}')
             ax.legend(loc='upper left')
             
             plt.tight_layout()
             return fig
             
         # Create plot for posterior evolution
+        plt.close('all')  # Close any existing figures to avoid memory leaks
         fig, ax = plt.subplots(figsize=(10, 6))
         
         # Plot values for different number of total flips
@@ -176,11 +180,11 @@ def server(input, output, session):
             # Store values for the evolution plot
             flip_counts.append(total_flips)
             posterior_values.append(stats.beta.pdf(input.true_prob(), alpha_posterior, beta_posterior) / 
-                                  np.max(stats.beta.pdf(x, alpha_posterior, beta_posterior)))
+                                np.max(stats.beta.pdf(x, alpha_posterior, beta_posterior)))
         
         # Add true probability line
         ax.axvline(x=history[-1]["true_prob"], color='red', linestyle='--', 
-                   label=f'True probability: {history[-1]["true_prob"]}')
+                label=f'True probability: {history[-1]["true_prob"]}')
         
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1.1)
@@ -191,12 +195,14 @@ def server(input, output, session):
         
         # Add an inset plot showing the evolution of posterior at the true probability
         if len(flip_counts) > 1:
-            axins = fig.add_axes([0.6, 0.2, 0.35, 0.25])
-            axins.plot(flip_counts, posterior_values, 'ko-', ms=4)
-            axins.set_xlabel('Number of Flips')
-            axins.set_ylabel('Posterior Density at True p')
-            axins.set_title('Evolution of Posterior')
-            axins.grid(True, linestyle='--', alpha=0.7)
+            # Use subplot method instead of add_axes
+            inset_ax = fig.add_subplot(3, 3, 9)
+            inset_ax.plot(flip_counts, posterior_values, 'ko-', ms=4)
+            inset_ax.set_xlabel('Number of Flips', fontsize=9)
+            inset_ax.set_ylabel('Posterior Density', fontsize=9)
+            inset_ax.set_title('Evolution at True p', fontsize=10)
+            inset_ax.grid(True, linestyle='--', alpha=0.7)
+            inset_ax.tick_params(axis='both', labelsize=8)
         
         plt.tight_layout()
         return fig
