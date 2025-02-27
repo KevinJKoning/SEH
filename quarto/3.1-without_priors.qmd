@@ -439,6 +439,7 @@ where:
 
 * $k$ is the observed number of successes in $n$  trials.
 * $p$ is the probability of success in each trial.
+* (the n over k is 'n choose k', the binomial coefficient)
 
 Our first data point is 992 successes, which equals $k$, out of 1,000 trials, which equals $n$. The best value of $p$ is what we are unsure about, and our current strategy is to strategically try some values to try to understand the problem. Let's assume we tried $p$ = 0.995 as a reasonable guess. The calculation is:
 
@@ -447,7 +448,7 @@ P(y_i = 992 | n = 1000, p = 0.995) =
 \binom{1000}{992} (0.995)^{992} (0.005)^8 = 0.0652
 $$
 
-The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point, which corresponds to k=992, has a value of about -2.73.
+The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point/batch, which corresponds to k=992, has a value of about -2.73.
 
 ### Other Things to Note
 
@@ -477,7 +478,7 @@ $$
 
 This notation means that $\hat{p}_{\text{grid}}$ is the value $p_i$ in $G$ for which the likelihood $\mathcal{L}(p_i \mid n, k)$ is highest—in other words, the optimum value derived from the grid search.
 
-While grid search is attractive for its simplicity, it doesn't scale well with multiple parameters. As you add more parameters, the number of parameter combinations increases exponentially (a phenomenon known as the "curse of dimensionality"). For instance, if you discretize one parameter into 100 values, two parameters would require checking $100^2 = 10,000$ combinations, and three parameters would involve $100^3 = 1,000,000$ combinations, quickly becoming computationally prohibitive.
+While grid search is attractive for its simplicity, it doesn't scale well with multiple parameters. As you add more parameters, the number of parameter combinations increases exponentially (a phenomenon known as the "curse of dimensionality"). For instance, if you discretize each parameter into 100 values, two parameters would require checking $100^2 = 10,000$ combinations, and three parameters would involve $100^3 = 1,000,000$ combinations, quickly becoming computationally prohibitive.
 
 ### Gradient Ascent
 
@@ -705,7 +706,7 @@ $$
 P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 $$
 
-This notation makes it clear that our estimate for $y_i$ is a probability distribution centered around the linear predictor $\beta_0 + \beta_1 x_i$. This formulation also highlights that while our model provides a deterministic estimate for the mean response at $x_i$, individual observations vary due to randomness captured by the variance  $\sigma^2$.
+This notation makes it clear that our estimate for $y_i$ is a probability distribution centered around the linear predictor $\beta_0 + \beta_1 x_i$. This formulation also highlights that while our model provides a deterministic estimate for the mean response at $x_i$, individual observations vary due to randomness captured by the [constant] variance  $\sigma^2$.
 
 If we define the predicted value as $\hat{y}_i = \beta_0 + \beta_1 x_i$, then the error for each observation is
 
@@ -713,15 +714,89 @@ $$
 \epsilon_i = y_i - \hat{y}_i,
 $$
 
-and by our model assumption, these errors follow a normal distribution:
+Where $y_i$ is the observed data and $\hat{y}_i$ is the prediction. By our model assumption, these errors follow a normal distribution:
 
 $$
-\epsilon_i \sim \mathcal{N}(0, \sigma^2).
+\epsilon_i \sim \mathcal{N}(0, \sigma^2)
 $$
 
-Which should look familiar. We can now find the Maximum Likelihood Estimate of the model parameters ($\beta_0$, $\beta_1$... $\sigma$) based on the likelihood of our data under the given distribution of errors.
+This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of $\sigma^2$. We can now find $P(y_i \mid \theta)$ for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters ($\beta_0$, $\beta_1$... $\sigma$).
+
+A visual here can be very helpful. For each data point we calculate like the probabilities like in the chart below, where every observation has a 'sideways' normal distribution centered at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.
+
+```{python}
+#| echo: false
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Generate linear regression line
+x = np.linspace(0, 10, 100)
+y = 2 * x + 1  # Example linear function y = 2x + 1
+
+# Select two observed data points with different offsets
+x_obs1 = 3
+y_obs1 = 2 * x_obs1 + 1 + 1.5  # Point above the line
+
+x_obs2 = 7
+y_obs2 = 2 * x_obs2 + 1 - 2  # Point below the line
+
+# Generate sideways normal distributions centered at the regression line for both points
+sigma = 0.8  # Standard deviation
+
+# For first point
+mu1 = 2 * x_obs1 + 1  # Mean at regression line
+y_norm1 = np.linspace(mu1 - 3*sigma, mu1 + 3*sigma, 100)
+x_norm1 = norm.pdf(y_norm1, mu1, sigma)
+x_norm1 = x_norm1 / np.max(x_norm1) * 0.8 + x_obs1  # Scale and shift
+
+# For second point
+mu2 = 2 * x_obs2 + 1  # Mean at regression line
+y_norm2 = np.linspace(mu2 - 3*sigma, mu2 + 3*sigma, 100)
+x_norm2 = norm.pdf(y_norm2, mu2, sigma)
+x_norm2 = x_norm2 / np.max(x_norm2) * 0.8 + x_obs2  # Scale and shift
+
+# Plot
+plt.figure(figsize=(8, 5))
+
+# Plot regression line
+plt.plot(x, y, 'b-', linewidth=2, label="Regression Line")
+
+# Plot normal distributions
+plt.plot(x_norm1, y_norm1, 'g-', linewidth=1.5, alpha=0.7, label="Probability Distribution")
+plt.plot(x_norm2, y_norm2, 'g-', linewidth=1.5, alpha=0.7)
+
+# Plot observed points
+plt.scatter(x_obs1, y_obs1, color='red', s=80, zorder=3, label="Data Point (Positive Residual)")
+plt.scatter(x_obs2, y_obs2, color='purple', s=80, zorder=3, label="Data Point (Negative Residual)")
+
+# Draw vertical lines from points to regression line
+plt.vlines(x_obs1, mu1, y_obs1, color='red', linestyle='--', alpha=0.7)
+plt.vlines(x_obs2, mu2, y_obs2, color='purple', linestyle='--', alpha=0.7)
+
+# Add markers on regression line where the distributions are centered
+plt.scatter(x_obs1, mu1, color='blue', s=50, marker='x')
+plt.scatter(x_obs2, mu2, color='blue', s=50, marker='x')
+
+# Set axis limits to better display the distributions
+plt.xlim(0, 10)
+plt.ylim(-1, 20)
+
+# Labels and legend
+plt.xlabel("X", fontsize=12)
+plt.ylabel("Y", fontsize=12)
+plt.title("Linear Regression with Normal Distributions of Error", fontsize=14)
+plt.legend(loc='upper left')
+plt.grid(True, alpha=0.3)
+
+# Show plot
+plt.tight_layout()
+plt.show()
+```
 
 ### Maximum Likelihood with Constant Normal Variance
+
+We take an unusual detour for the primer and derive the solution for maximizing likelihood with constant normal variance. This is important because of the result, as indicated by the callout at the end of the derivation. Also, rest assured that derivations are not needed to solve practical problems, solutions can be found numerically by just  maximizing the results of the raw/original likelihood calculation (like you did in earlier examples).
 
 The probability density function (PDF) of a normal distribution is:
 
@@ -741,17 +816,17 @@ $$
 \log L(\mu, \sigma^2) = -\frac{n}{2} \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2)$, is constant. So we simply need to minimize the second term, which is the **sum of squared errors (SSE)**:
+If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2)$ and $\frac{1}{2\sigma^2}$ is constant. So we simply need to minimize the second term, which is the **sum of squared errors (SSE)**:
 
 $$
 \sum_{i=1}^{n} (x_i - \mu)^2
 $$
 
-There are both analytical ($(X^T X)^{-1} X^T Y$) as well as computational methods for minimizing the sum of squared errors.
-
 ::: {.callout-important}
 It is very common to see optimizations that minimize the squared error. You should recognize that this is implicitly assuming that the errors are normally distributed.
 :::
+
+#### Example App
 
 The app below allows you to visualize the sum of squares error. You can try minimizing the total squared error by altering the parameters of the regression. When you are ready you can see the parameter values that maximizes the likelihood by clicking on the MLE button.
 
@@ -971,31 +1046,17 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-### Maximum Likelihood without Constant Normal Variance
-
-As we did before, we cast off the shackles of restrictive modeling assumptions. Because you are an engineer in a hurry, we skip the long derivation and get to the point. We will need to minimize the following function instead of the sum of squared errors (SSE), which is weighted least squares (WLS):
-
-$$
-\sum_{i=1}^{n} \frac{(x_i - \mu)^2}{\sigma_i^2}
-$$
-
-In general, however, you don't need to find a simpler function to minimize - as we've done here. Instead, once we assume a probability distribution, like the normal distribution, we can maximize it explicitly:
-
-
-**NEEDS WORK**
-$$
-\mathcal{L}(\theta \mid \mathbf{y}) = \prod_{i=1}^{N} \mathcal{N}(y_i - \hat{y}_i, \sigma^2).
-$$ 
-
 ## Motivation for Bayesian (With Prior) Methods
 
 If you've followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a seperate chapter to this topic which is finding the likelihood of models 'With Priors'.
 
-Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the parameter values. These are a necessary part of the Bayesian framework, can be vague/non-commital or specific, and depending on the situation can be very useful or just invite additional questions on the model accuracy. These points are long discussed in statistical literature.
+Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the parameter values. These are a necessary part of the Bayesian framework. The priors can be vague/non-commital or very specific, depending on the situation. Ultimately priors can be very useful or just invite additional questions on the model accuracy. These points are long discussed in statistical literature.
 
-The point I would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the parameter values are given a probabilistic interpretation - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibility. This is much more the reality of the situation.
+The point I would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibility. [^1]
 
-Also, the methods used end up being *extremely general*. You can define all sorts of custom models, and a single Bayesian sampling method will crank through them all no-sweat giving you plausible models.
+[^1]: From the Frequentist viewpoint you can also calculate uncertainty in the models parameter values - however the assumption is that a single model with a single set of parameters creates the data. The uncertainty in the parameter values stems from the fact that the model generated data randomly, and we have only a limited number of samples with which we 'backcalculate' the parameters.
+
+A major advantage is the method to find optimum parameter values end up being *extremely general*. You can define all sorts of custom models, and a single Bayesian sampling method will crank through them all no-sweat giving you plausible parameters for your models, including the spread or confidence in those parameter values.
 
 But again, we wait a chapter.
 
@@ -1005,7 +1066,7 @@ We again visit machine learning, but will now have the needed background/termino
 
 ### Loss Function
 
-A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ and the predicted values $\hat{y}$ The generic form of a loss function can be expressed as:
+A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ (it's machine learning so we say target instead of observed...) and the predicted values $\hat{y}$. The generic form of a loss function can be expressed as:
 
 $$
 L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
@@ -1041,6 +1102,8 @@ $$
 :::
 
 ### Training a Simple Neural Network
+
+**add a third tab which gives the parameter values**
 
 ```{shinylive-python}
 #| standalone: true
