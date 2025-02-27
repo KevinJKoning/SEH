@@ -44,7 +44,7 @@ app_ui = ui.page_fluid(
     ui.layout_sidebar(
         ui.sidebar(
             ui.p("The prior is always centered at 0.5"),
-            ui.input_slider("prior_sd", "Prior Standard Deviation", min=0.01, max=0.2, value=0.1, step=0.01),
+            ui.input_slider("prior_sd", "Prior Standard Deviation", min=0.01, max=0.5, value=0.1, step=0.01),
             ui.p("Set the true probability of heads for the coin:"),
             ui.input_slider("true_prob", "True Probability of Heads", min=0.1, max=0.9, value=0.5, step=0.05),
             ui.p("Select the number of coin flips:"),
@@ -60,7 +60,6 @@ app_ui = ui.page_fluid(
 def server(input, output, session):
     flips_history = reactive.Value([])
     
-    # Track button clicks separately
     @reactive.effect
     @reactive.event(input.flip)
     def handle_flip():
@@ -70,37 +69,15 @@ def server(input, output, session):
         flips = np.random.binomial(1, true_prob, n)
         heads_count = np.sum(flips)
         
-        # Store the results with cumulative counts
-        current_history = flips_history.get()
-        
-        # Reset history when parameters change
-        if len(current_history) > 0:
-            if true_prob != current_history[-1]["true_prob"] or \
-               input.prior_sd() != current_history[-1]["prior_sd"]:
-                current_history = []
-        
-        # If this is the first flip sequence or parameters changed
-        if len(current_history) == 0:
-            current_history.append({
-                "num_flips": n,
-                "total_flips": n,
-                "heads_count": heads_count,
-                "total_heads": heads_count,
-                "true_prob": true_prob,
-                "prior_sd": input.prior_sd()
-            })
-        else:
-            prev = current_history[-1]
-            current_history.append({
-                "num_flips": n,
-                "total_flips": prev["total_flips"] + n,
-                "heads_count": heads_count,
-                "total_heads": prev["total_heads"] + heads_count,
-                "true_prob": true_prob,
-                "prior_sd": input.prior_sd()
-            })
-        
-        flips_history.set(current_history)
+        # Reset history and add new flip result
+        flips_history.set([{
+            "num_flips": n,
+            "total_flips": n,
+            "heads_count": heads_count,
+            "total_heads": heads_count,
+            "true_prob": true_prob,
+            "prior_sd": input.prior_sd()
+        }])
 
     @output
     @render.plot
@@ -128,12 +105,61 @@ def server(input, output, session):
             ax.set_ylabel('Density (normalized)', fontsize=12)
             ax.set_title('Bayesian Analysis of Coin Flips: Prior Distribution', fontsize=14)
             ax.axvline(x=input.true_prob(), color='red', linestyle='--', 
-                    label=f'True probability: {input.true_prob()}')
+                       label=f'True probability: {input.true_prob()}')
             ax.legend(loc='upper left')
             
             plt.tight_layout()
             return fig
-            
+        
+        # Create plot for posterior evolution
+        plt.close('all')  # Close any existing figures to avoid memory leaks
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot values for different number of total flips
+        x = np.linspace(0, 1, 1000)
+        prior_mean = 0.5
+        prior_sd = history[0]["prior_sd"]
+        
+        # Plot the prior lightly
+        prior = stats.norm.pdf(x, prior_mean, prior_sd)
+        prior = prior / np.max(prior)  # Normalize
+        ax.plot(x, prior, 'b-', alpha=0.3, lw=1, label=f'Prior (Normal with μ=0.5, σ={prior_sd})')
+        
+        # Plot posterior for current data
+        data = history[0]  # We only have one entry now with the reset approach
+        total_flips = data["total_flips"]
+        total_heads = data["total_heads"]
+        
+        # Calculate posterior using Beta distribution (conjugate prior approximation)
+        # We convert the normal prior to an approximate beta prior
+        alpha_prior = 0.5 / prior_sd**2
+        beta_prior = alpha_prior
+        
+        # Update with observed data
+        alpha_posterior = alpha_prior + total_heads
+        beta_posterior = beta_prior + (total_flips - total_heads)
+        
+        # Calculate and normalize posterior
+        posterior = stats.beta.pdf(x, alpha_posterior, beta_posterior)
+        posterior = posterior / np.max(posterior)  # Normalize for better display
+        
+        # Plot the posterior
+        ax.plot(x, posterior, 'g-', alpha=1.0, lw=2.5, 
+                label=f'Posterior after {total_flips} flips ({total_heads} heads)')
+        
+        # Add true probability line
+        ax.axvline(x=data["true_prob"], color='red', linestyle='--', 
+                   label=f'True probability: {data["true_prob"]}')
+        
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1.1)
+        ax.set_xlabel('Probability of Heads', fontsize=12)
+        ax.set_ylabel('Density (normalized)', fontsize=12)
+        ax.set_title('Bayesian Analysis of Coin Flips: Posterior Distribution', fontsize=14)
+        ax.legend(loc='upper left')
+        
+        plt.tight_layout()
+        return fig            
         # Create plot for posterior evolution
         plt.close('all')  # Close any existing figures to avoid memory leaks
         fig, ax = plt.subplots(figsize=(10, 6))
