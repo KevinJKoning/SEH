@@ -7,14 +7,206 @@ filters:
 
 ## Preview
 
-We finally come to the last chapter, which is focused on P(M|D)...
+We finally come to the last chapter, which is focused on finding the $\mathcal{L}(M \mid D)$ with prior values for the parameters.
 
-Statistics used to be a bit of a flame way between those who used priors and Bayesian statistics, and the 'standard' which was frequentism... I think it's safe to say however, if you're working on a subject in which you have a significant amount of expert knowledge with relatively complex models, you should use a Bayesian approach for two reasons:
+In more statistical terms, this chapter utilizes a **Bayesian** perspective. We will introduce Bayes Theorem later... There are two key
+
+
+## The Argument For and Against Priors
+
+These are generally the 'Bayesian' arguments for priors:
 
 1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
 2) If you *do* have an overwhelming amount of data, the priors you set will have little to no difference in the final statistical model - although they may still help avoid nonsensical parameter values.
 
-In more statistical terms, this chapter utilizes a **Bayesian** perspective. We will introduce Bayes Theorem later... There are two key
+The simplest example of 1) is flipping a coin that, upon basic description or examination, appears likely to be fair (produces 50% heads). However, let's say the first three flips are: Heads, Heads, and Heads. Now what should we estimate the true propability of heads to be?
+
+- In the frequentist view, the probability with the maximum likelihood is simply P=1 for heads.
+- In the bayesian view, P of heads is now greater than 0.5 and less than 1, depending on how strongly you had a prior belief that the coin was fair.
+
+If you knew the coin had just come from the bank, you could give a strong prior, that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented P=1.
+
+The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, your statistical model included a uniform prior on human height with the lowest being the shortest human and the highest being the tallest human - but someone could still be born that is outside of those bounds.
+
+## Coin Flip App
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 750
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+app_ui = ui.page_fluid(
+    ui.h2("Bayesian Coin Flip Analysis"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.p("The prior is always centered at 0.5"),
+            ui.input_slider("prior_sd", "Prior Standard Deviation", min=0.01, max=0.2, value=0.1, step=0.01),
+            ui.p("Set the true probability of heads for the coin:"),
+            ui.input_slider("true_prob", "True Probability of Heads", min=0.1, max=0.9, value=0.5, step=0.05),
+            ui.p("Select the number of coin flips:"),
+            ui.input_select("num_flips", "Number of Coin Flips", 
+                          choices=["2", "5", "10", "50", "100", "1000", "10000"],
+                          selected="10"),
+            ui.input_action_button("flip", "Flip Coins"),
+        ),
+        ui.output_plot("posteriorPlot", height="500px"),
+    ),
+)
+
+def server(input, output, session):
+    flips_history = reactive.Value([])
+    
+    @reactive.effect
+    def handle_flip():
+        input.flip()  # Create dependency on button click
+        
+        # Reset history when parameters change
+        if len(flips_history.get()) > 0:
+            if input.true_prob() != flips_history.get()[-1]["true_prob"] or \
+               input.prior_sd() != flips_history.get()[-1]["prior_sd"]:
+                flips_history.set([])
+        
+        # Generate new coin flips
+        n = int(input.num_flips())
+        true_prob = input.true_prob()
+        flips = np.random.binomial(1, true_prob, n)
+        heads_count = np.sum(flips)
+        
+        # Store the results with cumulative counts
+        current_history = flips_history.get()
+        
+        # If this is the first flip sequence or parameters changed
+        if len(current_history) == 0:
+            current_history.append({
+                "num_flips": n,
+                "total_flips": n,
+                "heads_count": heads_count,
+                "total_heads": heads_count,
+                "true_prob": true_prob,
+                "prior_sd": input.prior_sd()
+            })
+        else:
+            prev = current_history[-1]
+            current_history.append({
+                "num_flips": n,
+                "total_flips": prev["total_flips"] + n,
+                "heads_count": heads_count,
+                "total_heads": prev["total_heads"] + heads_count,
+                "true_prob": true_prob,
+                "prior_sd": input.prior_sd()
+            })
+        
+        flips_history.set(current_history)
+
+    @output
+    @render.plot
+    def posteriorPlot():
+        # Get the current history
+        history = flips_history.get()
+        if not history:
+            # Show prior only if no flips yet
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            # Plot the prior distribution
+            x = np.linspace(0, 1, 1000)
+            prior_mean = 0.5
+            prior_sd = input.prior_sd()
+            prior = stats.norm.pdf(x, prior_mean, prior_sd)
+            prior = prior / np.max(prior)  # Normalize for better display
+            
+            ax.plot(x, prior, 'b-', lw=2, label=f'Prior (Normal with μ=0.5, σ={prior_sd})')
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1.1)
+            ax.set_xlabel('Probability of Heads', fontsize=12)
+            ax.set_ylabel('Density (normalized)', fontsize=12)
+            ax.set_title('Bayesian Analysis of Coin Flips: Prior Distribution', fontsize=14)
+            ax.axvline(x=input.true_prob(), color='red', linestyle='--', 
+                       label=f'True probability: {input.true_prob()}')
+            ax.legend(loc='upper left')
+            
+            plt.tight_layout()
+            return fig
+            
+        # Create plot for posterior evolution
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot values for different number of total flips
+        x = np.linspace(0, 1, 1000)
+        prior_mean = 0.5
+        prior_sd = history[0]["prior_sd"]
+        
+        # Track posterior probabilities at p=0.5 for each flip count
+        flip_counts = []
+        posterior_values = []
+        
+        # Plot the prior lightly
+        prior = stats.norm.pdf(x, prior_mean, prior_sd)
+        prior = prior / np.max(prior)  # Normalize
+        ax.plot(x, prior, 'b-', alpha=0.3, lw=1, label=f'Prior (Normal with μ=0.5, σ={prior_sd})')
+        
+        # Plot posteriors for each flip count
+        for idx, data in enumerate(history):
+            total_flips = data["total_flips"]
+            total_heads = data["total_heads"]
+            
+            # Calculate posterior using Beta distribution (conjugate prior approximation)
+            # We convert the normal prior to an approximate beta prior
+            alpha_prior = 0.5 / prior_sd**2
+            beta_prior = alpha_prior
+            
+            # Update with observed data
+            alpha_posterior = alpha_prior + total_heads
+            beta_posterior = beta_prior + (total_flips - total_heads)
+            
+            # Calculate and normalize posterior
+            posterior = stats.beta.pdf(x, alpha_posterior, beta_posterior)
+            posterior = posterior / np.max(posterior)  # Normalize for better display
+            
+            # Plot with darker lines for more recent posteriors
+            alpha = 0.3 + 0.7 * (idx + 1) / len(history)
+            lw = 1 + idx * 0.5
+            if idx == len(history) - 1:
+                ax.plot(x, posterior, 'g-', alpha=1.0, lw=2.5, 
+                        label=f'Posterior after {total_flips} flips ({total_heads} heads)')
+            
+            # Store values for the evolution plot
+            flip_counts.append(total_flips)
+            posterior_values.append(stats.beta.pdf(input.true_prob(), alpha_posterior, beta_posterior) / 
+                                  np.max(stats.beta.pdf(x, alpha_posterior, beta_posterior)))
+        
+        # Add true probability line
+        ax.axvline(x=history[-1]["true_prob"], color='red', linestyle='--', 
+                   label=f'True probability: {history[-1]["true_prob"]}')
+        
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1.1)
+        ax.set_xlabel('Probability of Heads', fontsize=12)
+        ax.set_ylabel('Density (normalized)', fontsize=12)
+        ax.set_title('Bayesian Analysis of Coin Flips: Posterior Distribution', fontsize=14)
+        ax.legend(loc='upper left')
+        
+        # Add an inset plot showing the evolution of posterior at the true probability
+        if len(flip_counts) > 1:
+            axins = fig.add_axes([0.6, 0.2, 0.35, 0.25])
+            axins.plot(flip_counts, posterior_values, 'ko-', ms=4)
+            axins.set_xlabel('Number of Flips')
+            axins.set_ylabel('Posterior Density at True p')
+            axins.set_title('Evolution of Posterior')
+            axins.grid(True, linestyle='--', alpha=0.7)
+        
+        plt.tight_layout()
+        return fig
+
+app = App(app_ui, server)
+```
+
+
+## Other Arguments For and Against Baysian Analysis?
+
 
 ## Maximum Likelihood Estimation (MLE) vs. Maximum A Posteriori (MAP)
 
@@ -211,9 +403,12 @@ app = App(app_ui, server)
 ```
 
 
-## Likelihood
+## Old Thoughts
 
-We have finally worked our way up to what I consider to be one of the most important topics... Likelihood...
+For with priors, consider:
+- Low Dimensional Search (Grid)
+- High Dimensional Search (MCMC)
+
 
 ## Probability Distribution or Uncertainty?
 
