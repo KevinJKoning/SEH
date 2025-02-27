@@ -13,8 +13,6 @@ Like before, we begin with a simple dice model as we consider it to be an intuit
 
 Throughout the chapter we assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we'll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a **Frequentist** perspective and the next a Bayesian perspective.
 
-*Need somewhere to tackle the creation of variance in Frequentist models vs Bayesian*
-
 ## Guessing the Best Model Parameter 
 
 In part one we wanted to understand the probability of the data based on a fixed model of a data generating process. In part two we use the data to find the most likely model of the data generating process. Intuitively, this is just a model that generates or predicts data that is similar to our observed data. Subsequently we start with an intuitive excercise before diving further into the technical details. 
@@ -722,7 +720,7 @@ $$
 
 This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of $\sigma^2$. We can now find $P(y_i \mid \theta)$ for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters ($\beta_0$, $\beta_1$... $\sigma$).
 
-A visual here can be very helpful. For each data point we calculate like the probabilities like in the chart below, where every observation has a 'sideways' normal distribution centered at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.
+A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a 'sideways' normal distribution centered ($\epsilon_i \sim \mathcal{N}(0, \sigma^2)$) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.
 
 ```{python}
 #| echo: false
@@ -1062,11 +1060,11 @@ But again, we wait a chapter.
 
 ## Machine Learning
 
-We again visit machine learning, but will now have the needed background/terminology for distinguishing it from the statistical models we've otherwise discussed.
+We again visit machine learning, but now have additional background/terminology for distinguishing it from the statistical models we've otherwise discussed.
 
 ### Loss Function
 
-A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ (it's machine learning so we say target instead of observed...) and the predicted values $\hat{y}$. The generic form of a loss function can be expressed as:
+The parameters of a machine learning model are optimized via a **loss function**. A loss function, denoted as $L$, is typically computed as the difference between the true target values $y$ (it's machine learning so we say target instead of observed...) and the predicted values $\hat{y}$. The generic form of a loss function can be expressed as:
 
 $$
 L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
@@ -1083,27 +1081,119 @@ The function $\ell(y_i, \hat{y}_i)$ depends on the task.
 
 ### Comparison to Likelihood Function
 
-Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, $\mathscr{L}(M|D)$.
-
-::: callout-note
-## Loss Functions
-
-Likelihood is a specific form of a **loss function**. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:
-
-$$
-\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
-$$
-
-1.  $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
-
-2.  $\ell(y_i, \hat{y}_i)$: This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. 
-
-3.  $\frac{1}{N} \sum_{i=1}^{N}$: This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
-:::
+Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).
 
 ### Training a Simple Neural Network
 
-**add a third tab which gives the parameter values**
+In the first half we developed the structure of a neural network and let is generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.
+
+#### Model Architecture
+
+The neural network we'll eventually train in the app further below consists of:
+
+- Input layer: 1 neuron (diamond carat)
+- Hidden layer 1: $h_1$ neurons (user-configurable)
+- Hidden layer 2: $h_2$ neurons (user-configurable)
+- Output layer: 1 neuron (predicted price)
+
+#### Forward Propagation
+
+For an input $\mathbf{x}$, the network computes:
+
+1. **First Hidden Layer**:
+   $$\mathbf{Z}^{[1]} = \mathbf{x} \mathbf{W}^{[1]} + \mathbf{b}^{[1]}$$
+   $$\mathbf{A}^{[1]} = g^{[1]}(\mathbf{Z}^{[1]})$$
+
+2. **Second Hidden Layer**:
+   $$\mathbf{Z}^{[2]} = \mathbf{A}^{[1]} \mathbf{W}^{[2]} + \mathbf{b}^{[2]}$$
+   $$\mathbf{A}^{[2]} = g^{[2]}(\mathbf{Z}^{[2]})$$
+
+3. **Output Layer**:
+   $$\mathbf{Z}^{[3]} = \mathbf{A}^{[2]} \mathbf{W}^{[3]} + \mathbf{b}^{[3]}$$
+   $$\hat{\mathbf{y}} = \mathbf{Z}^{[3]}$$
+
+Where:
+- $\mathbf{W}^{[l]}$ is the weight matrix for layer $l$
+- $\mathbf{b}^{[l]}$ is the bias vector for layer $l$
+- $g^{[l]}$ is the activation function (ReLU or Logistic)
+- $\hat{\mathbf{y}}$ is the predicted output
+
+#### Loss Function
+
+The model minimizes the Mean Squared Error (MSE) loss:
+
+$$\mathcal{L}(\mathbf{W}, \mathbf{b}) = \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})^2$$
+
+Where:
+- $m$ is the number of training examples
+- $\hat{y}^{(i)}$ is the predicted value for the $i$-th example
+- $y^{(i)}$ is the actual value for the $i$-th example
+
+#### Parameter Estimation Process
+
+##### Gradient Descent
+
+The parameters are updated iteratively using gradient descent:
+
+$$\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}$$
+$$\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}$$
+
+Where $\alpha$ is the learning rate (fixed at 0.01 in our implementation).
+
+##### Backpropagation
+
+The gradients are computed using backpropagation:
+
+1. **Output Layer**:
+   $$d\mathbf{Z}^{[3]} = \frac{2}{m}(\hat{\mathbf{y}} - \mathbf{y})$$
+   $$d\mathbf{W}^{[3]} = (\mathbf{A}^{[2]})^T d\mathbf{Z}^{[3]}$$
+   $$d\mathbf{b}^{[3]} = \sum_{i=1}^{m} d\mathbf{Z}^{[3]}_i$$
+
+2. **Hidden Layer 2**:
+   $$d\mathbf{A}^{[2]} = d\mathbf{Z}^{[3]} (\mathbf{W}^{[3]})^T$$
+   $$d\mathbf{Z}^{[2]} = d\mathbf{A}^{[2]} \odot g^{[2]\prime}(\mathbf{Z}^{[2]})$$
+   $$d\mathbf{W}^{[2]} = (\mathbf{A}^{[1]})^T d\mathbf{Z}^{[2]}$$
+   $$d\mathbf{b}^{[2]} = \sum_{i=1}^{m} d\mathbf{Z}^{[2]}_i$$
+
+3. **Hidden Layer 1**:
+   $$d\mathbf{A}^{[1]} = d\mathbf{Z}^{[2]} (\mathbf{W}^{[2]})^T$$
+   $$d\mathbf{Z}^{[1]} = d\mathbf{A}^{[1]} \odot g^{[1]\prime}(\mathbf{Z}^{[1]})$$
+   $$d\mathbf{W}^{[1]} = \mathbf{X}^T d\mathbf{Z}^{[1]}$$
+   $$d\mathbf{b}^{[1]} = \sum_{i=1}^{m} d\mathbf{Z}^{[1]}_i$$
+
+Where:
+- $\odot$ represents element-wise multiplication
+- $g^{[l]\prime}$ is the derivative of the activation function
+
+##### Activation Function Derivatives
+
+1. **ReLU Derivative**:
+   $$g^{\prime}_{\text{ReLU}}(z) = 
+   \begin{cases} 
+   1 & \text{if } z > 0 \\
+   0 & \text{otherwise}
+   \end{cases}$$
+
+2. **Logistic Sigmoid Derivative**:
+   $$g^{\prime}_{\text{sigmoid}}(z) = \sigma(z)(1-\sigma(z))$$
+   where $\sigma(z) = \frac{1}{1+e^{-z}}$
+
+#### Initialization Strategy
+
+The weights are initialized using He initialization for ReLU or standard normal scaled by the square root of layer size:
+
+$$\mathbf{W}^{[l]} \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n^{[l-1]}}}\right)$$
+
+Where $n^{[l-1]}$ is the number of neurons in the previous layer.
+
+#### Training Process
+
+1. **Standardization**: Input and output data are standardized to have zero mean and unit variance
+2. **Iterations**: The model is trained for a user-specified number of epochs
+3. **Parameter Updates**: After each forward pass, parameters are updated via backpropagation
+4. **Convergence**: Training continues until the specified number of epochs is completed
+
+The final parameter values displayed in the "Model Parameters" tab represent the optimized weights and biases that minimize the MSE loss on the training data.
 
 ```{shinylive-python}
 #| standalone: true
@@ -1519,12 +1609,6 @@ data_str = """ID,carat,cut,color,clarity,depth,table,price,x,y,z
 24966,2.02,Premium,H,SI1,63.0,60.0,13453,7.85,7.79,4.93
 """
 
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from io import StringIO
-
 # --- Activation Functions ---
 def relu(x):
     return np.maximum(0, x)
@@ -1610,6 +1694,17 @@ class NeuralNetwork:
             losses.append(loss)
             self.backward(X, y, y_pred, learning_rate)
         return losses
+    
+    def get_parameters(self):
+        """Return a dictionary of model parameters"""
+        return {
+            "W1": self.W1,
+            "b1": self.b1,
+            "W2": self.W2,
+            "b2": self.b2,
+            "W3": self.W3,
+            "b3": self.b3
+        }
 
 # --- Shiny UI ---
 app_ui = ui.page_fluid(
@@ -1626,6 +1721,36 @@ app_ui = ui.page_fluid(
             ),
             ui.nav_panel("Predictions",
                 ui.output_plot("predictionPlot", height="400px")
+            ),
+            ui.nav_panel("Model Parameters",
+                ui.row(
+                    ui.column(4, 
+                        ui.h4("Layer 1 Weights"),
+                        ui.output_table("w1Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 2 Weights"),
+                        ui.output_table("w2Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 3 Weights"),
+                        ui.output_table("w3Table")
+                    )
+                ),
+                ui.row(
+                    ui.column(4, 
+                        ui.h4("Layer 1 Biases"),
+                        ui.output_table("b1Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 2 Biases"),
+                        ui.output_table("b2Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 3 Biases"),
+                        ui.output_table("b3Table")
+                    )
+                )
             )
         )
     )
@@ -1665,7 +1790,19 @@ def server(input, output, session):
         y_pred_norm = nn.forward(X_norm)
         y_pred = y_pred_norm * y_std + y_mean
         
-        return {"losses": losses, "X": X, "y": y, "y_pred": y_pred}
+        return {
+            "losses": losses, 
+            "X": X, 
+            "y": y, 
+            "y_pred": y_pred, 
+            "model": nn,
+            "data_stats": {
+                "X_mean": X_mean,
+                "X_std": X_std,
+                "y_mean": y_mean,
+                "y_std": y_std
+            }
+        }
     
     @output
     @render.plot
@@ -1694,10 +1831,83 @@ def server(input, output, session):
         ax.set_ylabel("Price")
         ax.legend()
         return fig
+    
+    @output
+    @render.table
+    def w1Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W1"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def w2Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W2"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def w3Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W3"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b1Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b1"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b2Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b2"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b3Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b3"])
+        return df.round(4)
 
 app = App(app_ui, server)
-
 ```
 
 In training a 'standard' neural network, we hope to obtain a point estimate of the parameter values that will have the most accuracy in predicting data.
 
+
+## Graveyard
+
+This is not useable but should find more areas for these kinds of callouts:
+
+::: callout-note
+## Loss Functions
+
+Likelihood is a specific form of a **loss function**. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:
+
+$$
+\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+$$
+
+1.  $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
+
+2.  $\ell(y_i, \hat{y}_i)$: This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. 
+
+3.  $\frac{1}{N} \sum_{i=1}^{N}$: This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
+:::
