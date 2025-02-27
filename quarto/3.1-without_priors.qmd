@@ -123,11 +123,9 @@ $$
 
 ### Calculating $P(y_i \mid \theta)$
 
-Performing the likelihood calculation described above hinges on being able to calculate $P(y_i \mid \theta)$. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let's assume we are measuring the reliability of a similar manufacturing line across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.
+Performing the likelihood calculation described above hinges on being able to calculate $P(y_i \mid \theta)$. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let's assume we are measuring the reliability of similar manufacturing lines across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.
 
-First, we pick candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year, so $\lambda = 5$ for our candidate model. To find $P(y_i \mid \lambda = 5)$ for a single data point, we can use the app below which is similar to apps we used in the first half of the primer.
-
-We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$. Using the app $P$ = 0.1044. Once we can find $P(y_i \mid \theta)$ for one data point, we can do it for the rest and calculate $\mathcal{L}(\theta \mid \mathbf{y})$. Of course, we have not yet *maximized* that likelihood function. We will find strategies to do that later.
+So we can proceed with an example calculation, we simply try reasonable candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year, so $\lambda = 5$ for our candidate model. To find $P(y_i \mid \lambda = 5)$ for a single data point, we can use the app below which is similar to apps we used in the first half of the primer. We keep $\lambda = 5$ in the app and try to find $P(y_i=7 \mid \lambda = 5)$.
 
 ```{shinylive-python}
 #| standalone: true
@@ -222,7 +220,7 @@ def server(input, output, session):
         ax.set_xlim(-0.6, x_max + 0.6)
         
         ax.set_title(f"Poisson Distribution (λ={lam})")
-        ax.set_xlabel("X (number of events)")
+        ax.set_xlabel("y (number of events)")
         ax.set_ylabel("Probability")
         ax.grid(True, alpha=0.3)
         
@@ -238,22 +236,38 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+Using the app $P$ = 0.1044. Once we can find $P(y_i \mid \theta)$ for one data point, we can do it for the rest and calculate $\mathcal{L}(\theta \mid \mathbf{y})$. Of course, we have not yet *maximized* that likelihood function.
 
-## Maximum Likelihood Estimation with Discrete Data
+## Estimating Maximum Likelihood with Discrete Data
 
-It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.
+If our goal is to get the Maximum Likelihood Estimate of a model's parameters, the last example left a couple of things out:
 
-### Example with the Binomial Distribution
+1. It did not calculate the likelihood for multiple data points.
+2. It did nothing to help us estimate the parameters that gave the *maximum* likelihood.
 
-We start with an example in which the Binominal Distribution is an obvious choice for a model of the data generating process. (Setting the model and focusing on the parameters allows us to ignore the more 'meta' problem of deciding on a model type that fits the problem).
+We will walk through another example that fills in these blanks. We'll shift examples slightly, but we'll still be modeling a data generating process for which simply using a named parametric distribution is a good fit. In this example we have a manufacturing process with a final quality control step. A batch of 1,000 products are manufactured and then tested. The table below shows the number that pass in each batch. We want to find the most likely value for the pass rate - i.e. we want to find the value of the probability ($p$) parameter in the binomial distribution that gives the maximum likelihood for the model.
 
-We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the $p$ parameter. However, we now want to work in the other direction, $\mathcal{L}(M|D)$, in which we find the value of the $p$ parameter with the maximum likelihood.
+Although the app below does not automatically give you the Maximum Likelihood Estimate, it will hopefully make it easy for you to approximate the value. Pick several $p$ values you think are reasonable and for each select 'Add to plot'.
 
-Although the app below does not automatically give you the maximum likelihood estimate, it will hopefully make it easy for you to approximate the value. Pick several $p$ values you think are reasonable and for each select 'Add to plot'.
+::: {.content-width}
+| Batch Number | Passing |
+|-------------|---------|
+| 1           | 992     |
+| 2           | 995     |
+| 3           | 989     |
+| 4           | 998     |
+:::
+
+<style>
+.content-width {
+    width: 50%;  /* Adjust as needed */
+    margin: auto;
+}
+</style>
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 700
+#| viewerHeight: 600
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -261,7 +275,7 @@ from shiny import App, ui, reactive, render
 from scipy.stats import binom
 
 app_ui = ui.page_fluid(
-    ui.h3("In four batches of 1,000 products, we have 992, 995, 989, and 998 pass, what is the most likely pass probability?"),
+    ui.h3("For data above, what is the most likely pass probability?"),
     
     # Input row
     ui.row(
@@ -281,7 +295,7 @@ app_ui = ui.page_fluid(
         ),
         ui.column(
             4,
-            ui.h4("MLE Estimate of p:"),
+            ui.input_action_button("showMleBtn", "Show MLE", class_="btn-primary"),
             ui.output_text("mleOutput"),
         ),
     ),
@@ -309,6 +323,9 @@ def server(input, output, session):
     stored_probs = reactive.Value([])
     stored_lls = reactive.Value([])
     
+    # Flag to control MLE visibility
+    show_mle = reactive.Value(False)
+    
     # Calculate MLE estimate
     total_success = sum(x[0] for x in batch_data)
     total_trials = sum(x[1] for x in batch_data)
@@ -317,7 +334,9 @@ def server(input, output, session):
     @output
     @render.text
     def mleOutput():
-        return f"p = {mle_p:.6f}"
+        if show_mle.get():
+            return f"p = {mle_p:.6f}"
+        return ""
     
     # Reset function
     @reactive.Effect
@@ -325,6 +344,13 @@ def server(input, output, session):
     def _():
         stored_probs.set([])
         stored_lls.set([])
+        show_mle.set(False)
+    
+    # Toggle MLE display when button is clicked
+    @reactive.Effect
+    @reactive.event(input.showMleBtn)
+    def _():
+        show_mle.set(True)
     
     # Add new probability when button is clicked
     @reactive.Effect
@@ -381,8 +407,11 @@ def server(input, output, session):
             final_lls = [x[1][-1] for x in sorted_data]
             
             ax.plot(probs, final_lls, 'o-')
-            ax.axvline(mle_p, color='red', linestyle='--', 
-                      label=f'MLE (p={mle_p:.3f})')
+            
+            # Only show MLE line if button has been clicked
+            if show_mle.get():
+                ax.axvline(mle_p, color='red', linestyle='--', 
+                          label=f'MLE (p={mle_p:.3f})')
         
         ax.set_xlabel('Probability (p)')
         ax.set_ylabel('Total Log Probability')
@@ -396,14 +425,14 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-Let's breakdown how the likelihood was calculated for *one* of the datapoints before we try to maximize the likelihood over all of the datapoints. 
+Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of $p$. That strategy, which combines some guessing with observing the slope to find the most probable model is actually quite good - many state of the art methods are effectively very sophisticated versions of that same strategy.
 
-### Reminder of Binomial Probabilities
+### Reinforcement for Calculating $P(y_i \mid \theta)$
 
-Let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
+Let's again walkthrough calculating $P(y_i \mid \theta)$ for one data point but with more detail. If we can do this successfully the other calculations are generally straightforward (and in practice are taken care of by a software package). Let's remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:
 
 $$
-P(X = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
+P(y_i = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
 $$
 
 where:
@@ -414,15 +443,11 @@ where:
 Our first data point is 992 successes, which equals $k$, out of 1,000 trials, which equals $n$. The best value of $p$ is what we are unsure about, and our current strategy is to strategically try some values to try to understand the problem. Let's assume we tried $p$ = 0.995 as a reasonable guess. The calculation is:
 
 $$
-P(X = 992 | n = 1000, p = 0.995) =
+P(y_i = 992 | n = 1000, p = 0.995) =
 \binom{1000}{992} (0.995)^{992} (0.005)^8 = 0.0652
 $$
 
 The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select 'Add to Plot', the value of the first point, which corresponds to k=992, has a value of about -2.73.
-
-### A Subtly Good Strategy for Maximum Likelihood Estimates
-
-Playing around with the app you should be able to see that the chart on the right, the 'Total Log Probability vs p.' has an obvious peak. What we want are parameter values that are the most probable, i.e. the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of $p$. That strategy, which combines some guessing with observing the slope, to find the most probable model is actually not a bad one - many state of the art methods are effectively very sophisticated versions of that same strategy.
 
 ### Other Things to Note
 
