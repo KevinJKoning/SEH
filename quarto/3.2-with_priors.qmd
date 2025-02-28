@@ -15,7 +15,7 @@ In more statistical terms, this chapter utilizes a **Bayesian** perspective. We 
 
 Let's say we are flipping a coin that, upon basic examination, appears to be fair (produces 50% heads). However, let's say the first three flips are: Heads, Heads, and Heads. Now what should we estimate the true propability of heads to be after the three flips?
 
-- In the Frequentist (under which most of the primer has operated) view, the probability of heads with the maximum likelihood is simply P=1, i.e. we expect to always get heads.
+- In the Frequentist view (under which most of the primer has operated), the probability of heads with the maximum likelihood is simply P=1, i.e. we expect to always get heads.
 - In the Bayesian view, the probability of heads is greater than 0.5 and less than 1, depending on how strongly you had a prior belief that the coin was fair.
 
 Here's an app that let's you set the real probability of the coin and the strength of your prior belief. The more narrowly you set the prior distribution around 0.5, the more strongly you believe 0.5 is the correct probability.
@@ -496,12 +496,7 @@ app = App(app_ui, server)
 
 ```
 
-
-#### Observations About the Posterior
-
-This is another distribution that usually moved
-
-
+Picking a larger sample size and choosing a true probability of heads that differs notably from 0.5 can help make the difference between the prior and posterior more obvious. In small sample sizes you are much more at the mercy of random chance, which will occassionally have some unexpected results.
 
 ## The Argument For and Against Priors
 
@@ -512,35 +507,32 @@ These are generally the 'Bayesian' arguments for priors:
 
 The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, a uniform prior (constant probability between two points) can be a way to minimize practitioner bias, however, if a valid parameter value is outside of the bounds, it is completely inaccessible to the model.
 
-## Basics of Bayesian Analysis
+## The Math of Bayesian Updating
 
-Note to self - prevention of non-sensical parameter values.
-
-Bayesian statistical analysis is based on the principles of probability updating through Bayes’ Theorem. The key elements include:
-
-1.	Prior Distribution – Represents prior beliefs about the parameters before observing data. It can be informative or non-informative.
-2.	Likelihood Function – Describes the probability of the observed data given the parameters.
-3.	Posterior Distribution – Obtained by combining the prior distribution and the likelihood using Bayes’ Theorem. It represents updated beliefs after observing the data.
-4.	Bayes’ Theorem – The fundamental formula:
+The updating of probabilities/beliefs in Bayesian analysis is based on Bayes' Theorem:
 
 $$
 P(\theta | \text{data}) = \frac{P(\text{data} | \theta) P(\theta)}{P(\text{data})}
 $$
 
-where:
+Where:
 
 - $P(\theta | \text{data})$  is the posterior
 - $P(\text{data} | \theta)$  is the likelihood
 - $P(\theta)$  is the prior
 - $P(\text{data})$  is the marginal likelihood (normalizing constant)
 
-5.	Evidence (Marginal Likelihood) – The total probability of the observed data across all parameter values. It is used in model comparison.
-6.	Posterior Predictive Distribution – Used to make predictions by integrating over the posterior distribution.
-7.	Computation Methods – Due to complex posterior distributions, computational techniques like Markov Chain Monte Carlo (MCMC) or Variational Inference are often used for approximation.
+Since $P(\text{data})$ in practical applications is just a normalizing constant, it can be much simpler conceptually to think about Bayes' Theorem this way:
 
+$$
+P(\theta | \text{data}) \propto P(\text{data} | \theta) P(\theta)
+$$
 
-## Other Arguments For and Against Baysian Analysis?
+Which states that posterior value of the model parameters ($P(\theta | \text{data})$) after seeing the data is proportional to the likelihood of the data based on the model parameters ($P(\text{data} | \theta)$) multiplied by the prior belief ($P(\theta)$) in the parameter values.
 
+## ...
+
+...
 
 ## Maximum Likelihood Estimation (MLE) vs. Maximum A Posteriori (MAP)
 
@@ -568,8 +560,167 @@ This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only  P
 
 ### Low Dimensional Search (Grid)
 
+Just like we did in the previous chapter on $\mathcal{L}(M|D)$ without priors, we can find parameter values with grid search. However, we should acknowledge two major differences:
+
+1) Previously we did grid search to find the parameter with the maximum likelihood. Now we do grid search to find the distribution of likelihoods for the parameter $(P(\text{data})$. The results will include a maximum likelihood value of the parameter, but also other lower likelihood values of the parameter.
+2) We multiply the values found in the grid search by our prior belief in the parameter values ($P(\theta)$). If we do not have a strong prior belief, we can choose values that have little to no effect.
+
+**NOTE TO SELF, NEED TO UNIFY THE LIKELIHOOD AND PROB NOTATION**
+
 ### High Dimensional Search (MCMC)
 
+Like before, grid search does not scale well to many parameters/dimensions. To solve this previously we introduced Gradient Ascent, which uses slopes/gradients to guide us to the maximum value.
+
+There's a major problem, however, with using Gradient Ascent in Bayesian analysis - we do not want to find just the most likely value of the parameter - we want to find the correct probability distribution for the parameter (the likelihood of any value the parameter could take).
+
+The solution to this is to use random sampling methods, such that we search through the possible combinations of the parameters and see how likely they are. As the algorithm starts, we can think of it a little like grid search - we check some combination of parameters and calculate a likelihood for those parameters based on how well they fit the data. The problem is that in high dimensional space, the extreme majority of the parameter combinations will have virtually zero likelihood. (Picture a model with random parameter values generating data that isn't even close to what we observe).
+
+To solve the problem of constantly testing parameters that have virtually zero likelihood, modern sampling algorithms know to head towards areas of higher likelihood. However, importantly they do not simply head towards the peak like they would in Gradient Ascent - instead they strategically wander around the edges and peaks of the high likelihood space, mapping out those regions like a cartographer mapping a mountain ridge.
+
+### Parameter Find App
+
+To get a feel for what it's like to search the parameter space for parameter combinations with a high likelihood, play around with the app below.
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 750
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+
+app_ui = ui.page_fluid(
+    ui.h2("Parameter Estimation"),
+    ui.row(
+        ui.column(3, 
+            ui.input_select("search_method", "Search Method:", 
+                choices=["Grid Search", "Likelihood Search"], selected="Grid Search"),
+            ui.input_select("num_samples", "Number of Samples:", 
+                choices=["10", "100", "1000"], selected="100"),
+            ui.input_action_button("generate", "Generate Samples", class_="btn-primary"),
+            ui.p(""),
+            ui.input_checkbox("show_samples", "Show sample points", value=True)
+        ),
+        ui.column(9,
+            ui.output_plot("likelihoodPlot", height="500px")
+        )
+    )
+)
+
+def server(input, output, session):
+    # Store the current samples
+    samples = reactive.Value(None)
+    
+    @reactive.effect
+    @reactive.event(input.generate)
+    def handle_generate():
+        try:
+            n = int(input.num_samples())
+            search_method = input.search_method()
+            
+            # True parameters
+            true_x, true_y = 0.6, 0.4
+            
+            if search_method == "Grid Search":
+                # Create evenly spaced grid
+                grid_size = int(np.sqrt(n))
+                x_grid = np.linspace(0, 1, grid_size)
+                y_grid = np.linspace(0, 1, grid_size)
+                X, Y = np.meshgrid(x_grid, y_grid)
+                theta1 = X.flatten()[:n]  # Ensure exactly n samples
+                theta2 = Y.flatten()[:n]
+                
+                # Add small noise to make it look more realistic
+                theta1 += 0.01 * np.random.randn(len(theta1))
+                theta2 += 0.01 * np.random.randn(len(theta2))
+                
+                # Ensure values stay within bounds
+                theta1 = np.clip(theta1, 0, 1)
+                theta2 = np.clip(theta2, 0, 1)
+                
+            else:  # Likelihood Search
+                # First, generate random samples across the parameter space
+                theta1_initial = np.random.uniform(0, 1, n*2)  # Generate extra samples
+                theta2_initial = np.random.uniform(0, 1, n*2)
+                
+                # Calculate likelihood based on distance from true parameters
+                # (simulate a likelihood function with a peak at true parameters)
+                likelihoods = np.exp(-10 * ((theta1_initial - true_x)**2 + (theta2_initial - true_y)**2))
+                
+                # Sample from these points with probability proportional to likelihood
+                selection_probs = likelihoods / np.sum(likelihoods)
+                selected_indices = np.random.choice(len(theta1_initial), size=n, p=selection_probs, replace=False)
+                
+                theta1 = theta1_initial[selected_indices]
+                theta2 = theta2_initial[selected_indices]
+            
+            samples.set((theta1, theta2))
+        except Exception as e:
+            print(f"Error generating samples: {e}")
+            samples.set(None)
+
+    @output
+    @render.plot
+    def likelihoodPlot():
+        # Create basic plot
+        fig, ax = plt.subplots(figsize=(8, 6))
+        
+        # Get current samples
+        current_samples = samples.get()
+        
+        if current_samples is None:
+            ax.text(0.5, 0.5, "Click 'Generate Samples' to create data", 
+                   ha='center', va='center', fontsize=14)
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
+            return fig
+        
+        theta1, theta2 = current_samples
+        n = len(theta1)
+        
+        try:
+            # Create a 2D histogram
+            H, xedges, yedges = np.histogram2d(
+                theta1, theta2, 
+                bins=20, 
+                range=[[0, 1], [0, 1]]
+            )
+            
+            # Use pcolormesh for better rendering
+            pcm = ax.pcolormesh(xedges, yedges, H.T, cmap='viridis')
+            
+            # Add colorbar
+            plt.colorbar(pcm, ax=ax, label='Count')
+            
+            # Plot the samples if requested
+            if input.show_samples():
+                ax.scatter(theta1, theta2, s=5, color='red', alpha=0.3, label=f'Samples (n={n})')
+            
+            # Mark true parameters
+            ax.plot(0.6, 0.4, 'y*', markersize=15, markeredgecolor='black', label='True parameters')
+            
+            # Labels and layout
+            ax.set_xlabel('Parameter θ₁')
+            ax.set_ylabel('Parameter θ₂')
+            
+            search_method = input.search_method().split()[0]
+            ax.set_title(f'Parameter Estimation using {search_method} ({n} samples)')
+            
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
+            ax.legend(loc='upper right')
+            
+        except Exception as e:
+            print(f"Error plotting: {e}")
+            ax.text(0.5, 0.5, f"Error creating plot: {str(e)}", 
+                   ha='center', va='center', fontsize=12)
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
+        
+        return fig
+
+app = App(app_ui, server)
+```
 
 ## Text
 
