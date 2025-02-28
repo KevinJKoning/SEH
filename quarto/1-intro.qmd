@@ -1,77 +1,41 @@
 ---
 title: Introduction
-format: html
+format: 
+    html:
+        mermaid:
+            theme: neutral
 ---
 
 ## Welcome
 
-It's not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the 'confusing welcome' and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.
+Welcome. If we must guess, you're an engineer who would like to understand statistics, but long discussions on hypothesis testing or derivations of parametric probability distributions don't seem to be helping you figure it out. We feel you. And you're probably in a hurry. We feel that too.
 
-The premise of this primer is that an engineer should think of statistics as a loop involving just two processes:
+## The Premise
+
+The premise of this primer is that we can introduce statistics as a loop involving just two processes:
 
 1.  Estimating the probability of data given a model of a data generating process.
+2.  Maximizing the likelihood of a model, given the data.
 
-2.  Estimating the likelihood of a model, given the data.
+We will refer to the real-world process of interest as the **data generating process**, and we will attempt to summarize it mathematically with a **model**. When we work in the 'forward' direction, where the model is assumed constant, we will find the **probability** of the data. When we work in the 'reverse' direction, where we are trying to find the best model given the data, we maximize the **likelihood** of the model.
 
-We will refer to the real-world process of interest as the **data generating process**, and we will attempt to summarize it mathematically with a **model**. When we work in the 'forward' direction, where the model is assumed constant, we will find the **probability** of the data. When we work in the 'reverse' direction, where we are trying to find the best model given the data, we will call it the **likelihood** of the model.
+The chart below is a simple visual summary. The equations can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.
 
-These statements are summarized mathematically in @eq-1 and @eq-2, where D represents data and M represents a model.
-
-$$
-P(D \mid M)
-$$ {#eq-1}
-
-$$
-\mathcal{L}(M \mid D)
-$$ {#eq-2}
-
-The equations above can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.
+```{mermaid}
+flowchart LR
+    A(["P(D|M)"]) --> B(["ℒ(M|D)"])
+    B --> A
+```
 
 ::: callout-note
-Now you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec...
+Hopefully we haven't lost you already. $\mathcal{L}(M \mid D)$ is about creating accurate models, which any engineer can appreciate. We don't start there, however, because it's a little like building a car before you know how to drive. Instead we start by giving you models that can generate data. Models that generate data can either help you predict future data or show you how likely you were to get the data you already have, i.e. $P(D \mid M)$.
 :::
 
 ## Models and Data
 
-In engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty... But the real world has plenty of uncertainty, and that's probably why you've been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:
+In engineering, a model tends to spark thoughts of systems of interrelated equations that spit out a single answer. But it's silly to think that answer is precise to all those digits. The real world has plenty of uncertainty, and that's probably why you've been sucked into the statistical void. In this new world we need to acknowledge two kinds of uncertainty:
 
 -   Aleatoric Uncertainty (Randomness)
-
 -   Epistemic Uncertainty (Lack of Knowledge)
 
 Statistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.
-
-::: callout-warning
-This primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!
-:::
-
-## Reading Order
-
-The primer can obviously be read by just plowing down the table of contents on the left side of the page. This should be the most straightforward but possibly not the most interesting way to proceed. An alternative I recommend you consider is jumping through the first chapter of each major section, then the second chapter of each major section, and so on. This gets you into the material quicker...
-
-
-
-## Last Notes
-
-In case the point hasn't been driven home with words and equations, I'll round it out with a diagram:
-
-```{mermaid}
-%%{init: {'theme':'neutral'}}%%
-graph TB
-    A["Data Generation"] -->|Probability<br/>of Data| B["Data"]
-    B -->|Likelihood of<br/>Data Generation| A
-```
-
-Part 1 of this book focuses on 'probability of the data given the model' and Part 2 the 'likelihood of the model given the data'.
-
-## Glossary
-
-**Glossary:**
-
-| **Term** | **Definition** | **Example** |
-|------------------|--------------------------------|----------------------|
-| **Data Generating Process** | A theoretical model describing how observed data are produced, often using probability distributions to represent mechanisms. | Rolling a fair six-sided die generates outcomes with equal probabilities for each face (1-6). |
-| **Probability** | A value from 0 to 1... |  |
-| **Likelihood** |  |  |
-| **Probability Distribution** | A function that describes the likelihood of different outcomes in a random experiment. | The normal distribution models heights in a population with a bell-shaped curve. |
-| **Random Variable** | A variable whose values depend on outcomes of a random phenomenon, often defined by a probability distribution. | The number of heads obtained in 10 coin flips is a random variable. |
