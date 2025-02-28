@@ -15,7 +15,7 @@ In more statistical terms, this chapter utilizes a **Bayesian** perspective. We 
 
 Let's say we are flipping a coin that, upon basic examination, appears to be fair (produces 50% heads). However, let's say the first three flips are: Heads, Heads, and Heads. Now what should we estimate the true propability of heads to be after the three flips?
 
-- In the Frequentist view, the probability of heads with the maximum likelihood is simply P=1, i.e. we expect to always get heads.
+- In the Frequentist (under which most of the primer has operated) view, the probability of heads with the maximum likelihood is simply P=1, i.e. we expect to always get heads.
 - In the Bayesian view, the probability of heads is greater than 0.5 and less than 1, depending on how strongly you had a prior belief that the coin was fair.
 
 Here's an app that let's you set the real probability of the coin and the strength of your prior belief. The more narrowly you set the prior distribution around 0.5, the more strongly you believe 0.5 is the correct probability.
@@ -230,9 +230,9 @@ If you knew the coin had just come from the bank, you may give a strong prior fo
 
 ### Posterior Distribution
 
-Something you hopefully noticed in the app was that after flipping coins the chart showed a 'posterior' distribution. This distribution shows what we believe about the probability a random flip shows heads after we've seen a number of flips. We may say the posterior is a revised belief after witnessing additional evidence/data.
+Hopefully you noticed that after flipping coins the chart in the app showed a 'posterior' distribution. This distribution shows what we believe about the probability a random flip shows heads after we've seen a number of flips. We may say the posterior is a revised belief after witnessing additional evidence/data.
 
-#### Probabilities about Probabilities
+### Probabilities about Probabilities
 
 One of the very confusing thing about Bayesian statistics is it gets meta. We start to talk about probabilities of parameters that describe probabilities. Like treating addiction, the first step is to explicitly acknowledge what's happening:
 
@@ -245,9 +245,9 @@ One of the very confusing thing about Bayesian statistics is it gets meta. We st
     - This will randomly generate 0's for tails and 1's for heads
     - It will do so at a rate that is approximately 0.489 heads
 
-This description was in reference to the model before we considered any data - we want to update things after we've seen data, which is an different world called the posterior.
+We can have the model sample the value of parameter P based on either what we believe before we saw data (the prior) or after we saw data (the posterior). The distribution for P is different in the prior and posterior, but the process of generating data described above is the same.
 
-Here's an updated coin flipping app to try to make this more obvious:
+Here's an updated coin flipping app to try to make this more obvious. We can now see some examples (four) of the value P may take when sampled, and then subsequently how flip data would be generated from the sampled P. There is a seperate tab for sampling from the prior, and another for sampling from the posterior.
 
 ```{shinylive-python}
 #| standalone: true
@@ -437,7 +437,7 @@ def server(input, output, session):
             axs[i].set_xticklabels(['Tails (0)', 'Heads (1)'])
             axs[i].set_ylabel('Frequency')
             
-        fig.suptitle(f'Histograms with P Values from Prior Distribution ({n} flips each)', fontsize=16)
+        fig.suptitle(f'Sampled Prior P Values ({n} flips each)', fontsize=16)
         plt.tight_layout()
         return fig
     
@@ -488,7 +488,7 @@ def server(input, output, session):
             axs[i].set_xticklabels(['Tails (0)', 'Heads (1)'])
             axs[i].set_ylabel('Frequency')
             
-        fig.suptitle(f'Histograms with P Values from Posterior Distribution ({n} flips each)', fontsize=16)
+        fig.suptitle(f'Sampled Posterior P Values ({n} flips each)', fontsize=16)
         plt.tight_layout()
         return fig
 
