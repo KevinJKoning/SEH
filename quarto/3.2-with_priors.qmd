@@ -228,6 +228,281 @@ app = App(app_ui, server)
 
 If you knew the coin had just come from the bank, you may give a strong prior for a fair coin such that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented P=1.
 
+### Posterior Distribution
+
+Something you hopefully noticed in the app was that after flipping coins the chart showed a 'posterior' distribution. This distribution shows what we believe about the probability a random flip shows heads after we've seen a number of flips. We may say the posterior is a revised belief after witnessing additional evidence/data.
+
+#### Probabilities about Probabilities
+
+One of the very confusing thing about Bayesian statistics is it gets meta. We start to talk about probabilities of parameters that describe probabilities. Like treating addiction, the first step is to explicitly acknowledge what's happening:
+
+1) We have a probability distribution that describes a parameter P. The probability distribution says if we sampled P randomly, here's the more and less likely values.
+2) Let's assume we've sampled P and we have a value, like 0.578.
+3) We then use the value for P, which was 0.578 to generate random data.
+    - This will randomly generate 0's for tails and 1's for heads
+    - It will do so at a rate that is approximately 0.578 heads
+4) We could resample P, it will have a new value like 0.489.
+    - This will randomly generate 0's for tails and 1's for heads
+    - It will do so at a rate that is approximately 0.489 heads
+
+This description was in reference to the model before we considered any data - we want to update things after we've seen data, which is an different world called the posterior.
+
+Here's an updated coin flipping app to try to make this more obvious:
+
+```{shinylive-python}
+#| standalone: true
+#| viewerHeight: 750
+
+from shiny import App, ui, render, reactive
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+app_ui = ui.page_fluid(
+    ui.h2("Bayesian Coin Flip Analysis"),
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.p("The prior is always centered at 0.5"),
+            ui.input_slider("prior_sd", "Prior Standard Deviation", min=0.01, max=0.5, value=0.1, step=0.01),
+            ui.p("Set the true probability of heads for the coin:"),
+            ui.input_slider("true_prob", "True Probability of Heads", min=0.1, max=0.9, value=0.5, step=0.05),
+            ui.p("Select the number of coin flips:"),
+            ui.input_select("num_flips", "Number of Coin Flips", 
+                          choices=["2", "5", "10", "50", "100", "1000", "10000"],
+                          selected="10"),
+            ui.input_action_button("flip", "Flip Coins"),
+        ),
+        ui.navset_tab(
+            ui.nav_panel("Prior and Posterior", 
+                 ui.output_plot("posteriorPlot", height="500px")
+            ),
+            ui.nav_panel("Prior P Histograms", 
+                 ui.output_plot("fixedPHistograms", height="500px")
+            ),
+            ui.nav_panel("Posterior P Histograms", 
+                 ui.output_plot("posteriorPHistograms", height="500px")
+            )
+        )
+    ),
+)
+
+def server(input, output, session):
+    flips_history = reactive.Value([])
+    
+    @reactive.effect
+    @reactive.event(input.flip)
+    def handle_flip():
+        # Generate new coin flips
+        n = int(input.num_flips())
+        true_prob = input.true_prob()
+        flips = np.random.binomial(1, true_prob, n)
+        heads_count = np.sum(flips)
+        
+        # Reset history and add new flip result
+        flips_history.set([{
+            "num_flips": n,
+            "total_flips": n,
+            "heads_count": heads_count,
+            "total_heads": heads_count,
+            "true_prob": true_prob,
+            "prior_sd": input.prior_sd(),
+            "raw_flips": flips
+        }])
+
+    @output
+    @render.plot
+    def posteriorPlot():
+        # Forces the plot to react to button clicks
+        input.flip()
+        
+        # Get the current history
+        history = flips_history.get()
+        if not history:
+            # Show prior only if no flips yet
+            fig, ax = plt.subplots(figsize=(10, 6))
+            
+            # Plot the prior distribution
+            x = np.linspace(0, 1, 1000)
+            prior_mean = 0.5
+            prior_sd = input.prior_sd()
+            prior = stats.norm.pdf(x, prior_mean, prior_sd)
+            prior = prior / np.max(prior)  # Normalize for better display
+            
+            ax.plot(x, prior, 'b-', lw=2, label=f'Prior (Normal with μ=0.5, σ={prior_sd})')
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1.1)
+            ax.set_xlabel('Probability of Heads', fontsize=12)
+            ax.set_ylabel('Density (normalized)', fontsize=12)
+            ax.set_title('Bayesian Analysis of Coin Flips: Prior Distribution', fontsize=14)
+            ax.axvline(x=input.true_prob(), color='red', linestyle='--', 
+                       label=f'True probability: {input.true_prob()}')
+            ax.legend(loc='upper left')
+            
+            plt.tight_layout()
+            return fig
+        
+        # Create plot for posterior evolution
+        plt.close('all')  # Close any existing figures to avoid memory leaks
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot values for different number of total flips
+        x = np.linspace(0, 1, 1000)
+        prior_mean = 0.5
+        prior_sd = history[0]["prior_sd"]
+        
+        # Plot the prior lightly
+        prior = stats.norm.pdf(x, prior_mean, prior_sd)
+        prior = prior / np.max(prior)  # Normalize
+        ax.plot(x, prior, 'b-', alpha=0.3, lw=1, label=f'Prior (Normal with μ=0.5, σ={prior_sd})')
+        
+        # Plot posterior for current data
+        data = history[0]  # We only have one entry now with the reset approach
+        total_flips = data["total_flips"]
+        total_heads = data["total_heads"]
+        
+        # Calculate posterior using Beta distribution (conjugate prior approximation)
+        # We convert the normal prior to an approximate beta prior
+        alpha_prior = 0.5 / prior_sd**2
+        beta_prior = alpha_prior
+        
+        # Update with observed data
+        alpha_posterior = alpha_prior + total_heads
+        beta_posterior = beta_prior + (total_flips - total_heads)
+        
+        # Calculate and normalize posterior
+        posterior = stats.beta.pdf(x, alpha_posterior, beta_posterior)
+        posterior = posterior / np.max(posterior)  # Normalize for better display
+        
+        # Plot the posterior
+        ax.plot(x, posterior, 'g-', alpha=1.0, lw=2.5, 
+                label=f'Posterior after {total_flips} flips ({total_heads} heads)')
+        
+        # Add true probability line
+        ax.axvline(x=data["true_prob"], color='red', linestyle='--', 
+                   label=f'True probability: {data["true_prob"]}')
+        
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1.1)
+        ax.set_xlabel('Probability of Heads', fontsize=12)
+        ax.set_ylabel('Density (normalized)', fontsize=12)
+        ax.set_title('Bayesian Analysis of Coin Flips: Posterior Distribution', fontsize=14)
+        ax.legend(loc='upper left')
+        
+        plt.tight_layout()
+        return fig
+
+    @output
+    @render.plot
+    def fixedPHistograms():
+        # Forces the plot to react to button clicks
+        input.flip()
+        
+        history = flips_history.get()
+        if not history:
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, "Please click 'Flip Coins' to generate data", 
+                   ha='center', va='center', fontsize=14)
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
+            ax.axis('off')
+            return fig
+            
+        fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+        axs = axs.flatten()
+        
+        # Calculate prior parameters
+        prior_mean = 0.5
+        prior_sd = history[0]["prior_sd"]
+        
+        # Sample P values from the prior distribution with truncation between 0 and 1
+        prior_p_samples = []
+        for _ in range(4):
+            sample = np.random.normal(prior_mean, prior_sd)
+            # Truncate to [0,1]
+            sample = min(max(sample, 0.001), 0.999)
+            prior_p_samples.append(sample)
+            
+        n = int(input.num_flips())
+        
+        for i, p in enumerate(prior_p_samples):
+            # Generate data with prior P
+            simulated_flips = np.random.binomial(1, p, n)
+            
+            # Plot histogram
+            axs[i].hist(simulated_flips, bins=[-0.5, 0.5, 1.5], 
+                        rwidth=0.8, color='skyblue', edgecolor='black',
+                        align='mid')
+            axs[i].set_title(f'P ~ Prior: {p:.3f}')
+            axs[i].set_xticks([0, 1])
+            axs[i].set_xticklabels(['Tails (0)', 'Heads (1)'])
+            axs[i].set_ylabel('Frequency')
+            
+        fig.suptitle(f'Histograms with P Values from Prior Distribution ({n} flips each)', fontsize=16)
+        plt.tight_layout()
+        return fig
+    
+    @output
+    @render.plot
+    def posteriorPHistograms():
+        # Forces the plot to react to button clicks
+        input.flip()
+        
+        history = flips_history.get()
+        if not history:
+            fig, ax = plt.subplots()
+            ax.text(0.5, 0.5, "Please click 'Flip Coins' to generate data", 
+                   ha='center', va='center', fontsize=14)
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
+            ax.axis('off')
+            return fig
+        
+        data = history[0]
+        total_flips = data["total_flips"]
+        total_heads = data["total_heads"]
+        prior_sd = data["prior_sd"]
+        
+        # Calculate posterior parameters
+        alpha_prior = 0.5 / prior_sd**2
+        beta_prior = alpha_prior
+        alpha_posterior = alpha_prior + total_heads
+        beta_posterior = beta_prior + (total_flips - total_heads)
+        
+        # Draw 4 samples from the posterior
+        posterior_p_samples = np.random.beta(alpha_posterior, beta_posterior, 4)
+        
+        fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+        axs = axs.flatten()
+        n = int(input.num_flips())
+        
+        for i, p in enumerate(posterior_p_samples):
+            # Generate data with posterior P
+            simulated_flips = np.random.binomial(1, p, n)
+            
+            # Plot histogram
+            axs[i].hist(simulated_flips, bins=[-0.5, 0.5, 1.5], 
+                        rwidth=0.8, color='lightgreen', edgecolor='black',
+                        align='mid')
+            axs[i].set_title(f'P ~ Posterior: {p:.3f}')
+            axs[i].set_xticks([0, 1])
+            axs[i].set_xticklabels(['Tails (0)', 'Heads (1)'])
+            axs[i].set_ylabel('Frequency')
+            
+        fig.suptitle(f'Histograms with P Values from Posterior Distribution ({n} flips each)', fontsize=16)
+        plt.tight_layout()
+        return fig
+
+app = App(app_ui, server)
+
+```
+
+
+#### Observations About the Posterior
+
+This is another distribution that usually moved
+
+
+
 ## The Argument For and Against Priors
 
 These are generally the 'Bayesian' arguments for priors:
@@ -235,7 +510,7 @@ These are generally the 'Bayesian' arguments for priors:
 1) If you do not have an overwhelming amount of data, your expert knowledge in how the system works is crucial to ensuring the statistical model predicts reasonable values.
 2) If you *do* have an overwhelming amount of data, the priors you set will have little difference in the final statistical model.
 
-The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, your statistical model included a uniform prior on human height with the lowest being the shortest human and the highest being the tallest human - but someone could still be born that is outside of those bounds.
+The argument against priors is that they can introduce arbitrary practitioner bias into an otherwise sound statistical model. This is certainly possible, but explanation and disclosure of any priors used should mitigate these concerns. Finally, with regards to 2) given above, this is generally true unless your priors precluded a valid part of the sample space. For instance, a uniform prior (constant probability between two points) can be a way to minimize practitioner bias, however, if a valid parameter value is outside of the bounds, it is completely inaccessible to the model.
 
 ## Basics of Bayesian Analysis
 
