@@ -722,6 +722,14 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
+
+## Conclusion
+
+As stated in the title, this is intended to be a 'primer' to introduce you to the topic. We hope you have some sense for the important foundations of statistics. We encourage you to learn by experimenting - creating your own data and examples will be the fastest path to understanding for the majority of people.
+
+There are also many excellent texts in both statistics and machine learning, hopefully with some intuition on the basics, the rationale and math will be much easier to understand.
+
+
 ## Text
 
 Text.
