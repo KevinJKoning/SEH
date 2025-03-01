@@ -242,10 +242,10 @@ window.Quarto = {
   <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
   <li><a href="#statistical-models-vs.-machine-learning-models" id="toc-statistical-models-vs.-machine-learning-models" class="nav-link" data-scroll-target="#statistical-models-vs.-machine-learning-models">Statistical Models vs.&nbsp;Machine Learning Models</a>
   <ul class="collapse">
+  <li><a href="#probabilistic-vs-deterministic-outputs" id="toc-probabilistic-vs-deterministic-outputs" class="nav-link" data-scroll-target="#probabilistic-vs-deterministic-outputs">Probabilistic vs Deterministic Outputs</a></li>
   <li><a href="#likelihood-vs-loss-function" id="toc-likelihood-vs-loss-function" class="nav-link" data-scroll-target="#likelihood-vs-loss-function">Likelihood vs Loss Function</a></li>
   <li><a href="#other-differences" id="toc-other-differences" class="nav-link" data-scroll-target="#other-differences">Other Differences</a></li>
   </ul></li>
-  <li><a href="#machine-learning-hand-waving" id="toc-machine-learning-hand-waving" class="nav-link" data-scroll-target="#machine-learning-hand-waving">Machine Learning Hand Waving</a></li>
   <li><a href="#bayesian-neural-nets" id="toc-bayesian-neural-nets" class="nav-link" data-scroll-target="#bayesian-neural-nets">[Bayesian] Neural Nets</a></li>
   <li><a href="#single-neuron" id="toc-single-neuron" class="nav-link" data-scroll-target="#single-neuron">Single Neuron</a>
   <ul class="collapse">
@@ -295,29 +295,30 @@ window.Quarto = {
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>Due to popular demand, we move on from traditional statistical models to those considered <em>machine learning</em>. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e.&nbsp;probabilistic) interpretation.</p>
-<p>The chapter is focused on Bayesian Neural Networks, and although they are a relatively advanced topic, you may be surprised to learn the major building blocks have already been covered. In our version, each neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
+<p>Although the chapter is entitled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.</p>
+<p>The chapter is focused on Bayesian Neural Networks, and although they are an advanced topic, you may be surprised to learn the major building blocks have already been covered. In the flavor we use, each hidden layer neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
 </section>
 <section id="statistical-models-vs.-machine-learning-models" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-models-vs.-machine-learning-models">Statistical Models vs.&nbsp;Machine Learning Models</h2>
-<p><strong>Move even this to 3.1</strong></p>
-<p>I assume most engineers, a priori, consider <em>machine learning</em> models as somehow ‘better’ than statistical models. In reality there is a <em>lot</em> of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it’s best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.</p>
+<p>We assume most engineers, a priori, consider <em>machine learning</em> models as somehow ‘better’ than statistical models. In reality there is a <em>lot</em> of overlap between them, and the situation should dictate the model selection. However, since we assume the reader will inevitably be interested in machine learning, we think it’s best to include it, at the very least so we can understand the similarities and differences when compared to statistical models.</p>
+<p>The discussion below gives differences we believe are <em>typically</em> true. However, in topics with as much overlap as statistics and machine learning, virtual no difference is definite.</p>
+<section id="probabilistic-vs-deterministic-outputs" class="level3">
+<h3 class="anchored" data-anchor-id="probabilistic-vs-deterministic-outputs">Probabilistic vs Deterministic Outputs</h3>
+<p>A statistical model is built on probability distributions and can typically generate random data that accurately reflects its underlying statistical properties. A machine learning model <em>may</em> be built on probability distributions, and further, <em>may</em> be able to generate random data that accurately reflects its underlying statistical properties.</p>
+</section>
 <section id="likelihood-vs-loss-function" class="level3">
 <h3 class="anchored" data-anchor-id="likelihood-vs-loss-function">Likelihood vs Loss Function</h3>
-<p>Due to the amount of blur/overlap, this may not be a universally agreed distinction, but we define an important difference this way:</p>
+<p>We think the best way to understand models is to start using them, i.e.&nbsp;start having them generate data to understand P(D|M), so we built the first half of the primer on that premise. However, an important difference between statistical model and machine learning is how they are trained, which is effectively discussion left for the second half of the primer. Regardless, we’ll mention the following as it is an importance difference:</p>
 <ul>
-<li>Statistical models are built around probability theory and likelihood</li>
-<li>Machine learning models are built around an objective/<strong>loss function</strong></li>
+<li>Statistical model parameters are optimized via a likelihood function based in probability theory</li>
+<li>Machine learning model parameters are optimized using an objective/<strong>loss function</strong></li>
 </ul>
-<p>The confusing thing is that a lot of methods known as being machine learning have objective/loss functions that are purely probabilistic - but the key is they <em>do not have to be</em>.</p>
+<p>The confusing thing is that machine learning may have loss functions that use likelihood - but the key is they <em>do not have to</em>.</p>
 </section>
 <section id="other-differences" class="level3">
 <h3 class="anchored" data-anchor-id="other-differences">Other Differences</h3>
 <p>There are other common differences that are even more blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e.&nbsp;more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.</p>
 </section>
-</section>
-<section id="machine-learning-hand-waving" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning-hand-waving">Machine Learning Hand Waving</h2>
-<p>Although the chapter is entitled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.</p>
 </section>
 <section id="bayesian-neural-nets" class="level2">
 <h2 class="anchored" data-anchor-id="bayesian-neural-nets">[Bayesian] Neural Nets</h2>
@@ -332,9 +333,9 @@ window.Quarto = {
 <li>We develop the activation of a single neuron and it’s relation to logistic regression</li>
 <li>We develop a basic neural net structure</li>
 <li>We develop how the neuron activations propogate through the network</li>
-<li>Use the ‘standard’ neural net but add an output to let it determine the variance in the data</li>
-<li>Use ensembles of the neural nets that can estimate variance</li>
-<li>Use a Bayesian Neural Net that has a full posterior distribution of the weights</li>
+<li>We use the ‘standard’ neural net but add an output to let it determine the variance in the data</li>
+<li>We use ensembles of the neural nets that can estimate variance</li>
+<li>We use a Bayesian Neural Net that has a full posterior distribution of the weights</li>
 </ol>
 <p>We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer.</p>
 </section>
@@ -1706,7 +1707,7 @@ app = App(app_ui, server)
 </section>
 <section id="with-diamond-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="with-diamond-dataset">With Diamond Dataset</h2>
-<div id="6fcacb77" class="cell" data-execution_count="1">
+<div id="53791570" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

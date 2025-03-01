@@ -66,6 +66,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<meta name="mermaid-theme" content="neutral">
 <script src="site_libs/quarto-diagram/mermaid.min.js"></script>
 <script src="site_libs/quarto-diagram/mermaid-init.js"></script>
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
@@ -234,10 +235,8 @@ window.Quarto = {
    
   <ul>
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
-  <li><a href="#models-and-data" id="toc-models-and-data" class="nav-link" data-scroll-target="#models-and-data">Models and Data</a></li>
-  <li><a href="#reading-order" id="toc-reading-order" class="nav-link" data-scroll-target="#reading-order">Reading Order</a></li>
-  <li><a href="#last-notes" id="toc-last-notes" class="nav-link" data-scroll-target="#last-notes">Last Notes</a></li>
-  <li><a href="#glossary" id="toc-glossary" class="nav-link" data-scroll-target="#glossary">Glossary</a></li>
+  <li><a href="#the-premise" id="toc-the-premise" class="nav-link" data-scroll-target="#the-premise">The Premise</a></li>
+  <li><a href="#models-and-uncertainty" id="toc-models-and-uncertainty" class="nav-link" data-scroll-target="#models-and-uncertainty">Models and Uncertainty</a></li>
   </ul>
 </nav>
     </div>
@@ -265,21 +264,31 @@ window.Quarto = {
 
 <section id="welcome" class="level2">
 <h2 class="anchored" data-anchor-id="welcome">Welcome</h2>
-<p>It’s not uncommon for an engineer to find themselves drawn into the world of statistics. Fortunately the people are wonderful but unfortunately the welcome party is an awfully confusing mishmash of mathematics that all seem important but unrelated. Good luck sorting it all out in less than a few hundred hours of effort. This primer is an opinionated attempt to bypass the ‘confusing welcome’ and quickly give you a trunk of understanding from which you can later efficiently construct the branches and leaves of knowledge.</p>
-<p>The premise of this primer is that an engineer should think of statistics as a loop involving just two processes:</p>
+<p>Welcome. If we must guess, you’re an engineer who would like to understand statistics, but long discussions on hypothesis testing or derivations of parametric probability distributions don’t seem to be helping you figure it out. We feel you. And you’re probably in a hurry. We feel that too.</p>
+</section>
+<section id="the-premise" class="level2">
+<h2 class="anchored" data-anchor-id="the-premise">The Premise</h2>
+<p>The premise of this primer is that we can introduce statistics as a loop involving just two processes:</p>
 <ol type="1">
-<li><p>Estimating the probability of data given a model of a data generating process.</p></li>
-<li><p>Estimating the likelihood of a model, given the data.</p></li>
+<li>Estimating the probability of data given a model of a data generating process.</li>
+<li>Maximizing the likelihood of a model, given the data.</li>
 </ol>
-<p>We will refer to the real-world process of interest as the <strong>data generating process</strong>, and we will attempt to summarize it mathematically with a <strong>model</strong>. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the <strong>probability</strong> of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the data, we will call it the <strong>likelihood</strong> of the model.</p>
-<p>These statements are summarized mathematically in <a href="#eq-1" class="quarto-xref">Equation&nbsp;1</a> and <a href="#eq-2" class="quarto-xref">Equation&nbsp;2</a>, where D represents data and M represents a model.</p>
-<p><span id="eq-1"><span class="math display">\[
-P(D \mid M)
-\tag{1}\]</span></span></p>
-<p><span id="eq-2"><span class="math display">\[
-\mathcal{L}(M \mid D)
-\tag{2}\]</span></span></p>
-<p>The equations above can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.</p>
+<p>We will refer to the real-world process of interest as the <strong>data generating process</strong>, and we will attempt to summarize it mathematically with a <strong>model</strong>. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the <strong>probability</strong> of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the data, we maximize the <strong>likelihood</strong> of the model.</p>
+<p>The chart below is a simple visual summary. The equations can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A(["P(D|M)"]) --&gt; B(["ℒ(M|D)"])
+    B --&gt; A
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -290,100 +299,18 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Now you may be saying to yourself, why the heck do I want to know the probability of data? A concrete example may be a set of manufacturing machines that need to be rebuilt under certain criteria. If the machine is working perfectly normally you do not want to waste the time and money to rebuild it. But how do you know if it is truly out of spec…</p>
+<p>Hopefully we haven’t lost you already. <span class="math inline">\(\mathcal{L}(M \mid D)\)</span> is about creating accurate models, which any engineer can appreciate. We don’t start there, however, because it’s a little like building a car before you know how to drive. Instead we start by giving you models that can generate data. Models that generate data can either help you predict future data or show you how likely you were to get the data you already have, i.e.&nbsp;<span class="math inline">\(P(D \mid M)\)</span>.</p>
 </div>
 </div>
 </section>
-<section id="models-and-data" class="level2">
-<h2 class="anchored" data-anchor-id="models-and-data">Models and Data</h2>
-<p>In engineering, a model tends to spark thoughts of physics and interrelated equations. We need to broaden our mindset a bit. Engineering, mathematics, and physics education tend to focus on fundamental equations with no uncertainty… But the real world has plenty of uncertainty, and that’s probably why you’ve been sucked into the statistical void. In this world we need to acknowledge two kinds of uncertainty:</p>
+<section id="models-and-uncertainty" class="level2">
+<h2 class="anchored" data-anchor-id="models-and-uncertainty">Models and Uncertainty</h2>
+<p>In engineering, a model tends to spark thoughts of systems of interrelated equations that spit out a single answer. But it’s silly to think that answer is precise to all those digits. The real world has plenty of uncertainty, and that’s probably why you’ve been sucked into the statistical void. In this new world we need to acknowledge two kinds of uncertainty:</p>
 <ul>
-<li><p>Aleatoric Uncertainty (Randomness)</p></li>
-<li><p>Epistemic Uncertainty (Lack of Knowledge)</p></li>
+<li>Aleatoric Uncertainty (Randomness)</li>
+<li>Epistemic Uncertainty (Lack of Knowledge)</li>
 </ul>
 <p>Statistics is fine with both. In fact it will usually bundle up both of them without a second thought and simply try to estimate the outcome without becoming too concerned with the underlying process. This is a fine place to start, but eventually we will work our way back to a place where we can incorporate those underlying processes into our new statistical frameworks.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This primer is written by a practicing engineer - not a statistician or academic! It aims to be useful, not perfect, although if anything is particularly incorrect or misleading, it should definitely be corrected. Subsequently please make a comment or pull request on the github repo. Lastly, thank you for reading!!!</p>
-</div>
-</div>
-</section>
-<section id="reading-order" class="level2">
-<h2 class="anchored" data-anchor-id="reading-order">Reading Order</h2>
-<p>The primer can obviously be read by just plowing down the table of contents on the left side of the page. This should be the most straightforward but possibly not the most interesting way to proceed. An alternative I recommend you consider is jumping through the first chapter of each major section, then the second chapter of each major section, and so on. This gets you into the material quicker…</p>
-</section>
-<section id="last-notes" class="level2">
-<h2 class="anchored" data-anchor-id="last-notes">Last Notes</h2>
-<p>In case the point hasn’t been driven home with words and equations, I’ll round it out with a diagram:</p>
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<pre class="mermaid mermaid-js">%%{init: {'theme':'neutral'}}%%
-graph TB
-    A["Data Generation"] --&gt;|Probability&lt;br/&gt;of Data| B["Data"]
-    B --&gt;|Likelihood of&lt;br/&gt;Data Generation| A
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<p>Part 1 of this book focuses on ‘probability of the data given the model’ and Part 2 the ‘likelihood of the model given the data’.</p>
-</section>
-<section id="glossary" class="level2">
-<h2 class="anchored" data-anchor-id="glossary">Glossary</h2>
-<p><strong>Glossary:</strong></p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 44%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><strong>Term</strong></th>
-<th><strong>Definition</strong></th>
-<th><strong>Example</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Data Generating Process</strong></td>
-<td>A theoretical model describing how observed data are produced, often using probability distributions to represent mechanisms.</td>
-<td>Rolling a fair six-sided die generates outcomes with equal probabilities for each face (1-6).</td>
-</tr>
-<tr class="even">
-<td><strong>Probability</strong></td>
-<td>A value from 0 to 1…</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><strong>Likelihood</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="even">
-<td><strong>Probability Distribution</strong></td>
-<td>A function that describes the likelihood of different outcomes in a random experiment.</td>
-<td>The normal distribution models heights in a population with a bell-shaped curve.</td>
-</tr>
-<tr class="odd">
-<td><strong>Random Variable</strong></td>
-<td>A variable whose values depend on outcomes of a random phenomenon, often defined by a probability distribution.</td>
-<td>The number of heads obtained in 10 coin flips is a random variable.</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

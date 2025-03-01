@@ -1,9 +1,8 @@
 # SEH
 **Statistics for Engineers in a Hurry (An Illustrated Primer)**
 
-For with priors, consider:
-- Low Dimensional Search (Grid)
-- High Dimensional Search (MCMC)
+To read the primer, click on this link: TBD
 
-## Conclusion
-- If it's not obvious, this is a loop, and you move to each part of the loop
+Please read the *About* page in the website/primer to understand the philosophy underpinning the book.
+
+If you've done that, please use this github repo to contribute by making corrections or improving content!

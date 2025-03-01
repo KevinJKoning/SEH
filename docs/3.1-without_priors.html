@@ -239,38 +239,34 @@ window.Quarto = {
   <li><a href="#guessing-the-best-model-parameter" id="toc-guessing-the-best-model-parameter" class="nav-link" data-scroll-target="#guessing-the-best-model-parameter">Guessing the Best Model Parameter</a></li>
   <li><a href="#likelihood" id="toc-likelihood" class="nav-link" data-scroll-target="#likelihood">Likelihood</a>
   <ul class="collapse">
-  <li><a href="#modeling-the-probability-distribution-of-the-data" id="toc-modeling-the-probability-distribution-of-the-data" class="nav-link" data-scroll-target="#modeling-the-probability-distribution-of-the-data">Modeling the Probability Distribution of the Data</a></li>
+  <li><a href="#calculating-py_i-mid-theta" id="toc-calculating-py_i-mid-theta" class="nav-link" data-scroll-target="#calculating-py_i-mid-theta">Calculating <span class="math inline">\(P(y_i \mid \theta)\)</span></a></li>
   </ul></li>
-  <li><a href="#maximum-likelihood-estimation-with-discrete-data" id="toc-maximum-likelihood-estimation-with-discrete-data" class="nav-link" data-scroll-target="#maximum-likelihood-estimation-with-discrete-data">Maximum Likelihood Estimation with Discrete Data</a>
+  <li><a href="#estimating-maximum-likelihood-with-discrete-data" id="toc-estimating-maximum-likelihood-with-discrete-data" class="nav-link" data-scroll-target="#estimating-maximum-likelihood-with-discrete-data">Estimating Maximum Likelihood with Discrete Data</a>
   <ul class="collapse">
-  <li><a href="#reminder-of-binomial-probabilities" id="toc-reminder-of-binomial-probabilities" class="nav-link" data-scroll-target="#reminder-of-binomial-probabilities">Reminder of Binomial Probabilities</a></li>
-  <li><a href="#difference-between-mathcallmd-and-pdm" id="toc-difference-between-mathcallmd-and-pdm" class="nav-link" data-scroll-target="#difference-between-mathcallmd-and-pdm">Difference between <span class="math inline">\(\mathcal{L}(M|D)\)</span> and P(D|M)</a></li>
-  <li><a href="#a-subtly-good-strategy" id="toc-a-subtly-good-strategy" class="nav-link" data-scroll-target="#a-subtly-good-strategy">A Subtly Good Strategy</a></li>
-  <li><a href="#analytical-solution" id="toc-analytical-solution" class="nav-link" data-scroll-target="#analytical-solution">Analytical Solution</a></li>
+  <li><a href="#reinforcement-for-calculating-py_i-mid-theta" id="toc-reinforcement-for-calculating-py_i-mid-theta" class="nav-link" data-scroll-target="#reinforcement-for-calculating-py_i-mid-theta">Reinforcement for Calculating <span class="math inline">\(P(y_i \mid \theta)\)</span></a></li>
+  <li><a href="#other-things-to-note" id="toc-other-things-to-note" class="nav-link" data-scroll-target="#other-things-to-note">Other Things to Note</a></li>
   </ul></li>
   <li><a href="#computational-strategies-for-finding-the-maximum-likelihood-estimate" id="toc-computational-strategies-for-finding-the-maximum-likelihood-estimate" class="nav-link" data-scroll-target="#computational-strategies-for-finding-the-maximum-likelihood-estimate">Computational Strategies for finding the Maximum Likelihood Estimate</a>
   <ul class="collapse">
   <li><a href="#grid-search" id="toc-grid-search" class="nav-link" data-scroll-target="#grid-search">Grid Search</a></li>
-  <li><a href="#gradient-ascent-or-descent-on-the-negative-log-likelihood" id="toc-gradient-ascent-or-descent-on-the-negative-log-likelihood" class="nav-link" data-scroll-target="#gradient-ascent-or-descent-on-the-negative-log-likelihood">Gradient Ascent (or Descent on the Negative Log-Likelihood)</a></li>
+  <li><a href="#gradient-ascent" id="toc-gradient-ascent" class="nav-link" data-scroll-target="#gradient-ascent">Gradient Ascent</a></li>
   </ul></li>
   <li><a href="#maximum-likelihood-estimate-with-continuous-data" id="toc-maximum-likelihood-estimate-with-continuous-data" class="nav-link" data-scroll-target="#maximum-likelihood-estimate-with-continuous-data">Maximum Likelihood Estimate with Continuous Data</a>
   <ul class="collapse">
   <li><a href="#normal-distribution-with-mle-estimate" id="toc-normal-distribution-with-mle-estimate" class="nav-link" data-scroll-target="#normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</a></li>
-  <li><a href="#log-normal" id="toc-log-normal" class="nav-link" data-scroll-target="#log-normal">Log Normal</a></li>
-  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link" data-scroll-target="#linear-regression">Linear Regression</a></li>
-  <li><a href="#derivation-of-the-analytical-solution" id="toc-derivation-of-the-analytical-solution" class="nav-link" data-scroll-target="#derivation-of-the-analytical-solution">Derivation of the Analytical Solution</a></li>
-  <li><a href="#impact-of-the-error-term" id="toc-impact-of-the-error-term" class="nav-link" data-scroll-target="#impact-of-the-error-term">Impact of the Error Term</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul></li>
+  <li><a href="#statistical-modelslinear-regression" id="toc-statistical-modelslinear-regression" class="nav-link" data-scroll-target="#statistical-modelslinear-regression">Statistical Models/Linear Regression</a>
+  <ul class="collapse">
+  <li><a href="#maximum-likelihood-with-constant-normal-variance" id="toc-maximum-likelihood-with-constant-normal-variance" class="nav-link" data-scroll-target="#maximum-likelihood-with-constant-normal-variance">Maximum Likelihood with Constant Normal Variance</a></li>
+  </ul></li>
+  <li><a href="#motivation-for-bayesian-with-prior-methods" id="toc-motivation-for-bayesian-with-prior-methods" class="nav-link" data-scroll-target="#motivation-for-bayesian-with-prior-methods">Motivation for Bayesian (With Prior) Methods</a></li>
   <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link" data-scroll-target="#machine-learning">Machine Learning</a>
   <ul class="collapse">
   <li><a href="#loss-function" id="toc-loss-function" class="nav-link" data-scroll-target="#loss-function">Loss Function</a></li>
   <li><a href="#comparison-to-likelihood-function" id="toc-comparison-to-likelihood-function" class="nav-link" data-scroll-target="#comparison-to-likelihood-function">Comparison to Likelihood Function</a></li>
-  </ul></li>
-  <li><a href="#point-estimate-neural-network" id="toc-point-estimate-neural-network" class="nav-link" data-scroll-target="#point-estimate-neural-network">Point-Estimate Neural Network</a>
-  <ul class="collapse">
   <li><a href="#training-a-simple-neural-network" id="toc-training-a-simple-neural-network" class="nav-link" data-scroll-target="#training-a-simple-neural-network">Training a Simple Neural Network</a></li>
   </ul></li>
+  <li><a href="#graveyard" id="toc-graveyard" class="nav-link" data-scroll-target="#graveyard">Graveyard</a></li>
   </ul>
 </nav>
     </div>
@@ -300,7 +296,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>We finally flip to <span class="math inline">\(\mathcal{L}(M|D)\)</span> the likelihood of a <span style="text-decoration: underline;">model</span> given the <span style="text-decoration: underline;">data</span>. In practice, we typically find <span class="math inline">\(\mathcal{L}(M|D)\)</span> so that we can find the <em>best</em> parameter values for our chosen model type, although it could also be used to select between model types. We will describe what <em>best</em> is soon.</p>
 <p>Like before, we begin with a simple dice model as we consider it to be an intuitive subject. We then work forward in generally the same order as the first half of the primer. We work with probability distributions and how to find the most likely parameters given the observed data. We pause to examine how likely we are to calculate one set of parameters when the true process has another set of parameters. As usual we use computation to avoid misunderstood analytical solutions.</p>
-<p>Throughout the chapter we assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we’ll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a Frequentist perspective and the next a Bayesian perspective.</p>
+<p>Throughout the chapter we assume no prior knowledge of what the best model parameters may be - although in an app where you can guess and check you are probably not guessing randomly, which is already a hint at what a prior would be. In the next chapter we’ll formalize how to find optimal models when we have prior information about the parameter values. In more statistical terms, this chapter utilizes a <strong>Frequentist</strong> perspective and the next a Bayesian perspective.</p>
 </section>
 <section id="guessing-the-best-model-parameter" class="level2">
 <h2 class="anchored" data-anchor-id="guessing-the-best-model-parameter">Guessing the Best Model Parameter</h2>
@@ -403,31 +399,170 @@ app = App(app_ui, server)</code></pre>
 <li><p><span class="math inline">\(P(y_i \mid \theta)\)</span> is the probability (or probability density) of the <span class="math inline">\(i\)</span>th data point given the parameters.</p></li>
 <li><p>The product <span class="math inline">\(\prod_{i=1}^{N}\)</span> assumes that the data points are independent. In practice, we often work with the log-likelihood (i.e., sum of log probabilities) for numerical stability.</p></li>
 </ol>
-<section id="modeling-the-probability-distribution-of-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="modeling-the-probability-distribution-of-the-data">Modeling the Probability Distribution of the Data</h3>
-<p>When building a candidate model, you must assume a probability distribution for the data. For example, if you assume a normal (Gaussian) distribution, each data point is modeled as:</p>
-<p><span class="math display">\[
-y_i = \hat{y}_i + \epsilon_i,\quad \epsilon_i \sim \mathcal{N}(0, \sigma^2)
-\]</span></p>
-<p>Here:</p>
-<ul>
-<li><span class="math inline">\(\hat{y}_i\)</span> is the model’s prediction for <span class="math inline">\(y_i\)</span>.</li>
-<li><span class="math inline">\(\sigma^2\)</span> represents the variance of the noise (i.e., the spread of <span class="math inline">\(y_i\)</span> around <span class="math inline">\(\hat{y}_i\)</span>).</li>
-</ul>
-<p>Put simply, the larger the gaps between the predictions and the data, the smaller the likelihood will be.</p>
-<p>In the dice app above, the likelihood of the number of dice parameter being a value of 1, 2, or 3 based on the data shown is approximately zero (<span class="math inline">\(\mathcal{L}(\theta \in {1,2,3} \mid \mathbf{y}) \approx 0\)</span>). In the next section we’ll make the calculations more precisely.</p>
-</section>
-</section>
-<section id="maximum-likelihood-estimation-with-discrete-data" class="level2">
-<h2 class="anchored" data-anchor-id="maximum-likelihood-estimation-with-discrete-data">Maximum Likelihood Estimation with Discrete Data</h2>
-<p>It is common to consider the best model to be the one that maximizes the likelihood of the observed data. This is called Maximum Likelihood Estimation (MLE). The difficulty in finding the maximum likelihood estimate varies substantially depending on the problem. For simpler problems there is often a derived analytical solution. We will touch on these briefly, but we hold to one of our general themes, which is that we prefer computational solutions that can handle real-world problems.</p>
-<p>We introduced the binomial distribution in our chapter on discrete probability distributions. There we worked a problem in which we could find the exact probability of the data given a model, P(D|M), where the model was the binomial distribution with a given value of the p parameter. However, we now want to work in the other direction, <span class="math inline">\(\mathcal{L}(M|D)\)</span>, in which we find the value of the p parameter with the maximum likelihood.</p>
-<p>Although the app below does not automatically give you the maximum likelihood estimate, it will hopefully make it easy for you to approximate the value. Pick several p values you think are reasonable and for each select ‘Add to plot’.</p>
+<section id="calculating-py_i-mid-theta" class="level3">
+<h3 class="anchored" data-anchor-id="calculating-py_i-mid-theta">Calculating <span class="math inline">\(P(y_i \mid \theta)\)</span></h3>
+<p>Performing the likelihood calculation described above hinges on being able to calculate <span class="math inline">\(P(y_i \mid \theta)\)</span>. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let’s assume we are measuring the reliability of similar manufacturing lines across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.</p>
+<p>So we can proceed with an example calculation, we simply try reasonable candidate model parameters. Based on a brief look at the data we think 5 is a reasonable rate per year, so <span class="math inline">\(\lambda = 5\)</span> for our candidate model. To find <span class="math inline">\(P(y_i \mid \lambda = 5)\)</span> for a single data point, we can use the app below which is similar to apps we used in the first half of the primer. We keep <span class="math inline">\(\lambda = 5\)</span> in the app and try to find <span class="math inline">\(P(y_i=7 \mid \lambda = 5)\)</span>.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 700
+#| viewerHeight: 550
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_fluid(
+    ui.h2("Poisson Distribution Probability Calculator"),
+    
+    ui.layout_sidebar(
+        ui.sidebar(
+            ui.input_slider(
+                "lambdaInput", "Rate (λ):",
+                min=1, max=10, value=5, step=1
+            ),
+            ui.input_slider(
+                "xInput", "Value (y):",
+                min=0, max=15, value=5, step=1
+            ),
+            ui.br(),
+            ui.h4("Probability:"),
+            ui.output_text("probOutput"),
+            width=300
+        ),
+        
+        # Main panel with plot
+        ui.output_plot("poissonPlot", height="400px"),
+    )
+)
+
+def server(input, output, session):
+    # Calculate probability P(X = x)
+    @reactive.Calc
+    def calculate_probability():
+        lam = input.lambdaInput()
+        x = input.xInput()
+        # Using PMF for P(X = x)
+        return stats.poisson.pmf(x, lam)
+
+    # Show the probability
+    @output
+    @render.text
+    def probOutput():
+        prob = calculate_probability()
+        return f"{prob:.4f}"
+
+    # Plot the Poisson PMF with highlighted bar
+    @output
+    @render.plot
+    def poissonPlot():
+        lam = input.lambdaInput()
+        x_val = input.xInput()
+        
+        # Generate range of x values for plotting
+        x_max = max(int(lam*3), x_val + 10)
+        x_vals = np.arange(0, x_max + 1)
+        
+        # Calculate PMF values
+        pmf_vals = stats.poisson.pmf(x_vals, lam)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Plot all bars
+        bars = ax.bar(x_vals, pmf_vals, width=0.8, alpha=0.7, color='lightblue', 
+                     edgecolor='blue')
+        
+        # Highlight the specific bar for P(X = x)
+        for i in range(len(x_vals)):
+            if x_vals[i] == x_val:
+                bars[i].set_color('red')
+                bars[i].set_alpha(0.7)
+        
+        # Add text with probability
+        # prob = calculate_probability()
+        # ax.text(0.95, 0.95, f'P(X = {x_val}) = {prob:.4f}', 
+        #         transform=ax.transAxes, ha='right', va='top',
+        #         bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        
+        # Set integer ticks on x-axis
+        if len(x_vals) &gt; 15:
+            # Display approximately 10-15 ticks at regular intervals
+            step = max(1, len(x_vals) // 10)
+            ax.set_xticks(x_vals[::step])
+        else:
+            ax.set_xticks(x_vals)
+            
+        # Ensure x-axis limits provide proper spacing
+        ax.set_xlim(-0.6, x_max + 0.6)
+        
+        ax.set_title(f"Poisson Distribution (λ={lam})")
+        ax.set_xlabel("y (number of events)")
+        ax.set_ylabel("Probability")
+        ax.grid(True, alpha=0.3)
+        
+        # Single legend with clear explanation
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor='red', edgecolor='blue', alpha=0.7, label=f'Selected value (y = {x_val})')
+        ]
+        ax.legend(handles=legend_elements, loc='upper right')
+        
+        return fig
+
+app = App(app_ui, server)</code></pre>
+<p>Using the app <span class="math inline">\(P\)</span> = 0.1044. Once we can find <span class="math inline">\(P(y_i \mid \theta)\)</span> for one data point, we can do it for the rest and calculate <span class="math inline">\(\mathcal{L}(\theta \mid \mathbf{y})\)</span>. Of course, we have not yet <em>maximized</em> that likelihood function.</p>
+</section>
+</section>
+<section id="estimating-maximum-likelihood-with-discrete-data" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-maximum-likelihood-with-discrete-data">Estimating Maximum Likelihood with Discrete Data</h2>
+<p>If our goal is to get the Maximum Likelihood Estimate of a model’s parameters, the last example left a couple of things out:</p>
+<ol type="1">
+<li>It did not calculate the likelihood for multiple data points.</li>
+<li>It did nothing to help us estimate the parameters that gave the <em>maximum</em> likelihood.</li>
+</ol>
+<p>We will walk through another example that fills in these blanks. We’ll shift examples slightly, but we’ll still be modeling a data generating process for which simply using a named parametric distribution is a good fit. In this example we have a manufacturing process with a final quality control step. A batch of 1,000 products are manufactured and then tested. The table below shows the number that pass in each batch. We want to find the most likely value for the pass rate - i.e.&nbsp;we want to find the value of the probability (<span class="math inline">\(p\)</span>) parameter in the binomial distribution that gives the maximum likelihood for the model.</p>
+<p>Although the app below does not automatically give you the Maximum Likelihood Estimate, it will hopefully make it easy for you to approximate the value. Pick several <span class="math inline">\(p\)</span> values you think are reasonable and for each select ‘Add to plot’.</p>
+<div class="content-width">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Batch Number</th>
+<th>Passing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>992</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>995</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>989</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>998</td>
+</tr>
+</tbody>
+</table>
+</div>
+<style>
+.content-width {
+    width: 50%;  /* Adjust as needed */
+    margin: auto;
+}
+</style>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 600
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -435,7 +570,7 @@ from shiny import App, ui, reactive, render
 from scipy.stats import binom
 
 app_ui = ui.page_fluid(
-    ui.h3("In four batches of 1,000 products, we have 992, 995, 989, and 998 pass, what is the most likely pass probability?"),
+    ui.h3("For data above, what is the most likely pass probability?"),
     
     # Input row
     ui.row(
@@ -455,7 +590,7 @@ app_ui = ui.page_fluid(
         ),
         ui.column(
             4,
-            ui.h4("MLE Estimate of p:"),
+            ui.input_action_button("showMleBtn", "Show MLE", class_="btn-primary"),
             ui.output_text("mleOutput"),
         ),
     ),
@@ -483,6 +618,9 @@ def server(input, output, session):
     stored_probs = reactive.Value([])
     stored_lls = reactive.Value([])
     
+    # Flag to control MLE visibility
+    show_mle = reactive.Value(False)
+    
     # Calculate MLE estimate
     total_success = sum(x[0] for x in batch_data)
     total_trials = sum(x[1] for x in batch_data)
@@ -491,7 +629,9 @@ def server(input, output, session):
     @output
     @render.text
     def mleOutput():
-        return f"p = {mle_p:.6f}"
+        if show_mle.get():
+            return f"p = {mle_p:.6f}"
+        return ""
     
     # Reset function
     @reactive.Effect
@@ -499,6 +639,13 @@ def server(input, output, session):
     def _():
         stored_probs.set([])
         stored_lls.set([])
+        show_mle.set(False)
+    
+    # Toggle MLE display when button is clicked
+    @reactive.Effect
+    @reactive.event(input.showMleBtn)
+    def _():
+        show_mle.set(True)
     
     # Add new probability when button is clicked
     @reactive.Effect
@@ -555,8 +702,11 @@ def server(input, output, session):
             final_lls = [x[1][-1] for x in sorted_data]
             
             ax.plot(probs, final_lls, 'o-')
-            ax.axvline(mle_p, color='red', linestyle='--', 
-                      label=f'MLE (p={mle_p:.3f})')
+            
+            # Only show MLE line if button has been clicked
+            if show_mle.get():
+                ax.axvline(mle_p, color='red', linestyle='--', 
+                          label=f'MLE (p={mle_p:.3f})')
         
         ax.set_xlabel('Probability (p)')
         ax.set_ylabel('Total Log Probability')
@@ -568,38 +718,38 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
-<p>Let’s breakdown how the likelihood was calculated for one of the datapoints. First, we needed to determine a probability distribution that represents our data. Because we have a fixed number of trials and probability of success for each trial, the Binomial probability distribution was a good choice.</p>
-<section id="reminder-of-binomial-probabilities" class="level3">
-<h3 class="anchored" data-anchor-id="reminder-of-binomial-probabilities">Reminder of Binomial Probabilities</h3>
-<p>Next, let’s remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:</p>
+<p>Playing around with the app you should be able to see that the chart on the right, the ‘Total Log Probability vs p.’ has an obvious peak. What we want are parameter values that are the most probable, i.e.&nbsp;the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of <span class="math inline">\(p\)</span>. That strategy, which combines some guessing with observing the slope to find the most probable model is actually quite good - many state of the art methods are effectively very sophisticated versions of that same strategy.</p>
+<section id="reinforcement-for-calculating-py_i-mid-theta" class="level3">
+<h3 class="anchored" data-anchor-id="reinforcement-for-calculating-py_i-mid-theta">Reinforcement for Calculating <span class="math inline">\(P(y_i \mid \theta)\)</span></h3>
+<p>Let’s again walkthrough calculating <span class="math inline">\(P(y_i \mid \theta)\)</span> for one data point but with more detail. If we can do this successfully the other calculations are generally straightforward (and in practice are taken care of by a software package). Let’s remind ourselves how to calculate the probability of an observation that follows the Binomial probability distribution:</p>
 <p><span class="math display">\[
-P(X = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
+P(y_i = k | n, p) = \binom{n}{k} p^k (1 - p)^{n - k}
 \]</span></p>
 <p>where:</p>
 <ul>
 <li><span class="math inline">\(k\)</span> is the observed number of successes in <span class="math inline">\(n\)</span> trials.</li>
 <li><span class="math inline">\(p\)</span> is the probability of success in each trial.</li>
+<li>(the n over k is ‘n choose k’, the binomial coefficient)</li>
 </ul>
-<p>Our first data point is 992 successes, which equals k, out of 1,000 trials, which equals n.&nbsp;The best value of p is what we are unsure about, and our current strategy is to strategically try some values to try to understand the problem. Let’s assume we tried p = 0.995 as a reasonable guess. The calculation is:</p>
+<p>Our first data point is 992 successes, which equals <span class="math inline">\(k\)</span>, out of 1,000 trials, which equals <span class="math inline">\(n\)</span>. The best value of <span class="math inline">\(p\)</span> is what we are unsure about, and our current strategy is to strategically try some values to try to understand the problem. Let’s assume we tried <span class="math inline">\(p\)</span> = 0.995 as a reasonable guess. The calculation is:</p>
 <p><span class="math display">\[
-P(X = 992 | n = 1000, p = 0.995) =
+P(y_i = 992 | n = 1000, p = 0.995) =
 \binom{1000}{992} (0.995)^{992} (0.005)^8 = 0.0652
 \]</span></p>
-<p>The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select ‘Add to Plot’, the value of the first point, which corresponds to k=992, has a value of about -2.73.</p>
+<p>The result is that the 992 data point has a probability of 0.0652, if we assume n=1000 and p=0.995. That value is about -2.73 using the natural log or -1.19 using log base 10. In the app above, if you select p=0.995 and select ‘Add to Plot’, the value of the first point/batch, which corresponds to k=992, has a value of about -2.73.</p>
 </section>
-<section id="difference-between-mathcallmd-and-pdm" class="level3">
-<h3 class="anchored" data-anchor-id="difference-between-mathcallmd-and-pdm">Difference between <span class="math inline">\(\mathcal{L}(M|D)\)</span> and P(D|M)</h3>
-<p>Now you should be asking yourself - what is the difference between what we are doing here and what we did in the first half when we calculated P(D|M)? And the answer is that up until this step - nothing. So where does the difference come in?</p>
-<p>The difference is that we use the probability of the data to determine the likelihood of the model in comparison to other possible models. We then optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best <span class="math inline">\(\mathcal{L}(M|D)\)</span>.</p>
+<section id="other-things-to-note" class="level3">
+<h3 class="anchored" data-anchor-id="other-things-to-note">Other Things to Note</h3>
+<section id="difference-between-mathcallmd-and-pdm" class="level4">
+<h4 class="anchored" data-anchor-id="difference-between-mathcallmd-and-pdm">Difference between <span class="math inline">\(\mathcal{L}(M|D)\)</span> and <span class="math inline">\(P(D|M)\)</span></h4>
+<p>You may be asking yourself - what is the difference between what we are doing here and what we did in the first half of the primer when we calculated P(D|M)?</p>
+<p>The difference is we have a goal. We use the probability of the data as a metric we can optimize to find the best model parameters. We optimize the parameters until we find the best model, i.e the one with the Maximum Likelihood Estimate. So in summary, the calculation of the probabilities is the same - the difference is we use an optimization strategy to find the best <span class="math inline">\(\mathcal{L}(M|D)\)</span>.</p>
 </section>
-<section id="a-subtly-good-strategy" class="level3">
-<h3 class="anchored" data-anchor-id="a-subtly-good-strategy">A Subtly Good Strategy</h3>
-<p>Playing around with the app you should be able to see that the chart on the right, the ‘Total Log Probability vs p.’ has an obvious peak. What we want are parameter values that are the most probable, i.e.&nbsp;the ones with the largest total log probability. Here we can fairly easily pick random values, and maybe use some hints from the slope of the graph, to find a good estimate of p.&nbsp;That strategy to find the most probable model is actually not a bad one - a state of the art method is effectively a very sophisticated version of that same strategy.</p>
-</section>
-<section id="analytical-solution" class="level3">
-<h3 class="anchored" data-anchor-id="analytical-solution">Analytical Solution</h3>
+<section id="fyi-on-the-analytical-solution" class="level4">
+<h4 class="anchored" data-anchor-id="fyi-on-the-analytical-solution">FYI on the Analytical Solution</h4>
+<p>Although we’ve mostly avoided them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.</p>
 <p>For the Binomial distribution there’s actually a simple analytical solution, and while it may seem simple in hindsight, the proper derivation is maybe more complex than you’d expect… The basic idea is that the derivative of the ‘Total Log Probability vs p.’ chart will equal zero at the maximum probability. After a brief drum roll we can reveal that the most likely estimate of p is ……. just the average success rate. More precisely, the successes divided by the total n, e.g.&nbsp;(992 + 995 + 989 + 998)/(1,000 + 1,000 + 1,000 + 1,000).</p>
-<p>Although we mostly avoid them, analytical solutions can be very useful. For one they are typically very fast to compute. And secondly, they can be a nice verification that approximate/numerical methods converge to reasonable solutions, for at least some set of circumstances.</p>
+</section>
 </section>
 </section>
 <section id="computational-strategies-for-finding-the-maximum-likelihood-estimate" class="level2">
@@ -607,35 +757,34 @@ P(X = 992 | n = 1000, p = 0.995) =
 <p>Analytical solutions are not common for real-world problems, so we consider some computational strategies for finding the Maximum Likelihood Estimate.</p>
 <section id="grid-search" class="level3">
 <h3 class="anchored" data-anchor-id="grid-search">Grid Search</h3>
-<p>Grid search simply divides up the parameter space (i.e.&nbsp;the possible parameter values) into a discrete number of values to check. For example, if we are trying to estimate <span class="math inline">\(p\)</span> in a simple model based on the binomial distribution, it can range from 0 to 1, so we could try the values 0.01, 0.02 … 0.98, and 0.99. Of the 99 likelihood estimates we calculate, we simply pick the p value associated with the largest likelihood.</p>
-<p>The grid search estimate for the binomial example would be denoted as <span class="math inline">\(\hat{p}_{\text{grid}}\)</span>, which is the value of <span class="math inline">\(p\)</span> from the grid <span class="math inline">\(G\)</span> that maximizes the likelihood (or log-likelihood):</p>
+<p>Grid search is a straightforward optimization technique that divides the parameter space into a finite set of discrete values. For example, when estimating the parameter <span class="math inline">\(p\)</span> in a binomial model (where <span class="math inline">\(p\)</span> can range from 0 to 1), you might consider values such as 0.01, 0.02, …, 0.98, 0.99. For each candidate value, you compute the likelihood (or log-likelihood) of observing your data. The optimal parameter estimate, denoted as <span class="math inline">\(\hat{p}_{\text{grid}}\)</span>, is the value from the grid <span class="math inline">\(G\)</span> that maximizes the likelihood:</p>
 <p><span class="math display">\[
-\hat{p}_{\text{grid}} = \arg\max_{p_i \in G} l(p_i \mid n, k)
+\hat{p}_{\text{grid}} = \arg\max_{p_i \in G} \mathcal{L}(p_i \mid n, k)
 \]</span></p>
-<p>This notation means: “<span class="math inline">\(\hat{p}_{\text{grid}}\)</span> is the value of <span class="math inline">\(p_i\)</span>, chosen from the set <span class="math inline">\(G\)</span>, that maximizes the function <span class="math inline">\(l(p_i \mid n, k)\)</span>.”</p>
-<p>Grid search is attractive due to its simplicity. However, it doesn’t scale well if you need to estimate multiple parameters (high dimensionality) because the plausible number of combinations increases exponentially (also known the curse of dimensionality). For example, if may believe we can reasonably estimate a parameter by picking a minimum and a maximum value, dividing the space between into 100 values to check, and finding the parameter value with the maximum likelihood. With two parameters, this is quite feasible, 100^2, or 10,000. Three parameters is still quite feasible, at 100^3 or 1,000,000 combinations, with modern computers - but we can see where this is going. Any large number of parameters will be intractable.</p>
+<p>This notation means that <span class="math inline">\(\hat{p}_{\text{grid}}\)</span> is the value <span class="math inline">\(p_i\)</span> in <span class="math inline">\(G\)</span> for which the likelihood <span class="math inline">\(\mathcal{L}(p_i \mid n, k)\)</span> is highest—in other words, the optimum value derived from the grid search.</p>
+<p>While grid search is attractive for its simplicity, it doesn’t scale well with multiple parameters. As you add more parameters, the number of parameter combinations increases exponentially (a phenomenon known as the “curse of dimensionality”). For instance, if you discretize each parameter into 100 values, two parameters would require checking <span class="math inline">\(100^2 = 10,000\)</span> combinations, and three parameters would involve <span class="math inline">\(100^3 = 1,000,000\)</span> combinations, quickly becoming computationally prohibitive.</p>
 </section>
-<section id="gradient-ascent-or-descent-on-the-negative-log-likelihood" class="level3">
-<h3 class="anchored" data-anchor-id="gradient-ascent-or-descent-on-the-negative-log-likelihood">Gradient Ascent (or Descent on the Negative Log-Likelihood)</h3>
-<p>In our manual estimation of the Maximum Likelihood with discrete data, we created a chart that had an obvious peak at the Maximum Likelihood Estimate. If we want to find that peak we simply need to ‘walk’ up the hill. If the slope decreases near the top it may be a hint we should slow down to not overshoot the peak. This is the idea of using gradients/derivatives to make our calculation more efficient.</p>
-<p>We aim to minimize <span class="math inline">\(min_{\theta} f(\theta)\)</span> by computing the gradient of <span class="math inline">\(f(\theta)\)</span> with respect to <span class="math inline">\(\theta\)</span>:</p>
+<section id="gradient-ascent" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-ascent">Gradient Ascent</h3>
+<p>To manually estimate the Maximum Likelihood for the binomial probability problem, we created a chart that had an obvious peak at the Maximum Likelihood Estimate. If we want to find that peak we simply need to walk/step up the hill. This is the idea of using gradients/derivatives to make our calculation more efficient.</p>
+<p>This approach is excellent even for many parameters, so we jump right to the definition for multi-parameter spaces. We seek to compute the gradient of <span class="math inline">\(f(\theta)\)</span> with respect to <span class="math inline">\(\theta\)</span> so we can use it in an optimization algorithm:</p>
 <p><span class="math display">\[
 \nabla f(\theta) = \left[ \frac{\partial f}{\partial \theta_1}, \frac{\partial f}{\partial \theta_2}, \dots, \frac{\partial f}{\partial \theta_n} \right]
 \]</span></p>
-<p>This gradient points in the direction of the steepest ascent. We update our previous estimate by taking a step with a step size with learning rate <span class="math inline">\(\eta\)</span>:</p>
+<p>We use the resulting gradient to take a step towards the nearest optimum with learning rate <span class="math inline">\(\eta\)</span>:</p>
 <p><span class="math display">\[
 \theta^{(t+1)} = \theta^{(t)} - \eta \nabla f(\theta^{(t)})
 \]</span></p>
 <p>where <span class="math inline">\(t\)</span> is the iteration index.</p>
-<p>The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many ‘autograd’ libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation.</p>
+<p>The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many ‘autograd’ libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation (well, and GPU’s that go brrrrrrr).</p>
 </section>
 </section>
 <section id="maximum-likelihood-estimate-with-continuous-data" class="level2">
 <h2 class="anchored" data-anchor-id="maximum-likelihood-estimate-with-continuous-data">Maximum Likelihood Estimate with Continuous Data</h2>
-<p>We move onto continuous data and continuous probability distributions, but with the same goal of finding the model parameters that maximize the likelihood of the observed data. The methods remain the same. The only difference we should keep in mind is that when we calculate <span class="math inline">\(P(y_i \mid \theta)\)</span>, with a continuous probability distribution, it is a probability density, and not a true probability. However, since probability densities can still be used to compare relative probability, and we are only trying to find the model parameter values that are the most likely relative to all other possibilities, this nuance has little practical impact.</p>
+<p>We move on to continuous data and continuous probability distributions, but with the same goal of finding the model parameters that maximize the likelihood of the observed data. The methods remain the same. The only difference we should keep in mind is that when we calculate <span class="math inline">\(P(y_i \mid \theta)\)</span>, with a continuous probability distribution, it is a probability density, and not a true probability. However, since probability densities can still be used to compare relative probability, and we are only trying to find the model parameter values that are the most likely relative to all other possibilities, this nuance has little practical impact.</p>
 <section id="normal-distribution-with-mle-estimate" class="level3">
 <h3 class="anchored" data-anchor-id="normal-distribution-with-mle-estimate">Normal Distribution with MLE Estimate</h3>
-<p>The following is a very similar app to what we saw earlier that just calculated with likelihood of the data. However, this time we also have ability to find the most likely model to explain the data, i.e the Maximimum Likelihood Estimate <em>MLE</em> …</p>
+<p>The following is a very similar app to what we saw in the chapter on Continuous Probability Distributions, where we just calculated the relative probability of continuous data. However, this time we also have ability to find the most likely model parameter values to explain the data, i.e the Maximimum Likelihood Estimate.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -824,86 +973,303 @@ def server(input, output, session):
         return fig
 
 app = App(app_ui, server)</code></pre>
+<p>While there are some good reasons to ‘default’ to using normal/gaussian distributions, it’s somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling ‘real-word’ problems.</p>
 </section>
-<section id="log-normal" class="level3">
-<h3 class="anchored" data-anchor-id="log-normal">Log Normal</h3>
 </section>
-<section id="linear-regression" class="level3">
-<h3 class="anchored" data-anchor-id="linear-regression">Linear Regression</h3>
-<p>Here we reproduce the ‘standard’ methodology for computing the parameters of a linear regression model. Single-variable linear regression aims to model the relationship between a single independent variable <span class="math inline">\(x\)</span> and a dependent variable <span class="math inline">\(y\)</span> using a linear equation:</p>
-<p>We begin with the classical formulation: <span class="math display">\[
-y_i = \beta_0 + \beta_1 x_i + \epsilon_i,
-\]</span></p>
-<p>where <span class="math inline">\(\beta_0\)</span> is the intercept, <span class="math inline">\(\beta_1\)</span> the slope, and <span class="math inline">\(\epsilon_i\)</span> the error term. The classical form implies a deterministic component <span class="math inline">\(\beta_0+\beta_1 x_i\)</span> with random deviations <span class="math inline">\(\epsilon_i\)</span>, typically assumed to have”</p>
+<section id="statistical-modelslinear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-modelslinear-regression">Statistical Models/Linear Regression</h2>
+<p>So far this chapter we’ve focused on models/data generating processes that could be adequately described with just parametric probability distributions. Here we move on to statistical models conditioned on data, e.g.&nbsp;<span class="math inline">\(P(y_i | x_i)\)</span>, like we did in the first half of the primer. As a reminder, data allowed us to zoom in on a part of the sample space and make better estimates of the parameters of the probability distribution at that location. Again, as a reminder, here was our preferred notation for traditional (constant variance) linear regression:</p>
 <p><span class="math display">\[
-\epsilon_i \sim \mathcal{N}(0, \sigma^2).
+P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 \]</span></p>
-<p>We’ve previosly stated we prefer the following notation where we condition on the input: <span class="math display">\[
-P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2).
+<p>This notation makes it clear that our estimate for <span class="math inline">\(y_i\)</span> is a probability distribution centered around the linear predictor <span class="math inline">\(\beta_0 + \beta_1 x_i\)</span>. This formulation also highlights that while our model provides a deterministic estimate for the mean response at <span class="math inline">\(x_i\)</span>, individual observations vary due to randomness captured by the [constant] variance <span class="math inline">\(\sigma^2\)</span>.</p>
+<p>If we define the predicted value as <span class="math inline">\(\hat{y}_i = \beta_0 + \beta_1 x_i\)</span>, then the error for each observation is</p>
+<p><span class="math display">\[
+\epsilon_i = y_i - \hat{y}_i,
 \]</span></p>
-<p>This notation emphasizes that the distribution of <span class="math inline">\(y_i\)</span> is centered around <span class="math inline">\(\beta_0 + \beta_1 x_i\)</span> with constant variance <span class="math inline">\(\sigma^2\)</span>, and that our predictions are explicitly conditioned on the observed <span class="math inline">\(x_i\)</span>.</p>
-<hr>
+<p>Where <span class="math inline">\(y_i\)</span> is the observed data and <span class="math inline">\(\hat{y}_i\)</span> is the prediction. By our model assumption, these errors follow a normal distribution:</p>
+<p><span class="math display">\[
+\epsilon_i \sim \mathcal{N}(0, \sigma^2)
+\]</span></p>
+<p>This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of <span class="math inline">\(\sigma^2\)</span>. We can now find <span class="math inline">\(P(y_i \mid \theta)\)</span> for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>… <span class="math inline">\(\sigma\)</span>).</p>
+<p>A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a ‘sideways’ normal distribution centered (<span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.</p>
+<div id="a1653f83" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="3.1-without_priors_files/figure-html/cell-2-output-1.png" width="759" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="maximum-likelihood-with-constant-normal-variance" class="level3">
+<h3 class="anchored" data-anchor-id="maximum-likelihood-with-constant-normal-variance">Maximum Likelihood with Constant Normal Variance</h3>
+<p>We take an unusual detour for the primer and derive the solution for maximizing likelihood with constant normal variance. This is important because of the result, as indicated by the callout at the end of the derivation. Also, rest assured that derivations are not needed to solve practical problems, solutions can be found numerically by just maximizing the results of the raw/original likelihood calculation (like you did in earlier examples).</p>
+<p>The probability density function (PDF) of a normal distribution is:</p>
+<p><span class="math display">\[
+p(x_i | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right)
+\]</span></p>
+<p>The likelihood function for the entire dataset is the product of individual probabilities:</p>
+<p><span class="math display">\[
+L(\mu, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right)
+\]</span></p>
+<p>By taking the natural logarithm and rearraging we can arrive at:</p>
+<p><span class="math display">\[
+\log L(\mu, \sigma^2) = -\frac{n}{2} \log (2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^{n} (x_i - \mu)^2
+\]</span></p>
+<p>If we assume constant variance the first term, <span class="math inline">\(-\frac{n}{2} \log (2\pi\sigma^2)\)</span> and <span class="math inline">\(\frac{1}{2\sigma^2}\)</span> is constant. So we simply need to minimize the second term, which is the <strong>sum of squared errors (SSE)</strong>:</p>
+<p><span class="math display">\[
+\sum_{i=1}^{n} (x_i - \mu)^2
+\]</span></p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is very common to see optimizations that minimize the squared error. You should recognize that this is implicitly assuming that the errors are normally distributed.</p>
+</div>
+</div>
+<section id="example-app" class="level4">
+<h4 class="anchored" data-anchor-id="example-app">Example App</h4>
+<p>The app below allows you to visualize the sum of squares error. You can try minimizing the total squared error by altering the parameters of the regression. When you are ready you can see the parameter values that maximizes the likelihood by clicking on the MLE button.</p>
+<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| standalone: true
+#| viewerHeight: 800
+
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from shiny import App, ui, reactive, render
+
+app_ui = ui.page_sidebar(
+    # Sidebar with all user inputs
+    ui.sidebar(
+        ui.h3("Model Parameters"),
+        ui.input_slider(
+            "alphaInput", "Intercept (α):",
+            min=-10, max=10, value=0, step=0.1
+        ),
+        ui.input_slider(
+            "betaInput", "Slope (β):",
+            min=-5, max=5, value=1, step=0.1
+        ),
+        ui.input_slider(
+            "varInput", "Variance (σ²):",
+            min=0.1, max=10, value=1, step=0.1
+        ),
+        ui.input_slider(
+            "nInput", "Number of samples:",
+            min=5, max=20, value=10, step=1
+        ),
+        ui.input_checkbox("showResiduals", "Show residuals as squares", value=False),
+        ui.br(),
+        ui.row(
+            ui.column(
+                6,
+                ui.input_action_button("mleBtn", "MLE", class_="btn-primary"),
+            ),
+            ui.column(
+                6,
+                ui.input_action_button("newSampleBtn", "NEW SAMPLE", class_="btn-secondary"),
+            ),
+        ),
+        width="300px"
+    ),
+    
+    # Main content
+    ui.h2("Linear Regression Likelihood"),
+    
+    ui.row(
+        ui.column(
+            6,
+            ui.h4("Current Data (X, Y):"),
+            ui.output_text_verbatim("dataText"),
+        ),
+        ui.column(
+            6,
+            ui.h4("Model Statistics:"),
+            ui.output_text("statsOutput"),
+        ),
+    ),
+
+    ui.br(),
+
+    # Plot
+    ui.output_plot("regressionPlot", height="500px"),
+)
+
+def server(input, output, session):
+    # Reactive value to store X and Y
+    data_vals = reactive.Value(None)
+
+    # Function to generate linear-regression data
+    def generate_data(n, alpha, beta, var):
+        # For simplicity, let X be a random uniform(0, 10)
+        X = np.random.uniform(0, 10, size=n)
+        # Y = alpha + beta*X + noise
+        Y = alpha + beta*X + np.random.normal(0, np.sqrt(var), size=n)
+        return X, Y
+
+    # Initialize data once
+    data_vals.set(generate_data(10, 0, 1, 1))
+
+    # Generate a new sample when 'NEW SAMPLE' is pressed
+    @reactive.Effect
+    @reactive.event(input.newSampleBtn)
+    def _():
+        n = input.nInput()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        data_vals.set(generate_data(n, alpha, beta, var))
+
+    # Display the current data
+    @output
+    @render.text
+    def dataText():
+        X, Y = data_vals()
+        # Show a few decimal places
+        pairs_str = [
+            f"({round(xi,1)}, {round(yi,1)})" for xi, yi in zip(X, Y)
+        ]
+        return ", ".join(pairs_str)
+
+    # When 'MLE' is clicked, compute OLS estimates and update alpha, beta, var
+    @reactive.Effect
+    @reactive.event(input.mleBtn)
+    def _():
+        X, Y = data_vals()
+        n = len(Y)
+
+        # Compute MLE (which in classical linear regression is the OLS solution)
+        X_mean = np.mean(X)
+        Y_mean = np.mean(Y)
+
+        # beta_hat = Cov(X,Y)/Var(X)
+        beta_hat = np.sum((X - X_mean)*(Y - Y_mean)) / np.sum((X - X_mean)**2)
+
+        # alpha_hat = mean(Y) - beta_hat*mean(X)
+        alpha_hat = Y_mean - beta_hat*X_mean
+
+        # var_hat = (1/n) * sum((y_i - alpha_hat - beta_hat*x_i)^2)
+        residuals = Y - (alpha_hat + beta_hat*X)
+        var_hat = np.sum(residuals**2) / n
+
+        # Update the UI sliders
+        session.send_input_message("alphaInput", {"value": alpha_hat})
+        session.send_input_message("betaInput", {"value": beta_hat})
+        session.send_input_message("varInput", {"value": var_hat})
+
+    # Reactive expression for log-likelihood
+    @reactive.Calc
+    def log_likelihood():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        n = len(Y)
+
+        if var &lt;= 0:
+            return float("nan")
+
+        # Compute sum of squared residuals
+        residuals = Y - (alpha + beta*X)
+        ssr = np.sum(residuals**2)
+
+        # log-likelihood for linear regression
+        term1 = -0.5 * n * math.log(2 * math.pi * var)
+        term2 = -0.5 * (ssr / var)
+        return term1 + term2
+
+    # Calculate sum of squared errors
+    @reactive.Calc
+    def sum_squared_errors():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        
+        residuals = Y - (alpha + beta*X)
+        return np.sum(residuals**2)
+
+    # Show the log-likelihood and SSE
+    @output
+    @render.text
+    def statsOutput():
+        ll = log_likelihood()
+        sse = sum_squared_errors()
+        return f"Log-Likelihood: {round(ll, 2)}\nSum of Squared Errors: {round(sse, 2)}"
+
+    # Plot the data and the regression line
+    @output
+    @render.plot
+    def regressionPlot():
+        X, Y = data_vals()
+        alpha = input.alphaInput()
+        beta = input.betaInput()
+        var = input.varInput()
+        show_residuals = input.showResiduals()
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Plot data points
+        ax.scatter(X, Y, color="blue", alpha=0.7, label="Data")
+
+        # Plot regression line from min(X) to max(X)
+        x_min, x_max = np.min(X), np.max(X)
+        x_vals = np.linspace(x_min, x_max, 100)
+        y_vals = alpha + beta * x_vals
+        ax.plot(x_vals, y_vals, color="red", label=f"Line (α={round(alpha,2)}, β={round(beta,2)})")
+
+        # Draw residual squares if enabled
+        if show_residuals:
+            y_pred = alpha + beta * X
+            residuals = Y - y_pred
+            
+            for x, y, res in zip(X, Y, residuals):
+                y_on_line = y - res  # Point on the regression line
+                
+                # Create square vertices
+                if res &gt;= 0:  # Point above the line (positive residual)
+                    square = plt.Rectangle((x, y_on_line), abs(res), abs(res), 
+                                        fill=False, color='green', alpha=0.7)
+                else:  # Point below the line (negative residual)
+                    square = plt.Rectangle((x, y), abs(res), abs(res), 
+                                        fill=False, color='green', alpha=0.7)
+                ax.add_patch(square)
+
+        ax.set_title("Linear Regression Fit")
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.legend()
+        ax.grid(True)
+
+        return fig
+
+app = App(app_ui, server)</code></pre>
 </section>
-<section id="derivation-of-the-analytical-solution" class="level3">
-<h3 class="anchored" data-anchor-id="derivation-of-the-analytical-solution">Derivation of the Analytical Solution</h3>
-<p>The objective is to find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> that minimize the sum of squared errors (SSE): <span class="math display">\[
-S(\beta_0, \beta_1) = \sum_{i=1}^{n} \left(y_i - \beta_0 - \beta_1 x_i\right)^2.
-\]</span></p>
-<section id="step-1.-compute-the-partial-derivatives" class="level4">
-<h4 class="anchored" data-anchor-id="step-1.-compute-the-partial-derivatives">Step 1. Compute the Partial Derivatives</h4>
-<p><strong>With respect to <span class="math inline">\(\beta_0\)</span>:</strong> <span class="math display">\[
-\frac{\partial S}{\partial \beta_0} = -2 \sum_{i=1}^{n} \left(y_i - \beta_0 - \beta_1 x_i\right) = 0.
-\]</span></p>
-<p>This simplifies to: <span class="math display">\[
-\sum_{i=1}^{n} y_i = n \beta_0 + \beta_1 \sum_{i=1}^{n} x_i.
-\]</span></p>
-<p>Dividing by <span class="math inline">\(n\)</span>, we get: <span class="math display">\[
-\bar{y} = \beta_0 + \beta_1 \bar{x} \quad \Longrightarrow \quad \beta_0 = \bar{y} - \beta_1 \bar{x},
-\]</span></p>
-<p>where <span class="math inline">\(\bar{y}\)</span> and <span class="math inline">\(\bar{x}\)</span> are the sample means of <span class="math inline">\(y_i\)</span> and <span class="math inline">\(x_i\)</span>, respectively.</p>
-<p><strong>With respect to <span class="math inline">\(\beta_1\)</span>:</strong> <span class="math display">\[
-\frac{\partial S}{\partial \beta_1} = -2 \sum_{i=1}^{n} x_i\left(y_i - \beta_0 - \beta_1 x_i\right) = 0.
-\]</span></p>
-<p>Substitute <span class="math inline">\(\beta_0 = \bar{y} - \beta_1 \bar{x}\)</span> into the above: <span class="math display">\[
-\sum_{i=1}^{n} x_i y_i = \beta_0 \sum_{i=1}^{n} x_i + \beta_1 \sum_{i=1}^{n} x_i^2.
-\]</span></p>
-<p>Replacing <span class="math inline">\(\beta_0\)</span> and rearranging, we eventually obtain: <span class="math display">\[
-\beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2}.
-\]</span></p>
-</section>
-<section id="step-2.-final-estimates" class="level4">
-<h4 class="anchored" data-anchor-id="step-2.-final-estimates">Step 2. Final Estimates</h4>
-<p>Substituting <span class="math inline">\(\beta_1\)</span> back into the equation for <span class="math inline">\(\beta_0\)</span>: <span class="math display">\[
-\beta_0 = \bar{y} - \beta_1 \bar{x}.
-\]</span></p>
-<hr>
 </section>
 </section>
-<section id="impact-of-the-error-term" class="level3">
-<h3 class="anchored" data-anchor-id="impact-of-the-error-term">Impact of the Error Term</h3>
-<p>The error term <span class="math inline">\(\epsilon_i\)</span> represents the random variation in the response not captured by the deterministic part of the model. Under the assumption: <span class="math display">\[
-\epsilon_i \sim \mathcal{N}(0, \sigma^2),
-\]</span></p>
-<p>we have: - <strong>Unbiasedness:</strong> <span class="math inline">\(\mathbb{E}[y_i] = \beta_0 + \beta_1 x_i\)</span>, meaning that on average our model correctly predicts <span class="math inline">\(y_i\)</span>. - <strong>Constant Variance:</strong> The homoscedasticity assumption (<span class="math inline">\(\sigma^2\)</span> is constant) justifies minimizing the sum of squared errors, which is equivalent to maximizing the likelihood when <span class="math inline">\(y_i \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)\)</span>.</p>
-<p>In a maximum likelihood framework, the log-likelihood for the observed data is: <span class="math display">\[
-\log L(\beta_0, \beta_1, \sigma^2) = -\frac{n}{2} \log(2\pi\sigma^2) - \frac{1}{2\sigma^2} \sum_{i=1}^n \left(y_i - \beta_0 - \beta_1 x_i\right)^2.
-\]</span></p>
-<p>Maximizing this log-likelihood with respect to <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> leads to the same normal equations as minimizing the SSE.</p>
-<hr>
-</section>
-<section id="summary" class="level3">
-<h3 class="anchored" data-anchor-id="summary">Summary</h3>
-<p>The analytical solutions to the linear regression problem are: <span class="math display">\[
-\beta_1 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n} (x_i - \bar{x})^2} \quad \text{and} \quad \beta_0 = \bar{y} - \beta_1 \bar{x}.
-\]</span></p>
-<p>This derivation demonstrates how the inclusion of the error term <span class="math inline">\(\epsilon_i\)</span> in the model acknowledges the inherent variability in the data and justifies the least squares approach, which under normal error assumptions, is equivalent to the maximum likelihood estimation.</p>
-</section>
+<section id="motivation-for-bayesian-with-prior-methods" class="level2">
+<h2 class="anchored" data-anchor-id="motivation-for-bayesian-with-prior-methods">Motivation for Bayesian (With Prior) Methods</h2>
+<p>If you’ve followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a seperate chapter to this topic which is finding the likelihood of models ‘With Priors’.</p>
+<p>Regardless, we stop a moment to contemplate the need for these <em>Bayesian</em> methods. ‘Priors’ refers to having prior information (or beliefs) about the parameter values. These are a necessary part of the Bayesian framework. The priors can be vague/non-commital or very specific, depending on the situation. Ultimately priors can be very useful or just invite additional questions on the model accuracy. These points are long discussed in statistical literature.</p>
+<p>The point I would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibility. <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>A major advantage is the method to find optimum parameter values end up being <em>extremely general</em>. You can define all sorts of custom models, and a single Bayesian sampling method will crank through them all no-sweat giving you plausible parameters for your models, including the spread or confidence in those parameter values.</p>
+<p>But again, we wait a chapter.</p>
 </section>
 <section id="machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
+<p>We again visit machine learning, but now have additional background/terminology for distinguishing it from the statistical models we’ve otherwise discussed.</p>
 <section id="loss-function" class="level3">
 <h3 class="anchored" data-anchor-id="loss-function">Loss Function</h3>
-<p>A loss function, denoted as <span class="math inline">\(L\)</span>, is typically computed as the difference between the true target values <span class="math inline">\(y\)</span> and the predicted values <span class="math inline">\(\hat{y}\)</span> The generic form of a loss function can be expressed as:</p>
+<p>The parameters of a machine learning model are optimized via a <strong>loss function</strong>. A loss function, denoted as <span class="math inline">\(L\)</span>, is typically computed as the difference between the true target values <span class="math inline">\(y\)</span> (it’s machine learning so we say target instead of observed…) and the predicted values <span class="math inline">\(\hat{y}\)</span>. The generic form of a loss function can be expressed as:</p>
 <p><span class="math display">\[
 L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 \]</span></p>
@@ -920,34 +1286,82 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 </section>
 <section id="comparison-to-likelihood-function" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-likelihood-function">Comparison to Likelihood Function</h3>
-<p>Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE). We will explore these more in the second half of the primer, <span class="math inline">\(\mathscr{L}(M|D)\)</span>.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Loss Functions
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Likelihood is a specific form of a <strong>loss function</strong>. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:</p>
-<p><span class="math display">\[
-\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
-\]</span></p>
-<ol type="1">
-<li><p><span class="math inline">\(\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})\)</span>: This represents the overall loss function, which measures the difference between the true values <span class="math inline">\(\mathbf{y}\)</span> and the predicted values <span class="math inline">\(\hat{\mathbf{y}}\)</span>. It aggregates the individual losses across all data points.</p></li>
-<li><p><span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span>: This is the individual loss for a single data point <span class="math inline">\(i\)</span>. It can take different forms depending on the type of problem.</p></li>
-<li><p><span class="math inline">\(\frac{1}{N} \sum_{i=1}^{N}\)</span>: This is the averaging operation, which sums up the individual losses <span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset and divides by <span class="math inline">\(N\)</span> to compute the average loss. This helps ensure that the loss function is independent of the dataset size.</p></li>
-</ol>
-</div>
-</div>
+<p>Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).</p>
 </section>
-</section>
-<section id="point-estimate-neural-network" class="level2">
-<h2 class="anchored" data-anchor-id="point-estimate-neural-network">Point-Estimate Neural Network</h2>
 <section id="training-a-simple-neural-network" class="level3">
 <h3 class="anchored" data-anchor-id="training-a-simple-neural-network">Training a Simple Neural Network</h3>
+<p>In the first half we developed the structure of a neural network and let is generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.</p>
+<section id="model-architecture" class="level4">
+<h4 class="anchored" data-anchor-id="model-architecture">Model Architecture</h4>
+<p>The neural network we’ll eventually train in the app further below consists of:</p>
+<ul>
+<li>Input layer: 1 neuron (diamond carat)</li>
+<li>Hidden layer 1: <span class="math inline">\(h_1\)</span> neurons (user-configurable)</li>
+<li>Hidden layer 2: <span class="math inline">\(h_2\)</span> neurons (user-configurable)</li>
+<li>Output layer: 1 neuron (predicted price)</li>
+</ul>
+</section>
+<section id="forward-propagation" class="level4">
+<h4 class="anchored" data-anchor-id="forward-propagation">Forward Propagation</h4>
+<p>For an input <span class="math inline">\(\mathbf{x}\)</span>, the network computes:</p>
+<ol type="1">
+<li><p><strong>First Hidden Layer</strong>: <span class="math display">\[\mathbf{Z}^{[1]} = \mathbf{x} \mathbf{W}^{[1]} + \mathbf{b}^{[1]}\]</span> <span class="math display">\[\mathbf{A}^{[1]} = g^{[1]}(\mathbf{Z}^{[1]})\]</span></p></li>
+<li><p><strong>Second Hidden Layer</strong>: <span class="math display">\[\mathbf{Z}^{[2]} = \mathbf{A}^{[1]} \mathbf{W}^{[2]} + \mathbf{b}^{[2]}\]</span> <span class="math display">\[\mathbf{A}^{[2]} = g^{[2]}(\mathbf{Z}^{[2]})\]</span></p></li>
+<li><p><strong>Output Layer</strong>: <span class="math display">\[\mathbf{Z}^{[3]} = \mathbf{A}^{[2]} \mathbf{W}^{[3]} + \mathbf{b}^{[3]}\]</span> <span class="math display">\[\hat{\mathbf{y}} = \mathbf{Z}^{[3]}\]</span></p></li>
+</ol>
+<p>Where: - <span class="math inline">\(\mathbf{W}^{[l]}\)</span> is the weight matrix for layer <span class="math inline">\(l\)</span> - <span class="math inline">\(\mathbf{b}^{[l]}\)</span> is the bias vector for layer <span class="math inline">\(l\)</span> - <span class="math inline">\(g^{[l]}\)</span> is the activation function (ReLU or Logistic) - <span class="math inline">\(\hat{\mathbf{y}}\)</span> is the predicted output</p>
+</section>
+<section id="loss-function-1" class="level4">
+<h4 class="anchored" data-anchor-id="loss-function-1">Loss Function</h4>
+<p>The model minimizes the Mean Squared Error (MSE) loss:</p>
+<p><span class="math display">\[\mathcal{L}(\mathbf{W}, \mathbf{b}) = \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})^2\]</span></p>
+<p>Where: - <span class="math inline">\(m\)</span> is the number of training examples - <span class="math inline">\(\hat{y}^{(i)}\)</span> is the predicted value for the <span class="math inline">\(i\)</span>-th example - <span class="math inline">\(y^{(i)}\)</span> is the actual value for the <span class="math inline">\(i\)</span>-th example</p>
+</section>
+<section id="parameter-estimation-process" class="level4">
+<h4 class="anchored" data-anchor-id="parameter-estimation-process">Parameter Estimation Process</h4>
+<section id="gradient-descent" class="level5">
+<h5 class="anchored" data-anchor-id="gradient-descent">Gradient Descent</h5>
+<p>The parameters are updated iteratively using gradient descent:</p>
+<p><span class="math display">\[\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}\]</span> <span class="math display">\[\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}\]</span></p>
+<p>Where <span class="math inline">\(\alpha\)</span> is the learning rate (fixed at 0.01 in our implementation).</p>
+</section>
+<section id="backpropagation" class="level5">
+<h5 class="anchored" data-anchor-id="backpropagation">Backpropagation</h5>
+<p>The gradients are computed using backpropagation:</p>
+<ol type="1">
+<li><p><strong>Output Layer</strong>: <span class="math display">\[d\mathbf{Z}^{[3]} = \frac{2}{m}(\hat{\mathbf{y}} - \mathbf{y})\]</span> <span class="math display">\[d\mathbf{W}^{[3]} = (\mathbf{A}^{[2]})^T d\mathbf{Z}^{[3]}\]</span> <span class="math display">\[d\mathbf{b}^{[3]} = \sum_{i=1}^{m} d\mathbf{Z}^{[3]}_i\]</span></p></li>
+<li><p><strong>Hidden Layer 2</strong>: <span class="math display">\[d\mathbf{A}^{[2]} = d\mathbf{Z}^{[3]} (\mathbf{W}^{[3]})^T\]</span> <span class="math display">\[d\mathbf{Z}^{[2]} = d\mathbf{A}^{[2]} \odot g^{[2]\prime}(\mathbf{Z}^{[2]})\]</span> <span class="math display">\[d\mathbf{W}^{[2]} = (\mathbf{A}^{[1]})^T d\mathbf{Z}^{[2]}\]</span> <span class="math display">\[d\mathbf{b}^{[2]} = \sum_{i=1}^{m} d\mathbf{Z}^{[2]}_i\]</span></p></li>
+<li><p><strong>Hidden Layer 1</strong>: <span class="math display">\[d\mathbf{A}^{[1]} = d\mathbf{Z}^{[2]} (\mathbf{W}^{[2]})^T\]</span> <span class="math display">\[d\mathbf{Z}^{[1]} = d\mathbf{A}^{[1]} \odot g^{[1]\prime}(\mathbf{Z}^{[1]})\]</span> <span class="math display">\[d\mathbf{W}^{[1]} = \mathbf{X}^T d\mathbf{Z}^{[1]}\]</span> <span class="math display">\[d\mathbf{b}^{[1]} = \sum_{i=1}^{m} d\mathbf{Z}^{[1]}_i\]</span></p></li>
+</ol>
+<p>Where: - <span class="math inline">\(\odot\)</span> represents element-wise multiplication - <span class="math inline">\(g^{[l]\prime}\)</span> is the derivative of the activation function</p>
+</section>
+<section id="activation-function-derivatives" class="level5">
+<h5 class="anchored" data-anchor-id="activation-function-derivatives">Activation Function Derivatives</h5>
+<ol type="1">
+<li><p><strong>ReLU Derivative</strong>: <span class="math display">\[g^{\prime}_{\text{ReLU}}(z) =
+\begin{cases}
+1 &amp; \text{if } z &gt; 0 \\
+0 &amp; \text{otherwise}
+\end{cases}\]</span></p></li>
+<li><p><strong>Logistic Sigmoid Derivative</strong>: <span class="math display">\[g^{\prime}_{\text{sigmoid}}(z) = \sigma(z)(1-\sigma(z))\]</span> where <span class="math inline">\(\sigma(z) = \frac{1}{1+e^{-z}}\)</span></p></li>
+</ol>
+</section>
+</section>
+<section id="initialization-strategy" class="level4">
+<h4 class="anchored" data-anchor-id="initialization-strategy">Initialization Strategy</h4>
+<p>The weights are initialized using He initialization for ReLU or standard normal scaled by the square root of layer size:</p>
+<p><span class="math display">\[\mathbf{W}^{[l]} \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n^{[l-1]}}}\right)\]</span></p>
+<p>Where <span class="math inline">\(n^{[l-1]}\)</span> is the number of neurons in the previous layer.</p>
+</section>
+<section id="training-process" class="level4">
+<h4 class="anchored" data-anchor-id="training-process">Training Process</h4>
+<ol type="1">
+<li><strong>Standardization</strong>: Input and output data are standardized to have zero mean and unit variance</li>
+<li><strong>Iterations</strong>: The model is trained for a user-specified number of epochs</li>
+<li><strong>Parameter Updates</strong>: After each forward pass, parameters are updated via backpropagation</li>
+<li><strong>Convergence</strong>: Training continues until the specified number of epochs is completed</li>
+</ol>
+<p>The final parameter values displayed in the “Model Parameters” tab represent the optimized weights and biases that minimize the MSE loss on the training data.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -1364,12 +1778,6 @@ data_str = """ID,carat,cut,color,clarity,depth,table,price,x,y,z
 24966,2.02,Premium,H,SI1,63.0,60.0,13453,7.85,7.79,4.93
 """
 
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-from io import StringIO
-
 # --- Activation Functions ---
 def relu(x):
     return np.maximum(0, x)
@@ -1455,6 +1863,17 @@ class NeuralNetwork:
             losses.append(loss)
             self.backward(X, y, y_pred, learning_rate)
         return losses
+    
+    def get_parameters(self):
+        """Return a dictionary of model parameters"""
+        return {
+            "W1": self.W1,
+            "b1": self.b1,
+            "W2": self.W2,
+            "b2": self.b2,
+            "W3": self.W3,
+            "b3": self.b3
+        }
 
 # --- Shiny UI ---
 app_ui = ui.page_fluid(
@@ -1471,6 +1890,36 @@ app_ui = ui.page_fluid(
             ),
             ui.nav_panel("Predictions",
                 ui.output_plot("predictionPlot", height="400px")
+            ),
+            ui.nav_panel("Model Parameters",
+                ui.row(
+                    ui.column(4, 
+                        ui.h4("Layer 1 Weights"),
+                        ui.output_table("w1Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 2 Weights"),
+                        ui.output_table("w2Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 3 Weights"),
+                        ui.output_table("w3Table")
+                    )
+                ),
+                ui.row(
+                    ui.column(4, 
+                        ui.h4("Layer 1 Biases"),
+                        ui.output_table("b1Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 2 Biases"),
+                        ui.output_table("b2Table")
+                    ),
+                    ui.column(4, 
+                        ui.h4("Layer 3 Biases"),
+                        ui.output_table("b3Table")
+                    )
+                )
             )
         )
     )
@@ -1510,7 +1959,19 @@ def server(input, output, session):
         y_pred_norm = nn.forward(X_norm)
         y_pred = y_pred_norm * y_std + y_mean
         
-        return {"losses": losses, "X": X, "y": y, "y_pred": y_pred}
+        return {
+            "losses": losses, 
+            "X": X, 
+            "y": y, 
+            "y_pred": y_pred, 
+            "model": nn,
+            "data_stats": {
+                "X_mean": X_mean,
+                "X_std": X_std,
+                "y_mean": y_mean,
+                "y_std": y_std
+            }
+        }
     
     @output
     @render.plot
@@ -1539,16 +2000,101 @@ def server(input, output, session):
         ax.set_ylabel("Price")
         ax.legend()
         return fig
+    
+    @output
+    @render.table
+    def w1Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W1"])
+        return df.round(4)
 
-app = App(app_ui, server)
-</code></pre>
+    @output
+    @render.table
+    def w2Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W2"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def w3Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["W3"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b1Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b1"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b2Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b2"])
+        return df.round(4)
+
+    @output
+    @render.table
+    def b3Table():
+        result = train_model()
+        model = result["model"]
+        params = model.get_parameters()
+        df = pd.DataFrame(params["b3"])
+        return df.round(4)
+
+app = App(app_ui, server)</code></pre>
 <p>In training a ‘standard’ neural network, we hope to obtain a point estimate of the parameter values that will have the most accuracy in predicting data.</p>
+</section>
+</section>
+</section>
+<section id="graveyard" class="level2">
+<h2 class="anchored" data-anchor-id="graveyard">Graveyard</h2>
+<p>This is not useable but should find more areas for these kinds of callouts:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Loss Functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Likelihood is a specific form of a <strong>loss function</strong>. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:</p>
+<p><span class="math display">\[
+\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
+\]</span></p>
+<ol type="1">
+<li><p><span class="math inline">\(\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})\)</span>: This represents the overall loss function, which measures the difference between the true values <span class="math inline">\(\mathbf{y}\)</span> and the predicted values <span class="math inline">\(\hat{\mathbf{y}}\)</span>. It aggregates the individual losses across all data points.</p></li>
+<li><p><span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span>: This is the individual loss for a single data point <span class="math inline">\(i\)</span>. It can take different forms depending on the type of problem.</p></li>
+<li><p><span class="math inline">\(\frac{1}{N} \sum_{i=1}^{N}\)</span>: This is the averaging operation, which sums up the individual losses <span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset and divides by <span class="math inline">\(N\)</span> to compute the average loss. This helps ensure that the loss function is independent of the dataset size.</p></li>
+</ol>
+</div>
+</div>
 
 
 </section>
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>From the Frequentist viewpoint you can also calculate uncertainty in the models parameter values - however the assumption is that a single model with a single set of parameters creates the data. The uncertainty in the parameter values stems from the fact that the model generated data randomly, and we have only a limited number of samples with which we ‘backcalculate’ the parameters.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

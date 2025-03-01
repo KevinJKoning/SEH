@@ -16,7 +16,7 @@ Due to popular demand, we move on from traditional statistical models to those c
 
 Although the chapter is entitled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.
 
-The chapter is focused on Bayesian Neural Networks, and although they are an advanced topic, you may be surprised to learn the major building blocks have already been covered. In the flavor we use, each hidden layer neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D\|M).
+The chapter is focused on [Bayesian] Neural Networks, and although they are an advanced topic, you may be surprised to learn the major building blocks have already been covered. In the flavor we use, each hidden layer neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. We can choose to create ensembles of Neural Networks, or probabilistically sample likley parameter values. Because this type of machine learning is probabilistic, we can calculate P(D\|M).
 
 ## Statistical Models vs. Machine Learning Models
 
