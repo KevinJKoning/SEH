@@ -31,7 +31,7 @@ flowchart LR
 Hopefully we haven't lost you already. $\mathcal{L}(M \mid D)$ is about creating accurate models, which any engineer can appreciate. We don't start there, however, because it's a little like building a car before you know how to drive. Instead we start by giving you models that can generate data. Models that generate data can either help you predict future data or show you how likely you were to get the data you already have, i.e. $P(D \mid M)$.
 :::
 
-## Models and Data
+## Models and Uncertainty
 
 In engineering, a model tends to spark thoughts of systems of interrelated equations that spit out a single answer. But it's silly to think that answer is precise to all those digits. The real world has plenty of uncertainty, and that's probably why you've been sucked into the statistical void. In this new world we need to acknowledge two kinds of uncertainty:
 

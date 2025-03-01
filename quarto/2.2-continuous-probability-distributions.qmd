@@ -403,7 +403,7 @@ We return to the main theme of the first half of the primer, the probability of 
 
 ### Probability *Density* Function
 
-We've been hinting that the probability density function would require some explanation, and we've finally come to the right place to tackle it. We've created histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It's possible to use our relative frequency technique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would estimate the probability of a single point within the bin? The problem is that, as we've noted earlier, the probability of any exact value on the real number line $\mathbb{R}$ is effectively zero.
+We've been hinting that the probability density function would require some explanation, and we've finally come to the right place to tackle it. We've created histograms of our continuous data, in which we take multiple exact values and lump them together in a bin of the histogram. It's possible to use our relative frequency technique to estimate the probability of the bin (just divide the bin count by the total count of all bins). However, how would we estimate the probability of a single point within the bin? The problem is that, as we've noted earlier, the probability of any exact value on the real number line $\mathbb{R}$ is effectively zero.
 
 To solve this, the probability density function does not give a true probability, it gives a value such that the following properties are true:
 
