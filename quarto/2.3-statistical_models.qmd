@@ -2512,6 +2512,6 @@ Again, if we look back at the sale prices, in a fairly small number of sales at 
 
 ### Room for Improvement
 
-Due to some poor model assumptions, the probabilities we calculated here do not seem very reasonable. Ultimately this makes P(D|M) non-credible. However, we've also shown some how some fairly simple improvements improved our model substantially. We could also calculate $P(D|M)$ with those models and get much more reasonable results. 
+Due to some poor model assumptions, the probabilities we calculated here do not seem very reasonable. Ultimately this makes P(D|M) non-credible. However, we've also shown some how some fairly simple changes improved our model substantially. We could also calculate $P(D|M)$ with the improved models and get much more reasonable results. 
 
 It's worth noting that with the models shown in this chapter, you could calculate probabilities analytically, as we did above. However, another option is to just simulate a large dataset and check the percentile of a data point of interest. We mention the later again as it may be the only practical option for more realistic problems.
