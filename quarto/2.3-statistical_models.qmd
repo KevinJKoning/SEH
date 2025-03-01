@@ -2454,13 +2454,13 @@ We'd say this is becoming a fairly good model for estimating diamond sale price.
 
 ## Probability of the Data
 
-As usual, we started by focusing on the data generated from our models to improve our intution. When writing the standard equation for single variable linear regression, it's hard to understand what 'probability of the data' would even mean:
+As usual, we started by focusing on the data generated from our models to improve our intution. We now consider $P(D|M)$. When writing the standard equation for single variable linear regression, it's hard to understand what 'probability of the data' would even mean:
 
 $$
 y_i = \beta_0 + \beta_1 x_i + \epsilon
 $$
 
-However, in our preferred notation, that should become quite a bit more obvious:
+We should also state explicitly that we've reverted to our initial, or 'standard', version of linear regression with a single variable. However, in our preferred notation, that should become quite a bit more obvious since it's explicit how the data is modeled within a normal/gaussian probability distribution:
 
 $$
 P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
@@ -2510,8 +2510,8 @@ Here are some probabilities for selling a 1.55 carat diamond at the given price 
 
 Again, if we look back at the sale prices, in a fairly small number of sales at that price, several are above $12,000, so these estimates again seem terrible. Here, the estimate of the average sale price was somewhat low, but also now due to an *underestimate* of the standard deviation at 1.55 carats.
 
-#### Summary
+### Room for Improvement
 
 Due to some poor model assumptions, the probabilities we calculated here do not seem very reasonable. Ultimately this makes P(D|M) non-credible. However, we've also shown some how some fairly simple improvements improved our model substantially. We could also calculate $P(D|M)$ with those models and get much more reasonable results. 
 
-It's worth noting that with the models shown in this chapter, you could calculate probabilities analytically, as we did above. However, another option is to just simulate a large dataset and check the percentile of a data point of interest. We mention the later as it may be the only practical option for more complex problems.
+It's worth noting that with the models shown in this chapter, you could calculate probabilities analytically, as we did above. However, another option is to just simulate a large dataset and check the percentile of a data point of interest. We mention the later again as it may be the only practical option for more realistic problems.
