@@ -1,15 +1,20 @@
 ---
 title: With Priors
-format: html
+format: 
+    html:
+        mermaid:
+            theme: neutral
 filters:
   - shinylive
 ---
 
 ## Preview
 
-We finally come to the last chapter, which is focused on finding the $\mathcal{L}(M \mid D)$ with prior values for the parameters.
+We finally come to the last chapter, which is focused on finding the $\mathcal{L}(M \mid D)$ with **prior** values for the parameters.
 
-In more statistical terms, this chapter utilizes a **Bayesian** perspective. We will introduce Bayes Theorem later...
+In more statistical terms, this chapter utilizes a **Bayesian** perspective. Instead of starting off with Bayes Theorem, we show the usefulness of having prior values for our parameters through a coin flip example with limited data. This naturally leads to **posterior** estimates of the parameter values, which we obtain after we consider the data. Once we've gained some intuition for what Bayes Theorem does, we give the formal definition.
+
+We call the posterior estimate of the parameter values the **posterior distribution**, since it is not a single value but a distribution, and it comes after (post) utilizing the data. We then discuss methods for finding the posterior distribution in low and high dimensions, including the similarities and differences to methods for finding the Maximum Likelihood Estimate (MLE).
 
 ## Why Use Priors?
 
@@ -226,7 +231,7 @@ def server(input, output, session):
 app = App(app_ui, server)
 ```
 
-If you knew the coin had just come from the bank, you may give a strong prior for a fair coin such that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented P=1.
+If you knew the coin had just come from the bank, you may give a strong prior for a fair coin such that even after the three heads, the probability would be only slightly above 0.5. However, if you didn't know the origin of the coin, you may have a much weaker prior - but you also know it would be virtually impossible to create a coin that could only land heads - and therefore you would still give a prior that prevented $P=1$.
 
 ### Posterior Distribution
 
@@ -236,18 +241,40 @@ Hopefully you noticed that after flipping coins the chart in the app showed a 'p
 
 One of the very confusing thing about Bayesian statistics is it gets meta. We start to talk about probabilities of parameters that describe probabilities. Like treating addiction, the first step is to explicitly acknowledge what's happening:
 
-1) We have a probability distribution that describes a parameter P. The probability distribution says if we sampled P randomly, here's the more and less likely values.
-2) Let's assume we've sampled P and we have a value, like 0.578.
-3) We then use the value for P, which was 0.578 to generate random data.
+1) We have a probability distribution that describes a parameter $P$. The probability distribution says if we sampled $P$ randomly, here's the more and less likely values.
+2) Let's assume we've sampled $P$ and we have a value, like 0.578.
+3) We then use the value for P, which was 0.578, to generate random data.
     - This will randomly generate 0's for tails and 1's for heads
     - It will do so at a rate that is approximately 0.578 heads
 4) We could resample P, it will have a new value like 0.489.
     - This will randomly generate 0's for tails and 1's for heads
     - It will do so at a rate that is approximately 0.489 heads
 
-We can have the model sample the value of parameter P based on either what we believe before we saw data (the prior) or after we saw data (the posterior). The distribution for P is different in the prior and posterior, but the process of generating data described above is the same.
+Here's the process summarized as a diagram:
 
-Here's an updated coin flipping app to try to make this more obvious. We can now see some examples (four) of the value P may take when sampled, and then subsequently how flip data would be generated from the sampled P. There is a seperate tab for sampling from the prior, and another for sampling from the posterior.
+```{mermaid}
+graph LR
+    subgraph "Parameter Uncertainty"
+        subgraph "Distribution Parameters"
+            mean[Mean]
+            var[Variance]
+            mean --> dist
+            var --> dist
+        end
+        dist[Normal Distribution]
+        dist --> |"generates"| P[Parameter P]
+    end
+    
+    P --> |"generates"| flips[Coin Flip Outcomes]
+    
+    style P fill:#f9f,stroke:#333,stroke-width:2px
+    style flips fill:#bbf,stroke:#333,stroke-width:2px
+    style dist fill:#dfd,stroke:#333,stroke-width:2px
+```
+
+We can have the model sample the value of parameter $P$ based on either what we believe before we saw data (the prior) or after we saw data (the posterior). The distribution for $P$ is different in the prior and posterior, but the process of generating data described above is the same.
+
+Here's an updated coin flipping app to try to make this more obvious. We can now see some examples (four) of the value $P$ may take when sampled, and then subsequently how flip data would be generated from the sampled P. There is a seperate tab for sampling from the prior, and another for sampling from the posterior.
 
 ```{shinylive-python}
 #| standalone: true
@@ -509,75 +536,105 @@ The argument against priors is that they can introduce arbitrary practitioner bi
 
 ## The Math of Bayesian Updating
 
-The updating of probabilities/beliefs in Bayesian analysis is based on Bayes' Theorem:
+The updating of probabilities/beliefs in Bayesian analysis is based on Bayes' Theorem, where $\theta$ is the model parameter[s] and D is the observed data:
 
 $$
-P(\theta | \text{data}) = \frac{P(\text{data} | \theta) P(\theta)}{P(\text{data})}
+P(\theta | D) = \frac{P(D | \theta) P(\theta)}{P(D)}
 $$
 
 Where:
 
-- $P(\theta | \text{data})$  is the posterior
-- $P(\text{data} | \theta)$  is the likelihood
+- $P(\theta | D)$  is the posterior
+- $P(D | \theta)$  is the likelihood
 - $P(\theta)$  is the prior
-- $P(\text{data})$  is the marginal likelihood (normalizing constant)
+- $P(D)$  is the marginal likelihood (normalizing constant)
 
-Since $P(\text{data})$ in practical applications is just a normalizing constant, it can be much simpler conceptually to think about Bayes' Theorem this way:
+Since $P(D)$ in practical applications is just a normalizing constant, it can be much simpler conceptually to think about Bayes' Theorem this way:
 
 $$
-P(\theta | \text{data}) \propto P(\text{data} | \theta) P(\theta)
+P(\theta | D) \propto P(D | \theta) P(\theta)
 $$
 
-Which states that posterior value of the model parameters ($P(\theta | \text{data})$) after seeing the data is proportional to the likelihood of the data based on the model parameters ($P(\text{data} | \theta)$) multiplied by the prior belief ($P(\theta)$) in the parameter values.
+Which states that posterior value of the model parameters ($P(\theta | D)$) after seeing the data is proportional to the likelihood of the data based on the model parameters ($P(D | \theta)$) multiplied by the prior belief ($P(\theta)$) in the parameter values.
 
-## ...
+### Notation Notation Notation...
 
-...
+We've given Bayes' Theorem as you would normally see it, however, the notation of the result is slightly different than what would be consistent with our previous discussions. When we discussed the probability of model parameter values in the context of Maximum Likelihood Estimates, we called the result of finding the joint probability of the data given a model parameter[s] the **likelihood**:
 
-## Maximum Likelihood Estimation (MLE) vs. Maximum A Posteriori (MAP)
+$$
+\mathcal{L}(\theta \mid D) = \prod_{i=1}^{N} P(d_i \mid \theta)
+$$
+
+So to be consistent, we may be tempted to write likelihood in the Bayesian context as:
+
+$$
+\mathcal{L}(\theta \mid D) \propto P(D | \theta) P(\theta)
+$$
+
+or more explicitly including the product:
+
+$$
+\mathcal{L}(\theta \mid D) \propto \prod_{i=1}^{N}  P(d_i | \theta) P(\theta)
+$$
+
+**However, only $P(D \mid \theta)$ is known as 'the likelihood' in Bayesian statistics**, I believe to be consistent with the right-hand side of the first equation above, not the second or third equation. But as Ralph Waldo Emerson said:
+
+> A foolish consistency is the hobgoblin of little minds, adored by little statesmen and philosophers and divines.
+
+## Methods for Estimating the Posterior Distribution
+
+Estimating the posterior distribution of Bayesian model parameters can have similarities to Maximum Likelihood Estimates (MLE), but we will need to keep in mind a Bayesian posterior is a distribution, not a point estimate.
+
+### Low Dimensional Search (Grid)
+
+Just like we did in the previous chapter on $\mathcal{L}(M|D)$ without priors, we can find parameter values with grid search. However, we should acknowledge two major differences:
+
+1) Previously we did grid search to find the parameter with the maximum likelihood. Now we do grid search to find the distribution of likelihoods for the parameter $(P(D)$. The results will include a maximum likelihood value of the parameter, but also other lower likelihood values of the parameter.
+2) We multiply the values found in the grid search by our prior belief in the parameter values ($P(\theta)$). If we do not have a strong prior belief, we can choose values that have little to no effect.
+
+**NOTE TO SELF, NEED TO UNIFY THE LIKELIHOOD AND PROB NOTATION**
+
+### High Dimensional Search
+
+Like before, grid search does not scale well to many parameters/dimensions. To solve this previously we introduced Gradient Ascent, which uses slopes/gradients to guide us to the maximum value.
+
+There's a major problem, however, with using Gradient Ascent in Bayesian analysis - we do not want to find just the most likely value of the parameter - we want to find the correct probability distribution for the parameter (the likelihood of any value the parameter could take).
+
+#### Markov Chain Monte Carlo (MCMC)
+
+The solution to this is to use random sampling methods, such that we search through the possible combinations of the parameters and see how likely they are. As the algorithm starts, we can think of it a little like grid search - we check some combination of parameters and calculate a likelihood for those parameters based on how well they fit the data. The problem is that in high dimensional space, the extreme majority of the parameter combinations will have virtually zero likelihood. (Picture a model with random parameter values generating data that isn't even close to what we observe).
+
+To solve the problem of constantly testing parameters that have virtually zero likelihood, modern sampling algorithms know to head towards areas of higher likelihood. However, importantly they do not simply head towards the peak like they would in Gradient Ascent - instead they strategically wander around the edges and peaks of the high likelihood space, mapping out those regions like a cartographer mapping a mountain ridge with points from a transit.
+
+#### Variational Inference (VI)
+
+Hamiltonian Monte Carlo based methods such as the No U-Turn Sampler (NUTS) are the gold standard, but there's a major disadvantage - they are slow. And to make that clearer - even on modern computers they are slow. One option to speed things up is to make the problem more like the gradient ascent described in the previous chapter. This may assume that the posterior distribution can be described by a multi-variate gaussian (a multi-dimensionsal normal distribution), which means if you can approximate its mean and variance you're done. This is a lot faster than describing the shape with thousands of individual points. There's a major drawback however, which is the same as we've tried to warn about elsewhere, that not everything is in the shape of the normal distribution.
+
+### Maximum Likelihood Estimation (MLE) vs. Maximum A Posteriori (MAP)
 
 In machine learning, MAP (Maximum A Posteriori) estimation is a Bayesian approach to parameter estimation. It finds the most probable parameter values given the observed data and a prior distribution.
 
 Mathematically, it maximizes the posterior probability:
 
 $$
-\theta_{MAP} = \arg\max_{\theta} P(\theta | X)
+\theta_{MAP} = \arg\max_{\theta} P(\theta | D)
 $$
 
 Using Bayes’ theorem:
 
 $$
-P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}
+P(\theta | D) = \frac{P(D | \theta) P(\theta)}{P(D)}
 $$
 
-Since  P(X)  is constant for optimization, MAP simplifies to:
+Since  P(D)  is constant for optimization, MAP simplifies to:
 
 $$
-\theta_{MAP} = \arg\max_{\theta} P(X | \theta) P(\theta)
+\theta_{MAP} = \arg\max_{\theta} P(D | \theta) P(\theta)
 $$
 
-This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only  P(X | \theta)  (ignoring the prior  P(\theta) ). MAP is useful when incorporating prior knowledge into the learning process.
+This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only  P(D | \theta).
 
-### Low Dimensional Search (Grid)
-
-Just like we did in the previous chapter on $\mathcal{L}(M|D)$ without priors, we can find parameter values with grid search. However, we should acknowledge two major differences:
-
-1) Previously we did grid search to find the parameter with the maximum likelihood. Now we do grid search to find the distribution of likelihoods for the parameter $(P(\text{data})$. The results will include a maximum likelihood value of the parameter, but also other lower likelihood values of the parameter.
-2) We multiply the values found in the grid search by our prior belief in the parameter values ($P(\theta)$). If we do not have a strong prior belief, we can choose values that have little to no effect.
-
-**NOTE TO SELF, NEED TO UNIFY THE LIKELIHOOD AND PROB NOTATION**
-
-### High Dimensional Search (MCMC)
-
-Like before, grid search does not scale well to many parameters/dimensions. To solve this previously we introduced Gradient Ascent, which uses slopes/gradients to guide us to the maximum value.
-
-There's a major problem, however, with using Gradient Ascent in Bayesian analysis - we do not want to find just the most likely value of the parameter - we want to find the correct probability distribution for the parameter (the likelihood of any value the parameter could take).
-
-The solution to this is to use random sampling methods, such that we search through the possible combinations of the parameters and see how likely they are. As the algorithm starts, we can think of it a little like grid search - we check some combination of parameters and calculate a likelihood for those parameters based on how well they fit the data. The problem is that in high dimensional space, the extreme majority of the parameter combinations will have virtually zero likelihood. (Picture a model with random parameter values generating data that isn't even close to what we observe).
-
-To solve the problem of constantly testing parameters that have virtually zero likelihood, modern sampling algorithms know to head towards areas of higher likelihood. However, importantly they do not simply head towards the peak like they would in Gradient Ascent - instead they strategically wander around the edges and peaks of the high likelihood space, mapping out those regions like a cartographer mapping a mountain ridge.
-
-### Parameter Find App
+## Parameter Finding App
 
 To get a feel for what it's like to search the parameter space for parameter combinations with a high likelihood, play around with the app below.
 
@@ -727,206 +784,4 @@ app = App(app_ui, server)
 
 As stated in the title, this is intended to be a 'primer' to introduce you to the topic. We hope you have some sense for the important foundations of statistics. We encourage you to learn by experimenting - creating your own data and examples will be the fastest path to understanding for the majority of people.
 
-There are also many excellent texts in both statistics and machine learning, hopefully with some intuition on the basics, the rationale and math will be much easier to understand.
-
-
-## Text
-
-Text.
-
-
-```{shinylive-python}
-#| standalone: true
-#| viewerHeight: 700
-
-import math
-import numpy as np
-import matplotlib.pyplot as plt
-from shiny import App, ui, reactive, render
-
-app_ui = ui.page_fluid(
-    ui.h2("Likelihood Calculation"),
-
-    # Row 1: Sliders
-    ui.row(
-        ui.column(
-            4,
-            ui.input_slider(
-                "muInput", "Mean (μ):",
-                min=50, max=150, value=100, step=0.1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_slider(
-                "varInput", "Variance (σ²):",
-                min=1, max=200, value=10, step=1
-            ),
-        ),
-        ui.column(
-            4,
-            ui.input_slider(
-                "nInput", "Number of samples:",
-                min=1, max=100, value=10, step=1
-            ),
-        ),
-    ),
-
-    ui.br(),
-
-    # Row 2: Buttons, current data, and log-likelihood
-    ui.row(
-        ui.column(
-            2,
-            ui.input_action_button("mleBtn", "MLE"),
-        ),
-        ui.column(
-            2,
-            ui.input_action_button("newSampleBtn", "NEW SAMPLE"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Current Data (Y):"),
-            ui.output_text_verbatim("dataText"),
-        ),
-        ui.column(
-            4,
-            ui.h4("Log-Likelihood:"),
-            ui.output_text("llOutput"),
-        ),
-    ),
-
-    ui.br(),
-
-    # Plot
-    ui.output_plot("normalPlot", height="400px"),
-)
-
-def server(input, output, session):
-    # Initialize data with 10 random points
-    data_vals = reactive.Value(
-        np.random.normal(loc=100, scale=np.sqrt(10), size=10)
-    )
-
-    # Generate a new sample when 'NEW SAMPLE' is pressed
-    @reactive.Effect
-    @reactive.event(input.newSampleBtn)
-    def _():
-        n = input.nInput()
-        data_vals.set(
-            np.random.normal(loc=100, scale=np.sqrt(10), size=n)
-        )
-
-    # Display the current data
-    @output
-    @render.text
-    def dataText():
-        y = data_vals()
-        return ", ".join(str(round(val, 1)) for val in y)
-
-    # When 'MLE' is clicked, update muInput and varInput to MLE estimates
-    @reactive.Effect
-    @reactive.event(input.mleBtn)
-    def _():
-        y = data_vals()
-        n = len(y)
-        mle_mean = np.mean(y)
-        # MLE for variance uses 1/n factor
-        mle_var = np.sum((y - mle_mean)**2) / n
-        session.send_input_message("muInput", {"value": mle_mean})
-        session.send_input_message("varInput", {"value": mle_var})
-
-    # Reactive expression for log-likelihood
-    @reactive.Calc
-    def log_likelihood():
-        y = data_vals()
-        mu = input.muInput()
-        var = input.varInput()
-        n = len(y)
-        if var <= 0:
-            return float("nan")
-        term1 = -0.5 * n * math.log(2 * math.pi * var)
-        term2 = -0.5 * np.sum((y - mu)**2) / var
-        return term1 + term2
-
-    # Show the log-likelihood
-    @output
-    @render.text
-    def llOutput():
-        ll = log_likelihood()
-        return str(round(ll, 2))
-
-    # Plot the normal PDF and data points
-    @output
-    @render.plot
-    def normalPlot():
-        y = data_vals()
-        mu = input.muInput()
-        var = input.varInput()
-        sigma = math.sqrt(var)
-
-        x_min = min(y) - 3 * sigma
-        x_max = max(y) + 3 * sigma
-        x_vals = np.linspace(x_min, x_max, 200)
-        pdf_vals = (1.0 / (sigma * np.sqrt(2 * math.pi))) * np.exp(
-            -0.5 * ((x_vals - mu) / sigma)**2
-        )
-
-        fig, ax = plt.subplots(figsize=(6, 4))
-        ax.plot(
-            x_vals, pdf_vals,
-            color="blue",
-            label=f"Normal PDF (μ={round(mu,1)}, σ²={round(var,1)})"
-        )
-
-        # Scatter the data at y=0 with some jitter
-        jittered = y + np.random.uniform(-0.1, 0.1, size=len(y))
-        ax.scatter(jittered, np.zeros_like(y), color="darkgreen", alpha=0.7, label="Data points")
-
-        ax.axvline(mu, color="gray", linestyle="--")
-        ax.set_title("Normal PDF vs. Observed Data")
-        ax.set_xlabel("Y")
-        ax.set_ylabel("Density")
-        ax.legend()
-        ax.set_ylim(bottom=0)
-
-        return fig
-
-app = App(app_ui, server)
-```
-
-
-## Old Thoughts
-
-For with priors, consider:
-- Low Dimensional Search (Grid)
-- High Dimensional Search (MCMC)
-
-
-## Probability Distribution or Uncertainty?
-
-While I think a first order understanding of probability distributions should consider them as data generating processes, it turns out that they are conveniently used in another application, which is to simply express uncertainty about a value, or similarly, a prior belief about a value. When conceptualizing them as data generating processes, the variability in the outcome is an inherent part of the data generating process, there is no reason to think that the variability would shrink if we improved our understanding of the process. However, if we conceptualize them as an expression of uncertainty, or a prior belief, about a particular value or parameter, then the variability can shrink, and possibily shrink to a single value, when we gain more knowledge.
-
-The second half of the book we will figure out how to best find the form and parameters (a model) of a data generating process. Often this requires probability distributions used in both contexts, and this is inherently confusing. It is best to think of it this way: 1) There may be a data generating process that is best described by a probability distribution. A perfect understanding of this process will not reduce the variability of its outputs. 2) This data generating probability distribution has parameters, and these parameters, with infinite knowledge, may have exact values. Unfortunately we don't have that knowledge and so we need to conceptualize them as uncertain. However, unlike the data generation of the probability distribution itself which will always be variable even with infinite knowledge, the uncertainty in the parameter values would shrink to a single value with infinite knowledge.
-
-In the following chart we describe a data generating process based on the normal distribution (a data generating distribution) that generates height observations. We may have some uncertainty, however, in the correct values of the mean and variance parameters used in the normal distribution. We can express our uncertainty in the mean and variance parameters by describing them with a Gamma distribution (an uncertainty distribution).
-
-```{mermaid}
-flowchart LR
-    subgraph DGD[Data Generating Distribution]
-        subgraph UD[Uncertainty Distributions]
-            GammaMean[Gamma Distribution]
-            GammaVar[Gamma Distribution]
-        end
-        Mean[Mean]
-        Variance[Variance]
-        GammaMean --> Mean
-        GammaVar --> Variance
-        Mean --> Normal
-        Variance --> Normal
-        Normal[Normal Distribution]
-    end
-    Normal --> Height[Height Observations]
-
-```
-
+There are also many excellent texts in both statistics and machine learning, hopefully with some intuition on the basics, the rationale and math will now be much easier to understand.

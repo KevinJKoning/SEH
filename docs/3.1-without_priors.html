@@ -398,6 +398,7 @@ app = App(app_ui, server)</code></pre>
 <li><p><span class="math inline">\(P(y_i \mid \theta)\)</span> is the probability (or probability density) of the <span class="math inline">\(i\)</span>th data point given the parameters.</p></li>
 <li><p>The product <span class="math inline">\(\prod_{i=1}^{N}\)</span> assumes that the data points are independent. In practice, we often work with the log-likelihood (i.e., sum of log probabilities) for numerical stability.</p></li>
 </ol>
+<p>Alternatively we could also replace <span class="math inline">\(y_i\)</span> with <span class="math inline">\(d_i\)</span> for a single data point: <span class="math inline">\(\mathcal{L}(\theta \mid D) = \prod_{i=1}^{N} P(d_i \mid \theta)\)</span></p>
 <section id="calculating-py_i-mid-theta" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-py_i-mid-theta">Calculating <span class="math inline">\(P(y_i \mid \theta)\)</span></h3>
 <p>Performing the likelihood calculation described above hinges on being able to calculate <span class="math inline">\(P(y_i \mid \theta)\)</span>. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let’s assume we are measuring the reliability of similar manufacturing lines across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.</p>
@@ -1043,7 +1044,7 @@ P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 \]</span></p>
 <p>This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of <span class="math inline">\(\sigma^2\)</span>. We can now find <span class="math inline">\(P(y_i \mid \theta)\)</span> for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>… <span class="math inline">\(\sigma\)</span>).</p>
 <p>A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a ‘sideways’ normal distribution centered (<span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.</p>
-<div id="f97a3848" class="cell" data-execution_count="1">
+<div id="1be359bd" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1321,7 +1322,7 @@ app = App(app_ui, server)</code></pre>
 <section id="motivation-for-bayesian-with-prior-methods" class="level2">
 <h2 class="anchored" data-anchor-id="motivation-for-bayesian-with-prior-methods">Motivation for Bayesian (With Prior) Methods</h2>
 <p>If you’ve followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a separate chapter to this topic which is finding the likelihood of models ‘With Priors’.</p>
-<p>Regardless, we stop a moment to contemplate the need for these <em>Bayesian</em> methods. ‘Priors’ refers to having prior information (or beliefs) about the parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.</p>
+<p>Regardless, we stop a moment to contemplate the need for these <em>Bayesian</em> methods. ‘Priors’ refers to having prior information (or beliefs) about the model’s parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.</p>
 <p>The point we would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibilities <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. A major advantage is the methods to find optimum parameter values end up being <em>extremely general</em>. You can define all sorts of custom models, and modern Bayesian sampling will give you plausible parameter values for your models, including the spread/confidence in those parameter values.</p>
 <p>But again, we wait a chapter.</p>
 </section>
