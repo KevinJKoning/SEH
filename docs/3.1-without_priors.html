@@ -266,7 +266,6 @@ window.Quarto = {
   <li><a href="#comparison-to-likelihood-function" id="toc-comparison-to-likelihood-function" class="nav-link" data-scroll-target="#comparison-to-likelihood-function">Comparison to Likelihood Function</a></li>
   <li><a href="#training-a-simple-neural-network" id="toc-training-a-simple-neural-network" class="nav-link" data-scroll-target="#training-a-simple-neural-network">Training a Simple Neural Network</a></li>
   </ul></li>
-  <li><a href="#graveyard" id="toc-graveyard" class="nav-link" data-scroll-target="#graveyard">Graveyard</a></li>
   </ul>
 </nav>
     </div>
@@ -1023,7 +1022,8 @@ def server(input, output, session):
 
 app = App(app_ui, server)
 </code></pre>
-<p>It’s quite a bit harder to optimize two parameters by hand, but you can always see the Maximium Likelihood Estimate by clicking the ‘MLE’ button. Also, while there are some good reasons in statistical analysis to default to using normal/gaussian distributions, it’s somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling ‘real-world’ problems.</p>
+<p>It’s quite a bit harder to optimize two parameters by hand, but you can always see the Maximium Likelihood Estimate by clicking the ‘MLE’ button. The true distribution from which the data was generated had a mean of 100 and a standard deviation of 10. You may notice that with just 7 data points, the Maximum Likelihood Estimate can vary notably from those values.</p>
+<p>Also, while there are some good reasons in statistical analysis to default to using normal/gaussian distributions, it’s somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling ‘real-world’ problems.</p>
 </section>
 </section>
 <section id="statistical-modelslinear-regression" class="level2">
@@ -1043,7 +1043,7 @@ P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 \]</span></p>
 <p>This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of <span class="math inline">\(\sigma^2\)</span>. We can now find <span class="math inline">\(P(y_i \mid \theta)\)</span> for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>… <span class="math inline">\(\sigma\)</span>).</p>
 <p>A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a ‘sideways’ normal distribution centered (<span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.</p>
-<div id="ddb1b830" class="cell" data-execution_count="1">
+<div id="f97a3848" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1055,6 +1055,16 @@ P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 <section id="maximum-likelihood-with-constant-normal-variance" class="level3">
 <h3 class="anchored" data-anchor-id="maximum-likelihood-with-constant-normal-variance">Maximum Likelihood with Constant Normal Variance</h3>
 <p>We take an unusual detour for the primer and derive the solution for maximizing likelihood with constant normal variance. This is important because of the result, as indicated by the callout at the end of the derivation. Also, rest assured that derivations are not needed to solve practical problems, solutions can be found numerically by just maximizing the results of the raw/original likelihood calculation (like you did in earlier examples).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Sum of Squared Errors Derivation
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>The probability density function (PDF) of a normal distribution is:</p>
 <p><span class="math display">\[
 p(x_i | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\frac{(x_i - \mu)^2}{2\sigma^2} \right)
@@ -1071,6 +1081,8 @@ L(\mu, \sigma^2) = \prod_{i=1}^{n} \frac{1}{\sqrt{2\pi\sigma^2}} \exp \left( -\f
 <p><span class="math display">\[
 \sum_{i=1}^{n} (x_i - \mu)^2
 \]</span></p>
+</div>
+</div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1112,13 +1124,13 @@ app_ui = ui.page_sidebar(
         ),
         ui.input_slider(
             "varInput", "Variance (σ²):",
-            min=0.1, max=10, value=1, step=0.1
+            min=0.01, max=2, value=1, step=0.01
         ),
         ui.input_slider(
             "nInput", "Number of samples:",
             min=5, max=20, value=10, step=1
         ),
-        ui.input_checkbox("showResiduals", "Show residuals as squares", value=False),
+        ui.input_checkbox("showResiduals", "Show residuals as squares", value=True),
         ui.br(),
         ui.row(
             ui.column(
@@ -1254,7 +1266,7 @@ def server(input, output, session):
     def statsOutput():
         ll = log_likelihood()
         sse = sum_squared_errors()
-        return f"Log-Likelihood: {round(ll, 2)}\nSum of Squared Errors: {round(sse, 2)}"
+        return ui.HTML(f"Log-Likelihood: {round(ll, 2)}, and the Sum of Squared Errors: {round(sse, 2)}")
 
     # Plot the data and the regression line
     @output
@@ -1308,14 +1320,26 @@ app = App(app_ui, server)</code></pre>
 </section>
 <section id="motivation-for-bayesian-with-prior-methods" class="level2">
 <h2 class="anchored" data-anchor-id="motivation-for-bayesian-with-prior-methods">Motivation for Bayesian (With Prior) Methods</h2>
-<p>If you’ve followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a seperate chapter to this topic which is finding the likelihood of models ‘With Priors’.</p>
-<p>Regardless, we stop a moment to contemplate the need for these <em>Bayesian</em> methods. ‘Priors’ refers to having prior information (or beliefs) about the parameter values. These are a necessary part of the Bayesian framework. The priors can be vague/non-commital or very specific, depending on the situation. Ultimately priors can be very useful or just invite additional questions on the model accuracy. These points are long discussed in statistical literature.</p>
-<p>The point I would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibility. <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>A major advantage is the method to find optimum parameter values end up being <em>extremely general</em>. You can define all sorts of custom models, and a single Bayesian sampling method will crank through them all no-sweat giving you plausible parameters for your models, including the spread or confidence in those parameter values.</p>
+<p>If you’ve followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a separate chapter to this topic which is finding the likelihood of models ‘With Priors’.</p>
+<p>Regardless, we stop a moment to contemplate the need for these <em>Bayesian</em> methods. ‘Priors’ refers to having prior information (or beliefs) about the parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.</p>
+<p>The point we would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibilities <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. A major advantage is the methods to find optimum parameter values end up being <em>extremely general</em>. You can define all sorts of custom models, and modern Bayesian sampling will give you plausible parameter values for your models, including the spread/confidence in those parameter values.</p>
 <p>But again, we wait a chapter.</p>
 </section>
 <section id="machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This section is incomplete. It’s interesting material, but for the core purpose of the primer, it’s hard to prioritize for a v0 release.</p>
+</div>
+</div>
 <p>We again visit machine learning, but now have additional background/terminology for distinguishing it from the statistical models we’ve otherwise discussed.</p>
 <section id="loss-function" class="level3">
 <h3 class="anchored" data-anchor-id="loss-function">Loss Function</h3>
@@ -1336,11 +1360,11 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 </section>
 <section id="comparison-to-likelihood-function" class="level3">
 <h3 class="anchored" data-anchor-id="comparison-to-likelihood-function">Comparison to Likelihood Function</h3>
-<p>Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).</p>
+<p>Loss functions are more general than the Maximum Likelihood Estimate usually used in statistical models. They may or may not be based on probabilities and may or may not be equivalent to the Maximum Likelihood Estimate.</p>
 </section>
 <section id="training-a-simple-neural-network" class="level3">
 <h3 class="anchored" data-anchor-id="training-a-simple-neural-network">Training a Simple Neural Network</h3>
-<p>In the first half we developed the structure of a neural network and let is generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.</p>
+<p>In the first half we developed the structure of a neural network and let it generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.</p>
 <section id="model-architecture" class="level4">
 <h4 class="anchored" data-anchor-id="model-architecture">Model Architecture</h4>
 <p>The neural network we’ll eventually train in the app further below consists of:</p>
@@ -1350,16 +1374,6 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 <li>Hidden layer 2: <span class="math inline">\(h_2\)</span> neurons (user-configurable)</li>
 <li>Output layer: 1 neuron (predicted price)</li>
 </ul>
-</section>
-<section id="forward-propagation" class="level4">
-<h4 class="anchored" data-anchor-id="forward-propagation">Forward Propagation</h4>
-<p>For an input <span class="math inline">\(\mathbf{x}\)</span>, the network computes:</p>
-<ol type="1">
-<li><p><strong>First Hidden Layer</strong>: <span class="math display">\[\mathbf{Z}^{[1]} = \mathbf{x} \mathbf{W}^{[1]} + \mathbf{b}^{[1]}\]</span> <span class="math display">\[\mathbf{A}^{[1]} = g^{[1]}(\mathbf{Z}^{[1]})\]</span></p></li>
-<li><p><strong>Second Hidden Layer</strong>: <span class="math display">\[\mathbf{Z}^{[2]} = \mathbf{A}^{[1]} \mathbf{W}^{[2]} + \mathbf{b}^{[2]}\]</span> <span class="math display">\[\mathbf{A}^{[2]} = g^{[2]}(\mathbf{Z}^{[2]})\]</span></p></li>
-<li><p><strong>Output Layer</strong>: <span class="math display">\[\mathbf{Z}^{[3]} = \mathbf{A}^{[2]} \mathbf{W}^{[3]} + \mathbf{b}^{[3]}\]</span> <span class="math display">\[\hat{\mathbf{y}} = \mathbf{Z}^{[3]}\]</span></p></li>
-</ol>
-<p>Where: - <span class="math inline">\(\mathbf{W}^{[l]}\)</span> is the weight matrix for layer <span class="math inline">\(l\)</span> - <span class="math inline">\(\mathbf{b}^{[l]}\)</span> is the bias vector for layer <span class="math inline">\(l\)</span> - <span class="math inline">\(g^{[l]}\)</span> is the activation function (ReLU or Logistic) - <span class="math inline">\(\hat{\mathbf{y}}\)</span> is the predicted output</p>
 </section>
 <section id="loss-function-1" class="level4">
 <h4 class="anchored" data-anchor-id="loss-function-1">Loss Function</h4>
@@ -1375,16 +1389,6 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 <p><span class="math display">\[\mathbf{W}^{[l]} = \mathbf{W}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{[l]}}\]</span> <span class="math display">\[\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{[l]}}\]</span></p>
 <p>Where <span class="math inline">\(\alpha\)</span> is the learning rate (fixed at 0.01 in our implementation).</p>
 </section>
-<section id="backpropagation" class="level5">
-<h5 class="anchored" data-anchor-id="backpropagation">Backpropagation</h5>
-<p>The gradients are computed using backpropagation:</p>
-<ol type="1">
-<li><p><strong>Output Layer</strong>: <span class="math display">\[d\mathbf{Z}^{[3]} = \frac{2}{m}(\hat{\mathbf{y}} - \mathbf{y})\]</span> <span class="math display">\[d\mathbf{W}^{[3]} = (\mathbf{A}^{[2]})^T d\mathbf{Z}^{[3]}\]</span> <span class="math display">\[d\mathbf{b}^{[3]} = \sum_{i=1}^{m} d\mathbf{Z}^{[3]}_i\]</span></p></li>
-<li><p><strong>Hidden Layer 2</strong>: <span class="math display">\[d\mathbf{A}^{[2]} = d\mathbf{Z}^{[3]} (\mathbf{W}^{[3]})^T\]</span> <span class="math display">\[d\mathbf{Z}^{[2]} = d\mathbf{A}^{[2]} \odot g^{[2]\prime}(\mathbf{Z}^{[2]})\]</span> <span class="math display">\[d\mathbf{W}^{[2]} = (\mathbf{A}^{[1]})^T d\mathbf{Z}^{[2]}\]</span> <span class="math display">\[d\mathbf{b}^{[2]} = \sum_{i=1}^{m} d\mathbf{Z}^{[2]}_i\]</span></p></li>
-<li><p><strong>Hidden Layer 1</strong>: <span class="math display">\[d\mathbf{A}^{[1]} = d\mathbf{Z}^{[2]} (\mathbf{W}^{[2]})^T\]</span> <span class="math display">\[d\mathbf{Z}^{[1]} = d\mathbf{A}^{[1]} \odot g^{[1]\prime}(\mathbf{Z}^{[1]})\]</span> <span class="math display">\[d\mathbf{W}^{[1]} = \mathbf{X}^T d\mathbf{Z}^{[1]}\]</span> <span class="math display">\[d\mathbf{b}^{[1]} = \sum_{i=1}^{m} d\mathbf{Z}^{[1]}_i\]</span></p></li>
-</ol>
-<p>Where: - <span class="math inline">\(\odot\)</span> represents element-wise multiplication - <span class="math inline">\(g^{[l]\prime}\)</span> is the derivative of the activation function</p>
-</section>
 <section id="activation-function-derivatives" class="level5">
 <h5 class="anchored" data-anchor-id="activation-function-derivatives">Activation Function Derivatives</h5>
 <ol type="1">
@@ -1399,7 +1403,7 @@ L(y, \hat{y}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
 </section>
 <section id="initialization-strategy" class="level4">
 <h4 class="anchored" data-anchor-id="initialization-strategy">Initialization Strategy</h4>
-<p>The weights are initialized using He initialization for ReLU or standard normal scaled by the square root of layer size:</p>
+<p>The weights are initialized using the initialization for ReLU or standard normal scaled by the square root of layer size:</p>
 <p><span class="math display">\[\mathbf{W}^{[l]} \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n^{[l-1]}}}\right)\]</span></p>
 <p>Where <span class="math inline">\(n^{[l-1]}\)</span> is the number of neurons in the previous layer.</p>
 </section>
@@ -2107,35 +2111,10 @@ def server(input, output, session):
 
 app = App(app_ui, server)</code></pre>
 <p>In training a ‘standard’ neural network, we hope to obtain a point estimate of the parameter values that will have the most accuracy in predicting data.</p>
-</section>
-</section>
-</section>
-<section id="graveyard" class="level2">
-<h2 class="anchored" data-anchor-id="graveyard">Graveyard</h2>
-<p>This is not useable but should find more areas for these kinds of callouts:</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Loss Functions
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Likelihood is a specific form of a <strong>loss function</strong>. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:</p>
-<p><span class="math display">\[
-\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
-\]</span></p>
-<ol type="1">
-<li><p><span class="math inline">\(\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})\)</span>: This represents the overall loss function, which measures the difference between the true values <span class="math inline">\(\mathbf{y}\)</span> and the predicted values <span class="math inline">\(\hat{\mathbf{y}}\)</span>. It aggregates the individual losses across all data points.</p></li>
-<li><p><span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span>: This is the individual loss for a single data point <span class="math inline">\(i\)</span>. It can take different forms depending on the type of problem.</p></li>
-<li><p><span class="math inline">\(\frac{1}{N} \sum_{i=1}^{N}\)</span>: This is the averaging operation, which sums up the individual losses <span class="math inline">\(\ell(y_i, \hat{y}_i)\)</span> across all <span class="math inline">\(N\)</span> data points in the dataset and divides by <span class="math inline">\(N\)</span> to compute the average loss. This helps ensure that the loss function is independent of the dataset size.</p></li>
-</ol>
-</div>
-</div>
 
 
+</section>
+</section>
 </section>
 
 

@@ -12,7 +12,7 @@ execute:
 
 ::: {.callout-warning}
 ## Warning
-This chapter is still rough. It's interesting material, but for the core purpose of the primer, it's hard to prioritize for a v0 release.
+This chapter is incomplete. It's interesting material, but for the core purpose of the primer, it's hard to prioritize for a v0 release.
 :::
 
 ## Preview
