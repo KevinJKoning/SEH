@@ -252,11 +252,10 @@ window.Quarto = {
   </ul></li>
   <li><a href="#methods-for-estimating-the-posterior-distribution" id="toc-methods-for-estimating-the-posterior-distribution" class="nav-link" data-scroll-target="#methods-for-estimating-the-posterior-distribution">Methods for Estimating the Posterior Distribution</a>
   <ul class="collapse">
-  <li><a href="#low-dimensional-search-grid" id="toc-low-dimensional-search-grid" class="nav-link" data-scroll-target="#low-dimensional-search-grid">Low Dimensional Search (Grid)</a></li>
+  <li><a href="#low-dimensional-search-grid-search" id="toc-low-dimensional-search-grid-search" class="nav-link" data-scroll-target="#low-dimensional-search-grid-search">Low Dimensional Search / Grid Search</a></li>
   <li><a href="#high-dimensional-search" id="toc-high-dimensional-search" class="nav-link" data-scroll-target="#high-dimensional-search">High Dimensional Search</a></li>
   <li><a href="#maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" id="toc-maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" class="nav-link" data-scroll-target="#maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map">Maximum Likelihood Estimation (MLE) vs.&nbsp;Maximum A Posteriori (MAP)</a></li>
   </ul></li>
-  <li><a href="#parameter-finding-app" id="toc-parameter-finding-app" class="nav-link" data-scroll-target="#parameter-finding-app">Parameter Finding App</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
@@ -856,14 +855,14 @@ P(\theta | D) \propto P(D | \theta) P(\theta)
 <section id="methods-for-estimating-the-posterior-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="methods-for-estimating-the-posterior-distribution">Methods for Estimating the Posterior Distribution</h2>
 <p>Estimating the posterior distribution of Bayesian model parameters can have similarities to Maximum Likelihood Estimates (MLE), but we will need to keep in mind a Bayesian posterior is a distribution, not a point estimate.</p>
-<section id="low-dimensional-search-grid" class="level3">
-<h3 class="anchored" data-anchor-id="low-dimensional-search-grid">Low Dimensional Search (Grid)</h3>
-<p>Just like we did in the previous chapter on <span class="math inline">\(\mathcal{L}(M|D)\)</span> without priors, we can find parameter values with grid search. However, we should acknowledge two major differences:</p>
+<section id="low-dimensional-search-grid-search" class="level3">
+<h3 class="anchored" data-anchor-id="low-dimensional-search-grid-search">Low Dimensional Search / Grid Search</h3>
+<p>Just like we did in the previous chapter on <span class="math inline">\(\mathcal{L}(M|D)\)</span> without priors, we can find parameter values with grid search. However, we should acknowledge some major differences:</p>
 <ol type="1">
-<li>Previously we did grid search to find the parameter with the maximum likelihood. Now we do grid search to find the distribution of likelihoods for the parameter <span class="math inline">\((P(D)\)</span>. The results will include a maximum likelihood value of the parameter, but also other lower likelihood values of the parameter.</li>
+<li>Previously we did grid search to find the single parameter value with the maximum likelihood. Now we do grid search to find the posterior distribution for the parameter. (Effectively we keep <em>all</em> the results, not just the maximum result).</li>
 <li>We multiply the values found in the grid search by our prior belief in the parameter values (<span class="math inline">\(P(\theta)\)</span>). If we do not have a strong prior belief, we can choose values that have little to no effect.</li>
+<li>We will need to normalize the resulting probability distribution for the parameter, since the total probabilities need to sum to one.</li>
 </ol>
-<p><strong>NOTE TO SELF, NEED TO UNIFY THE LIKELIHOOD AND PROB NOTATION</strong></p>
 </section>
 <section id="high-dimensional-search" class="level3">
 <h3 class="anchored" data-anchor-id="high-dimensional-search">High Dimensional Search</h3>
@@ -871,12 +870,13 @@ P(\theta | D) \propto P(D | \theta) P(\theta)
 <p>There’s a major problem, however, with using Gradient Ascent in Bayesian analysis - we do not want to find just the most likely value of the parameter - we want to find the correct probability distribution for the parameter (the likelihood of any value the parameter could take).</p>
 <section id="markov-chain-monte-carlo-mcmc" class="level4">
 <h4 class="anchored" data-anchor-id="markov-chain-monte-carlo-mcmc">Markov Chain Monte Carlo (MCMC)</h4>
-<p>The solution to this is to use random sampling methods, such that we search through the possible combinations of the parameters and see how likely they are. As the algorithm starts, we can think of it a little like grid search - we check some combination of parameters and calculate a likelihood for those parameters based on how well they fit the data. The problem is that in high dimensional space, the extreme majority of the parameter combinations will have virtually zero likelihood. (Picture a model with random parameter values generating data that isn’t even close to what we observe).</p>
+<p>The gold standard solution to this problem is to use random sampling methods, such that we search through the possible combinations of the parameters and see how likely they are. As the algorithm starts, we can think of it a little like grid search - we check some combination of parameters and calculate a likelihood for those parameters based on how well they fit the data. The problem is that in high dimensional space, the extreme majority of the parameter combinations will have virtually zero likelihood. (Picture a model with random parameter values generating data that isn’t even close to what we observe).</p>
 <p>To solve the problem of constantly testing parameters that have virtually zero likelihood, modern sampling algorithms know to head towards areas of higher likelihood. However, importantly they do not simply head towards the peak like they would in Gradient Ascent - instead they strategically wander around the edges and peaks of the high likelihood space, mapping out those regions like a cartographer mapping a mountain ridge with points from a transit.</p>
+<p>These solutions are called <strong>Markov Chain</strong> since after they move to a new point, they don’t need to remember anything about all the previous points they visited. The name <strong>Monte Carlo</strong> refers to random methods with a tip of the hat to the Monte Carlo Casino in Monaco.</p>
 </section>
 <section id="variational-inference-vi" class="level4">
 <h4 class="anchored" data-anchor-id="variational-inference-vi">Variational Inference (VI)</h4>
-<p>Hamiltonian Monte Carlo based methods such as the No U-Turn Sampler (NUTS) are the gold standard, but there’s a major disadvantage - they are slow. And to make that clearer - even on modern computers they are slow. One option to speed things up is to make the problem more like the gradient ascent described in the previous chapter. This may assume that the posterior distribution can be described by a multi-variate gaussian (a multi-dimensionsal normal distribution), which means if you can approximate its mean and variance you’re done. This is a lot faster than describing the shape with thousands of individual points. There’s a major drawback however, which is the same as we’ve tried to warn about elsewhere, that not everything is in the shape of the normal distribution.</p>
+<p>Markov Chain Monte Carlo based methods such as the Hamiltonian No U-Turn Sampler (NUTS) are the gold standard, but there’s a major disadvantage - they are slow. And to make that clearer - even on modern computers they are slow. One option to speed things up is to make the problem more like the gradient ascent described in the previous chapter. This may assume that the posterior distribution can be described by a multi-variate gaussian (a multi-dimensionsal normal distribution), which means if you can approximate its mean and variance - you’re done. This is a lot faster than describing the shape with thousands of individual points. There’s a major drawback however, which is the same as we’ve tried to warn about elsewhere, that not everything is in the shape of the normal distribution.</p>
 </section>
 </section>
 <section id="maximum-likelihood-estimation-mle-vs.-maximum-a-posteriori-map" class="level3">
@@ -894,153 +894,8 @@ P(\theta | D) = \frac{P(D | \theta) P(\theta)}{P(D)}
 <p><span class="math display">\[
 \theta_{MAP} = \arg\max_{\theta} P(D | \theta) P(\theta)
 \]</span></p>
-<p>This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only P(D | ).</p>
+<p>This contrasts with Maximum Likelihood Estimation (MLE), which maximizes only <span class="math inline">\(P(D | \theta)\)</span>.</p>
 </section>
-</section>
-<section id="parameter-finding-app" class="level2">
-<h2 class="anchored" data-anchor-id="parameter-finding-app">Parameter Finding App</h2>
-<p>To get a feel for what it’s like to search the parameter space for parameter combinations with a high likelihood, play around with the app below.</p>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 750
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import matplotlib.pyplot as plt
-
-app_ui = ui.page_fluid(
-    ui.h2("Parameter Estimation"),
-    ui.row(
-        ui.column(3, 
-            ui.input_select("search_method", "Search Method:", 
-                choices=["Grid Search", "Likelihood Search"], selected="Grid Search"),
-            ui.input_select("num_samples", "Number of Samples:", 
-                choices=["10", "100", "1000"], selected="100"),
-            ui.input_action_button("generate", "Generate Samples", class_="btn-primary"),
-            ui.p(""),
-            ui.input_checkbox("show_samples", "Show sample points", value=True)
-        ),
-        ui.column(9,
-            ui.output_plot("likelihoodPlot", height="500px")
-        )
-    )
-)
-
-def server(input, output, session):
-    # Store the current samples
-    samples = reactive.Value(None)
-    
-    @reactive.effect
-    @reactive.event(input.generate)
-    def handle_generate():
-        try:
-            n = int(input.num_samples())
-            search_method = input.search_method()
-            
-            # True parameters
-            true_x, true_y = 0.6, 0.4
-            
-            if search_method == "Grid Search":
-                # Create evenly spaced grid
-                grid_size = int(np.sqrt(n))
-                x_grid = np.linspace(0, 1, grid_size)
-                y_grid = np.linspace(0, 1, grid_size)
-                X, Y = np.meshgrid(x_grid, y_grid)
-                theta1 = X.flatten()[:n]  # Ensure exactly n samples
-                theta2 = Y.flatten()[:n]
-                
-                # Add small noise to make it look more realistic
-                theta1 += 0.01 * np.random.randn(len(theta1))
-                theta2 += 0.01 * np.random.randn(len(theta2))
-                
-                # Ensure values stay within bounds
-                theta1 = np.clip(theta1, 0, 1)
-                theta2 = np.clip(theta2, 0, 1)
-                
-            else:  # Likelihood Search
-                # First, generate random samples across the parameter space
-                theta1_initial = np.random.uniform(0, 1, n*2)  # Generate extra samples
-                theta2_initial = np.random.uniform(0, 1, n*2)
-                
-                # Calculate likelihood based on distance from true parameters
-                # (simulate a likelihood function with a peak at true parameters)
-                likelihoods = np.exp(-10 * ((theta1_initial - true_x)**2 + (theta2_initial - true_y)**2))
-                
-                # Sample from these points with probability proportional to likelihood
-                selection_probs = likelihoods / np.sum(likelihoods)
-                selected_indices = np.random.choice(len(theta1_initial), size=n, p=selection_probs, replace=False)
-                
-                theta1 = theta1_initial[selected_indices]
-                theta2 = theta2_initial[selected_indices]
-            
-            samples.set((theta1, theta2))
-        except Exception as e:
-            print(f"Error generating samples: {e}")
-            samples.set(None)
-
-    @output
-    @render.plot
-    def likelihoodPlot():
-        # Create basic plot
-        fig, ax = plt.subplots(figsize=(8, 6))
-        
-        # Get current samples
-        current_samples = samples.get()
-        
-        if current_samples is None:
-            ax.text(0.5, 0.5, "Click 'Generate Samples' to create data", 
-                   ha='center', va='center', fontsize=14)
-            ax.set_xlim(0, 1)
-            ax.set_ylim(0, 1)
-            return fig
-        
-        theta1, theta2 = current_samples
-        n = len(theta1)
-        
-        try:
-            # Create a 2D histogram
-            H, xedges, yedges = np.histogram2d(
-                theta1, theta2, 
-                bins=20, 
-                range=[[0, 1], [0, 1]]
-            )
-            
-            # Use pcolormesh for better rendering
-            pcm = ax.pcolormesh(xedges, yedges, H.T, cmap='viridis')
-            
-            # Add colorbar
-            plt.colorbar(pcm, ax=ax, label='Count')
-            
-            # Plot the samples if requested
-            if input.show_samples():
-                ax.scatter(theta1, theta2, s=5, color='red', alpha=0.3, label=f'Samples (n={n})')
-            
-            # Mark true parameters
-            ax.plot(0.6, 0.4, 'y*', markersize=15, markeredgecolor='black', label='True parameters')
-            
-            # Labels and layout
-            ax.set_xlabel('Parameter θ₁')
-            ax.set_ylabel('Parameter θ₂')
-            
-            search_method = input.search_method().split()[0]
-            ax.set_title(f'Parameter Estimation using {search_method} ({n} samples)')
-            
-            ax.set_xlim(0, 1)
-            ax.set_ylim(0, 1)
-            ax.legend(loc='upper right')
-            
-        except Exception as e:
-            print(f"Error plotting: {e}")
-            ax.text(0.5, 0.5, f"Error creating plot: {str(e)}", 
-                   ha='center', va='center', fontsize=12)
-            ax.set_xlim(0, 1)
-            ax.set_ylim(0, 1)
-        
-        return fig
-
-app = App(app_ui, server)</code></pre>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
