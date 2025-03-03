@@ -744,7 +744,9 @@ app = App(app_ui, server)
 
 ```
 
-It's quite a bit harder to optimize two parameters by hand, but you can always see the Maximium Likelihood Estimate by clicking the 'MLE' button. Also, while there are some good reasons in statistical analysis to default to using normal/gaussian distributions, it's somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling 'real-world' problems.
+It's quite a bit harder to optimize two parameters by hand, but you can always see the Maximium Likelihood Estimate by clicking the 'MLE' button. The true distribution from which the data was generated had a mean of 100 and a standard deviation of 10. You may notice that with just 7 data points, the Maximum Likelihood Estimate can vary notably from those values.
+
+ Also, while there are some good reasons in statistical analysis to default to using normal/gaussian distributions, it's somewhat dangerous to the extent it has implicitly permeated many analyses. Please just keep this in mind when tackling 'real-world' problems.
 
 ## Statistical Models/Linear Regression
 
@@ -866,6 +868,8 @@ plt.show()
 
 We take an unusual detour for the primer and derive the solution for maximizing likelihood with constant normal variance. This is important because of the result, as indicated by the callout at the end of the derivation. Also, rest assured that derivations are not needed to solve practical problems, solutions can be found numerically by just  maximizing the results of the raw/original likelihood calculation (like you did in earlier examples).
 
+::: callout-note
+### Sum of Squared Errors Derivation
 The probability density function (PDF) of a normal distribution is:
 
 $$
@@ -889,6 +893,7 @@ If we assume constant variance the first term,  $-\frac{n}{2} \log (2\pi\sigma^2
 $$
 \sum_{i=1}^{n} (x_i - \mu)^2
 $$
+:::
 
 ::: {.callout-important}
 It is very common to see optimizations that minimize the squared error. You should recognize that this is implicitly assuming that the errors are normally distributed.
@@ -921,13 +926,13 @@ app_ui = ui.page_sidebar(
         ),
         ui.input_slider(
             "varInput", "Variance (σ²):",
-            min=0.1, max=10, value=1, step=0.1
+            min=0.01, max=2, value=1, step=0.01
         ),
         ui.input_slider(
             "nInput", "Number of samples:",
             min=5, max=20, value=10, step=1
         ),
-        ui.input_checkbox("showResiduals", "Show residuals as squares", value=False),
+        ui.input_checkbox("showResiduals", "Show residuals as squares", value=True),
         ui.br(),
         ui.row(
             ui.column(
@@ -1063,7 +1068,7 @@ def server(input, output, session):
     def statsOutput():
         ll = log_likelihood()
         sse = sum_squared_errors()
-        return f"Log-Likelihood: {round(ll, 2)}\nSum of Squared Errors: {round(sse, 2)}"
+        return ui.HTML(f"Log-Likelihood: {round(ll, 2)}, and the Sum of Squared Errors: {round(sse, 2)}")
 
     # Plot the data and the regression line
     @output
@@ -1116,19 +1121,22 @@ app = App(app_ui, server)
 
 ## Motivation for Bayesian (With Prior) Methods
 
-If you've followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a seperate chapter to this topic which is finding the likelihood of models 'With Priors'.
+If you've followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a separate chapter to this topic which is finding the likelihood of models 'With Priors'.
 
-Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the parameter values. These are a necessary part of the Bayesian framework. The priors can be vague/non-commital or very specific, depending on the situation. Ultimately priors can be very useful or just invite additional questions on the model accuracy. These points are long discussed in statistical literature.
+Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.
 
-The point I would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibility. [^1]
-
-[^1]: From the Frequentist viewpoint you can also calculate uncertainty in the models parameter values - however the assumption is that a single model with a single set of parameters creates the data. The uncertainty in the parameter values stems from the fact that the model generated data randomly, and we have only a limited number of samples with which we 'backcalculate' the parameters.
-
-A major advantage is the method to find optimum parameter values end up being *extremely general*. You can define all sorts of custom models, and a single Bayesian sampling method will crank through them all no-sweat giving you plausible parameters for your models, including the spread or confidence in those parameter values.
+The point we would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibilities [^1]. A major advantage is the methods to find optimum parameter values end up being *extremely general*. You can define all sorts of custom models, and modern Bayesian sampling will give you plausible parameter values for your models, including the spread/confidence in those parameter values.
 
 But again, we wait a chapter.
 
+[^1]: From the Frequentist viewpoint you can also calculate uncertainty in the models parameter values - however the assumption is that a single model with a single set of parameters creates the data. The uncertainty in the parameter values stems from the fact that the model generated data randomly, and we have only a limited number of samples with which we 'backcalculate' the parameters.
+
 ## Machine Learning
+
+::: {.callout-warning}
+## Warning
+This section is incomplete. It's interesting material, but for the core purpose of the primer, it's hard to prioritize for a v0 release.
+:::
 
 We again visit machine learning, but now have additional background/terminology for distinguishing it from the statistical models we've otherwise discussed.
 
@@ -1151,11 +1159,11 @@ The function $\ell(y_i, \hat{y}_i)$ depends on the task.
 
 ### Comparison to Likelihood Function
 
-Likelihood functions are always based in probability/statistical theory (loss functions may or may not be). We use likelihood to find the best statistical model, specifically by finding the Maximum Likelihood Estimate (MLE).
+Loss functions are more general than the Maximum Likelihood Estimate usually used in statistical models. They may or may not be based on probabilities and may or may not be equivalent to the Maximum Likelihood Estimate.
 
 ### Training a Simple Neural Network
 
-In the first half we developed the structure of a neural network and let is generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.
+In the first half we developed the structure of a neural network and let it generate data, but we did not train it. Training a neural network, is unfortunately, probably the hardest part of the whole package.
 
 #### Model Architecture
 
@@ -1165,28 +1173,6 @@ The neural network we'll eventually train in the app further below consists of:
 - Hidden layer 1: $h_1$ neurons (user-configurable)
 - Hidden layer 2: $h_2$ neurons (user-configurable)
 - Output layer: 1 neuron (predicted price)
-
-#### Forward Propagation
-
-For an input $\mathbf{x}$, the network computes:
-
-1. **First Hidden Layer**:
-   $$\mathbf{Z}^{[1]} = \mathbf{x} \mathbf{W}^{[1]} + \mathbf{b}^{[1]}$$
-   $$\mathbf{A}^{[1]} = g^{[1]}(\mathbf{Z}^{[1]})$$
-
-2. **Second Hidden Layer**:
-   $$\mathbf{Z}^{[2]} = \mathbf{A}^{[1]} \mathbf{W}^{[2]} + \mathbf{b}^{[2]}$$
-   $$\mathbf{A}^{[2]} = g^{[2]}(\mathbf{Z}^{[2]})$$
-
-3. **Output Layer**:
-   $$\mathbf{Z}^{[3]} = \mathbf{A}^{[2]} \mathbf{W}^{[3]} + \mathbf{b}^{[3]}$$
-   $$\hat{\mathbf{y}} = \mathbf{Z}^{[3]}$$
-
-Where:
-- $\mathbf{W}^{[l]}$ is the weight matrix for layer $l$
-- $\mathbf{b}^{[l]}$ is the bias vector for layer $l$
-- $g^{[l]}$ is the activation function (ReLU or Logistic)
-- $\hat{\mathbf{y}}$ is the predicted output
 
 #### Loss Function
 
@@ -1210,31 +1196,6 @@ $$\mathbf{b}^{[l]} = \mathbf{b}^{[l]} - \alpha \frac{\partial \mathcal{L}}{\part
 
 Where $\alpha$ is the learning rate (fixed at 0.01 in our implementation).
 
-##### Backpropagation
-
-The gradients are computed using backpropagation:
-
-1. **Output Layer**:
-   $$d\mathbf{Z}^{[3]} = \frac{2}{m}(\hat{\mathbf{y}} - \mathbf{y})$$
-   $$d\mathbf{W}^{[3]} = (\mathbf{A}^{[2]})^T d\mathbf{Z}^{[3]}$$
-   $$d\mathbf{b}^{[3]} = \sum_{i=1}^{m} d\mathbf{Z}^{[3]}_i$$
-
-2. **Hidden Layer 2**:
-   $$d\mathbf{A}^{[2]} = d\mathbf{Z}^{[3]} (\mathbf{W}^{[3]})^T$$
-   $$d\mathbf{Z}^{[2]} = d\mathbf{A}^{[2]} \odot g^{[2]\prime}(\mathbf{Z}^{[2]})$$
-   $$d\mathbf{W}^{[2]} = (\mathbf{A}^{[1]})^T d\mathbf{Z}^{[2]}$$
-   $$d\mathbf{b}^{[2]} = \sum_{i=1}^{m} d\mathbf{Z}^{[2]}_i$$
-
-3. **Hidden Layer 1**:
-   $$d\mathbf{A}^{[1]} = d\mathbf{Z}^{[2]} (\mathbf{W}^{[2]})^T$$
-   $$d\mathbf{Z}^{[1]} = d\mathbf{A}^{[1]} \odot g^{[1]\prime}(\mathbf{Z}^{[1]})$$
-   $$d\mathbf{W}^{[1]} = \mathbf{X}^T d\mathbf{Z}^{[1]}$$
-   $$d\mathbf{b}^{[1]} = \sum_{i=1}^{m} d\mathbf{Z}^{[1]}_i$$
-
-Where:
-- $\odot$ represents element-wise multiplication
-- $g^{[l]\prime}$ is the derivative of the activation function
-
 ##### Activation Function Derivatives
 
 1. **ReLU Derivative**:
@@ -1250,7 +1211,7 @@ Where:
 
 #### Initialization Strategy
 
-The weights are initialized using He initialization for ReLU or standard normal scaled by the square root of layer size:
+The weights are initialized using the initialization for ReLU or standard normal scaled by the square root of layer size:
 
 $$\mathbf{W}^{[l]} \sim \mathcal{N}\left(0, \sqrt{\frac{2}{n^{[l-1]}}}\right)$$
 
@@ -1960,24 +1921,3 @@ app = App(app_ui, server)
 ```
 
 In training a 'standard' neural network, we hope to obtain a point estimate of the parameter values that will have the most accuracy in predicting data.
-
-
-## Graveyard
-
-This is not useable but should find more areas for these kinds of callouts:
-
-::: callout-note
-## Loss Functions
-
-Likelihood is a specific form of a **loss function**. Likelihood is rooted in probability, but a loss function does not need to be. Loss functions in machine learning are what likelihood functions are in statistics. In generic form they look like this:
-
-$$
-\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}}) = \frac{1}{N} \sum_{i=1}^{N} \ell(y_i, \hat{y}_i)
-$$
-
-1.  $\mathcal{L}(\mathbf{y}, \hat{\mathbf{y}})$: This represents the overall loss function, which measures the difference between the true values $\mathbf{y}$ and the predicted values $\hat{\mathbf{y}}$. It aggregates the individual losses across all data points.
-
-2.  $\ell(y_i, \hat{y}_i)$: This is the individual loss for a single data point $i$. It can take different forms depending on the type of problem. 
-
-3.  $\frac{1}{N} \sum_{i=1}^{N}$: This is the averaging operation, which sums up the individual losses $\ell(y_i, \hat{y}_i)$ across all $N$ data points in the dataset and divides by $N$ to compute the average loss. This helps ensure that the loss function is independent of the dataset size.
-:::
