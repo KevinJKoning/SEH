@@ -119,6 +119,8 @@ $$
 
 3. The product $\prod_{i=1}^{N}$ assumes that the data points are independent. In practice, we often work with the log-likelihood (i.e., sum of log probabilities) for numerical stability.
 
+Alternatively we could also replace $y_i$ with $d_i$ for a single data point: $\mathcal{L}(\theta \mid D) = \prod_{i=1}^{N} P(d_i \mid \theta)$
+
 ### Calculating $P(y_i \mid \theta)$
 
 Performing the likelihood calculation described above hinges on being able to calculate $P(y_i \mid \theta)$. To start, we assume we are using a model of a data generating process where the model is just a named parametric probability distribution. To have an example, let's assume we are measuring the reliability of similar manufacturing lines across several different plants. Over the course of a year, there are a wide variety of unplanned shutdowns, with Line A having 7, Line B having 0, Line C having 2, etc. Across all the plants we want to know the most likely value for the rate of unplanned shutdowns, assuming our data follows a Poisson distribution.
@@ -1123,7 +1125,7 @@ app = App(app_ui, server)
 
 If you've followed the general development of topics from the first half of the primer, this is where the discussion on Bayesian models slots in. We have, however, dedicated a separate chapter to this topic which is finding the likelihood of models 'With Priors'.
 
-Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.
+Regardless, we stop a moment to contemplate the need for these *Bayesian* methods. 'Priors' refers to having prior information (or beliefs) about the model's parameter values. This can be very useful, especially if you understand the data generating process but have not been able to collect a large amount of data. They can be controversial, however, if not well defended. These points are long discussed in statistical literature.
 
 The point we would like to make here is that once you get past some reasonable starting point for the prior parameter values, you open up an extremely attractive computational framework. In this framework the model parameter values are sampled probabilistically - you do not simply find a single most likely value at the top of the hill - you find a range of parameter values with different plausibilities [^1]. A major advantage is the methods to find optimum parameter values end up being *extremely general*. You can define all sorts of custom models, and modern Bayesian sampling will give you plausible parameter values for your models, including the spread/confidence in those parameter values.
 
