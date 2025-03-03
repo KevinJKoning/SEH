@@ -254,8 +254,8 @@ Here's the process summarized as a diagram:
 
 ```{mermaid}
 graph LR
-    subgraph "Parameter Uncertainty"
-        subgraph "Distribution Parameters"
+    subgraph "Draw of Parameter P"
+        subgraph "Uncertainty in P"
             mean[Mean]
             var[Variance]
             mean --> dist
