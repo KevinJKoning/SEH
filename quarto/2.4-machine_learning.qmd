@@ -10,6 +10,11 @@ execute:
   echo: false
 ---
 
+::: {.callout-warning}
+## Warning
+This chapter is still rough. It's interesting material, but for the core purpose of the primer, it's hard to prioritize for a v0 release.
+:::
+
 ## Preview
 
 Due to popular demand, we move on from traditional statistical models to those considered *machine learning*. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e. probabilistic) interpretation.
@@ -1255,7 +1260,7 @@ A statistical model is built on probability distributions and can typically gene
 
 ### Likelihood vs Loss Function
 
-Although these topics are effectively left for the second half of the primer, we'll mention the following as it is an importance difference: 
+Although these topics are effectively left for the second half of the primer, we'll mention the following as it is an important difference: 
 
 -   Statistical model parameters are optimized via a likelihood function based in probability theory
 -   Machine learning model parameters are optimized using an objective/**loss function**
@@ -1266,24 +1271,9 @@ The confusing thing is that machine learning may have loss functions that use li
 
 There are other common differences that are even more blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e. more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.
 
-## \[Bayesian\] Neural Nets
+## Neural Nets
 
-There are many machine learning models we could focus on, however, we'll choose Neural Nets, culminating in Bayesian Neural Nets for a few reasons:
-
-A)  They can make probabilistic predictions just like our statistical models
-B)  We have already learned the basic building blocks
-C)  \[Standard\] Neural nets are the basis of modern AI, a fundamental technology
-
-Comprehending Bayesian Neural Nets from scratch is a loftly goal, so we will tackle it by building up our understanding gradually:
-
-1)  We develop the activation of a single neuron and it's relation to logistic regression
-2)  We develop a basic neural net structure
-2)  We develop how the neuron activations propogate through the network
-3)  We use the 'standard' neural net but add an output to let it determine the variance in the data
-4)  We use ensembles of the neural nets that can estimate variance
-5)  We use a Bayesian Neural Net that has a full posterior distribution of the weights
-
-We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer.
+There are many machine learning models we could focus on, however, we'll choose Neural Nets, culminating in Bayesian Neural Nets...
 
 ## Single Neuron
 
@@ -1551,7 +1541,9 @@ $$
 
 While the structure of a neural net influences the types of problems it is most appropriate for, the knowledge of the neural net is held in the weights and biases. Determining the weights of a neural network is generally accomplished by training on data via backpropogation, for which numerous resources are available elsewhere. Here, we will jump past the details of that step so that we can proceed with a reasonably trained neural net.
 
-## Mermaid Rendered in Shiny
+## Draft Apps
+
+### Shiny Mermaid
 
 ```{shinylive-python}
 #| standalone: true
@@ -1651,7 +1643,7 @@ app = App(app_ui, server)
 
 ```
 
-## Mermaid Rendered in Shiny with Controls
+### Mermaid Rendered in Shiny with Controls
 
 ```{shinylive-python}
 #| standalone: true
@@ -1765,12 +1757,7 @@ graph LR
 app = App(app_ui, server)
 ```
 
-
-## Bayesian Neural Network (Simplified Implementation)
-
-The difference between a 'standard' neural network and a Bayesian one is that the Bayesian neural network will have uncertainty associated with the parameter values. (It could also have meaningful prior values for the parameters, but this is generally not relevant when training a new model). Here we will assume this uncertainty follows a normal/gaussian distribution. This uncertainty is key to making this method statistical/probabilistic - otherwise an input will always produce the same output. If the structure of the neural net is appropriate for the model and it has been well trained, a Bayesian neural network should mimic the variation/uncertainty in the outputs.
-
-### More control on noise
+### Bayesian Attempt
 
 ```{shinylive-python}
 #| standalone: true

@@ -239,14 +239,17 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link active" data-scroll-target="#preview">Preview</a>
+  <ul class="collapse">
+  <li><a href="#interactive-neural-network-visualization" id="toc-interactive-neural-network-visualization" class="nav-link" data-scroll-target="#interactive-neural-network-visualization">Interactive Neural Network Visualization</a></li>
+  </ul></li>
   <li><a href="#statistical-models-vs.-machine-learning-models" id="toc-statistical-models-vs.-machine-learning-models" class="nav-link" data-scroll-target="#statistical-models-vs.-machine-learning-models">Statistical Models vs.&nbsp;Machine Learning Models</a>
   <ul class="collapse">
   <li><a href="#probabilistic-vs-deterministic-outputs" id="toc-probabilistic-vs-deterministic-outputs" class="nav-link" data-scroll-target="#probabilistic-vs-deterministic-outputs">Probabilistic vs Deterministic Outputs</a></li>
   <li><a href="#likelihood-vs-loss-function" id="toc-likelihood-vs-loss-function" class="nav-link" data-scroll-target="#likelihood-vs-loss-function">Likelihood vs Loss Function</a></li>
-  <li><a href="#other-differences" id="toc-other-differences" class="nav-link" data-scroll-target="#other-differences">Other Differences</a></li>
+  <li><a href="#volume-of-data-and-number-of-parameters" id="toc-volume-of-data-and-number-of-parameters" class="nav-link" data-scroll-target="#volume-of-data-and-number-of-parameters">Volume of Data and Number of Parameters</a></li>
   </ul></li>
-  <li><a href="#bayesian-neural-nets" id="toc-bayesian-neural-nets" class="nav-link" data-scroll-target="#bayesian-neural-nets">[Bayesian] Neural Nets</a></li>
+  <li><a href="#neural-nets" id="toc-neural-nets" class="nav-link" data-scroll-target="#neural-nets">Neural Nets</a></li>
   <li><a href="#single-neuron" id="toc-single-neuron" class="nav-link" data-scroll-target="#single-neuron">Single Neuron</a>
   <ul class="collapse">
   <li><a href="#activation-function" id="toc-activation-function" class="nav-link" data-scroll-target="#activation-function">Activation Function</a></li>
@@ -256,17 +259,12 @@ window.Quarto = {
   <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">Notation</a></li>
   <li><a href="#the-input-layer" id="toc-the-input-layer" class="nav-link" data-scroll-target="#the-input-layer">The Input Layer</a></li>
   </ul></li>
-  <li><a href="#activating-mermaid-nn" id="toc-activating-mermaid-nn" class="nav-link" data-scroll-target="#activating-mermaid-nn">Activating Mermaid NN</a></li>
-  <li><a href="#o3-mini-try" id="toc-o3-mini-try" class="nav-link" data-scroll-target="#o3-mini-try">O3 Mini Try</a></li>
-  <li><a href="#o3-v2-with-3.5-sonnet" id="toc-o3-v2-with-3.5-sonnet" class="nav-link" data-scroll-target="#o3-v2-with-3.5-sonnet">O3 v2 with 3.5 Sonnet</a></li>
-  <li><a href="#stan-sim-v2" id="toc-stan-sim-v2" class="nav-link" data-scroll-target="#stan-sim-v2">Stan Sim v2</a></li>
-  <li><a href="#bayesian-neural-network-simplified-implementation" id="toc-bayesian-neural-network-simplified-implementation" class="nav-link" data-scroll-target="#bayesian-neural-network-simplified-implementation">Bayesian Neural Network (Simplified Implementation)</a>
+  <li><a href="#draft-apps" id="toc-draft-apps" class="nav-link" data-scroll-target="#draft-apps">Draft Apps</a>
   <ul class="collapse">
-  <li><a href="#more-control-on-noise" id="toc-more-control-on-noise" class="nav-link" data-scroll-target="#more-control-on-noise">More control on noise</a></li>
+  <li><a href="#shiny-mermaid" id="toc-shiny-mermaid" class="nav-link" data-scroll-target="#shiny-mermaid">Shiny Mermaid</a></li>
+  <li><a href="#mermaid-rendered-in-shiny-with-controls" id="toc-mermaid-rendered-in-shiny-with-controls" class="nav-link" data-scroll-target="#mermaid-rendered-in-shiny-with-controls">Mermaid Rendered in Shiny with Controls</a></li>
+  <li><a href="#bayesian-attempt" id="toc-bayesian-attempt" class="nav-link" data-scroll-target="#bayesian-attempt">Bayesian Attempt</a></li>
   </ul></li>
-  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  <li><a href="#with-diamond-dataset" id="toc-with-diamond-dataset" class="nav-link" data-scroll-target="#with-diamond-dataset">With Diamond Dataset</a></li>
   </ul>
 </nav>
     </div>
@@ -292,11 +290,1245 @@ window.Quarto = {
 </header>
 
 
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This chapter is still rough. It’s interesting material, but for the core purpose of the primer, it’s hard to prioritize for a v0 release.</p>
+</div>
+</div>
 <section id="preview" class="level2">
 <h2 class="anchored" data-anchor-id="preview">Preview</h2>
 <p>Due to popular demand, we move on from traditional statistical models to those considered <em>machine learning</em>. We touch on the differences and similarities between the two categories before choosing to continue with a machine learning model that allows for statistical (i.e.&nbsp;probabilistic) interpretation.</p>
 <p>Although the chapter is entitled Machine Learning, we make no attempt to cover the topic broadly. We simply choose a method that fits well in both statistical and machine learning contexts and explore it in detail. The resources for more comprehensive introductions to Machine Learning are easily found elsewhere.</p>
-<p>The chapter is focused on Bayesian Neural Networks, and although they are an advanced topic, you may be surprised to learn the major building blocks have already been covered. In the flavor we use, each hidden layer neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. Because this type of machine learning is probabilistic, we can calculate P(D|M).</p>
+<p>The chapter is focused on [Bayesian] Neural Networks, and although they are an advanced topic, you may be surprised to learn the major building blocks have already been covered. In the flavor we use, each hidden layer neuron is just logistic regression (which is just generalized linear regression) built into a network. Once we build this network we will allow it to generate data like in previous chapters. We can choose to create ensembles of Neural Networks, or probabilistically sample likely parameter values, which will allow us to calculate P(D|M).</p>
+<section id="interactive-neural-network-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-neural-network-visualization">Interactive Neural Network Visualization</h3>
+<p>This visualization shows a neural network with 1 input (carat), 2 hidden layers (3 neurons each), and 1 output (price). The network performs regression with sigmoid-activated hidden layers.</p>
+<style>
+  .container {
+    margin-top: 20px;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+  }
+  .control {
+    display: flex;
+    flex-direction: column;
+  }
+  .control label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    margin-top: 20px;
+  }
+  .tab {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-bottom: none;
+    margin-bottom: -1px;
+  }
+  .tab.active {
+    border-color: #ccc;
+    border-bottom-color: white;
+    background-color: white;
+  }
+  .tab-content {
+    display: none;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-top: none;
+  }
+  .tab-content.active {
+    display: block;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  th {
+    font-weight: bold;
+  }
+  .neuronsContainer {
+    margin-top: 20px;
+  }
+</style>
+
+<div class="controls">
+  <div class="control">
+    <label for="learningRate">Learning Rate: <span id="learningRateValue">0.01</span></label>
+    <input type="range" id="learningRate" min="0.001" max="0.1" step="0.001" value="0.01">
+  </div>
+  <div class="control">
+    <label for="epochs">Training Epochs: <span id="epochsValue">100</span></label>
+    <input type="range" id="epochs" min="1" max="500" step="10" value="100">
+  </div>
+  <div class="control">
+    <label for="trainingPct">Training Data %: <span id="trainingPctValue">70%</span></label>
+    <input type="range" id="trainingPct" min="0.5" max="0.9" step="0.05" value="0.7">
+  </div>
+  <div class="control">
+    <button id="trainButton">Train Network</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="network">Neural Network</div>
+  <div class="tab" data-tab="metrics">Performance Metrics</div>
+  <div class="tab" data-tab="predictions">Predictions</div>
+  <div class="tab" data-tab="data">Data</div>
+</div>
+
+<div id="network" class="tab-content active">
+  <div id="neuralNetworkViz"></div>
+</div>
+
+<div id="metrics" class="tab-content">
+  <div id="metricsTable"></div>
+  <div id="trainingChart"></div>
+</div>
+
+<div id="predictions" class="tab-content">
+  <div id="predictionsChart"></div>
+</div>
+
+<div id="data" class="tab-content">
+  <div id="dataTable"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+  // Global variables
+  let data = [];
+  let trainingData = [];
+  let testData = [];
+  let network;
+  let carat_mean, carat_std, price_mean, price_std;
+  let trainingErrors = [];
+  let predictionLine = [];
+  let metrics = {};
+
+  // Set up tabs
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Set up sliders
+  document.getElementById('learningRate').addEventListener('input', function() {
+    document.getElementById('learningRateValue').textContent = this.value;
+  });
+  
+  document.getElementById('epochs').addEventListener('input', function() {
+    document.getElementById('epochsValue').textContent = this.value;
+  });
+  
+  document.getElementById('trainingPct').addEventListener('input', function() {
+    document.getElementById('trainingPctValue').textContent = (this.value * 100) + '%';
+  });
+
+  // Data from sampled_diamonds.csv (carat and price only)
+  const sampleData = [
+    { carat: 0.3, price: 545 },
+    { carat: 0.3, price: 878 },
+    { carat: 0.3, price: 590 },
+    { carat: 0.3, price: 526 },
+    { carat: 0.3, price: 776 },
+    { carat: 0.27, price: 500 },
+    { carat: 0.3, price: 540 },
+    { carat: 0.3, price: 447 },
+    { carat: 0.3, price: 605 },
+    { carat: 0.3, price: 789 },
+    { carat: 0.3, price: 421 },
+    { carat: 0.3, price: 789 },
+    { carat: 0.27, price: 567 },
+    { carat: 0.3, price: 608 },
+    { carat: 0.25, price: 575 },
+    { carat: 0.3, price: 873 },
+    { carat: 0.27, price: 682 },
+    { carat: 0.3, price: 796 },
+    { carat: 0.3, price: 608 },
+    { carat: 0.3, price: 453 },
+    { carat: 0.31, price: 544 },
+    { carat: 0.31, price: 651 },
+    { carat: 0.31, price: 979 },
+    { carat: 0.31, price: 421 },
+    { carat: 0.31, price: 914 },
+    { carat: 0.31, price: 725 },
+    { carat: 0.31, price: 921 },
+    { carat: 0.31, price: 742 },
+    { carat: 0.31, price: 802 },
+    { carat: 0.31, price: 907 },
+    { carat: 0.31, price: 625 },
+    { carat: 0.31, price: 871 },
+    { carat: 0.31, price: 462 },
+    { carat: 0.31, price: 802 },
+    { carat: 0.31, price: 802 },
+    { carat: 0.31, price: 523 },
+    { carat: 0.31, price: 1046 },
+    { carat: 0.31, price: 507 },
+    { carat: 0.31, price: 816 },
+    { carat: 0.31, price: 891 },
+    { carat: 0.32, price: 990 },
+    { carat: 0.32, price: 828 },
+    { carat: 0.32, price: 645 },
+    { carat: 0.32, price: 814 },
+    { carat: 0.32, price: 477 },
+    { carat: 0.32, price: 477 },
+    { carat: 0.32, price: 602 },
+    { carat: 0.32, price: 449 },
+    { carat: 0.32, price: 442 },
+    { carat: 0.32, price: 720 },
+    { carat: 0.32, price: 528 },
+    { carat: 0.32, price: 803 },
+    { carat: 0.32, price: 421 },
+    { carat: 0.32, price: 854 },
+    { carat: 0.32, price: 653 },
+    { carat: 0.32, price: 716 },
+    { carat: 0.32, price: 720 },
+    { carat: 0.32, price: 758 },
+    { carat: 0.32, price: 918 },
+    { carat: 0.32, price: 544 },
+    { carat: 0.33, price: 797 },
+    { carat: 0.33, price: 713 },
+    { carat: 0.33, price: 984 },
+    { carat: 0.33, price: 1312 },
+    { carat: 0.34, price: 727 },
+    { carat: 0.33, price: 631 },
+    { carat: 0.35, price: 620 },
+    { carat: 0.34, price: 760 },
+    { carat: 0.35, price: 868 },
+    { carat: 0.35, price: 601 },
+    { carat: 0.34, price: 961 },
+    { carat: 0.33, price: 965 },
+    { carat: 0.33, price: 743 },
+    { carat: 0.34, price: 477 },
+    { carat: 0.33, price: 854 },
+    { carat: 0.35, price: 738 },
+    { carat: 0.35, price: 820 },
+    { carat: 0.35, price: 644 },
+    { carat: 0.33, price: 646 },
+    { carat: 0.33, price: 854 },
+    { carat: 0.4, price: 666 },
+    { carat: 0.4, price: 1080 },
+    { carat: 0.36, price: 835 },
+    { carat: 0.4, price: 945 },
+    { carat: 0.4, price: 982 },
+    { carat: 0.38, price: 1257 },
+    { carat: 0.4, price: 912 },
+    { carat: 0.37, price: 649 },
+    { carat: 0.4, price: 1238 },
+    { carat: 0.38, price: 998 },
+    { carat: 0.37, price: 936 },
+    { carat: 0.4, price: 980 },
+    { carat: 0.36, price: 1018 },
+    { carat: 0.38, price: 899 },
+    { carat: 0.37, price: 749 },
+    { carat: 0.4, price: 737 },
+    { carat: 0.37, price: 491 },
+    { carat: 0.4, price: 737 },
+    { carat: 0.39, price: 614 },
+    { carat: 0.38, price: 898 },
+    { carat: 0.41, price: 827 },
+    { carat: 0.41, price: 1079 },
+    { carat: 0.42, price: 773 },
+    { carat: 0.41, price: 844 },
+    { carat: 0.41, price: 1243 },
+    { carat: 0.41, price: 1286 },
+    { carat: 0.41, price: 719 },
+    { carat: 0.41, price: 1230 },
+    { carat: 0.41, price: 904 },
+    { carat: 0.41, price: 638 },
+    { carat: 0.42, price: 898 },
+    { carat: 0.41, price: 969 },
+    { carat: 0.42, price: 963 },
+    { carat: 0.41, price: 671 },
+    { carat: 0.42, price: 1400 },
+    { carat: 0.41, price: 1186 },
+    { carat: 0.42, price: 992 },
+    { carat: 0.41, price: 1122 },
+    { carat: 0.41, price: 1007 },
+    { carat: 0.41, price: 1076 },
+    { carat: 0.5, price: 1747 },
+    { carat: 0.45, price: 1046 },
+    { carat: 0.46, price: 1227 },
+    { carat: 0.5, price: 2243 },
+    { carat: 0.5, price: 1415 },
+    { carat: 0.43, price: 894 },
+    { carat: 0.44, price: 1253 },
+    { carat: 0.5, price: 978 },
+    { carat: 0.5, price: 982 },
+    { carat: 0.5, price: 1015 },
+    { carat: 0.43, price: 813 },
+    { carat: 0.46, price: 1412 },
+    { carat: 0.5, price: 1624 },
+    { carat: 0.43, price: 792 },
+    { carat: 0.5, price: 1080 },
+    { carat: 0.46, price: 1299 },
+    { carat: 0.5, price: 2070 },
+    { carat: 0.48, price: 1088 },
+    { carat: 0.5, price: 1819 },
+    { carat: 0.47, price: 1021 },
+    { carat: 0.51, price: 2146 },
+    { carat: 0.53, price: 1070 },
+    { carat: 0.53, price: 1607 },
+    { carat: 0.53, price: 1881 },
+    { carat: 0.53, price: 1607 },
+    { carat: 0.51, price: 2185 },
+    { carat: 0.51, price: 1204 },
+    { carat: 0.52, price: 1878 },
+    { carat: 0.52, price: 1988 },
+    { carat: 0.52, price: 1227 },
+    { carat: 0.51, price: 2041 },
+    { carat: 0.53, price: 1395 },
+    { carat: 0.51, price: 1781 },
+    { carat: 0.52, price: 1385 },
+    { carat: 0.51, price: 959 },
+    { carat: 0.51, price: 1577 },
+    { carat: 0.52, price: 971 },
+    { carat: 0.52, price: 1936 },
+    { carat: 0.51, price: 1574 },
+    { carat: 0.51, price: 1776 },
+    { carat: 0.54, price: 1774 },
+    { carat: 0.54, price: 2202 },
+    { carat: 0.58, price: 1430 },
+    { carat: 0.56, price: 1819 },
+    { carat: 0.54, price: 1259 },
+    { carat: 0.59, price: 1265 },
+    { carat: 0.55, price: 2030 },
+    { carat: 0.54, price: 2479 },
+    { carat: 0.56, price: 2118 },
+    { carat: 0.55, price: 2499 },
+    { carat: 0.54, price: 2271 },
+    { carat: 0.54, price: 1725 },
+    { carat: 0.54, price: 1772 },
+    { carat: 0.56, price: 1712 },
+    { carat: 0.58, price: 1761 },
+    { carat: 0.6, price: 1250 },
+    { carat: 0.59, price: 1652 },
+    { carat: 0.54, price: 1392 },
+    { carat: 0.56, price: 1698 },
+    { carat: 0.56, price: 1287 },
+    { carat: 0.7, price: 3359 },
+    { carat: 0.7, price: 2362 },
+    { carat: 0.7, price: 2317 },
+    { carat: 0.63, price: 1736 },
+    { carat: 0.7, price: 2730 },
+    { carat: 0.7, price: 3001 },
+    { carat: 0.7, price: 3201 },
+    { carat: 0.7, price: 2563 },
+    { carat: 0.7, price: 2525 },
+    { carat: 0.7, price: 2473 },
+    { carat: 0.7, price: 1564 },
+    { carat: 0.64, price: 1811 },
+    { carat: 0.7, price: 1843 },
+    { carat: 0.63, price: 3181 },
+    { carat: 0.7, price: 2039 },
+    { carat: 0.7, price: 2394 },
+    { carat: 0.7, price: 1749 },
+    { carat: 0.7, price: 2176 },
+    { carat: 0.7, price: 2444 },
+    { carat: 0.7, price: 3300 },
+    { carat: 0.71, price: 2795 },
+    { carat: 0.71, price: 2863 },
+    { carat: 0.72, price: 2583 },
+    { carat: 0.72, price: 2889 },
+    { carat: 0.71, price: 2400 },
+    { carat: 0.72, price: 1942 },
+    { carat: 0.72, price: 2398 },
+    { carat: 0.72, price: 3465 },
+    { carat: 0.71, price: 2343 },
+    { carat: 0.71, price: 2853 },
+    { carat: 0.72, price: 2311 },
+    { carat: 0.71, price: 1717 },
+    { carat: 0.72, price: 2148 },
+    { carat: 0.72, price: 3124 },
+    { carat: 0.71, price: 2930 },
+    { carat: 0.71, price: 2294 },
+    { carat: 0.71, price: 2633 },
+    { carat: 0.71, price: 2036 },
+    { carat: 0.71, price: 3431 },
+    { carat: 0.71, price: 2423 },
+    { carat: 0.74, price: 2709 },
+    { carat: 0.9, price: 4198 },
+    { carat: 0.9, price: 4314 },
+    { carat: 0.9, price: 4435 },
+    { carat: 0.8, price: 2914 },
+    { carat: 0.75, price: 2613 },
+    { carat: 0.76, price: 2937 },
+    { carat: 0.78, price: 2834 },
+    { carat: 0.74, price: 1913 },
+    { carat: 0.77, price: 2988 },
+    { carat: 0.76, price: 2680 },
+    { carat: 0.84, price: 3577 },
+    { carat: 0.76, price: 3671 },
+    { carat: 0.78, price: 3055 },
+    { carat: 0.75, price: 2850 },
+    { carat: 0.9, price: 2761 },
+    { carat: 0.9, price: 3350 },
+    { carat: 0.9, price: 4592 },
+    { carat: 0.83, price: 2666 },
+    { carat: 0.74, price: 3537 },
+    { carat: 0.91, price: 3567 },
+    { carat: 1.0, price: 4626 },
+    { carat: 0.95, price: 4341 },
+    { carat: 1.0, price: 5914 },
+    { carat: 1.0, price: 5148 },
+    { carat: 1.0, price: 3465 },
+    { carat: 0.97, price: 4063 },
+    { carat: 1.0, price: 4626 },
+    { carat: 0.92, price: 3684 },
+    { carat: 1.0, price: 4816 },
+    { carat: 0.91, price: 4668 },
+    { carat: 1.0, price: 5484 },
+    { carat: 1.0, price: 7500 },
+    { carat: 0.91, price: 3423 },
+    { carat: 1.0, price: 3830 },
+    { carat: 1.0, price: 6377 },
+    { carat: 1.0, price: 4861 },
+    { carat: 1.0, price: 3920 },
+    { carat: 0.91, price: 4389 },
+    { carat: 0.91, price: 3546 },
+    { carat: 1.01, price: 4588 },
+    { carat: 1.01, price: 4821 },
+    { carat: 1.01, price: 6097 },
+    { carat: 1.01, price: 3945 },
+    { carat: 1.01, price: 4559 },
+    { carat: 1.01, price: 6075 },
+    { carat: 1.01, price: 4276 },
+    { carat: 1.01, price: 4513 },
+    { carat: 1.01, price: 6295 },
+    { carat: 1.01, price: 4989 },
+    { carat: 1.01, price: 6105 },
+    { carat: 1.01, price: 4899 },
+    { carat: 1.01, price: 3682 },
+    { carat: 1.01, price: 7652 },
+    { carat: 1.01, price: 6221 },
+    { carat: 1.01, price: 6516 },
+    { carat: 1.01, price: 4916 },
+    { carat: 1.01, price: 6697 },
+    { carat: 1.01, price: 4977 },
+    { carat: 1.01, price: 5543 },
+    { carat: 1.02, price: 5553 },
+    { carat: 1.03, price: 4522 },
+    { carat: 1.02, price: 4540 },
+    { carat: 1.03, price: 4764 },
+    { carat: 1.02, price: 5287 },
+    { carat: 1.02, price: 6169 },
+    { carat: 1.03, price: 4401 },
+    { carat: 1.04, price: 7220 },
+    { carat: 1.04, price: 4181 },
+    { carat: 1.03, price: 6783 },
+    { carat: 1.02, price: 4958 },
+    { carat: 1.03, price: 3922 },
+    { carat: 1.02, price: 6047 },
+    { carat: 1.04, price: 4240 },
+    { carat: 1.03, price: 5804 },
+    { carat: 1.02, price: 4449 },
+    { carat: 1.02, price: 4162 },
+    { carat: 1.03, price: 9881 },
+    { carat: 1.04, price: 2037 },
+    { carat: 1.02, price: 6652 },
+    { carat: 1.09, price: 6225 },
+    { carat: 1.11, price: 7639 },
+    { carat: 1.06, price: 4255 },
+    { carat: 1.06, price: 4452 },
+    { carat: 1.11, price: 8843 },
+    { carat: 1.13, price: 5526 },
+    { carat: 1.07, price: 5093 },
+    { carat: 1.09, price: 8454 },
+    { carat: 1.08, price: 6769 },
+    { carat: 1.05, price: 6181 },
+    { carat: 1.09, price: 6934 },
+    { carat: 1.11, price: 5962 },
+    { carat: 1.07, price: 9532 },
+    { carat: 1.13, price: 3669 },
+    { carat: 1.1, price: 6535 },
+    { carat: 1.05, price: 5101 },
+    { carat: 1.07, price: 6730 },
+    { carat: 1.12, price: 9634 },
+    { carat: 1.09, price: 4372 },
+    { carat: 1.12, price: 7716 },
+    { carat: 1.16, price: 5678 },
+    { carat: 1.23, price: 8855 },
+    { carat: 1.15, price: 5257 },
+    { carat: 1.2, price: 5699 },
+    { carat: 1.2, price: 11021 },
+    { carat: 1.21, price: 4472 },
+    { carat: 1.24, price: 7701 },
+    { carat: 1.2, price: 16256 },
+    { carat: 1.24, price: 8584 },
+    { carat: 1.24, price: 5221 },
+    { carat: 1.21, price: 6092 },
+    { carat: 1.22, price: 7738 },
+    { carat: 1.2, price: 6416 },
+    { carat: 1.21, price: 4791 },
+    { carat: 1.2, price: 5226 },
+    { carat: 1.21, price: 4310 },
+    { carat: 1.21, price: 11572 },
+    { carat: 1.22, price: 8975 },
+    { carat: 1.2, price: 8545 },
+    { carat: 1.2, price: 6250 },
+    { carat: 1.51, price: 12831 },
+    { carat: 1.5, price: 15240 },
+    { carat: 1.5, price: 13528 },
+    { carat: 1.25, price: 3990 },
+    { carat: 1.25, price: 4900 },
+    { carat: 1.4, price: 5723 },
+    { carat: 1.26, price: 6277 },
+    { carat: 1.26, price: 5306 },
+    { carat: 1.5, price: 9533 },
+    { carat: 1.5, price: 10428 },
+    { carat: 1.5, price: 8770 },
+    { carat: 1.5, price: 8490 },
+    { carat: 1.5, price: 6770 },
+    { carat: 1.5, price: 8161 },
+    { carat: 1.33, price: 7982 },
+    { carat: 1.32, price: 6079 },
+    { carat: 1.5, price: 12247 },
+    { carat: 1.33, price: 6482 },
+    { carat: 1.51, price: 9116 },
+    { carat: 1.25, price: 9933 },
+    { carat: 1.7, price: 13823 },
+    { carat: 1.62, price: 12429 },
+    { carat: 1.52, price: 10664 },
+    { carat: 1.52, price: 10968 },
+    { carat: 1.55, price: 8056 },
+    { carat: 1.54, price: 8652 },
+    { carat: 1.53, price: 12791 },
+    { carat: 1.54, price: 9285 },
+    { carat: 1.67, price: 11400 },
+    { carat: 1.56, price: 8048 },
+    { carat: 1.56, price: 8324 },
+    { carat: 1.52, price: 13799 },
+    { carat: 1.7, price: 17892 },
+    { carat: 1.7, price: 18279 },
+    { carat: 1.7, price: 13737 },
+    { carat: 1.7, price: 12190 },
+    { carat: 1.7, price: 6397 },
+    { carat: 1.52, price: 13768 },
+    { carat: 1.55, price: 8678 },
+    { carat: 1.53, price: 7240 },
+    { carat: 2.14, price: 12400 },
+    { carat: 1.71, price: 13097 },
+    { carat: 2.0, price: 11036 },
+    { carat: 2.32, price: 18026 },
+    { carat: 2.0, price: 15312 },
+    { carat: 1.73, price: 9271 },
+    { carat: 2.3, price: 12316 },
+    { carat: 2.06, price: 14982 },
+    { carat: 2.01, price: 14998 },
+    { carat: 2.05, price: 16357 },
+    { carat: 2.02, price: 15996 },
+    { carat: 1.71, price: 9193 },
+    { carat: 2.02, price: 10412 },
+    { carat: 2.15, price: 17221 },
+    { carat: 1.77, price: 15278 },
+    { carat: 2.28, price: 16369 },
+    { carat: 1.75, price: 9890 },
+    { carat: 2.06, price: 13317 }
+  ];
+
+  // Activation functions
+  function sigmoid(x) {
+    return 1 / (1 + Math.exp(-x));
+  }
+
+  function dsigmoid(y) {
+    return y * (1 - y);
+  }
+
+  // Neural Network class
+  class NeuralNetwork {
+    constructor(learningRate) {
+      // Architecture: 1 input, 2 hidden layers with 3 neurons each, 1 output
+      this.weights = {
+        // Input to hidden layer 1
+        ih1: Array.from({length: 3}, () => Array.from({length: 1}, () => Math.random() * 2 - 1)),
+        // Hidden layer 1 to hidden layer 2
+        h1h2: Array.from({length: 3}, () => Array.from({length: 3}, () => Math.random() * 2 - 1)),
+        // Hidden layer 2 to output
+        h2o: Array.from({length: 1}, () => Array.from({length: 3}, () => Math.random() * 2 - 1))
+      };
+      
+      this.biases = {
+        h1: Array.from({length: 3}, () => Math.random() * 2 - 1),
+        h2: Array.from({length: 3}, () => Math.random() * 2 - 1),
+        o: Array.from({length: 1}, () => Math.random() * 2 - 1)
+      };
+      
+      this.learning_rate = learningRate;
+    }
+    
+    feedforward(input) {
+      // Nodes in hidden layer 1
+      const hidden1 = Array(3).fill(0);
+      for (let i = 0; i < 3; i++) {
+        let sum = this.biases.h1[i];
+        sum += input * this.weights.ih1[i][0];
+        hidden1[i] = sigmoid(sum);
+      }
+      
+      // Nodes in hidden layer 2
+      const hidden2 = Array(3).fill(0);
+      for (let i = 0; i < 3; i++) {
+        let sum = this.biases.h2[i];
+        for (let j = 0; j < 3; j++) {
+          sum += hidden1[j] * this.weights.h1h2[i][j];
+        }
+        hidden2[i] = sigmoid(sum);
+      }
+      
+      // Output layer (linear activation)
+      let output = this.biases.o[0];
+      for (let i = 0; i < 3; i++) {
+        output += hidden2[i] * this.weights.h2o[0][i];
+      }
+      
+      return {
+        input: input,
+        hidden1: hidden1,
+        hidden2: hidden2,
+        output: output
+      };
+    }
+    
+    train(input, target) {
+      // Feedforward
+      const result = this.feedforward(input);
+      const { hidden1, hidden2, output } = result;
+      
+      // Calculate errors
+      // Output error
+      const output_error = target - output;
+      
+      // Hidden layer 2 error
+      const hidden2_error = Array(3).fill(0);
+      for (let i = 0; i < 3; i++) {
+        hidden2_error[i] = output_error * this.weights.h2o[0][i];
+      }
+      
+      // Hidden layer 1 error
+      const hidden1_error = Array(3).fill(0);
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          hidden1_error[i] += hidden2_error[j] * this.weights.h1h2[j][i];
+        }
+      }
+      
+      // Backpropagation
+      // Update weights and biases for output layer
+      for (let i = 0; i < 3; i++) {
+        this.weights.h2o[0][i] += this.learning_rate * output_error * hidden2[i];
+      }
+      this.biases.o[0] += this.learning_rate * output_error;
+      
+      // Update weights and biases for hidden layer 2
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          this.weights.h1h2[i][j] += this.learning_rate * hidden2_error[i] * dsigmoid(hidden2[i]) * hidden1[j];
+        }
+        this.biases.h2[i] += this.learning_rate * hidden2_error[i] * dsigmoid(hidden2[i]);
+      }
+      
+      // Update weights and biases for hidden layer 1
+      for (let i = 0; i < 3; i++) {
+        this.weights.ih1[i][0] += this.learning_rate * hidden1_error[i] * dsigmoid(hidden1[i]) * input;
+        this.biases.h1[i] += this.learning_rate * hidden1_error[i] * dsigmoid(hidden1[i]);
+      }
+      
+      return output_error;
+    }
+  }
+
+  // Initialize data
+  function initializeData() {
+    data = sampleData;
+    
+    // Calculate statistics
+    carat_mean = data.reduce((sum, d) => sum + d.carat, 0) / data.length;
+    price_mean = data.reduce((sum, d) => sum + d.price, 0) / data.length;
+    
+    carat_std = Math.sqrt(data.reduce((sum, d) => sum + Math.pow(d.carat - carat_mean, 2), 0) / data.length);
+    price_std = Math.sqrt(data.reduce((sum, d) => sum + Math.pow(d.price - price_mean, 2), 0) / data.length);
+    
+    // Normalize data
+    const normalizedData = data.map(d => ({
+      carat: (d.carat - carat_mean) / carat_std,
+      price: (d.price - price_mean) / price_std,
+      carat_raw: d.carat,
+      price_raw: d.price
+    }));
+    
+    // Split data
+    const trainingPct = parseFloat(document.getElementById('trainingPct').value);
+    const shuffled = [...normalizedData].sort(() => Math.random() - 0.5);
+    const splitIndex = Math.floor(shuffled.length * trainingPct);
+    trainingData = shuffled.slice(0, splitIndex);
+    testData = shuffled.slice(splitIndex);
+    
+    // Show data table
+    createDataTable();
+  }
+
+  // Create data table
+  function createDataTable() {
+    const table = document.createElement('table');
+    
+    // Create header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    
+    const th1 = document.createElement('th');
+    th1.textContent = 'Carat';
+    headerRow.appendChild(th1);
+    
+    const th2 = document.createElement('th');
+    th2.textContent = 'Price';
+    headerRow.appendChild(th2);
+    
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // Create body
+    const tbody = document.createElement('tbody');
+    
+    // Show first 20 rows
+    const displayData = data.slice(0, 20);
+    displayData.forEach(d => {
+      const row = document.createElement('tr');
+      
+      const td1 = document.createElement('td');
+      td1.textContent = d.carat.toFixed(2);
+      row.appendChild(td1);
+      
+      const td2 = document.createElement('td');
+      td2.textContent = '$' + d.price.toFixed(0);
+      row.appendChild(td2);
+      
+      tbody.appendChild(row);
+    });
+    
+    table.appendChild(tbody);
+    
+    // Add to page
+    const dataTableDiv = document.getElementById('dataTable');
+    dataTableDiv.innerHTML = '';
+    dataTableDiv.appendChild(table);
+  }
+
+  // Train the neural network
+  function trainNetwork() {
+    const learningRate = parseFloat(document.getElementById('learningRate').value);
+    const epochs = parseInt(document.getElementById('epochs').value);
+    
+    network = new NeuralNetwork(learningRate);
+    trainingErrors = [];
+    
+    const startTime = Date.now();
+    
+    // Training loop
+    for (let epoch = 0; epoch < epochs; epoch++) {
+      let sumError = 0;
+      
+      for (const d of trainingData) {
+        const error = network.train(d.carat, d.price);
+        sumError += error * error;
+      }
+      
+      const mse = sumError / trainingData.length;
+      trainingErrors.push({
+        epoch: epoch,
+        error: Math.sqrt(mse)
+      });
+    }
+    
+    const endTime = Date.now();
+    
+    // Calculate metrics
+    // RMSE
+    let sumSqError = 0;
+    for (const d of testData) {
+      const { output } = network.feedforward(d.carat);
+      sumSqError += Math.pow(d.price - output, 2);
+    }
+    const testRmse = Math.sqrt(sumSqError / testData.length);
+    
+    // R-squared
+    const predictions = testData.map(d => {
+      const normalizedCarat = (d.carat_raw - carat_mean) / carat_std;
+      const normalizedPrediction = network.feedforward(normalizedCarat).output;
+      return normalizedPrediction * price_std + price_mean;
+    });
+    
+    const meanPrice = testData.reduce((sum, d) => sum + d.price_raw, 0) / testData.length;
+    const totalSumSquares = testData.reduce((sum, d) => sum + Math.pow(d.price_raw - meanPrice, 2), 0);
+    const residualSumSquares = testData.reduce((sum, d, i) => sum + Math.pow(d.price_raw - predictions[i], 2), 0);
+    const rSquared = 1 - (residualSumSquares / totalSumSquares);
+    
+    metrics = {
+      rmse: testRmse * price_std,
+      rSquared: rSquared,
+      trainingTime: endTime - startTime
+    };
+    
+    // Generate prediction line
+    const caratMin = Math.min(...data.map(d => d.carat));
+    const caratMax = Math.max(...data.map(d => d.carat));
+    const step = (caratMax - caratMin) / 50;
+    
+    predictionLine = [];
+    for (let carat = caratMin; carat <= caratMax; carat += step) {
+      const normalizedCarat = (carat - carat_mean) / carat_std;
+      const normalizedPrediction = network.feedforward(normalizedCarat).output;
+      const prediction = normalizedPrediction * price_std + price_mean;
+      
+      predictionLine.push({
+        carat: carat,
+        price: prediction
+      });
+    }
+    
+    // Update visualizations
+    createNeuralNetworkViz();
+    createMetricsViz();
+    createPredictionsViz();
+  }
+
+  // Create neural network visualization
+  function createNeuralNetworkViz() {
+    const width = 800;
+    const height = 400;
+    const margin = { top: 40, right: 40, bottom: 40, left: 40 };
+    
+    // Clear previous visualization
+    const container = document.getElementById('neuralNetworkViz');
+    container.innerHTML = '';
+    
+    // Create SVG
+    const svg = d3.create('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('viewBox', [0, 0, width, height])
+      .attr('style', 'max-width: 100%; height: auto;');
+    
+    // Layer coordinates
+    const layers = [
+      { name: 'Input', nodes: 1, x: margin.left + 50 },
+      { name: 'Hidden 1', nodes: 3, x: margin.left + 230 },
+      { name: 'Hidden 2', nodes: 3, x: margin.left + 410 },
+      { name: 'Output', nodes: 1, x: margin.left + 590 }
+    ];
+    
+    // Add layer labels
+    svg.selectAll('.layer-label')
+      .data(layers)
+      .join('text')
+      .attr('class', 'layer-label')
+      .attr('x', d => d.x)
+      .attr('y', margin.top - 15)
+      .attr('text-anchor', 'middle')
+      .attr('font-weight', 'bold')
+      .text(d => d.name);
+    
+    // Function to get node vertical position
+    function getNodeY(layerIndex, nodeIndex, layerNodes) {
+      const layerHeight = height - margin.top - margin.bottom;
+      const nodeSpacing = layerHeight / (layerNodes + 1);
+      return margin.top + nodeSpacing * (nodeIndex + 1);
+    }
+    
+    // Create all nodes
+    const nodeData = [];
+    const connections = [];
+    
+    layers.forEach((layer, layerIndex) => {
+      for (let i = 0; i < layer.nodes; i++) {
+        const nodeY = getNodeY(layerIndex, i, layer.nodes);
+        
+        nodeData.push({
+          id: `${layerIndex}-${i}`,
+          x: layer.x,
+          y: nodeY,
+          layer: layerIndex,
+          index: i
+        });
+        
+        // Create connections
+        if (layerIndex > 0) {
+          const prevLayer = layers[layerIndex - 1];
+          for (let j = 0; j < prevLayer.nodes; j++) {
+            let weight;
+            if (layerIndex === 1) {
+              weight = network.weights.ih1[i][j];
+            } else if (layerIndex === 2) {
+              weight = network.weights.h1h2[i][j];
+            } else if (layerIndex === 3) {
+              weight = network.weights.h2o[i][j];
+            }
+            
+            connections.push({
+              source: `${layerIndex-1}-${j}`,
+              target: `${layerIndex}-${i}`,
+              weight: weight
+            });
+          }
+        }
+      }
+    });
+    
+    // Draw connections
+    svg.append('g')
+      .attr('class', 'connections')
+      .selectAll('line')
+      .data(connections)
+      .join('line')
+      .attr('x1', d => nodeData.find(n => n.id === d.source).x)
+      .attr('y1', d => nodeData.find(n => n.id === d.source).y)
+      .attr('x2', d => nodeData.find(n => n.id === d.target).x)
+      .attr('y2', d => nodeData.find(n => n.id === d.target).y)
+      .attr('stroke', d => d.weight > 0 ? 'blue' : 'red')
+      .attr('stroke-width', d => Math.abs(d.weight) * 3 + 0.5)
+      .attr('opacity', 0.6);
+    
+    // Draw nodes
+    const nodeGroup = svg.append('g').attr('class', 'nodes');
+    
+    nodeGroup.selectAll('circle')
+      .data(nodeData)
+      .join('circle')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', 25)
+      .attr('fill', d => {
+        if (d.layer === 0) return '#8dd3c7';  // Input (teal)
+        if (d.layer === 3) return '#fb8072';  // Output (red)
+        return '#80b1d3';                     // Hidden (blue)
+      })
+      .attr('stroke', 'black')
+      .attr('stroke-width', 2);
+    
+    // Add bias and weight labels
+    nodeGroup.selectAll('text.node-label')
+      .data(nodeData)
+      .join('text')
+      .attr('class', 'node-label')
+      .attr('x', d => d.x)
+      .attr('y', d => d.y)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', '12px')
+      .attr('font-weight', 'bold')
+      .text(d => {
+        if (d.layer === 0) return 'Carat';
+        if (d.layer === 3) return 'Price';
+        
+        // Get bias for hidden nodes
+        let bias;
+        if (d.layer === 1) bias = network.biases.h1[d.index];
+        if (d.layer === 2) bias = network.biases.h2[d.index];
+        
+        return `b:${bias.toFixed(2)}`;
+      });
+    
+    // Add weight labels to connections
+    svg.append('g')
+      .attr('class', 'weight-labels')
+      .selectAll('text')
+      .data(connections)
+      .join('text')
+      .attr('x', d => {
+        const source = nodeData.find(n => n.id === d.source);
+        const target = nodeData.find(n => n.id === d.target);
+        return (source.x + target.x) / 2;
+      })
+      .attr('y', d => {
+        const source = nodeData.find(n => n.id === d.source);
+        const target = nodeData.find(n => n.id === d.target);
+        return (source.y + target.y) / 2 - 8;
+      })
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '10px')
+      .text(d => d.weight.toFixed(2));
+    
+    container.appendChild(svg.node());
+  }
+
+  // Create metrics visualization
+  function createMetricsViz() {
+    // Create metrics table
+    const tableContainer = document.getElementById('metricsTable');
+    tableContainer.innerHTML = '';
+    
+    const table = document.createElement('table');
+    const tbody = document.createElement('tbody');
+    
+    // RMSE
+    const row1 = document.createElement('tr');
+    const cell1_1 = document.createElement('td');
+    cell1_1.textContent = 'Test RMSE';
+    const cell1_2 = document.createElement('td');
+    cell1_2.textContent = `$${metrics.rmse.toFixed(2)}`;
+    cell1_2.style.textAlign = 'right';
+    row1.appendChild(cell1_1);
+    row1.appendChild(cell1_2);
+    tbody.appendChild(row1);
+    
+    // R-squared
+    const row2 = document.createElement('tr');
+    const cell2_1 = document.createElement('td');
+    cell2_1.textContent = 'R² Score';
+    const cell2_2 = document.createElement('td');
+    cell2_2.textContent = metrics.rSquared.toFixed(4);
+    cell2_2.style.textAlign = 'right';
+    row2.appendChild(cell2_1);
+    row2.appendChild(cell2_2);
+    tbody.appendChild(row2);
+    
+    // Training time
+    const row3 = document.createElement('tr');
+    const cell3_1 = document.createElement('td');
+    cell3_1.textContent = 'Training Time';
+    const cell3_2 = document.createElement('td');
+    cell3_2.textContent = `${metrics.trainingTime}ms`;
+    cell3_2.style.textAlign = 'right';
+    row3.appendChild(cell3_1);
+    row3.appendChild(cell3_2);
+    tbody.appendChild(row3);
+    
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+    
+    // Create training error chart
+    const chartContainer = document.getElementById('trainingChart');
+    chartContainer.innerHTML = '';
+    
+    const width = 600;
+    const height = 300;
+    const margin = { top: 40, right: 30, bottom: 40, left: 60 };
+    
+    const svg = d3.create('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('viewBox', [0, 0, width, height])
+      .attr('style', 'max-width: 100%; height: auto;');
+    
+    // Add title
+    svg.append('text')
+      .attr('x', width / 2)
+      .attr('y', margin.top / 2)
+      .attr('text-anchor', 'middle')
+      .attr('font-weight', 'bold')
+      .text('Training Error Over Epochs');
+    
+    // Create scales
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(trainingErrors, d => d.epoch)])
+      .range([margin.left, width - margin.right]);
+    
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(trainingErrors, d => d.error) * 1.1])
+      .range([height - margin.bottom, margin.top]);
+    
+    // Add axes
+    svg.append('g')
+      .attr('transform', `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x).ticks(5))
+      .append('text')
+      .attr('x', width - margin.right)
+      .attr('y', 30)
+      .attr('fill', 'black')
+      .text('Epoch');
+    
+    svg.append('g')
+      .attr('transform', `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y))
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -height / 2)
+      .attr('y', -40)
+      .attr('fill', 'black')
+      .attr('text-anchor', 'middle')
+      .text('RMSE');
+    
+    // Create line
+    const line = d3.line()
+      .x(d => x(d.epoch))
+      .y(d => y(d.error));
+    
+    // Add the line
+    svg.append('path')
+      .datum(trainingErrors)
+      .attr('fill', 'none')
+      .attr('stroke', 'steelblue')
+      .attr('stroke-width', 1.5)
+      .attr('d', line);
+    
+    chartContainer.appendChild(svg.node());
+  }
+
+  // Create predictions visualization
+  function createPredictionsViz() {
+    const container = document.getElementById('predictionsChart');
+    container.innerHTML = '';
+    
+    const width = 600;
+    const height = 400;
+    const margin = { top: 40, right: 30, bottom: 40, left: 60 };
+    
+    const svg = d3.create('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('viewBox', [0, 0, width, height])
+      .attr('style', 'max-width: 100%; height: auto;');
+    
+    // Create scales
+    const x = d3.scaleLinear()
+      .domain([d3.min(data, d => d.carat), d3.max(data, d => d.carat)])
+      .range([margin.left, width - margin.right]);
+    
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.price) * 1.1])
+      .range([height - margin.bottom, margin.top]);
+    
+    // Add axes
+    svg.append('g')
+      .attr('transform', `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x))
+      .append('text')
+      .attr('x', width - margin.right)
+      .attr('y', 30)
+      .attr('fill', 'black')
+      .text('Carat');
+    
+    svg.append('g')
+      .attr('transform', `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y))
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -height / 2)
+      .attr('y', -40)
+      .attr('fill', 'black')
+      .attr('text-anchor', 'middle')
+      .text('Price ($)');
+    
+    // Add grid
+    svg.append('g')
+      .attr('stroke', 'lightgray')
+      .attr('stroke-opacity', 0.3)
+      .call(g => g.append('g')
+        .selectAll('line')
+        .data(x.ticks(10))
+        .join('line')
+        .attr('x1', d => x(d))
+        .attr('x2', d => x(d))
+        .attr('y1', margin.top)
+        .attr('y2', height - margin.bottom))
+      .call(g => g.append('g')
+        .selectAll('line')
+        .data(y.ticks(10))
+        .join('line')
+        .attr('y1', d => y(d))
+        .attr('y2', d => y(d))
+        .attr('x1', margin.left)
+        .attr('x2', width - margin.right));
+    
+    // Draw test data points
+    svg.append('g')
+      .selectAll('circle.test')
+      .data(testData)
+      .join('circle')
+      .attr('class', 'test')
+      .attr('cx', d => x(d.carat_raw))
+      .attr('cy', d => y(d.price_raw))
+      .attr('r', 3)
+      .attr('fill', 'gray')
+      .attr('opacity', 0.5);
+    
+    // Draw prediction line
+    const line = d3.line()
+      .x(d => x(d.carat))
+      .y(d => y(d.price));
+    
+    svg.append('path')
+      .datum(predictionLine)
+      .attr('fill', 'none')
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2)
+      .attr('d', line);
+    
+    // Add legend
+    const legend = svg.append('g')
+      .attr('transform', `translate(${width - 120}, ${margin.top + 20})`);
+    
+    legend.append('circle')
+      .attr('cx', 0)
+      .attr('cy', 0)
+      .attr('r', 4)
+      .attr('fill', 'gray')
+      .attr('opacity', 0.5);
+    
+    legend.append('text')
+      .attr('x', 10)
+      .attr('y', 4)
+      .text('Actual');
+    
+    legend.append('line')
+      .attr('x1', -10)
+      .attr('x2', 5)
+      .attr('y1', 20)
+      .attr('y2', 20)
+      .attr('stroke', 'red')
+      .attr('stroke-width', 2);
+    
+    legend.append('text')
+      .attr('x', 10)
+      .attr('y', 24)
+      .text('Predicted');
+    
+    container.appendChild(svg.node());
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Load data
+    initializeData();
+    
+    // Set up training button
+    document.getElementById('trainButton').addEventListener('click', trainNetwork);
+    
+    // Train network with default parameters
+    trainNetwork();
+  });
+</script>
+</section>
 </section>
 <section id="statistical-models-vs.-machine-learning-models" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-models-vs.-machine-learning-models">Statistical Models vs.&nbsp;Machine Learning Models</h2>
@@ -308,36 +1540,21 @@ window.Quarto = {
 </section>
 <section id="likelihood-vs-loss-function" class="level3">
 <h3 class="anchored" data-anchor-id="likelihood-vs-loss-function">Likelihood vs Loss Function</h3>
-<p>We think the best way to understand models is to start using them, i.e.&nbsp;start having them generate data to understand P(D|M), so we built the first half of the primer on that premise. However, an important difference between statistical model and machine learning is how they are trained, which is effectively discussion left for the second half of the primer. Regardless, we’ll mention the following as it is an importance difference:</p>
+<p>Although these topics are effectively left for the second half of the primer, we’ll mention the following as it is an important difference:</p>
 <ul>
 <li>Statistical model parameters are optimized via a likelihood function based in probability theory</li>
 <li>Machine learning model parameters are optimized using an objective/<strong>loss function</strong></li>
 </ul>
 <p>The confusing thing is that machine learning may have loss functions that use likelihood - but the key is they <em>do not have to</em>.</p>
 </section>
-<section id="other-differences" class="level3">
-<h3 class="anchored" data-anchor-id="other-differences">Other Differences</h3>
+<section id="volume-of-data-and-number-of-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="volume-of-data-and-number-of-parameters">Volume of Data and Number of Parameters</h3>
 <p>There are other common differences that are even more blurry - like that machine learning is focused on larger datasets and often have more flexible (i.e.&nbsp;more parameters) methods. This tends to also mean overfitting is a larger concern in machine learning. You would also typically not define a causal model as a foundation for a machine learning model, as they tend to use predefined algorithms.</p>
 </section>
 </section>
-<section id="bayesian-neural-nets" class="level2">
-<h2 class="anchored" data-anchor-id="bayesian-neural-nets">[Bayesian] Neural Nets</h2>
-<p>There are many machine learning models we could focus on, however, we’ll choose Neural Nets, culminating in Bayesian Neural Nets for a few reasons:</p>
-<ol type="A">
-<li>They can make probabilistic predictions just like our statistical models</li>
-<li>We have already learned the basic building blocks</li>
-<li>[Standard] Neural nets are the basis of modern AI, a fundamental technology</li>
-</ol>
-<p>Comprehending Bayesian Neural Nets from scratch is a loftly goal, so we will tackle it by building up our understanding gradually:</p>
-<ol type="1">
-<li>We develop the activation of a single neuron and it’s relation to logistic regression</li>
-<li>We develop a basic neural net structure</li>
-<li>We develop how the neuron activations propogate through the network</li>
-<li>We use the ‘standard’ neural net but add an output to let it determine the variance in the data</li>
-<li>We use ensembles of the neural nets that can estimate variance</li>
-<li>We use a Bayesian Neural Net that has a full posterior distribution of the weights</li>
-</ol>
-<p>We are quite unprepared to understand what a full posterior distribution looks like in such a highly-correlated space as neural network weights, but we shoot for the stars. This will motivate us a litte more to understand the second half of the primer.</p>
+<section id="neural-nets" class="level2">
+<h2 class="anchored" data-anchor-id="neural-nets">Neural Nets</h2>
+<p>There are many machine learning models we could focus on, however, we’ll choose Neural Nets, culminating in Bayesian Neural Nets…</p>
 </section>
 <section id="single-neuron" class="level2">
 <h2 class="anchored" data-anchor-id="single-neuron">Single Neuron</h2>
@@ -620,62 +1837,10 @@ y = w^{(3)}_{1,1} \cdot a^{(2)}_{1,1} + w^{(3)}_{1,2} \cdot a^{(2)}_{2,1} + w^{(
 </section>
 </section>
 </section>
-<section id="activating-mermaid-nn" class="level2">
-<h2 class="anchored" data-anchor-id="activating-mermaid-nn">Activating Mermaid NN</h2>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 600
-
-from shiny import App, ui, render
-
-app_ui = ui.page_fluid(
-    # Include Mermaid JS in the head
-    ui.tags.head(
-        ui.tags.script(src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js")
-    ),
-    ui.h1("Simple Mermaid Diagram Example"),
-    # Add ui.output to connect with server
-    ui.output_ui("mermaid_diagram"),
-    # Initialize Mermaid
-    ui.tags.script("""
-        mermaid.initialize({ startOnLoad: true });
-        // Re-run mermaid rendering after dynamic content loads
-        $(document).on('shiny:value', function(event) {
-            if(event.name === 'mermaid_diagram') {
-                setTimeout(function() {
-                    mermaid.init();
-                }, 100);
-            }
-        });
-    """)
-)
-
-def server(input, output, session):
-    @output
-    @render.ui
-    def mermaid_diagram():
-        return ui.div(
-            ui.tags.pre(
-                ui.tags.code(
-                    """
-                    graph TD
-                        A[Start] --&gt; B{Decision}
-                        B --&gt;|Yes| C[Action 1]
-                        B --&gt;|No| D[Action 2]
-                        C --&gt; E[End]
-                        D --&gt; E
-                    """,
-                    {"class": "mermaid"}
-                )
-            )
-        )
-
-app = App(app_ui, server)</code></pre>
-</section>
-<section id="o3-mini-try" class="level2">
-<h2 class="anchored" data-anchor-id="o3-mini-try">O3 Mini Try</h2>
+<section id="draft-apps" class="level2">
+<h2 class="anchored" data-anchor-id="draft-apps">Draft Apps</h2>
+<section id="shiny-mermaid" class="level3">
+<h3 class="anchored" data-anchor-id="shiny-mermaid">Shiny Mermaid</h3>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -775,8 +1940,8 @@ app = App(app_ui, server)
 
 </code></pre>
 </section>
-<section id="o3-v2-with-3.5-sonnet" class="level2">
-<h2 class="anchored" data-anchor-id="o3-v2-with-3.5-sonnet">O3 v2 with 3.5 Sonnet</h2>
+<section id="mermaid-rendered-in-shiny-with-controls" class="level3">
+<h3 class="anchored" data-anchor-id="mermaid-rendered-in-shiny-with-controls">Mermaid Rendered in Shiny with Controls</h3>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -890,166 +2055,8 @@ graph LR
 
 app = App(app_ui, server)</code></pre>
 </section>
-<section id="stan-sim-v2" class="level2">
-<h2 class="anchored" data-anchor-id="stan-sim-v2">Stan Sim v2</h2>
-<pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 600
-
-from shiny import App, ui, render, reactive
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# --- Helper Functions ---
-
-def inv_logit(z):
-    """Sigmoid function."""
-    return 1 / (1 + np.exp(-z))
-
-def generate_parameters():
-    """
-    Draw a single set of neural network parameters using the Stan summary's means and sds.
-    """
-    params = {}
-    # Input -&gt; first hidden layer (1 x 4)
-    params["weights_in"] = np.array([
-         np.random.normal(-0.84,  0.01),
-         np.random.normal(2.71, 0.01),
-         np.random.normal(-0.82, 0.01),
-         np.random.normal(-9.16, 0.01)
-    ])
-    params["bias_in"] = np.array([
-         np.random.normal(1.03, 0.01),
-         np.random.normal(-3.78, 0.01),
-         np.random.normal(0.92, 0.01),
-         np.random.normal(13.41, 0.014)
-    ])
-    
-    # First hidden layer -&gt; second hidden layer (4 x 4)
-    params["weights_hidden"] = np.array([
-        [np.random.normal(3.16, 0.01), np.random.normal(-4.52, 0.01),
-         np.random.normal(-0.40, 0.01), np.random.normal(0.07, 0.01)],
-        [np.random.normal(-8.63, 0.01), np.random.normal(7.35, 0.01),
-         np.random.normal(2.56, 0.01), np.random.normal(-1.52, 0.01)],
-        [np.random.normal(0.05, 0.01), np.random.normal(-1.25, 0.01),
-         np.random.normal(-0.73, 0.01), np.random.normal(-2.39, 0.01)],
-        [np.random.normal(-7.14, 0.01), np.random.normal(-1.35, 0.01),
-         np.random.normal(-7.77, 0.01), np.random.normal(4.00, 0.01)]
-    ])
-    params["bias_hidden"] = np.array([
-         np.random.normal(3.71, 0.01),
-         np.random.normal(-3.22, 0.01),
-         np.random.normal(2.19, 0.01),
-         np.random.normal(-1.57, 0.01)
-    ])
-    
-    # Second hidden layer -&gt; output layer (vector of length 4)
-    params["weights_out"] = np.array([
-         np.random.normal(3856.76, 495.69),
-         np.random.normal(3715.54, 513.76),
-         np.random.normal(3879.81, 467.75),
-         np.random.normal(3916.50, 487.24)
-    ])
-    params["bias_out"] = np.random.normal(528.46, 120.71)
-    
-    # Noise standard deviation (sigma)
-    params["sigma"] = np.random.normal(470.55, 5.22)
-    return params
-
-def simulate_network(x, params):
-    """
-    Given input array x (carat values) and a set of parameters,
-    compute the network output and add noise (sigma scales with x).
-    """
-    # First hidden layer: apply sigmoid( x * weights_in + bias_in )
-    h1 = inv_logit( x[:, None] * params["weights_in"][None, :] + params["bias_in"][None, :] )
-    # Second hidden layer: apply sigmoid( h1 dot weights_hidden + bias_hidden )
-    h2 = inv_logit( np.dot(h1, params["weights_hidden"]) + params["bias_hidden"] )
-    # Output: linear combination (no activation)
-    mu = np.dot(h2, params["weights_out"]) + params["bias_out"]
-    # Add noise with standard deviation proportional to carat
-    # noise = np.random.normal(0, params["sigma"] * x)
-    # return mu + noise
-    return mu
-
-# --- Define the UI ---
-
-app_ui = ui.page_fluid(
-    ui.h2("Bayesian Neural Network Data Generator"),
-    ui.p("Generate simulated diamond prices from a Bayesian neural network."),
-    ui.input_slider("n_points", "Total number of points:",
-                    min=100, max=1000, value=100, step=100),
-    ui.input_action_button("add", "Add to Plot"),
-    ui.input_action_button("reset", "Reset"),
-    ui.output_plot("plot")
-)
-
-# --- Define the Server ---
-
-def server(input, output, session):
-    # Reactive value to store accumulated data across "Add to Plot" clicks.
-    accumulated_data = reactive.Value(pd.DataFrame(columns=["carat", "price", "block"]))
-    # A counter to number each block uniquely.
-    block_counter = reactive.Value(1)
-    
-    @reactive.Effect
-    @reactive.event(input.add)
-    def add_points():
-        n_points = input.n_points()
-        blocks = n_points // 100  # Each block is 100 points.
-        current_df = accumulated_data.get()
-        counter = block_counter.get()
-        new_blocks = []
-        for _ in range(blocks):
-            # Generate 100 carat values between 0.5 and 2.5.
-            x = np.linspace(0.5, 2.5, 100)
-            params = generate_parameters()  # Draw new parameters for each block.
-            y = simulate_network(x, params)
-            block_label = f"Block {counter}"
-            counter += 1
-            df = pd.DataFrame({"carat": x, "price": y, "block": block_label})
-            new_blocks.append(df)
-        # Append the new blocks to the accumulated data.
-        new_data = pd.concat(new_blocks, ignore_index=True)
-        accumulated_data.set(pd.concat([current_df, new_data], ignore_index=True))
-        block_counter.set(counter)
-    
-    @reactive.Effect
-    @reactive.event(input.reset)
-    def reset_data():
-        # Clear the accumulated data and reset the block counter.
-        accumulated_data.set(pd.DataFrame(columns=["carat", "price", "block"]))
-        block_counter.set(1)
-    
-    @output
-    @render.plot
-    def plot():
-        df = accumulated_data.get()
-        fig, ax = plt.subplots(figsize=(6,4))
-        if not df.empty:
-            # Plot each block's points as scatter (no connecting lines)
-            for block, group in df.groupby("block"):
-                ax.scatter(group["carat"], group["price"], label=block)
-        ax.set_xlabel("Carat")
-        ax.set_ylabel("Price")
-        ax.set_title("Simulated Data from Bayesian Neural Network")
-        if not df.empty:
-            ax.legend()
-        return fig
-
-# --- Create the App ---
-
-app = App(app_ui, server)
-</code></pre>
-</section>
-<section id="bayesian-neural-network-simplified-implementation" class="level2">
-<h2 class="anchored" data-anchor-id="bayesian-neural-network-simplified-implementation">Bayesian Neural Network (Simplified Implementation)</h2>
-<p>The difference between a ‘standard’ neural network and a Bayesian one is that the Bayesian neural network will have uncertainty associated with the parameter values. (It could also have meaningful prior values for the parameters, but this is generally not relevant when training a new model). Here we will assume this uncertainty follows a normal/gaussian distribution. This uncertainty is key to making this method statistical/probabilistic - otherwise an input will always produce the same output. If the structure of the neural net is appropriate for the model and it has been well trained, a Bayesian neural network should mimic the variation/uncertainty in the outputs.</p>
-<section id="more-control-on-noise" class="level3">
-<h3 class="anchored" data-anchor-id="more-control-on-noise">More control on noise</h3>
+<section id="bayesian-attempt" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-attempt">Bayesian Attempt</h3>
 <pre class="shinylive-python" data-engine="python"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -1688,64 +2695,9 @@ def server(input, output, session):
 app = App(app_ui, server)
 
 </code></pre>
-<p>Training a Bayesian neural network occurs in effectively two steps:</p>
-<ol type="1">
-<li>The ‘burn-in’ phase, this is similar in some sense to the point estimate of the parameters in a ‘standard’ neural network. Here we want to ensure we have found the parameter space that is somewhat close to the optimal parameter values. This is contrast to being in some random combination of parameters that have practically zero chance of being correct.</li>
-<li>The inference phase should explore the parameter values from their near-optimum to where they start to become totally unlikely. If done well we can be confident we know not just the most likely value of the parameter, but how uncertain we are in that parameter value.</li>
-</ol>
-<p>We can expect that parameters with impactful values to the results and small uncertainty are very important to the model. The opposite is true as well, if a parameter has a large range of uncertainty, and is not impactful, which typically means the estimated range of the parameter includes zero, then we can conclude the parameter is not improtant to the model.</p>
-</section>
-</section>
-<section id="discussion" class="level2">
-<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
-<p>This second section is only a rough approximation of Bayesian updating. A more formal approach involves a well-defined posterior, which typically requires advanced methods. However, this snippet shows how the concept of a prior on weights can be approximated by combining a prior-based penalty with noise around the final solution to visualize uncertainty.</p>
-<p><strong>Key takeaways and caveats:</strong> - Implementing a neural network from scratch with NumPy requires manual forward/backprop calculations. - True Bayesian neural networks often rely on MCMC or variational inference. - Weight decay alone is not fully Bayesian, but it is consistent with a Gaussian prior if used carefully. - Adding noise around learned weights is only a heuristic approach to capturing model uncertainty, not a rigorous posterior sampling method.</p>
-</section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>We have demonstrated how to implement (1) a basic neural network using only NumPy and manual gradient-based learning and (2) a very simplified approximation of Bayesian neural networks by imposing a Gaussian prior on the weights. While this example is primarily for educational purposes and lacks the efficiency, stability, and full correctness of modern Bayesian frameworks, it should help illustrate the main ideas in a more “bare-metal” approach.</p>
-</section>
-<section id="with-diamond-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="with-diamond-dataset">With Diamond Dataset</h2>
-<div id="53791570" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.4-machine_learning_files/figure-html/cell-2-output-1.png" width="589" height="376" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.4-machine_learning_files/figure-html/cell-2-output-2.png" width="610" height="376" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.4-machine_learning_files/figure-html/cell-2-output-3.png" width="597" height="376" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.4-machine_learning_files/figure-html/cell-2-output-4.png" width="610" height="376" class="figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="2.4-machine_learning_files/figure-html/cell-2-output-5.png" width="585" height="376" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
