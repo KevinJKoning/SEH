@@ -17,7 +17,7 @@ The premise of this primer is that we can introduce statistics as a loop involvi
 1.  Estimating the probability of data given a model of a data generating process.
 2.  Maximizing the likelihood of a model, given observed data.
 
-We will refer to the real-world process of interest as the **data generating process**, and we will attempt to summarize it mathematically with a **model**. When we work in the 'forward' direction, where the model is assumed constant, we will find the **probability** of the data. When we work in the 'reverse' direction, where we are trying to find the best model given the observed data, we maximize the **likelihood** of the model.
+We will refer to the real-world process of interest as the **data generating process**, and we will attempt to summarize it mathematically with a **model**. When we work in the 'forward' direction, where the model is assumed constant, we will find the **probability** of data. When we work in the 'reverse' direction, where we are trying to find the best model given the observed data, we maximize the **likelihood** of the model.
 
 The chart below is a simple visual summary. The equations can be read as 'probability of the data given the model' and 'likelihood of the model given the data'.
 
