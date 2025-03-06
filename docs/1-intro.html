@@ -270,6 +270,19 @@ window.Quarto = {
 <li>Maximizing the likelihood of a model, given observed data.</li>
 </ol>
 <p>We will refer to the real-world process of interest as the <strong>data generating process</strong>, and we will attempt to summarize it mathematically with a <strong>model</strong>. When we work in the ‘forward’ direction, where the model is assumed constant, we will find the <strong>probability</strong> of the data. When we work in the ‘reverse’ direction, where we are trying to find the best model given the observed data, we maximize the <strong>likelihood</strong> of the model.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Hopefully we haven’t lost you already. <span class="math inline">\(\mathcal{L}(M \mid D)\)</span> is about creating accurate models, which any engineer can appreciate. We don’t start there, however, because it’s a little like building a car before you know how to drive. Instead we start by giving you models that can generate data. Models that generate data can either help you predict future data or show you how likely you were to get the data you already have, i.e.&nbsp;<span class="math inline">\(P(D \mid M)\)</span>.</p>
+</div>
+</div>
 <p>The chart below is a simple visual summary. The equations can be read as ‘probability of the data given the model’ and ‘likelihood of the model given the data’.</p>
 <div class="cell" data-layout-align="default">
 <div class="cell-output-display">
@@ -283,19 +296,6 @@ window.Quarto = {
 </div>
 <p></p></figure><p></p>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Hopefully we haven’t lost you already. <span class="math inline">\(\mathcal{L}(M \mid D)\)</span> is about creating accurate models, which any engineer can appreciate. We don’t start there, however, because it’s a little like building a car before you know how to drive. Instead we start by giving you models that can generate data. Models that generate data can either help you predict future data or show you how likely you were to get the data you already have, i.e.&nbsp;<span class="math inline">\(P(D \mid M)\)</span>.</p>
 </div>
 </div>
 </section>

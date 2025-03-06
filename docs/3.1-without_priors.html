@@ -1040,7 +1040,7 @@ P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 \]</span></p>
 <p>This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of <span class="math inline">\(\sigma^2\)</span>. We can now find <span class="math inline">\(P(y_i \mid \theta)\)</span> for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>… <span class="math inline">\(\sigma\)</span>).</p>
 <p>A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a ‘sideways’ normal distribution centered (<span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.</p>
-<div id="00e05ac1" class="cell" data-execution_count="1">
+<div id="3ddaccec" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
