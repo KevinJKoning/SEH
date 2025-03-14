@@ -23,8 +23,8 @@ The chart below is a simple visual summary. The equations can be read as 'probab
 
 ```{mermaid}
 flowchart LR
-    A(["P(D|M)"]) --> B(["ℒ(M|D)"])
-    B --> A
+    A(["P(D|M)"]) --> |Re-evaluate model with new data or methods| B(["ℒ(M|D)"])
+    B --> |Compare observed data to model generated data| A
 ```
 
 ::: callout-note
