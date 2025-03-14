@@ -2,7 +2,7 @@
 title: "Statistics for Engineers in a Hurry (an Illustrated Primer)"
 ---
 
-Please use the Github repo for the book to make corrections or contributions: https://github.com/Bearsetc/SEH
+Please use the Github repo for the book to make corrections or contributions: https://github.com/KevinJKoning/SEH
 
 > What I cannot create, I do not understand.
 >
