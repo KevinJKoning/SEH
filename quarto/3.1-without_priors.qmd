@@ -484,19 +484,22 @@ While grid search is attractive for its simplicity, it doesn't scale well with m
 
 To manually estimate the Maximum Likelihood for the binomial probability problem, we created a chart that had an obvious peak at the Maximum Likelihood Estimate. If we want to find that peak we simply need to walk/step up the hill. This is the idea of using gradients/derivatives to make our calculation more efficient.
 
-This approach is excellent even for many parameters, so we jump right to the definition for multi-parameter spaces. We seek to compute the gradient of $f(\theta)$ with respect to $\theta$ so we can use it in an optimization algorithm:
+This approach is excellent even for many parameters, so we jump right to the definition for multi-parameter spaces. We seek to compute the gradient of a likelihood function $L(\theta)$ with respect to parameter[s] $\theta$ so we can use it in an optimization algorithm:
 
 $$
-\nabla f(\theta) = \left[ \frac{\partial f}{\partial \theta_1}, \frac{\partial f}{\partial \theta_2}, \dots, \frac{\partial f}{\partial \theta_n} \right]
+\nabla L(\theta) = \left[ \frac{\partial l}{\partial \theta_1}, \frac{\partial l}{\partial \theta_2}, \dots, \frac{\partial l}{\partial \theta_n} \right]
 $$
 
 We use the resulting gradient to take a step towards the nearest optimum with learning rate $\eta$:
 
 $$
-\theta^{(t+1)} = \theta^{(t)} - \eta \nabla f(\theta^{(t)})
+\theta^{(t+1)} = \theta^{(t)} + \eta \nabla L(\theta^{(t)})
 $$
 
-where $t$ is the iteration index.
+- $t$ is the iteration index.
+- $\theta^{(t)}$ is your current estimate of the parameters at iteration t.
+- $\nabla L(\theta^{(t)})$ is the gradient of the likelihood function evaluated at $\theta^{(t)}$, it tells you the direction in which $L(\theta)$ increases the most.
+- $\eta$ is the learning rate, a small positive number that controls the size of your step.
 
 The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many 'autograd' libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation (well, and GPU's that go brrrrrrr).
 

@@ -763,15 +763,20 @@ P(y_i = 992 | n = 1000, p = 0.995) =
 <section id="gradient-ascent" class="level3">
 <h3 class="anchored" data-anchor-id="gradient-ascent">Gradient Ascent</h3>
 <p>To manually estimate the Maximum Likelihood for the binomial probability problem, we created a chart that had an obvious peak at the Maximum Likelihood Estimate. If we want to find that peak we simply need to walk/step up the hill. This is the idea of using gradients/derivatives to make our calculation more efficient.</p>
-<p>This approach is excellent even for many parameters, so we jump right to the definition for multi-parameter spaces. We seek to compute the gradient of <span class="math inline">\(f(\theta)\)</span> with respect to <span class="math inline">\(\theta\)</span> so we can use it in an optimization algorithm:</p>
+<p>This approach is excellent even for many parameters, so we jump right to the definition for multi-parameter spaces. We seek to compute the gradient of a likelihood function <span class="math inline">\(L(\theta)\)</span> with respect to parameter[s] <span class="math inline">\(\theta\)</span> so we can use it in an optimization algorithm:</p>
 <p><span class="math display">\[
-\nabla f(\theta) = \left[ \frac{\partial f}{\partial \theta_1}, \frac{\partial f}{\partial \theta_2}, \dots, \frac{\partial f}{\partial \theta_n} \right]
+\nabla L(\theta) = \left[ \frac{\partial l}{\partial \theta_1}, \frac{\partial l}{\partial \theta_2}, \dots, \frac{\partial l}{\partial \theta_n} \right]
 \]</span></p>
 <p>We use the resulting gradient to take a step towards the nearest optimum with learning rate <span class="math inline">\(\eta\)</span>:</p>
 <p><span class="math display">\[
-\theta^{(t+1)} = \theta^{(t)} - \eta \nabla f(\theta^{(t)})
+\theta^{(t+1)} = \theta^{(t)} + \eta \nabla L(\theta^{(t)})
 \]</span></p>
-<p>where <span class="math inline">\(t\)</span> is the iteration index.</p>
+<ul>
+<li><span class="math inline">\(t\)</span> is the iteration index.</li>
+<li><span class="math inline">\(\theta^{(t)}\)</span> is your current estimate of the parameters at iteration t.</li>
+<li><span class="math inline">\(\nabla L(\theta^{(t)})\)</span> is the gradient of the likelihood function evaluated at <span class="math inline">\(\theta^{(t)}\)</span>, it tells you the direction in which <span class="math inline">\(L(\theta)\)</span> increases the most.</li>
+<li><span class="math inline">\(\eta\)</span> is the learning rate, a small positive number that controls the size of your step.</li>
+</ul>
 <p>The use of gradients/derivatives forms a core piece of most modern optimization methods. The methods that use these gradients/derivatives are so effective, practitioners will go to great lengths to ensure that the gradients/derivatives can be calculated for their problem. This fact has given birth to many ‘autograd’ libraries that efficiently find derivatives in very complex problem domains. Modern neural networks are possible due to efficient matrix multiplication and gradient/derivative estimation (well, and GPU’s that go brrrrrrr).</p>
 </section>
 </section>
@@ -1040,7 +1045,7 @@ P(y_i \mid x_i) \sim \mathcal{N}(\beta_0 + \beta_1 x_i, \sigma^2)
 \]</span></p>
 <p>This simply means we assume the error (difference between data point and prediction) are centered at our prediction (the mean equals zero), and have a variance of <span class="math inline">\(\sigma^2\)</span>. We can now find <span class="math inline">\(P(y_i \mid \theta)\)</span> for each data point, which means we can also find the Maximum Likelihood Estimate of the model parameters (<span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>… <span class="math inline">\(\sigma\)</span>).</p>
 <p>A visual here can be very helpful. For each data point we calculate its probability like in the chart below. Every observation has a ‘sideways’ normal distribution centered (<span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>) at the prediction, and the probability of the point is based on how far out it would land on that normal distribution.</p>
-<div id="3b616b7d" class="cell" data-execution_count="1">
+<div id="ee006fc7" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
